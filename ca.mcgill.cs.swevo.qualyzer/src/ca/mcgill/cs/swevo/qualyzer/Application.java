@@ -1,3 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2010 McGill University
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     McGill University - initial API and implementation
+ *******************************************************************************/
+
 package ca.mcgill.cs.swevo.qualyzer;
 
 import org.eclipse.equinox.app.IApplication;
@@ -7,38 +18,60 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 
 /**
- * This class controls all aspects of the application's execution
+ * This class controls all aspects of the application's execution.
  */
-public class Application implements IApplication {
+public class Application implements IApplication
+{
 
-	/* (non-Javadoc)
+	/**
+	 * 
+	 * Does something.
+	 * 
+	 * @param context
+	 *            The context.
+	 * @return Status of the Application.
 	 * @see org.eclipse.equinox.app.IApplication#start(org.eclipse.equinox.app.IApplicationContext)
 	 */
-	public Object start(IApplicationContext context) {
+	public Object start(IApplicationContext context)
+	{
 		Display display = PlatformUI.createDisplay();
-		try {
+		try
+		{
 			int returnCode = PlatformUI.createAndRunWorkbench(display, new ApplicationWorkbenchAdvisor());
-			if (returnCode == PlatformUI.RETURN_RESTART) {
+			if (returnCode == PlatformUI.RETURN_RESTART)
+			{
 				return IApplication.EXIT_RESTART;
 			}
 			return IApplication.EXIT_OK;
-		} finally {
+		}
+		finally
+		{
 			display.dispose();
 		}
 	}
 
-	/* (non-Javadoc)
+	/**
+	 * 
+	 * Stops the application.
+	 * 
 	 * @see org.eclipse.equinox.app.IApplication#stop()
 	 */
-	public void stop() {
+	public void stop()
+	{
 		final IWorkbench workbench = PlatformUI.getWorkbench();
 		if (workbench == null)
+		{
 			return;
+		}
 		final Display display = workbench.getDisplay();
-		display.syncExec(new Runnable() {
-			public void run() {
+		display.syncExec(new Runnable()
+		{
+			public void run()
+			{
 				if (!display.isDisposed())
+				{
 					workbench.close();
+				}
 			}
 		});
 	}

@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2010 McGill University
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     McGill University - initial API and implementation
+ *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer;
 
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -8,13 +18,17 @@ import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.ide.IDE;
 
+/**
+ * 
+ * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
+ * 
+ */
 public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor
 {
 
 	private static final String PERSPECTIVE_ID = "ca.mcgill.cs.swevo.qualyzer.perspective";
 
-	public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor(
-			IWorkbenchWindowConfigurer configurer)
+	public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer)
 	{
 		return new ApplicationWorkbenchWindowAdvisor(configurer);
 	}
@@ -29,13 +43,6 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor
 		return ResourcesPlugin.getWorkspace().getRoot();
 	}
 
-	/**
-	 * <p>
-	 * Does something.
-	 * </p>
-	 * 
-	 * @see org.eclipse.ui.application.WorkbenchAdvisor#preStartup()
-	 */
 	@Override
 	public void preStartup()
 	{
@@ -46,10 +53,8 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor
 
 	public void initialize(IWorkbenchConfigurer configurer)
 	{
-		configurer
-				.declareImage(IDE.SharedImages.IMG_OBJ_PROJECT,
-						QualyzerActivator
-								.getImageDescriptor("icons/prj_obj.gif"), true);
+		configurer.declareImage(IDE.SharedImages.IMG_OBJ_PROJECT, QualyzerActivator
+				.getImageDescriptor("icons/prj_obj.gif"), true);
 		super.initialize(configurer);
 	}
 
