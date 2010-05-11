@@ -109,5 +109,16 @@
          </menu>
       </menuContribution>
    </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="ca.mcgill.cs.swevo.qualyzer.editors.InterviewEditor"
+            contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
+            extensions="txt"
+            icon="icons/sample.gif"
+            id="ca.mcgill.cs.swevo.qualyzer.editors.InterviewEditor"
+            name="Interview Editor">
+      </editor>
+   </extension>
 
 </plugin>
