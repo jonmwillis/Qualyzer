@@ -86,6 +86,10 @@ public class XMLConfiguration extends SourceViewerConfiguration
 		reconciler.setDamager(dr, IDocument.DEFAULT_CONTENT_TYPE);
 		reconciler.setRepairer(dr, IDocument.DEFAULT_CONTENT_TYPE);
 
+		
+		// This is probably what we will need to use. 
+		// A partition scanner will partition the document in coded fragments
+		// Coded fragments will be assigned to a color.
 		NonRuleBasedDamagerRepairer ndr = new NonRuleBasedDamagerRepairer(new TextAttribute(fColorManager
 				.getColor(IXMLColorConstants.XML_COMMENT)));
 		reconciler.setDamager(ndr, XMLPartitionScanner.XML_COMMENT);

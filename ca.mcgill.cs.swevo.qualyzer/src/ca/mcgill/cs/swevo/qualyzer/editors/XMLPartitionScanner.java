@@ -18,6 +18,11 @@ import org.eclipse.jface.text.rules.Token;
 
 /**
  * 
+ * This will be replaced by a simpler IPartitionTokenScanner generating tokens for each fragments (and non-fragment) of the text.
+ * A token contains data: this data is the name of the partition in the case of partition scanners.
+ * Refresh will be interesting though: is everything repartitioned? how can we ask for a partial refresh? 
+ * This could probably be done by firing a DocumentChanged event with the text that was coded...
+ * 
  * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
  * 
  */
