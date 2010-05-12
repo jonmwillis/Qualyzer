@@ -129,6 +129,7 @@ This Agreement is governed by the laws of the State of New York and the intellec
    <features>
       <feature id="ca.mcgill.cs.swevo.qualyzer.feature" version="1.0.0.qualifier"/>
       <feature id="ca.mcgill.cs.swevo.qualyzer.rcp_feature" version="1.0.0.qualifier"/>
+      <feature id="ca.mcgill.cs.swevo.qualyzer.dependencies" version="1.0.0.qualifier"/>
    </features>
 
    <configurations>
