@@ -49,6 +49,51 @@
          point="org.eclipse.ui.navigator.viewer">
       <viewer
             viewerId="ca.mcgill.cs.swevo.qualyzer.projectexplorer">
+         <popupMenu
+               allowsPlatformContributions="true"
+               id="ca.mcgill.cs.swevo.qualyzer.projectexplorer#PopupMenu">
+            <insertionPoint
+                  name="group.new">
+            </insertionPoint>
+            <insertionPoint
+                  name="group.open"
+                  separator="true">
+            </insertionPoint>
+            <insertionPoint
+                  name="group.openWith">
+            </insertionPoint>
+            <insertionPoint
+                  name="group.edit2"
+                  separator="true">
+            </insertionPoint>
+            <insertionPoint
+                  name="group.reorganize2">
+            </insertionPoint>
+            <insertionPoint
+                  name="group.port"
+                  separator="true">
+            </insertionPoint>
+            <insertionPoint
+                  name="group.build"
+                  separator="true">
+            </insertionPoint>
+            <insertionPoint
+                  name="group.generate"
+                  separator="true">
+            </insertionPoint>
+            <insertionPoint
+                  name="group.search"
+                  separator="true">
+            </insertionPoint>
+            <insertionPoint
+                  name="additions"
+                  separator="true">
+            </insertionPoint>
+            <insertionPoint
+                  name="group.properties"
+                  separator="true">
+            </insertionPoint>
+         </popupMenu>
       </viewer>
       <viewerContentBinding
             viewerId="ca.mcgill.cs.swevo.qualyzer.projectexplorer">
@@ -61,26 +106,23 @@
             </contentExtension>
          </includes>
       </viewerContentBinding>
-      <viewerActionBinding
-            viewerId="ca.mcgill.cs.swevo.qualyzer.projectexplorer">
-         <includes>
-            <actionExtension
-                  pattern="org.eclipse.ui.navigator.resources.*">
-            </actionExtension>
-         </includes>
-      </viewerActionBinding>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
       <command
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.ExitHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.exit"
-            name="E&amp;xit">
+            name="Exit">
       </command>
       <command
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.SetupHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.setup"
             name="Setup">
+      </command>
+      <command
+            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.NewProjectHandler"
+            id="ca.mcgill.cs.swevo.qualyzer.commands.newProject"
+            name="New Project">
       </command>
    </extension>
    <extension
@@ -90,6 +132,16 @@
          <menu
                id="fileMenu"
                label="&amp;File">
+            <menu
+                  id="fileNew"
+                  label="&amp;New">
+               <command
+                     commandId="ca.mcgill.cs.swevo.qualyzer.commands.newProject"
+                     label="New &amp;Project"
+                     style="push"
+                     tooltip="Create a New Project">
+               </command>
+            </menu>
             <command
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.setup"
                   label="&amp;Setup"
@@ -108,6 +160,27 @@
             </command>
          </menu>
       </menuContribution>
+      <menuContribution
+            locationURI="popup:ca.mcgill.cs.swevo.qualyzer.projectexplorer#PopupMenu?after=group.new">
+         <menu
+               id="fileNew"
+               label="&amp;New">
+            <command
+                  commandId="ca.mcgill.cs.swevo.qualyzer.commands.newProject"
+                  label="New Project"
+                  style="push"
+                  tooltip="Create a New Project">
+            </command>
+         </menu>
+      </menuContribution>
+      <menuContribution
+            locationURI="popup:ca.mcgill.cs.swevo.qualyzer.projectexplorer#PopupMenu?after=group.edit">
+         <command
+               commandId="org.eclipse.ui.edit.rename"
+               label="Rename"
+               style="push">
+         </command>
+      </menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.editors">
@@ -119,6 +192,21 @@
             id="ca.mcgill.cs.swevo.qualyzer.editors.InterviewEditor"
             name="Interview Editor">
       </editor>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="ca.mcgill.cs.swevo.qualyzer.handlers.RenameHandler"
+            commandId="org.eclipse.ui.edit.rename">
+         <activeWhen>
+            <with
+                  variable="activePartId">
+               <equals
+                     value="ca.mcgill.cs.swevo.qualyzer.projectexplorer">
+               </equals>
+            </with>
+         </activeWhen>
+      </handler>
    </extension>
 
 </plugin>
