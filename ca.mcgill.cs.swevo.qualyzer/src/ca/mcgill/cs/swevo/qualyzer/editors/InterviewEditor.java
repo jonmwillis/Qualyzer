@@ -22,6 +22,8 @@ import org.eclipse.ui.ide.IDEActionFactory;
 public class InterviewEditor extends TextEditor
 {
 
+	public static final String ID = "ca.mcgill.cs.swevo.qualyzer.editors.InterviewEditor";
+	
 	private ColorManager fColorManager;
 
 	public InterviewEditor()

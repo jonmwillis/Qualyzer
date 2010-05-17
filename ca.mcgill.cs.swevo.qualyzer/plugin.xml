@@ -104,8 +104,18 @@
             <contentExtension
                   pattern="org.eclipse.ui.navigator.resources.filters.closedProject">
             </contentExtension>
+            <actionExtension
+                  pattern="org.eclipse.ui.navigator.resources.*">
+            </actionExtension>
          </includes>
       </viewerContentBinding>
+      <viewerActionBinding
+            viewerId="ca.mcgill.cs.swevo.qualyzer.projectexplorer">
+         <includes>
+            <actionExtension
+                  pattern="ca.mcgill.cs.swevo.qualyzer.actions.*">
+            </actionExtension></includes>
+      </viewerActionBinding>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
@@ -123,6 +133,11 @@
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.NewProjectHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.newProject"
             name="New Project">
+      </command>
+      <command
+            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.OpenInterviewHandler"
+            id="ca.mcgill.cs.swevo.qualyzer.commands.openInterview"
+            name="Open Interview">
       </command>
    </extension>
    <extension
@@ -181,6 +196,14 @@
                style="push">
          </command>
       </menuContribution>
+      <menuContribution
+            locationURI="popup:ca.mcgill.cs.swevo.qualyzer.projectexplorer#PopupMenu?after=group.open">
+         <command
+               commandId="ca.mcgill.cs.swevo.qualyzer.commands.openInterview"
+               label="Open"
+               style="push">
+         </command>
+      </menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.editors">
@@ -207,6 +230,18 @@
             </with>
          </activeWhen>
       </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.navigator.navigatorContent">
+      <actionProvider
+            class="ca.mcgill.cs.swevo.qualyzer.views.ProjectExplorerActionProvider"
+            id="ca.mcgill.cs.swevo.qualyzer.actions.ProjectExplorerActionProvider">
+         <enablement>
+            <adapt
+                  type="org.eclipse.core.resources.IFile">
+            </adapt>
+         </enablement>
+      </actionProvider>
    </extension>
 
 </plugin>
