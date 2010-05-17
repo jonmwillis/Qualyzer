@@ -26,7 +26,7 @@ import org.eclipse.ui.navigator.ICommonActionExtensionSite;
  */
 public class ProjectExplorerActionProvider extends CommonActionProvider
 {
-	private IAction doubleClickAction;
+	private IAction fDoubleClickAction;
 
 	/**
 	 * Initializes common actions such as Open.
@@ -41,7 +41,7 @@ public class ProjectExplorerActionProvider extends CommonActionProvider
 		final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(
 				IHandlerService.class);
 
-		doubleClickAction = new Action()
+		fDoubleClickAction = new Action()
 		{
 			@Override
 			public void run()
@@ -66,7 +66,7 @@ public class ProjectExplorerActionProvider extends CommonActionProvider
 	{
 		super.fillActionBars(actionBars);
 		// forward doubleClick to doubleClickAction
-		actionBars.setGlobalActionHandler(ICommonActionConstants.OPEN, doubleClickAction);
+		actionBars.setGlobalActionHandler(ICommonActionConstants.OPEN, fDoubleClickAction);
 	}
 
 }
