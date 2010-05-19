@@ -15,10 +15,12 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.hibernate.Session;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
+import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
 
 /**
  * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
@@ -108,9 +110,21 @@ public final class PersistenceManager
 		return dbFolder;
 	}
 
-	public Project[] getProjects()
+	public Project getProject(String name)
 	{
-		return null;
+		HibernateDBManager dbManager = fActivator.getHibernateDBManagers().get(name);
+
+		Session session = dbManager.openSession();
+		Project project = null;
+		try
+		{
+			project = (Project) session.createQuery("from Project").uniqueResult();
+		}
+		finally
+		{
+			HibernateUtil.quietClose(session);
+		}
+		return project;
 	}
 
 }

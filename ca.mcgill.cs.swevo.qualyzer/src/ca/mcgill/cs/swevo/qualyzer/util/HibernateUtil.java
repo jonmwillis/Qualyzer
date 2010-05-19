@@ -14,6 +14,8 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
+
 /**
  * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
  * 
@@ -55,11 +57,13 @@ public final class HibernateUtil
 		}
 	}
 
-	public static void quietSave(Session session, Object object)
+	public static void quietSave(HibernateDBManager manager, Object object)
 	{
 		Transaction t = null;
+		Session session = null;
 		try
 		{
+			session = manager.openSession();
 			t = session.beginTransaction();
 			session.saveOrUpdate(object);
 			t.commit();
@@ -68,13 +72,19 @@ public final class HibernateUtil
 		{
 			quietRollback(t);
 		}
+		finally
+		{
+			quietClose(session);
+		}
 	}
 
-	public static void quietSave(Session session, Object[] objects)
+	public static void quietSave(HibernateDBManager manager, Object[] objects)
 	{
 		Transaction t = null;
+		Session session = null;
 		try
 		{
+			session = manager.openSession();
 			t = session.beginTransaction();
 			for (Object object : objects)
 			{
@@ -86,7 +96,10 @@ public final class HibernateUtil
 		{
 			quietRollback(t);
 		}
+		finally
+		{
+			quietClose(session);
+		}
 	}
-
 
 }
