@@ -10,8 +10,10 @@
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -32,16 +34,16 @@ public class Project
 	private String fName;
 
 	private Long fPersistenceId;
-	
-	private List<Investigator> fInvestigators;
-	
-	private List<Participant> fParticipants;
-	
-	private List<Transcript> fTranscripts;
-	
-	private List<Memo> fMemos;
-	
-	private List<Code> fCodes;
+
+	private List<Investigator> fInvestigators = new ArrayList<Investigator>();
+
+	private List<Participant> fParticipants = new ArrayList<Participant>();
+
+	private List<Transcript> fTranscripts = new ArrayList<Transcript>();
+
+	private List<Memo> fMemos = new ArrayList<Memo>();
+
+	private List<Code> fCodes = new ArrayList<Code>();
 
 	/**
 	 * @return the name
@@ -70,7 +72,8 @@ public class Project
 	}
 
 	/**
-	 * @param investigators the investigators to set
+	 * @param investigators
+	 *            the investigators to set
 	 */
 	public void setInvestigators(List<Investigator> investigators)
 	{
@@ -87,7 +90,8 @@ public class Project
 	}
 
 	/**
-	 * @param participants the participants to set
+	 * @param participants
+	 *            the participants to set
 	 */
 	public void setParticipants(List<Participant> participants)
 	{
@@ -104,7 +108,8 @@ public class Project
 	}
 
 	/**
-	 * @param transcripts the transcripts to set
+	 * @param transcripts
+	 *            the transcripts to set
 	 */
 	public void setTranscripts(List<Transcript> transcripts)
 	{
@@ -121,7 +126,8 @@ public class Project
 	}
 
 	/**
-	 * @param memos the memos to set
+	 * @param memos
+	 *            the memos to set
 	 */
 	public void setMemos(List<Memo> memos)
 	{
@@ -131,7 +137,7 @@ public class Project
 	/**
 	 * @return the codes
 	 */
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL)
 	@OrderBy("codeName")
 	public List<Code> getCodes()
 	{
@@ -139,14 +145,14 @@ public class Project
 	}
 
 	/**
-	 * @param codes the codes to set
+	 * @param codes
+	 *            the codes to set
 	 */
 	public void setCodes(List<Code> codes)
 	{
 		this.fCodes = codes;
 	}
-	
-	
+
 	/**
 	 * @param persistenceId
 	 *            the persistenceId to set
