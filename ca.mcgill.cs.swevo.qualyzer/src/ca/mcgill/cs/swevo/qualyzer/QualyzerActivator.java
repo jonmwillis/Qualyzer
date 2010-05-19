@@ -10,9 +10,14 @@
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+
+import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
 
 /**
  * The activator class controls the plug-in life cycle.
@@ -30,6 +35,9 @@ public class QualyzerActivator extends AbstractUIPlugin
 	// The shared instance
 	private static QualyzerActivator gPlugin;
 
+	// Indexed by Project Name
+	private Map<String, HibernateDBManager> fHibernateManagers = new HashMap<String, HibernateDBManager>();
+
 	/**
 	 * The constructor.
 	 */
@@ -42,6 +50,7 @@ public class QualyzerActivator extends AbstractUIPlugin
 	 * 
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext )
 	 */
+	@Override
 	public void start(BundleContext context) throws Exception
 	{
 		super.start(context);
@@ -53,6 +62,7 @@ public class QualyzerActivator extends AbstractUIPlugin
 	 * 
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext )
 	 */
+	@Override
 	public void stop(BundleContext context) throws Exception
 	{
 		gPlugin = null;
@@ -79,5 +89,15 @@ public class QualyzerActivator extends AbstractUIPlugin
 	public static ImageDescriptor getImageDescriptor(String path)
 	{
 		return imageDescriptorFromPlugin(PLUGIN_ID, path);
+	}
+
+	/**
+	 * 
+	 *
+	 * @return A Map of HibernateDBManager indexed by the project name.
+	 */
+	public Map<String, HibernateDBManager> getHibernateDBManagers()
+	{
+		return fHibernateManagers;
 	}
 }

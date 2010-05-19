@@ -36,6 +36,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor
 		super(configurer);
 	}
 
+	@Override
 	protected void makeActions(final IWorkbenchWindow window)
 	{
 		// Creates the actions and registers them.
@@ -49,6 +50,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor
 		// register(exitAction);
 	}
 
+	@Override
 	protected void fillMenuBar(IMenuManager menuBar)
 	{
 		// MenuManager fileMenu = new MenuManager("&File",

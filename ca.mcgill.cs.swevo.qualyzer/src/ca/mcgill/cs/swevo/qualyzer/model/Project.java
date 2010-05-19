@@ -10,15 +10,23 @@
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 /**
  * A qualitative project.
  * 
  * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
- *
+ * 
  */
+@Entity
 public class Project
 {
 	private String fName;
+
+	private Long fPersistenceId;
 
 	/**
 	 * @return the name
@@ -29,13 +37,28 @@ public class Project
 	}
 
 	/**
-	 * @param name the name to set
+	 * @param name
+	 *            the name to set
 	 */
 	public void setName(String name)
 	{
 		this.fName = name;
 	}
-	
-	
-	
+
+	/**
+	 * @param persistenceId
+	 *            the persistenceId to set
+	 */
+	public void setPersistenceId(Long persistenceId)
+	{
+		this.fPersistenceId = persistenceId;
+	}
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Long getPersistenceId()
+	{
+		return fPersistenceId;
+	}
+
 }
