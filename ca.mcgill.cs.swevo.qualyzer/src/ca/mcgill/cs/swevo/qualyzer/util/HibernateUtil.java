@@ -25,7 +25,7 @@ public final class HibernateUtil
 
 	}
 
-	public static void closeSession(Session session)
+	public static void quietClose(Session session)
 	{
 		if (session != null)
 		{
@@ -40,7 +40,7 @@ public final class HibernateUtil
 		}
 	}
 
-	public static void rollbackTransaction(Transaction transaction)
+	public static void quietRollback(Transaction transaction)
 	{
 		if (transaction != null)
 		{
@@ -54,4 +54,39 @@ public final class HibernateUtil
 			}
 		}
 	}
+
+	public static void quietSave(Session session, Object object)
+	{
+		Transaction t = null;
+		try
+		{
+			t = session.beginTransaction();
+			session.saveOrUpdate(object);
+			t.commit();
+		}
+		catch (HibernateException e)
+		{
+			quietRollback(t);
+		}
+	}
+
+	public static void quietSave(Session session, Object[] objects)
+	{
+		Transaction t = null;
+		try
+		{
+			t = session.beginTransaction();
+			for (Object object : objects)
+			{
+				session.saveOrUpdate(object);
+			}
+			t.commit();
+		}
+		catch (HibernateException e)
+		{
+			quietRollback(t);
+		}
+	}
+
+
 }
