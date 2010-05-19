@@ -57,6 +57,7 @@ public class HibernateDBManager
 
 			// Add classes
 			tempConfiguration = tempConfiguration.addAnnotatedClass(Project.class);
+			tempConfiguration = tempConfiguration.addAnnotatedClass(Code.class);
 			// Configure
 			tempConfiguration = tempConfiguration.configure();
 			

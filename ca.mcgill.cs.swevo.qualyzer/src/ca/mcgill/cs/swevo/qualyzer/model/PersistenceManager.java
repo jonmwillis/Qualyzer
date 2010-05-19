@@ -39,7 +39,7 @@ public final class PersistenceManager
 	private static final PersistenceManager INSTANCE = new PersistenceManager();
 
 	private final QualyzerActivator fActivator;
-	
+
 	private PersistenceManager()
 	{
 		fActivator = QualyzerActivator.getDefault();
@@ -54,12 +54,12 @@ public final class PersistenceManager
 	{
 		return project.getFolder(DB_FOLDER).getFile(QUALYZER_DB_NAME).getRawLocation();
 	}
-	
+
 	public IPath getDBFilePath(IProject project)
 	{
 		return project.getFolder(DB_FOLDER).getFile(QUALYZER_DB_FILE_NAME).getRawLocation();
 	}
-	
+
 	/**
 	 * 
 	 * Creates the HSQLDB database in the .db folder of project.
@@ -71,12 +71,12 @@ public final class PersistenceManager
 		setupDBFolder(project);
 		String dbPath = getDBPath(project).toOSString();
 		String connectionString = DB_CONNECTION_STRING.replace("%s", dbPath) + DB_INIT_STRING;
-		
+
 		HibernateDBManager dbManager = new HibernateDBManager(connectionString, DB_USERNAME, "", DB_DRIVER, DB_DIALECT);
-		
+
 		// Add DB Manager
 		fActivator.getHibernateDBManagers().put(project.getName(), dbManager);
-		
+
 		// Init DB
 		SchemaExport export = new SchemaExport(dbManager.getConfiguration());
 		export.execute(false, true, false, false);
@@ -106,6 +106,11 @@ public final class PersistenceManager
 			}
 		}
 		return dbFolder;
+	}
+
+	public Project[] getProjects()
+	{
+		return null;
 	}
 
 }
