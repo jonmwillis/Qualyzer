@@ -14,6 +14,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 /**
  * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
@@ -27,6 +29,8 @@ public class Investigator
 	private String fFullName;
 	
 	private String fInstitution;
+	
+	private Project fProject;
 	
 	private Long fPersistenceId;
 
@@ -72,5 +76,16 @@ public class Investigator
 		this.fPersistenceId = persistenceId;
 	}
 	
+	@ManyToOne
+	@JoinColumn(name = "project_persistenceid", nullable = false, insertable = false, updatable = false)
+	public Project getProject()
+	{
+		return fProject;
+	}
+
+	public void setProject(Project project)
+	{
+		this.fProject = project;
+	}
 	
 }

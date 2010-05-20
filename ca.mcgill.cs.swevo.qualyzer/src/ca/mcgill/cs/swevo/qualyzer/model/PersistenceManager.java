@@ -15,6 +15,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.hibernate.Hibernate;
+import org.hibernate.LockOptions;
 import org.hibernate.Session;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 
@@ -125,6 +127,31 @@ public final class PersistenceManager
 			HibernateUtil.quietClose(session);
 		}
 		return project;
+	}
+
+	/**
+	 * 
+	 * Does something.
+	 * 
+	 * @param project
+	 * @return
+	 */
+	public void initializeDocument(IAnnotatedDocument document)
+	{
+		HibernateDBManager dbManager = fActivator.getHibernateDBManagers().get(document.getProject().getName());
+
+		Session session = dbManager.openSession();
+		try
+		{
+			// Reattach
+			session.buildLockRequest(LockOptions.NONE).lock(document);
+			Hibernate.initialize(document.getParticipants());
+			Hibernate.initialize(document.getFragments());
+		}
+		finally
+		{
+			HibernateUtil.quietClose(session);
+		}
 	}
 
 }

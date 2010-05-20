@@ -20,6 +20,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -34,7 +35,7 @@ import org.hibernate.annotations.Type;
  */
 @Entity
 @GenericGenerator(name = "uuid-gen", strategy = "uuid")
-public class Memo
+public class Memo implements Comparable<Memo>, IAnnotatedDocument
 {
 	private Investigator fAuthor;
 
@@ -45,6 +46,8 @@ public class Memo
 	private String fName;
 
 	private String fFileName;
+
+	private Project fProject;
 
 	private Long fPersistenceId;
 
@@ -59,8 +62,9 @@ public class Memo
 		this.fAuthor = author;
 	}
 
-	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
+	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
 	@CollectionId(columns = @Column(name = "COL_ID"), type = @Type(type = "string"), generator = "uuid-gen")
+	@Override
 	public List<Fragment> getFragments()
 	{
 		return fFragments;
@@ -71,8 +75,9 @@ public class Memo
 		this.fFragments = fragments;
 	}
 
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@CollectionId(columns = @Column(name = "COL_ID"), type = @Type(type = "string"), generator = "uuid-gen")
+	@Override
 	public List<Participant> getParticipants()
 	{
 		return fParticipants;
@@ -113,6 +118,25 @@ public class Memo
 	public void setFileName(String fileName)
 	{
 		this.fFileName = fileName;
+	}
+
+	@ManyToOne
+	@JoinColumn(name = "project_persistenceid", nullable = false, insertable = false, updatable = false)
+	@Override
+	public Project getProject()
+	{
+		return fProject;
+	}
+
+	public void setProject(Project project)
+	{
+		this.fProject = project;
+	}
+
+	@Override
+	public int compareTo(Memo memo)
+	{
+		return this.getName().compareTo(memo.getName());
 	}
 	
 	

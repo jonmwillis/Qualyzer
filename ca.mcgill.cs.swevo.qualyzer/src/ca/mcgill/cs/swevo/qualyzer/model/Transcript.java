@@ -20,7 +20,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -34,7 +36,7 @@ import org.hibernate.annotations.Type;
  */
 @Entity
 @GenericGenerator(name = "uuid-gen", strategy = "uuid")
-public class Transcript
+public class Transcript implements Comparable<Transcript>, IAnnotatedDocument
 {
 	private AudioFile fAudioFile;
 
@@ -45,6 +47,8 @@ public class Transcript
 	private String fName;
 
 	private String fFileName;
+	
+	private Project fProject;
 
 	private Long fPersistenceId;
 
@@ -59,8 +63,9 @@ public class Transcript
 		this.fAudioFile = audioFile;
 	}
 
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@CollectionId(columns = @Column(name = "COL_ID"), type = @Type(type = "string"), generator = "uuid-gen")
+	@Override
 	public List<Participant> getParticipants()
 	{
 		return fParticipants;
@@ -71,8 +76,9 @@ public class Transcript
 		this.fParticipants = participants;
 	}
 
-	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
+	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
 	@CollectionId(columns = @Column(name = "COL_ID"), type = @Type(type = "string"), generator = "uuid-gen")
+	@Override
 	public List<Fragment> getFragments()
 	{
 		return fFragments;
@@ -114,5 +120,26 @@ public class Transcript
 	{
 		this.fPersistenceId = persistenceId;
 	}
+	
+	@ManyToOne
+	@JoinColumn(name = "project_persistenceid", nullable = false, insertable = false, updatable = false)
+	@Override
+	public Project getProject()
+	{
+		return fProject;
+	}
+
+	public void setProject(Project project)
+	{
+		this.fProject = project;
+	}
+
+	@Override
+	public int compareTo(Transcript transcript)
+	{
+		return this.getName().compareTo(transcript.getName());
+	}
+	
+	
 
 }
