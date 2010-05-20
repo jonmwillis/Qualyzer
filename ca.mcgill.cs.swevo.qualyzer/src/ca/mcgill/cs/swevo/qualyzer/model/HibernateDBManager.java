@@ -43,6 +43,7 @@ public class HibernateDBManager
 	 * @param driver
 	 * @param dialect
 	 */
+	// CSOFF:
 	public HibernateDBManager(String connectionString, String userName, String password, String driver, String dialect)
 	{
 		try
@@ -56,8 +57,16 @@ public class HibernateDBManager
 			// "true");
 
 			// Add classes
-			tempConfiguration = tempConfiguration.addAnnotatedClass(Project.class);
+			tempConfiguration = tempConfiguration.addAnnotatedClass(Annotation.class);
+			tempConfiguration = tempConfiguration.addAnnotatedClass(AudioFile.class);
 			tempConfiguration = tempConfiguration.addAnnotatedClass(Code.class);
+			tempConfiguration = tempConfiguration.addAnnotatedClass(CodeEntry.class);
+			tempConfiguration = tempConfiguration.addAnnotatedClass(Fragment.class);
+			tempConfiguration = tempConfiguration.addAnnotatedClass(Investigator.class);
+			tempConfiguration = tempConfiguration.addAnnotatedClass(Memo.class);
+			tempConfiguration = tempConfiguration.addAnnotatedClass(Participant.class);
+			tempConfiguration = tempConfiguration.addAnnotatedClass(Project.class);
+			tempConfiguration = tempConfiguration.addAnnotatedClass(Transcript.class);
 			// Configure
 			tempConfiguration = tempConfiguration.configure();
 			
@@ -71,6 +80,7 @@ public class HibernateDBManager
 			throw new QualyzerException(ex);
 		}
 	}
+	//CSON:
 
 
 	public Configuration getConfiguration()

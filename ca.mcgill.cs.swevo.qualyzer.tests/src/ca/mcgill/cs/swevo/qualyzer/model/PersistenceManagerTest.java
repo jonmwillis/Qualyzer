@@ -13,13 +13,17 @@ package ca.mcgill.cs.swevo.qualyzer.model;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -121,16 +125,106 @@ public class PersistenceManagerTest
 		projectDB.getCodes().add(code2);
 		HibernateUtil.quietSave(dbManager, projectDB);
 
-		// XXX Should be in a try/finally block like in HibernateUtil
-		// TODO Implement refresh in the HibernateUtil (maybe?)
-		Session session = dbManager.openSession();
-		// Refresh to trigger the ordering.
-		session.refresh(projectDB);
-		HibernateUtil.quietClose(session);
+		// List is still local.
 		Code tempCode = projectDB.getCodes().get(0);
+		assertEquals("b", tempCode.getCodeName());
+
+		HibernateUtil.quietRefresh(dbManager, projectDB);
+		// List was refreshed
+		tempCode = projectDB.getCodes().get(0);
 		assertEquals("a", tempCode.getCodeName());
 	}
 
-	// TODO Add testHibernateCascade
-	// TODO Add testHibernateFetchStrategy
+	private Project createProject()
+	{
+		Project projectDB = new Project();
+		projectDB.setName(TEST_PROJECT_NAME);
+		Code code = new Code();
+		code.setCodeName("b");
+		projectDB.getCodes().add(code);
+		code = new Code();
+		code.setCodeName("a");
+		projectDB.getCodes().add(code);
+		return projectDB;
+	}
+
+	/**
+	 * This is an example of using Hibernate API in a single session.
+	 * 
+	 */
+	// CSOFF:
+	@Test
+	public void testHibernateCascade()
+	{
+		Session session = null;
+		try
+		{
+			fManager.initDB(fProject);
+			HibernateDBManager dbManager = fActivator.getHibernateDBManagers().get(TEST_PROJECT_NAME);
+			session = dbManager.openSession();
+			Transaction t = session.beginTransaction();
+			Project projectDB = createProject();
+			// Test save cascade
+			session.saveOrUpdate(projectDB);
+			t.commit();
+			// The list is still local
+			Code tempCode = projectDB.getCodes().get(0);
+			assertEquals("b", tempCode.getCodeName());
+
+			// Codes should be persisted on the DB.
+			// Note: this is probably a bad query performance-wise.
+			Query query = session
+					.createQuery(
+							"select count(code) from Code as code, Project as project where project = ? and code in elements(project.codes)")
+					.setEntity(0, projectDB);
+			assertEquals(2, HibernateUtil.count(query));
+
+			t = session.beginTransaction();
+			// Test delete cascade
+			session.delete(projectDB);
+			t.commit();
+
+			// The codes were deleted from the DB.
+			assertEquals(0, HibernateUtil.count(query));
+		}
+		catch (HibernateException e)
+		{
+			e.printStackTrace();
+			fail();
+		}
+		finally
+		{
+			HibernateUtil.quietClose(session);
+		}
+	}
+
+	// CSON:
+
+	@Test
+	public void testHibernateFetchStrategies()
+	{
+		fManager.initDB(fProject);
+		HibernateDBManager dbManager = fActivator.getHibernateDBManagers().get(TEST_PROJECT_NAME);
+		Project projectDB = createProject();
+		Transcript t = new Transcript();
+		t.setName("Transcript 1");
+		projectDB.getTranscripts().add(t);
+		HibernateUtil.quietSave(dbManager, projectDB);
+
+		projectDB = fManager.getProject(TEST_PROJECT_NAME);
+		// Should work because codes are loaded eagerly
+		assertNotNull(projectDB.getCodes().get(0));
+
+		try
+		{
+			// Should not work as Transcripts are not loaded by default.
+			projectDB.getTranscripts().get(0);
+			fail();
+		}
+		catch (HibernateException e)
+		{
+			assertTrue(true);
+		}
+	}
+
 }
