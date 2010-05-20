@@ -12,9 +12,9 @@ package ca.mcgill.cs.swevo.qualyzer.model;
 
 /**
  * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
- *
+ * 
  */
 public class Timestamp
 {
-
+	// TODO Add appropriate property.
 }

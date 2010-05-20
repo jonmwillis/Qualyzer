@@ -10,11 +10,45 @@
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 /**
  * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
  *
  */
+@Entity
 public class AudioFile
 {
 
+	// Path relative to the workspace.
+	private String fRelativePath;
+	
+	private Long fPersistenceId;
+
+	public String getRelativePath()
+	{
+		return fRelativePath;
+	}
+
+	public void setRelativePath(String relativePath)
+	{
+		this.fRelativePath = relativePath;
+	}
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Long getPersistenceId()
+	{
+		return fPersistenceId;
+	}
+
+	public void setPersistenceId(Long persistenceId)
+	{
+		this.fPersistenceId = persistenceId;
+	}
+	
+	
 }

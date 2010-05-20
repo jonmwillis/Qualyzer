@@ -14,50 +14,41 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 /**
  * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
  *
  */
 @Entity
-public class Investigator
+public class CodeEntry
 {
-	private String fNickName;
+	private Code fCode;
 	
-	private String fFullName;
-	
-	private String fInstitution;
+	private Investigator fInvestigator;
 	
 	private Long fPersistenceId;
 
-	public String getNickName()
+	@OneToOne
+	public Code getCode()
 	{
-		return fNickName;
+		return fCode;
 	}
 
-	public void setNickName(String nickName)
+	public void setCode(Code code)
 	{
-		this.fNickName = nickName;
+		this.fCode = code;
 	}
 
-	public String getFullName()
+	@OneToOne
+	public Investigator getInvestigator()
 	{
-		return fFullName;
+		return fInvestigator;
 	}
 
-	public void setFullName(String fullName)
+	public void setInvestigator(Investigator investigator)
 	{
-		this.fFullName = fullName;
-	}
-
-	public String getInstitution()
-	{
-		return fInstitution;
-	}
-
-	public void setInstitution(String institution)
-	{
-		this.fInstitution = institution;
+		this.fInvestigator = investigator;
 	}
 
 	@Id

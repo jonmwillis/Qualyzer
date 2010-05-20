@@ -15,6 +15,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import org.hibernate.annotations.Type;
+
 /**
  * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
  *
@@ -24,6 +26,8 @@ public class Code
 {
 
 	private String fCodeName;
+
+	private String fDescription;
 	
 	private Long fPersistenceId;
 
@@ -42,7 +46,18 @@ public class Code
 	{
 		this.fCodeName = codeName;
 	}
-	
+
+	@Type(type = "text")
+	public String getDescription()
+	{
+		return fDescription;
+	}
+
+	public void setDescription(String description)
+	{
+		this.fDescription = description;
+	}
+
 	/**
 	 * @param persistenceId
 	 *            the persistenceId to set
