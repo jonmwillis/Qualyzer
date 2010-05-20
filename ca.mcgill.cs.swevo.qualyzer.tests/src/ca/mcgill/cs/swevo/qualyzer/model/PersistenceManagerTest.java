@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.hibernate.HibernateException;
+import org.hibernate.LazyInitializationException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -29,6 +30,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
+import ca.mcgill.cs.swevo.qualyzer.util.CollectionUtil;
 import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
 
 /**
@@ -107,7 +109,7 @@ public class PersistenceManagerTest
 	 * acceptable for testing purpose though.
 	 */
 	@Test
-	public void testHibernateOrderBy()
+	public void testHibernateListInsert()
 	{
 		fManager.initDB(fProject);
 		HibernateDBManager dbManager = fActivator.getHibernateDBManagers().get(TEST_PROJECT_NAME);
@@ -117,23 +119,23 @@ public class PersistenceManagerTest
 
 		Code code1 = new Code();
 		code1.setCodeName("b");
-		projectDB.getCodes().add(code1);
+		CollectionUtil.insertSorted(projectDB.getCodes(), code1);
 		HibernateUtil.quietSave(dbManager, projectDB);
 
 		Code code2 = new Code();
 		code2.setCodeName("a");
-		projectDB.getCodes().add(code2);
+		CollectionUtil.insertSorted(projectDB.getCodes(), code2);
 		HibernateUtil.quietSave(dbManager, projectDB);
 
-		// List is still local.
 		Code tempCode = projectDB.getCodes().get(0);
-		assertEquals("b", tempCode.getCodeName());
+		assertEquals("a", tempCode.getCodeName());
 
-		HibernateUtil.quietRefresh(dbManager, projectDB);
-		// List was refreshed
+		projectDB = fManager.getProject(TEST_PROJECT_NAME);
 		tempCode = projectDB.getCodes().get(0);
 		assertEquals("a", tempCode.getCodeName());
 	}
+
+	
 
 	private Project createProject()
 	{
@@ -146,6 +148,18 @@ public class PersistenceManagerTest
 		code.setCodeName("a");
 		projectDB.getCodes().add(code);
 		return projectDB;
+	}
+	
+	@Test
+	public void testHibernateBidirectional()
+	{
+		fManager.initDB(fProject);
+		HibernateDBManager dbManager = fActivator.getHibernateDBManagers().get(TEST_PROJECT_NAME);
+		Project projectDB = createProject();
+		HibernateUtil.quietSave(dbManager, projectDB);
+		
+		projectDB = fManager.getProject(TEST_PROJECT_NAME);
+		assertNotNull(projectDB.getCodes().get(0).getProject());
 	}
 
 	/**
@@ -198,8 +212,6 @@ public class PersistenceManagerTest
 		}
 	}
 
-	// CSON:
-
 	@Test
 	public void testHibernateFetchStrategies()
 	{
@@ -208,23 +220,32 @@ public class PersistenceManagerTest
 		Project projectDB = createProject();
 		Transcript t = new Transcript();
 		t.setName("Transcript 1");
-		projectDB.getTranscripts().add(t);
+		Participant p = new Participant();
+		p.setParticipantId("P1");
+		t.getParticipants().add(p);
+		CollectionUtil.insertSorted(projectDB.getTranscripts(), t);
+		CollectionUtil.insertSorted(projectDB.getParticipants(), p);
 		HibernateUtil.quietSave(dbManager, projectDB);
 
 		projectDB = fManager.getProject(TEST_PROJECT_NAME);
 		// Should work because codes are loaded eagerly
 		assertNotNull(projectDB.getCodes().get(0));
 
+		Transcript tempTranscript = projectDB.getTranscripts().get(0);
 		try
 		{
-			// Should not work as Transcripts are not loaded by default.
-			projectDB.getTranscripts().get(0);
+			// Should not work as Participants are not loaded by default.
+			tempTranscript.getParticipants().get(0);
 			fail();
 		}
-		catch (HibernateException e)
+		catch (LazyInitializationException e)
 		{
-			assertTrue(true);
 		}
+
+		fManager.initializeDocument(tempTranscript);
+		assertNotNull(tempTranscript.getParticipants().get(0));
 	}
+
+	// CSON:
 
 }

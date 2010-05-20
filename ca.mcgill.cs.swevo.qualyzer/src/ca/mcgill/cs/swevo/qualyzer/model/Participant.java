@@ -14,6 +14,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.Type;
 
@@ -22,7 +24,7 @@ import org.hibernate.annotations.Type;
  * 
  */
 @Entity
-public class Participant
+public class Participant implements Comparable<Participant>
 {
 
 	private String fParticipantId;
@@ -31,6 +33,8 @@ public class Participant
 
 	private String fNotes;
 
+	private Project fProject;
+	
 	private Long fPersistenceId;
 
 	public String getParticipantId()
@@ -74,6 +78,24 @@ public class Participant
 	public void setPersistenceId(Long persistenceId)
 	{
 		this.fPersistenceId = persistenceId;
+	}
+
+	@Override
+	public int compareTo(Participant participant)
+	{
+		return this.getParticipantId().compareTo(participant.getParticipantId());
+	}
+	
+	@ManyToOne
+	@JoinColumn(name = "project_persistenceid", nullable = false, insertable = false, updatable = false)
+	public Project getProject()
+	{
+		return fProject;
+	}
+
+	public void setProject(Project project)
+	{
+		this.fProject = project;
 	}
 
 }

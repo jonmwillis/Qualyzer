@@ -14,20 +14,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
+import javax.persistence.OrderColumn;
 
-import org.hibernate.annotations.CollectionId;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
-import org.hibernate.annotations.Type;
 
 /**
  * A qualitative project.
@@ -74,8 +70,8 @@ public class Project
 	 * @return the investigators
 	 */
 	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
-	@OrderBy("nickName")
-	@CollectionId(columns = @Column(name = "COL_ID"), type = @Type(type = "string"), generator = "uuid-gen")
+	@JoinColumn(name = "project_persistenceid", nullable = false)
+	@OrderColumn(name = "index")
 	public List<Investigator> getInvestigators()
 	{
 		return fInvestigators;
@@ -94,8 +90,8 @@ public class Project
 	 * @return the participants
 	 */
 	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
-	@OrderBy("participantId")
-	@CollectionId(columns = @Column(name = "COL_ID"), type = @Type(type = "string"), generator = "uuid-gen")
+	@JoinColumn(name = "project_persistenceid", nullable = false)
+	@OrderColumn(name = "index")
 	public List<Participant> getParticipants()
 	{
 		return fParticipants;
@@ -113,10 +109,9 @@ public class Project
 	/**
 	 * @return the transcripts
 	 */
-	@OneToMany(cascade = { CascadeType.ALL })
-	@LazyCollection(LazyCollectionOption.EXTRA)
-	@CollectionId(columns = @Column(name = "COL_ID"), type = @Type(type = "string"), generator = "uuid-gen")
-	@OrderBy("name")
+	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
+	@JoinColumn(name = "project_persistenceid", nullable = false)
+	@OrderColumn(name = "index")
 	public List<Transcript> getTranscripts()
 	{
 		return fTranscripts;
@@ -134,10 +129,9 @@ public class Project
 	/**
 	 * @return the memos
 	 */
-	@OneToMany(cascade = { CascadeType.ALL })
-	@LazyCollection(LazyCollectionOption.EXTRA)
-	@CollectionId(columns = @Column(name = "COL_ID"), type = @Type(type = "string"), generator = "uuid-gen")
-	@OrderBy("name")
+	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
+	@JoinColumn(name = "project_persistenceid", nullable = false)
+	@OrderColumn(name = "index")
 	public List<Memo> getMemos()
 	{
 		return fMemos;
@@ -156,8 +150,8 @@ public class Project
 	 * @return the codes
 	 */
 	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
-	@OrderBy("codeName")
-	@CollectionId(columns = @Column(name = "COL_ID"), type = @Type(type = "string"), generator = "uuid-gen")
+	@JoinColumn(name = "project_persistenceid", nullable = false)
+	@OrderColumn(name = "index")
 	public List<Code> getCodes()
 	{
 		return fCodes;

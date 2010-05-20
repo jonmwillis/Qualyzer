@@ -14,21 +14,25 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.Type;
 
 /**
  * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
- *
+ * 
  */
 @Entity
-public class Code
+public class Code implements Comparable<Code>
 {
 
 	private String fCodeName;
 
 	private String fDescription;
-	
+
+	private Project fProject;
+
 	private Long fPersistenceId;
 
 	/**
@@ -40,7 +44,8 @@ public class Code
 	}
 
 	/**
-	 * @param codeName the codeName to set
+	 * @param codeName
+	 *            the codeName to set
 	 */
 	public void setCodeName(String codeName)
 	{
@@ -73,5 +78,23 @@ public class Code
 	{
 		return fPersistenceId;
 	}
-	
+
+	@ManyToOne
+	@JoinColumn(name = "project_persistenceid", nullable = false, insertable = false, updatable = false)
+	public Project getProject()
+	{
+		return fProject;
+	}
+
+	public void setProject(Project project)
+	{
+		this.fProject = project;
+	}
+
+	@Override
+	public int compareTo(Code code)
+	{
+		return this.getCodeName().compareTo(code.getCodeName());
+	}
+
 }
