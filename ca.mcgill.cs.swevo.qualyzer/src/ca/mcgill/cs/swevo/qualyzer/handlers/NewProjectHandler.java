@@ -13,12 +13,15 @@ package ca.mcgill.cs.swevo.qualyzer.handlers;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.handlers.HandlerUtil;
+
+import ca.mcgill.cs.swevo.qualyzer.wizards.NewProjectWizard;
 
 /**
  * 
  * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
+ * @author Jonathan Faubert
  * 
  */
 public class NewProjectHandler extends AbstractHandler
@@ -35,8 +38,10 @@ public class NewProjectHandler extends AbstractHandler
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
 	{
-		MessageDialog.openInformation(HandlerUtil.getActiveShell(event), "New Project",
-				"This dialog should be replaced by a new project wizard.");
+		NewProjectWizard wizard = new NewProjectWizard();
+		
+		WizardDialog dialog = new WizardDialog(HandlerUtil.getActiveShell(event), wizard);
+		dialog.open();
 		return null;
 	}
 
