@@ -29,8 +29,9 @@ public class NewProjectPageTwo extends WizardPage
 {
 
 	private Composite fContainer;
-	private Text fTextbox;
-	private Text fTextArea;
+	private Text fNickname;
+	private Text fFullname;
+	private Text fInstitution;
 	
 	public NewProjectPageTwo()
 	{
@@ -49,11 +50,52 @@ public class NewProjectPageTwo extends WizardPage
 		Label label1 = new Label(fContainer, SWT.NULL);
 		label1.setText("Investigator Nickname");
 
-		fTextbox = new Text(fContainer, SWT.BORDER | SWT.SINGLE);
-		fTextbox.setText("");
+		fNickname = new Text(fContainer, SWT.BORDER | SWT.SINGLE);
+		fNickname.setText("");
 		
 		//Only allows the user to proceed if a name is entered
-		fTextbox.addKeyListener(new KeyListener() {
+		fNickname.addKeyListener(createKeyListener());
+		
+		Label label2 = new Label(fContainer, SWT.NULL);
+		label2.setText("Full name");
+		
+		fFullname = new Text(fContainer, SWT.BORDER | SWT.SINGLE);
+		fFullname.setText("");
+		
+		Label label3 = new Label(fContainer, SWT.NULL);
+		label3.setText("Institution");
+		
+		fInstitution = new Text(fContainer, SWT.BORDER | SWT.SINGLE);
+		fInstitution.setText("");
+		
+		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+		fNickname.setLayoutData(gd);
+		fFullname.setLayoutData(gd);
+		fInstitution.setLayoutData(gd);
+		
+		// Required to avoid an error in the system
+		setControl(fContainer);
+		setPageComplete(false);
+	}
+	
+	public String getInvestigatorNickname()
+	{
+		return fNickname.getText();
+	}
+	
+	public String getInvestigatorFullname()
+	{
+		return fFullname.getText();
+	}
+	
+	public String getInstitution()
+	{
+		return fInstitution.getText();
+	}
+	
+	public KeyListener createKeyListener()
+	{
+		return new KeyListener() {
 
 			@Override
 			public void keyPressed(KeyEvent e)
@@ -63,7 +105,7 @@ public class NewProjectPageTwo extends WizardPage
 			@Override
 			public void keyReleased(KeyEvent e)
 			{
-				if (!fTextbox.getText().isEmpty()) 
+				if (!fNickname.getText().isEmpty()) 
 				{
 					setPageComplete(true);
 
@@ -74,30 +116,7 @@ public class NewProjectPageTwo extends WizardPage
 				}
 			}
 
-		});
-		
-		Label label2 = new Label(fContainer, SWT.NULL);
-		label2.setText("Full name");
-		
-		fTextArea = new Text(fContainer, SWT.BORDER | SWT.SINGLE);
-		fTextArea.setText("");
-		
-		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-		fTextbox.setLayoutData(gd);
-		fTextArea.setLayoutData(gd);
-		// Required to avoid an error in the system
-		setControl(fContainer);
-		setPageComplete(false);
-	}
-	
-	public String getInvestigatorNickname()
-	{
-		return fTextbox.getText();
-	}
-	
-	public String getInvestigatorFullname()
-	{
-		return fTextArea.getText();
+		};
 	}
 
 }

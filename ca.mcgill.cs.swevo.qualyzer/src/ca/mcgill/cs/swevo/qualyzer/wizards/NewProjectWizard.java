@@ -10,7 +10,6 @@
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.wizards;
 
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -18,8 +17,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.wizard.Wizard;
 
+import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
+import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
+import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
+import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
 
 /**
  * The wizard that controls the creation of a new project.
@@ -59,48 +62,37 @@ public class NewProjectWizard extends Wizard
 		project.setName(fOne.getProjectName());
 		Investigator investigator = new Investigator();
 		investigator.setFullName(fTwo.getInvestigatorNickname());
+		investigator.setFullName(fTwo.getInvestigatorFullname());
+		investigator.setInstitution(fTwo.getInstitution());
+		project.getInvestigators().add(investigator);
 		investigator.setProject(project);
 		
-		
-//		try
-//		{
-//		//build workspace data
-//		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-//		
-//		IProject wProject = root.getProject(fOne.getProjectName());
-//		
-//		if(wProject.exists())
-//		{
-//			//TODO Error message
-//			System.out.println("This project already exists");
-//			return false;
-//		}
-//		
-//		wProject.create(new NullProgressMonitor());
-//		wProject.open(new NullProgressMonitor());
-//		
-//		IFolder transcripts, investigators, memos, participants, codes;
-//		
-//		transcripts = wProject.getFolder("transcripts");
-//		transcripts.create(true, true, new NullProgressMonitor());
-//		
-//		codes = wProject.getFolder("codes");
-//		codes.create(true, true, new NullProgressMonitor());
-//		
-//		memos = wProject.getFolder("memos");
-//		memos.create(true, true, new NullProgressMonitor());
-//		
-//		investigators = wProject.getFolder("investigators");
-//		investigators.create(true, true, new NullProgressMonitor());
-//		
-//		participants = wProject.getFolder("participants");
-//		participants.create(true, true, new NullProgressMonitor());
-//		}
-//		catch(CoreException e)
-//		{
-//			e.printStackTrace();
-//			return false;
-//		}
+		try
+		{
+			//build workspace data
+			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+			
+			IProject wProject = root.getProject(fOne.getProjectName());
+			
+			if(wProject.exists())
+			{
+				//TODO Error message
+				System.out.println("This project already exists");
+				return false;
+			}
+			
+			wProject.create(new NullProgressMonitor());
+			wProject.open(new NullProgressMonitor());
+			
+			PersistenceManager.getInstance().initDB(wProject);
+			HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(wProject.getName());
+			HibernateUtil.quietSave(manager, project);
+		}
+		catch(CoreException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
 		
 		return true;
 	}
