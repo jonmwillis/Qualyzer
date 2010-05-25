@@ -14,19 +14,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.internal.navigator.resources.plugin.WorkbenchNavigatorPlugin;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 
 import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
@@ -75,46 +70,37 @@ public class NavigatorContentProvider extends WorkbenchContentProvider
 	{
 		if (element instanceof IProject)
 		{
-			try{
 			Project proj = PersistenceManager.getInstance().getProject(((IProject) element).getName());
 			
-			ProjectWrapper transcript = new ProjectWrapper(proj, "transcripts");
-			ProjectWrapper investigator = new ProjectWrapper(proj, "investigators");
-			ProjectWrapper code = new ProjectWrapper(proj, "codes");
-			ProjectWrapper memo = new ProjectWrapper(proj, "memos");
-			ProjectWrapper participant = new ProjectWrapper(proj, "participants");
+			WrapperTranscript transcript = new WrapperTranscript(proj);
+			WrapperInvestigator investigator = new WrapperInvestigator(proj);
+			WrapperCode code = new WrapperCode(proj);
+			WrapperMemo memo = new WrapperMemo(proj);
+			WrapperParticipant participant = new WrapperParticipant(proj);
 			
 			return new Object[]{participant, investigator, transcript, memo, code };
-			}
-			catch(Exception e)
-			{
-				e.printStackTrace();
-			}
-			
-			
-			
 		}
 		else if(element instanceof ProjectWrapper)
 		{
 			ProjectWrapper wrapper = (ProjectWrapper) element;
 			Object[] toReturn = null;
-			if(wrapper.getResource().equals("transcripts"))
+			if(wrapper instanceof WrapperTranscript)
 			{
 				toReturn = wrapper.getProject().getTranscripts().toArray();
 			}
-			else if(wrapper.getResource().equals("investigators"))
+			else if(wrapper instanceof WrapperInvestigator)
 			{
 				toReturn = wrapper.getProject().getInvestigators().toArray();
 			}
-			else if(wrapper.getResource().equals("participants"))
+			else if(wrapper instanceof WrapperParticipant)
 			{
 				toReturn = wrapper.getProject().getParticipants().toArray();
 			}
-			else if(wrapper.getResource().equals("memos"))
+			else if(wrapper instanceof WrapperMemo)
 			{
 				toReturn = wrapper.getProject().getMemos().toArray();
 			}
-			else if(wrapper.getResource().equals("codes"))
+			else if(wrapper instanceof WrapperCode)
 			{
 				toReturn = wrapper.getProject().getCodes().toArray();
 			}
@@ -397,7 +383,7 @@ public class NavigatorContentProvider extends WorkbenchContentProvider
 	}
 
 	/**
-	 * Run all of the runnables that are the widget updates
+	 * Run all of the runnables that are the widget updates.
 	 * 
 	 * @param runnables
 	 */
