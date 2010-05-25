@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Name - Initial Contribution
+ *     McGill University - initial API and implementation
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.model;
 
