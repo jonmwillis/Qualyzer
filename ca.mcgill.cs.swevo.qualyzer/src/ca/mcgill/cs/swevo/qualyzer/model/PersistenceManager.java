@@ -86,6 +86,17 @@ public final class PersistenceManager
 		export.execute(false, true, false, false);
 		dbManager.getSessionFactory().close();
 	}
+	
+	public void refreshManager(IProject project)
+	{
+		String dbPath = getDBPath(project).toOSString();
+		String connectionString = DB_CONNECTION_STRING.replace("%s", dbPath) + DB_INIT_STRING;
+
+		HibernateDBManager dbManager = new HibernateDBManager(connectionString, DB_USERNAME, "", DB_DRIVER, DB_DIALECT);
+
+		// Add DB Manager
+		fActivator.getHibernateDBManagers().put(project.getName(), dbManager);
+	}
 
 	/**
 	 * 

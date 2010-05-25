@@ -13,11 +13,15 @@ package ca.mcgill.cs.swevo.qualyzer;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
+import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
 
 /**
  * The activator class controls the plug-in life cycle.
@@ -55,6 +59,13 @@ public class QualyzerActivator extends AbstractUIPlugin
 	{
 		super.start(context);
 		gPlugin = this;
+		
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		
+		for(IProject project : root.getProjects())
+		{
+			PersistenceManager.getInstance().refreshManager(project);
+		}
 	}
 
 	/*
