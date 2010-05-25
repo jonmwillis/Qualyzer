@@ -227,6 +227,13 @@
             id="ca.mcgill.cs.swevo.qualyzer.editors.ParticipantFormEditor"
             name="Participant Form Editor">
       </editor>
+      <editor
+            class="ca.mcgill.cs.swevo.qualyzer.editors.InvestigatorFormEditor"
+            default="false"
+            icon="icons/sample.gif"
+            id="ca.mcgill.cs.swevo.qualyzer.editors.investigatorFormEditor"
+            name="Investigator Form Editor">
+      </editor>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
