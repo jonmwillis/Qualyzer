@@ -133,6 +133,11 @@
             id="ca.mcgill.cs.swevo.qualyzer.commands.openInterview"
             name="Open Interview">
       </command>
+      <command
+            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.AddParticipantHandler"
+            id="ca.mcgill.cs.swevo.qualyzer.commands.addParticipant"
+            name="Add Participant">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -179,6 +184,12 @@
                   label="New Project"
                   style="push"
                   tooltip="Create a New Project">
+            </command>
+            <command
+                  commandId="ca.mcgill.cs.swevo.qualyzer.commands.addParticipant"
+                  label="Add Participant"
+                  style="push"
+                  tooltip="Add a Participant">
             </command>
          </menu>
       </menuContribution>

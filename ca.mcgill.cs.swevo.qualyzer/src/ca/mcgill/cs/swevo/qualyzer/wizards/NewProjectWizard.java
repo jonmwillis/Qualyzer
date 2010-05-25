@@ -110,7 +110,7 @@ public class NewProjectWizard extends Wizard
 		Project project = new Project();
 		project.setName(fOne.getProjectName());
 		Investigator investigator = new Investigator();
-		investigator.setFullName(fTwo.getInvestigatorNickname());
+		investigator.setNickName(fTwo.getInvestigatorNickname());
 		investigator.setFullName(fTwo.getInvestigatorFullname());
 		investigator.setInstitution(fTwo.getInstitution());
 		project.getInvestigators().add(investigator);
