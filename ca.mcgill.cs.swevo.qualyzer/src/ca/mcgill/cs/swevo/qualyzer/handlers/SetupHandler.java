@@ -10,19 +10,26 @@
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.handlers;
 
-import java.io.ByteArrayInputStream;
-
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+
+import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
+import ca.mcgill.cs.swevo.qualyzer.model.Code;
+import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
+import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
+import ca.mcgill.cs.swevo.qualyzer.model.Memo;
+import ca.mcgill.cs.swevo.qualyzer.model.Participant;
+import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
+import ca.mcgill.cs.swevo.qualyzer.model.Project;
+import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
+import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
 
 /**
  * Test command used to setup a basic project.
@@ -48,18 +55,41 @@ public class SetupHandler extends AbstractHandler
 	{
 		try
 		{
+			PersistenceManager manager = PersistenceManager.getInstance();
 			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 
-			IProject project = root.getProject("My First Project");
+			IProject project = root.getProject("Navigator Test");
+			
 			project.create(new NullProgressMonitor());
 			project.open(new NullProgressMonitor());
+			
+			manager.initDB(project);
+			HibernateDBManager dbManager = QualyzerActivator.getDefault().getHibernateDBManagers().get("Navigator Test");
 
-			IFolder interviewFolder = project.getFolder("interviews");
-			interviewFolder.create(true, true, new NullProgressMonitor());
-
-			IFile interview1 = interviewFolder.getFile("interview1.txt");
-			interview1.create(new ByteArrayInputStream("This is an interview\nWith Participant 1".getBytes()), true,
-					new NullProgressMonitor());
+			Project projectDB = new Project();
+			projectDB.setName("Navigator Test");
+			Investigator inv = new Investigator();
+			inv.setFullName("Jonathan Faubert");
+			projectDB.getInvestigators().add(inv);
+			
+			Code code = new Code();
+			code.setCodeName("code");
+			projectDB.getCodes().add(code);
+			
+			Memo memo = new Memo();
+			memo.setName("memo");
+			projectDB.getMemos().add(memo);
+			
+			Participant part = new Participant();
+			part.setFullName("Tester Participant");
+			projectDB.getParticipants().add(part);
+			
+			Transcript trans = new Transcript();
+			trans.setName("transcript");
+			projectDB.getTranscripts().add(trans);
+			
+			HibernateUtil.quietSave(dbManager, projectDB);
+			
 			root.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
 		}
 		catch (CoreException e)
