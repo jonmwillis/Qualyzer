@@ -164,7 +164,7 @@ public class NavigatorLabelProvider extends LabelProvider implements ILabelProvi
 		}
 		else if(anElement instanceof Investigator)
 		{
-			output = ((Investigator) anElement).getFullName();
+			output = ((Investigator) anElement).getNickName();
 		}
 		else if(anElement instanceof Memo)
 		{
@@ -172,7 +172,7 @@ public class NavigatorLabelProvider extends LabelProvider implements ILabelProvi
 		}
 		else if(anElement instanceof Participant)
 		{
-			output = ((Participant) anElement).getFullName();
+			output = ((Participant) anElement).getParticipantId();
 		}
 		else if(anElement instanceof Code)
 		{
