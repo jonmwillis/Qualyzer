@@ -16,29 +16,23 @@ package ca.mcgill.cs.swevo.qualyzer.providers;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 
 /**
- * Acts as a folder containing parts of a project.
- * Holds a reference back to the project.
  * @author Jonathan Faubert (jonfaub@gmail.com)
  *
  */
-public abstract class ProjectWrapper
+public class WrapperTranscript extends ProjectWrapper
 {
-	private Project fProject;
-	
-	public ProjectWrapper(Project project)
-	{
-		setProject(project);
-	}
+	private static final String RESOURCE = "transcripts";
 
-	public void setProject(Project project)
+	/**
+	 * @param project
+	 */
+	public WrapperTranscript(Project project)
 	{
-		this.fProject = project;
-	}
-
-	public Project getProject()
-	{
-		return fProject;
+		super(project);
 	}
 	
-	public abstract String getResource();
+	public String getResource()
+	{
+		return RESOURCE;
+	}
 }
