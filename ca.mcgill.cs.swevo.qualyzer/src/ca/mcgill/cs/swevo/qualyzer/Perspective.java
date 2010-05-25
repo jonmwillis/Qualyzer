@@ -29,12 +29,14 @@ public class Perspective implements IPerspectiveFactory
 	// CSOFF:
 	public void createInitialLayout(IPageLayout layout)
 	{
-		String editorArea = layout.getEditorArea();
-
-		// Top left.
-		IFolderLayout topLeft = layout.createFolder("topLeft", IPageLayout.LEFT, (float) 0.26, editorArea);//$NON-NLS-1$
-		topLeft.addView(PROJECT_EXPLORER_VIEW_ID);
-		topLeft.addPlaceholder(IPageLayout.ID_BOOKMARKS);
+		/* I added all of this to a perspectiveExtension --Jonathan Faubert*/
+		
+//		String editorArea = layout.getEditorArea();
+//
+//		// Top left.
+//		IFolderLayout topLeft = layout.createFolder("topLeft", IPageLayout.LEFT, (float) 0.26, editorArea);//$NON-NLS-1$
+//		topLeft.addView(PROJECT_EXPLORER_VIEW_ID);
+//		topLeft.addPlaceholder(IPageLayout.ID_BOOKMARKS);
 
 	}
 	// CSON:

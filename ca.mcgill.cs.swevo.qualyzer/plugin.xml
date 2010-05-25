@@ -107,6 +107,9 @@
             <actionExtension
                   pattern="org.eclipse.ui.navigator.resources.*">
             </actionExtension>
+            <contentExtension
+                  pattern="ca.mcgill.cs.swevo.qualyzer.model.*">
+            </contentExtension>
          </includes>
       </viewerContentBinding>
       <viewerActionBinding
@@ -215,6 +218,13 @@
             id="ca.mcgill.cs.swevo.qualyzer.editors.InterviewEditor"
             name="Interview Editor">
       </editor>
+      <editor
+            class="ca.mcgill.cs.swevo.qualyzer.editors.ParticipantFormEditor"
+            default="false"
+            icon="icons/sample.gif"
+            id="ca.mcgill.cs.swevo.qualyzer.editors.ParticipantFormEditor"
+            name="Participant Form Editor">
+      </editor>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
@@ -242,6 +252,170 @@
             </adapt>
          </enablement>
       </actionProvider>
+      <navigatorContent
+            activeByDefault="true"
+            contentProvider="ca.mcgill.cs.swevo.qualyzer.providers.ProjectContentProvider"
+            icon="icons/sample.gif"
+            id="ca.mcgill.cs.swevo.qualyzer.model.project"
+            labelProvider="ca.mcgill.cs.swevo.qualyzer.providers.ProjectLabelProvider"
+            name="Qualyzer Project"
+            priority="normal">
+         <possibleChildren>
+            <or>
+               <instanceof
+                     value="ca.mcgill.cs.swevo.qualyzer.model.Code">
+               </instanceof>
+               <instanceof
+                     value="ca.mcgill.cs.swevo.qualyzer.model.Transcript">
+               </instanceof>
+               <instanceof
+                     value="ca.mcgill.cs.swevo.qualyzer.model.Investigator">
+               </instanceof>
+               <instanceof
+                     value="ca.mcgill.cs.swevo.qualyzer.model.Participant">
+               </instanceof>
+               <instanceof
+                     value="ca.mcgill.cs.swevo.qualyzer.model.Memo">
+               </instanceof>
+            </or></possibleChildren>
+         <triggerPoints>
+            <or>
+               <instanceof
+                     value="ca.mcgill.cs.swevo.qualyzer.model.Project">
+               </instanceof>
+            </or></triggerPoints>
+      </navigatorContent>
+      <navigatorContent
+            activeByDefault="true"
+            contentProvider="ca.mcgill.cs.swevo.qualyzer.providers.CodeContentProvider"
+            icon="icons/sample.gif"
+            id="ca.mcgill.cs.swevo.qualyzer.model.code"
+            labelProvider="ca.mcgill.cs.swevo.qualyzer.providers.CodeLabelProvider"
+            name="Code"
+            priority="normal">
+         <possibleChildren>
+            <or>
+               <instanceof
+                     value="ca.mcgill.cs.swevo.qualyzer.model.Code">
+               </instanceof>
+            </or>
+         </possibleChildren>
+         <triggerPoints>
+            <or>
+               <instanceof
+                     value="ca.mcgill.cs.swevo.qualyzer.model.Code">
+               </instanceof>
+            </or>
+         </triggerPoints>
+      </navigatorContent>
+      <navigatorContent
+            activeByDefault="true"
+            contentProvider="ca.mcgill.cs.swevo.qualyzer.providers.TranscriptContentProvider"
+            icon="icons/sample.gif"
+            id="ca.mcgill.cs.swevo.qualyzer.model.transcript"
+            labelProvider="ca.mcgill.cs.swevo.qualyzer.providers.TranscriptLabelProvider"
+            name="Transcript"
+            priority="normal">
+         <possibleChildren>
+            <or>
+               <instanceof
+                     value="ca.mcgill.cs.swevo.qualyzer.model.Transcript">
+               </instanceof>
+            </or>
+         </possibleChildren>
+         <triggerPoints>
+            <or>
+               <instanceof
+                     value="ca.mcgill.cs.swevo.qualyzer.model.Transcript">
+               </instanceof>
+            </or>
+         </triggerPoints>
+      </navigatorContent>
+      <navigatorContent
+            activeByDefault="true"
+            contentProvider="ca.mcgill.cs.swevo.qualyzer.providers.InvestigatorContentProvider"
+            icon="icons/sample.gif"
+            id="ca.mcgill.cs.swevo.qualyzer.model.investigator"
+            labelProvider="ca.mcgill.cs.swevo.qualyzer.providers.InvestigatorLabelProvider"
+            name="Investigator"
+            priority="normal">
+         <possibleChildren>
+            <or>
+               <instanceof
+                     value="ca.mcgill.cs.swevo.qualyzer.model.Investigator">
+               </instanceof>
+            </or></possibleChildren>
+         <triggerPoints>
+            <instanceof
+                  value="ca.mcgill.cs.swevo.qualyzer.model.Investigator">
+            </instanceof>
+            <or>
+               <instanceof
+                     value="ca.mcgill.cs.swevo.qualyzer.model.Investigator">
+               </instanceof>
+            </or></triggerPoints>
+      </navigatorContent>
+      <navigatorContent
+            activeByDefault="true"
+            contentProvider="ca.mcgill.cs.swevo.qualyzer.providers.ParticipantContentProvider"
+            icon="icons/sample.gif"
+            id="ca.mcgill.cs.swevo.qualyzer.model.participant"
+            labelProvider="ca.mcgill.cs.swevo.qualyzer.providers.ParticipantLabelProvider"
+            name="Participant">
+         <triggerPoints>
+            <or>
+               <instanceof
+                     value="ca.mcgill.cs.swevo.qualyzer.model.Participant">
+               </instanceof>
+            </or>
+         </triggerPoints>
+         <possibleChildren>
+            <instanceof
+                  value="ca.mcgill.cs.swevo.qualyzer.model.Participant">
+            </instanceof>
+         </possibleChildren>
+      </navigatorContent>
+      <navigatorContent
+            activeByDefault="true"
+            contentProvider="ca.mcgill.cs.swevo.qualyzer.providers.MemoContentProvider"
+            icon="icons/sample.gif"
+            id="ca.mcgill.cs.swevo.qualyzer.model.memo"
+            labelProvider="ca.mcgill.cs.swevo.qualyzer.providers.MemoLabelProvider"
+            name="Memo"
+            priority="normal">
+         <possibleChildren>
+            <or>
+               <instanceof
+                     value="ca.mcgill.cs.swevo.qualyzer.model.Memo">
+               </instanceof>
+            </or>
+         </possibleChildren>
+         <triggerPoints>
+            <or>
+               <instanceof
+                     value="ca.mcgill.cs.swevo.qualyzer.model.Memo">
+               </instanceof>
+            </or>
+         </triggerPoints>
+      </navigatorContent>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="*">
+         <view
+               closeable="false"
+               id="ca.mcgill.cs.swevo.qualyzer.projectexplorer"
+               minimized="false"
+               moveable="false"
+               ratio="0.26f"
+               relationship="left"
+               relative="org.eclipse.ui.editorss"
+               showTitle="true"
+               standalone="true"
+               visible="true">
+         </view>
+      </perspectiveExtension>
    </extension>
 
 </plugin>
