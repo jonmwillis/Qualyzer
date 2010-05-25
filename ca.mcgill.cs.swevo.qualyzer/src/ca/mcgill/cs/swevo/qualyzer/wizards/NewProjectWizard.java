@@ -10,6 +10,8 @@
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.wizards;
 
+import java.io.File;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -55,38 +57,25 @@ public class NewProjectWizard extends Wizard
 	public boolean performFinish()
 	{
 		// TODO Popup tips dialog if user hasn't disabled it
-		// TODO populate the project explorer with the new project and all necessary folders
-		
-		//Build model data
-		Project project = new Project();
-		project.setName(fOne.getProjectName());
-		Investigator investigator = new Investigator();
-		investigator.setFullName(fTwo.getInvestigatorNickname());
-		investigator.setFullName(fTwo.getInvestigatorFullname());
-		investigator.setInstitution(fTwo.getInstitution());
-		project.getInvestigators().add(investigator);
-		investigator.setProject(project);
+		Project project = createProject();
 		
 		try
 		{
 			//build workspace data
 			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-			
 			IProject wProject = root.getProject(fOne.getProjectName());
-			
-			if(wProject.exists())
-			{
-				//TODO Error message
-				System.out.println("This project already exists");
-				return false;
-			}
-			
 			wProject.create(new NullProgressMonitor());
 			wProject.open(new NullProgressMonitor());
 			
 			PersistenceManager.getInstance().initDB(wProject);
-			HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(wProject.getName());
+			HibernateDBManager manager;
+			manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(wProject.getName());
 			HibernateUtil.quietSave(manager, project);
+			
+			if(!makeSubFolders(wProject))
+			{
+				//Undo changes.
+			}
 		}
 		catch(CoreException e)
 		{
@@ -95,6 +84,38 @@ public class NewProjectWizard extends Wizard
 		}
 		
 		return true;
+	}
+
+	/**
+	 * @param wProject
+	 */
+	private boolean makeSubFolders(IProject wProject)
+	{
+		//If any of these fail then undo the changes.
+		String path = wProject.getLocation().toOSString();
+		File dir = new File(path+File.separator+"audio");
+		dir.mkdir();
+		dir = new File(path+File.separator+"transcripts");
+		dir.mkdir();
+		dir = new File(path+File.separator+"memos");
+		dir.mkdir();
+		return true;
+	}
+
+	/**
+	 * @return the project built by the wizard
+	 */
+	private Project createProject()
+	{
+		Project project = new Project();
+		project.setName(fOne.getProjectName());
+		Investigator investigator = new Investigator();
+		investigator.setFullName(fTwo.getInvestigatorNickname());
+		investigator.setFullName(fTwo.getInvestigatorFullname());
+		investigator.setInstitution(fTwo.getInstitution());
+		project.getInvestigators().add(investigator);
+		investigator.setProject(project);
+		return project;
 	}
 
 }

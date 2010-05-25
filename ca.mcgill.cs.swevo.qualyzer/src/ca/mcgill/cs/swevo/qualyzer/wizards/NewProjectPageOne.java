@@ -10,6 +10,11 @@
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.wizards;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
@@ -29,7 +34,7 @@ public class NewProjectPageOne extends WizardPage
 {
 
 	private Composite fContainer;
-	private Text fTextbox;
+	private Text fProjectName;
 	
 	public NewProjectPageOne()
 	{
@@ -47,12 +52,26 @@ public class NewProjectPageOne extends WizardPage
 		fContainer.setLayout(layout);
 		Label label = new Label(fContainer, SWT.NULL);
 		label.setText("Project Name");
-		fTextbox = new Text(fContainer, SWT.BORDER);
-		fTextbox.setText("");
+		fProjectName = new Text(fContainer, SWT.BORDER);
+		fProjectName.setText("");
 		
 		//Checks if there is anything in the textbox
 		//if not then cannot proceed
-		fTextbox.addKeyListener(new KeyListener(){
+		fProjectName.addKeyListener(createKeyListener());
+		
+		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+		fProjectName.setLayoutData(gd);
+		// Required to avoid an error in the system
+		setControl(fContainer);
+		setPageComplete(false);
+	}
+
+	/**
+	 * @return
+	 */
+	private KeyListener createKeyListener()
+	{
+		return new KeyListener(){
 
 			@Override
 			public void keyPressed(KeyEvent e) 
@@ -62,7 +81,7 @@ public class NewProjectPageOne extends WizardPage
 			@Override
 			public void keyReleased(KeyEvent e) 
 			{
-				if(!fTextbox.getText().isEmpty())
+				if(!fProjectName.getText().isEmpty())
 				{
 					setPageComplete(true);
 				}
@@ -72,18 +91,33 @@ public class NewProjectPageOne extends WizardPage
 				}
 			}
 			
-		});
-		
-		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-		fTextbox.setLayoutData(gd);
-		// Required to avoid an error in the system
-		setControl(fContainer);
-		setPageComplete(false);
+		};
 	}
 	
 	public String getProjectName()
 	{
-		return fTextbox.getText();
+		return fProjectName.getText();
+	}
+	
+	@Override
+	public IWizardPage getNextPage()
+	{
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		IProject wProject = root.getProject(fProjectName.getText());
+		
+		if(wProject.exists())
+		{
+			setPageComplete(false);
+			fProjectName.setText("");
+			MessageDialog.openError(getShell(), "Cannot create a Project", 
+					"This project already exists! Please choose a different name.");
+		
+			return null;
+		}
+		else
+		{
+			return super.getNextPage();
+		}
 	}
 
 }

@@ -40,6 +40,7 @@ public class NewProjectPageTwo extends WizardPage
 		setDescription("Please enter the Investigator's information");
 	}
 	
+	//CSOFF:
 	@Override
 	public void createControl(Composite parent)
 	{
@@ -47,23 +48,23 @@ public class NewProjectPageTwo extends WizardPage
 		GridLayout layout = new GridLayout();
 		fContainer.setLayout(layout);
 		layout.numColumns = 2;
-		Label label1 = new Label(fContainer, SWT.NULL);
-		label1.setText("Investigator Nickname");
+		Label label = new Label(fContainer, SWT.NULL);
+		label.setText("Investigator Nickname");
 
 		fNickname = new Text(fContainer, SWT.BORDER | SWT.SINGLE);
-		fNickname.setText("");
+		fNickname.setText(System.getProperty("user.name"));
 		
 		//Only allows the user to proceed if a name is entered
 		fNickname.addKeyListener(createKeyListener());
 		
-		Label label2 = new Label(fContainer, SWT.NULL);
-		label2.setText("Full name");
+		label = new Label(fContainer, SWT.NULL);
+		label.setText("Full name");
 		
 		fFullname = new Text(fContainer, SWT.BORDER | SWT.SINGLE);
 		fFullname.setText("");
 		
-		Label label3 = new Label(fContainer, SWT.NULL);
-		label3.setText("Institution");
+		label = new Label(fContainer, SWT.NULL);
+		label.setText("Institution");
 		
 		fInstitution = new Text(fContainer, SWT.BORDER | SWT.SINGLE);
 		fInstitution.setText("");
@@ -75,8 +76,9 @@ public class NewProjectPageTwo extends WizardPage
 		
 		// Required to avoid an error in the system
 		setControl(fContainer);
-		setPageComplete(false);
+		setPageComplete(true);
 	}
+	//CSON:
 	
 	public String getInvestigatorNickname()
 	{
