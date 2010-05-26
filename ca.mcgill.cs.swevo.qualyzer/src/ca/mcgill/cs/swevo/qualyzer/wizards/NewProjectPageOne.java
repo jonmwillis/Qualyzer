@@ -13,8 +13,6 @@ package ca.mcgill.cs.swevo.qualyzer.wizards;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
@@ -74,23 +72,30 @@ public class NewProjectPageOne extends WizardPage
 		return new KeyListener(){
 
 			@Override
-			public void keyPressed(KeyEvent e) 
-			{				
-			}
+			public void keyPressed(KeyEvent e) {}
 
 			@Override
 			public void keyReleased(KeyEvent e) 
 			{
-				if(!fProjectName.getText().isEmpty())
+				IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+				IProject wProject = root.getProject(fProjectName.getText());
+				
+				if(wProject.exists())
+				{
+					setPageComplete(false);
+					setErrorMessage("This project already exists! Please choose a different name.");
+				}	
+				else if(!fProjectName.getText().isEmpty())
 				{
 					setPageComplete(true);
+					setErrorMessage(null);
 				}
 				else
 				{
 					setPageComplete(false);
+					setErrorMessage(null);
 				}
 			}
-			
 		};
 	}
 	
@@ -98,26 +103,4 @@ public class NewProjectPageOne extends WizardPage
 	{
 		return fProjectName.getText();
 	}
-	
-	@Override
-	public IWizardPage getNextPage()
-	{
-		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		IProject wProject = root.getProject(fProjectName.getText());
-		
-		if(wProject.exists())
-		{
-			setPageComplete(false);
-			fProjectName.setText("");
-			MessageDialog.openError(getShell(), "Cannot create a Project", 
-					"This project already exists! Please choose a different name.");
-		
-			return null;
-		}
-		else
-		{
-			return super.getNextPage();
-		}
-	}
-
 }

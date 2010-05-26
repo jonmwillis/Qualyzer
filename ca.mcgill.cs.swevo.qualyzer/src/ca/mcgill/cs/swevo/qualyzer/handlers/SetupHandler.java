@@ -81,6 +81,10 @@ public class SetupHandler extends AbstractHandler
 			memo.setName("memo");
 			projectDB.getMemos().add(memo);
 			
+			memo = new Memo();
+			memo.setName("memo2");
+			projectDB.getMemos().add(memo);
+			
 			Participant part = new Participant();
 			part.setFullName("Tester Participant");
 			projectDB.getParticipants().add(part);
