@@ -13,6 +13,7 @@ package ca.mcgill.cs.swevo.qualyzer.wizards;
 import java.io.File;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -56,26 +57,26 @@ public class NewProjectWizard extends Wizard
 	@Override
 	public boolean performFinish()
 	{
-		// TODO Popup tips dialog if user hasn't disabled it
 		Project project = createProject();
 		
 		try
 		{
-			//build workspace data
 			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 			IProject wProject = root.getProject(fOne.getProjectName());
 			wProject.create(new NullProgressMonitor());
 			wProject.open(new NullProgressMonitor());
 			
+			if(!makeSubFolders(wProject))
+			{
+				cleanUpFolders(wProject);
+				//TODO display error message and quit.
+			}
+			
 			PersistenceManager.getInstance().initDB(wProject);
 			HibernateDBManager manager;
 			manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(wProject.getName());
 			HibernateUtil.quietSave(manager, project);
-			
-			if(!makeSubFolders(wProject))
-			{
-				//Undo changes.
-			}
+			root.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
 		}
 		catch(CoreException e)
 		{
@@ -87,19 +88,48 @@ public class NewProjectWizard extends Wizard
 	}
 
 	/**
+	 * 
+	 */
+	private void cleanUpFolders(IProject wProject)
+	{
+		String path = wProject.getLocation().toOSString();
+		File dir = new File(path+File.separator+"audio");
+		if(!dir.exists())
+		{
+			dir.delete();
+		}
+		dir = new File(path+File.separator+"transcripts");
+		if(!dir.exists())
+		{
+			dir.delete();
+		}
+		dir = new File(path+File.separator+"memos");
+		if(!dir.exists())
+		{
+			dir.delete();
+		}
+	}
+
+	/**
+	 * Makes the sub-folders required by the project.
 	 * @param wProject
+	 * @return false if any fail to be created
 	 */
 	private boolean makeSubFolders(IProject wProject)
 	{
-		//If any of these fail then undo the changes.
 		String path = wProject.getLocation().toOSString();
 		File dir = new File(path+File.separator+"audio");
-		dir.mkdir();
+		if(!dir.mkdir())
+		{
+			return false;
+		}
 		dir = new File(path+File.separator+"transcripts");
-		dir.mkdir();
+		if(!dir.mkdir())
+		{
+			return false;
+		}
 		dir = new File(path+File.separator+"memos");
-		dir.mkdir();
-		return true;
+		return dir.mkdir();
 	}
 
 	/**
