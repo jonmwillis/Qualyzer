@@ -11,8 +11,11 @@
 package ca.mcgill.cs.swevo.qualyzer.editors;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.editor.FormEditor;
+
+import ca.mcgill.cs.swevo.qualyzer.editors.inputs.ParticipantEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.editors.pages.ParticipantEditorPage;
 
 /**
@@ -22,18 +25,26 @@ import ca.mcgill.cs.swevo.qualyzer.editors.pages.ParticipantEditorPage;
  */
 public class ParticipantFormEditor extends FormEditor
 {
+	public static final String ID = "ca.mcgill.cs.swevo.qualyzer.editors.ParticipantFormEditor";
 
 	@Override
 	protected void addPages()
 	{
-		try
+		IEditorInput input = getEditorInput();
+		if(input instanceof ParticipantEditorInput)
 		{
-			addPage(new ParticipantEditorPage(this));
+			ParticipantEditorInput partInput = (ParticipantEditorInput) input;
+			try
+			{
+				addPage(new ParticipantEditorPage(this, partInput.getParticipant()));
+				this.setPartName(partInput.getParticipant().getParticipantId());
+			}
+			catch(PartInitException e)
+			{
+				e.printStackTrace();
+			}
 		}
-		catch(PartInitException e)
-		{
-			e.printStackTrace();
-		}
+		
 	}
 
 	@Override

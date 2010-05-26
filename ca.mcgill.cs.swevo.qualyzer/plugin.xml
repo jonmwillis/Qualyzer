@@ -138,6 +138,11 @@
             id="ca.mcgill.cs.swevo.qualyzer.commands.addParticipant"
             name="Add Participant">
       </command>
+      <command
+            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.EditParticipantHandler"
+            id="ca.mcgill.cs.swevo.qualyzer.commands.editParticipant"
+            name="Edit Participant">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -194,11 +199,26 @@
          </menu>
       </menuContribution>
       <menuContribution
-            locationURI="popup:ca.mcgill.cs.swevo.qualyzer.projectexplorer#PopupMenu?after=group.edit">
+            locationURI="popup:ca.mcgill.cs.swevo.qualyzer.projectexplorer#PopupMenu?after=group.edit2">
          <command
                commandId="org.eclipse.ui.edit.rename"
                label="Rename"
                style="push">
+         </command>
+         <command
+               commandId="ca.mcgill.cs.swevo.qualyzer.commands.editParticipant"
+               label="Edit Participant"
+               style="push">
+            <visibleWhen
+                  checkEnabled="true">
+               <iterate
+                     ifEmpty="true"
+                     operator="or">
+                  <instanceof
+                        value="ca.mcgill.cs.swevo.qualyzer.model.Participant">
+                  </instanceof>
+               </iterate>
+            </visibleWhen>
          </command>
       </menuContribution>
       <menuContribution
