@@ -17,7 +17,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.editor.FormEditor;
 
+import ca.mcgill.cs.swevo.qualyzer.editors.inputs.InvestigatorEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.editors.pages.InvestigatorEditorPage;
+import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
 
 /**
  * @author Jonathan Faubert (jonfaub@gmail.com)
@@ -25,7 +27,10 @@ import ca.mcgill.cs.swevo.qualyzer.editors.pages.InvestigatorEditorPage;
  */
 public class InvestigatorFormEditor extends FormEditor
 {
+	public static final String ID = "ca.mcgill.cs.swevo.qualyzer.editors.investigatorFormEditor";
+
 	private InvestigatorEditorPage fPage;
+	private Investigator fInvestigator;
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.forms.editor.FormEditor#addPages()
@@ -33,7 +38,9 @@ public class InvestigatorFormEditor extends FormEditor
 	@Override
 	protected void addPages()
 	{
-		fPage = new InvestigatorEditorPage(this);
+		fInvestigator = ((InvestigatorEditorInput)getEditorInput()).getInvestigator();
+		this.setPartName(fInvestigator.getNickName());
+		fPage = new InvestigatorEditorPage(this, fInvestigator);
 		try
 		{
 			addPage(fPage);

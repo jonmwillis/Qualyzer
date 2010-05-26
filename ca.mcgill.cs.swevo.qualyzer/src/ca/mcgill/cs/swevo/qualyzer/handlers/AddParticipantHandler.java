@@ -97,16 +97,14 @@ public class AddParticipantHandler extends AbstractHandler
 
 	/**
 	 * @param element The object selected by the user.
-	 * @return TODO
+	 * @return The project the object belongs to.
 	 */
-	private Project getProject(Object element)
+	public static Project getProject(Object element)
 	{
 		Project project = null;
-		
 		if(element instanceof IProject)
 		{
-			String projectName = ((IProject) element).getName();
-			project = PersistenceManager.getInstance().getProject(projectName);
+			project = PersistenceManager.getInstance().getProject(((IProject) element).getName());
 		}
 		else if(element instanceof ProjectWrapper)
 		{
@@ -131,10 +129,6 @@ public class AddParticipantHandler extends AbstractHandler
 		else if(element instanceof Memo)
 		{
 			project = ((Memo) element).getProject();
-		}
-		else
-		{
-			System.out.println("Error, selected:" +element.getClass().getName());
 		}
 		return project;
 	}
