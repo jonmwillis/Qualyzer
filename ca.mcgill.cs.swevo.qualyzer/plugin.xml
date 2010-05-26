@@ -143,6 +143,16 @@
             id="ca.mcgill.cs.swevo.qualyzer.commands.editParticipant"
             name="Edit Participant">
       </command>
+      <command
+            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.AddInvestigatorHandler"
+            id="ca.mcgill.cs.swevo.qualyzer.commands.addInvestigator"
+            name="Add Investigator">
+      </command>
+      <command
+            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.EditInvestigatorHandler"
+            id="ca.mcgill.cs.swevo.qualyzer.commands.editInvestigator"
+            name="Edit Investigator">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -196,6 +206,11 @@
                   style="push"
                   tooltip="Add a Participant">
             </command>
+            <command
+                  commandId="ca.mcgill.cs.swevo.qualyzer.commands.addInvestigator"
+                  label="Add Investigator"
+                  style="push">
+            </command>
          </menu>
       </menuContribution>
       <menuContribution
@@ -216,6 +231,21 @@
                      operator="or">
                   <instanceof
                         value="ca.mcgill.cs.swevo.qualyzer.model.Participant">
+                  </instanceof>
+               </iterate>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="ca.mcgill.cs.swevo.qualyzer.commands.editInvestigator"
+               label="Edit Investigator"
+               style="push">
+            <visibleWhen
+                  checkEnabled="true">
+               <iterate
+                     ifEmpty="true"
+                     operator="or">
+                  <instanceof
+                        value="ca.mcgill.cs.swevo.qualyzer.model.Investigator">
                   </instanceof>
                </iterate>
             </visibleWhen>

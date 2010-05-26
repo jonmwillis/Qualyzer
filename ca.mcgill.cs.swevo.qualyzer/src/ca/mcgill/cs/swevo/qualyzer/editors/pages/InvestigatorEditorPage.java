@@ -13,6 +13,7 @@
  */
 package ca.mcgill.cs.swevo.qualyzer.editors.pages;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -29,19 +30,23 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
+import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
+
 /**
  * @author Jonathan Faubert (jonfaub@gmail.com)
  *
  */
 public class InvestigatorEditorPage extends FormPage
 {
-
+	private Investigator fInvestigator;
 	/**
 	 * @param editor
+	 * @param fInvestigator 
 	 */
-	public InvestigatorEditorPage(FormEditor editor)
+	public InvestigatorEditorPage(FormEditor editor, Investigator investigator)
 	{
 		super(editor, "Investigator", "Investigator");
+		fInvestigator = investigator;
 	}
 
 	@Override
@@ -53,22 +58,25 @@ public class InvestigatorEditorPage extends FormPage
 		TableWrapLayout layout = new TableWrapLayout();
 		layout.numColumns = 2;
 		TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB);
-		form.getBody().setLayout(layout);
+		Composite body = form.getBody();
+		body.setLayout(layout);
 		
-		Label label = toolkit.createLabel(form.getBody(), "Investigator ID");
-		Text text = toolkit.createText(form.getBody(), "");
+		Label label = toolkit.createLabel(body, "Nickname:");
+		Text text = toolkit.createText(body, fInvestigator.getNickName());
 		text.setLayoutData(td);
 		
-		label = toolkit.createLabel(form.getBody(), "Investigator's name");
-		text = toolkit.createText(form.getBody(), "");
+		label = toolkit.createLabel(body, "Full Name:");
+		text = toolkit.createText(body, fInvestigator.getFullName());
+		td = new TableWrapData(TableWrapData.FILL_GRAB);
+		text.setLayoutData(td);
+
+		label = toolkit.createLabel(body, "Institution:");
+		text = toolkit.createText(body, fInvestigator.getInstitution());
+		td = new TableWrapData(TableWrapData.FILL_GRAB);
 		text.setLayoutData(td);
 		
-		label = toolkit.createLabel(form.getBody(), "Institution");
-		text = toolkit.createText(form.getBody(), "");
-		text.setLayoutData(td);
-		
-		Section section = toolkit.createSection(form.getBody(), Section.EXPANDED | Section.TITLE_BAR | Section.TWISTIE);
-		td = new TableWrapData(TableWrapData.FILL);
+		Section section = toolkit.createSection(body, Section.EXPANDED | Section.TITLE_BAR | Section.TWISTIE);
+		td = new TableWrapData(TableWrapData.FILL_GRAB);
 		td.colspan = 2;
 		section.setLayoutData(td);
 		section.setText("Conducted Interviews");
@@ -84,13 +92,13 @@ public class InvestigatorEditorPage extends FormPage
 		sectionClient.setLayout(grid);
 		//TODO generate the interview data
 		//TODO make clickable
-		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+		GridData gd = new GridData(SWT.FILL, SWT.NULL, true, false);
 		label = toolkit.createLabel(sectionClient, "Example Interview");
 		label.setLayoutData(gd);
 		section.setClient(sectionClient);
 		
-		section = toolkit.createSection(form.getBody(), Section.EXPANDED | Section.TITLE_BAR | Section.TWISTIE);
-		td = new TableWrapData(TableWrapData.FILL);
+		section = toolkit.createSection(body, Section.EXPANDED | Section.TITLE_BAR | Section.TWISTIE);
+		td = new TableWrapData(TableWrapData.FILL_GRAB);
 		td.colspan = 2;
 		section.setLayoutData(td);
 		section.setText("Coded Interviews");
@@ -106,13 +114,13 @@ public class InvestigatorEditorPage extends FormPage
 		sectionClient.setLayout(grid);
 		//TODO generate the interview data
 		//TODO make clickable
-		gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd = new GridData(SWT.FILL, SWT.NULL, true, false);
 		label = toolkit.createLabel(sectionClient, "Example Interview");
 		label.setLayoutData(gd);
 		section.setClient(sectionClient);
 		
-		section = toolkit.createSection(form.getBody(), Section.EXPANDED | Section.TITLE_BAR | Section.TWISTIE);
-		td = new TableWrapData(TableWrapData.FILL);
+		section = toolkit.createSection(body, Section.EXPANDED | Section.TITLE_BAR | Section.TWISTIE);
+		td = new TableWrapData(TableWrapData.FILL_GRAB);
 		td.colspan = 2;
 		section.setLayoutData(td);
 		section.setText("Memos");
@@ -128,10 +136,11 @@ public class InvestigatorEditorPage extends FormPage
 		sectionClient.setLayout(grid);
 		//TODO generate the memo data
 		//TODO make clickable
-		gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd = new GridData(SWT.FILL, SWT.NULL, true, false);
 		label = toolkit.createLabel(sectionClient, "Example Memo");
 		label.setLayoutData(gd);
 		section.setClient(sectionClient);
-		
+	
+		toolkit.paintBordersFor(body);
 	}
 }
