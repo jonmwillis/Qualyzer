@@ -16,6 +16,7 @@ package ca.mcgill.cs.swevo.qualyzer.providers;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 
 /**
+ * A ProjectWrapper for Memos.
  * @author Jonathan Faubert (jonfaub@gmail.com)
  *
  */
@@ -35,6 +36,32 @@ public class WrapperMemo extends ProjectWrapper
 	public String getResource()
 	{
 		return RESOURCE;
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return super.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object obj)
+	{
+		if(obj == null)
+		{
+			return false;
+		}
+		if(obj == this)
+		{
+			return true;
+		}
+		if(obj instanceof WrapperMemo)
+		{
+			return super.equals(obj);
+		}
+		
+		return false;
+			
 	}
 
 }

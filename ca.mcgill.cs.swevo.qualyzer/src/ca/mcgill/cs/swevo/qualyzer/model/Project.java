@@ -181,5 +181,30 @@ public class Project
 	{
 		return fPersistenceId;
 	}
+	
+	@Override
+	public boolean equals(Object obj)
+	{
+		if(obj == null)
+		{
+			return false;
+		}
+		else if(obj == this)
+		{
+			return true;
+		}
+		else if(obj.getClass().equals(getClass()))
+		{
+			return fName.equals(((Project) obj).getName());
+		}
+		return false;
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		//TODO implement
+		return super.hashCode();
+	}
 
 }
