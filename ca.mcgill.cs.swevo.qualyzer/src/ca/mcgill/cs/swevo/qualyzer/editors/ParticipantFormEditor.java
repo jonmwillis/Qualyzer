@@ -24,7 +24,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
 
 /**
- * 
+ * An editor for Participant objects.
  * @author Jonathan Faubert
  *
  */

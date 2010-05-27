@@ -90,7 +90,7 @@ public class NewProjectWizard extends Wizard
 	}
 
 	/**
-	 * 
+	 * Deletes any created subfolders in the event of a failure.
 	 */
 	private void cleanUpFolders(IProject wProject)
 	{

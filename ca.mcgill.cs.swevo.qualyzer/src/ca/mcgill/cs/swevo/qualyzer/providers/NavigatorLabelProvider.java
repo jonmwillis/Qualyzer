@@ -72,6 +72,7 @@ public class NavigatorLabelProvider extends LabelProvider implements ILabelProvi
 		return fRegistry.get(computeKey(key, pluginID));
 	}
 	
+	@Override
 	public Image getImage(Object element)
 	{
 		Image image = null;
@@ -144,6 +145,7 @@ public class NavigatorLabelProvider extends LabelProvider implements ILabelProvi
 		return null;
 	}
 	
+	@Override
 	public String getText(Object anElement)
 	{
 		String output = null;

@@ -23,6 +23,7 @@ import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
 import ca.mcgill.cs.swevo.qualyzer.wizards.pages.AddInvestigatorPage;
 
 /**
+ * The wizard which controls the adding of a new Investigator to the project.
  * @author Jonathan Faubert (jonfaub@gmail.com)
  *
  */
@@ -62,6 +63,10 @@ public class AddInvestigatorWizard extends Wizard
 		return true;
 	}
 	
+	/**
+	 * Gets the investigator that was created with the wizard.
+	 * @return The Investigator that the user created.
+	 */
 	public Investigator getInvestigator()
 	{
 		return fInvestigator;

@@ -87,6 +87,11 @@ public final class PersistenceManager
 		dbManager.getSessionFactory().close();
 	}
 	
+	/**
+	 * Makes sure that project has a HibernateDBManager registered.
+	 * Should be called when Qualyzer launches so that the workspace can be properly propagated.
+	 * @param project The project whose HibernateDBManager needs to be refreshed.
+	 */
 	public void refreshManager(IProject project)
 	{
 		String dbPath = getDBPath(project).toOSString();
@@ -123,6 +128,11 @@ public final class PersistenceManager
 		return dbFolder;
 	}
 
+	/**
+	 * Gets the Project object represented by the given name.
+	 * @param name The name of the expected Project
+	 * @return The Project represented by name.
+	 */
 	public Project getProject(String name)
 	{
 		HibernateDBManager dbManager = fActivator.getHibernateDBManagers().get(name);

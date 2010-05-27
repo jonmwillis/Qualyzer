@@ -24,7 +24,7 @@ import ca.mcgill.cs.swevo.qualyzer.editors.inputs.InvestigatorEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
 
 /**
- * 
+ * Opens the Investigator Editor for the selected Investigator.
  * @author Jonathan Faubert (jonfaub@gmail.com)
  *
  */

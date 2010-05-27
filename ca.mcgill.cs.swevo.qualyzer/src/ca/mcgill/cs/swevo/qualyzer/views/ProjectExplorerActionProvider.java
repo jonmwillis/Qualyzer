@@ -27,7 +27,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 /**
  * 
  * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
- * 
+ * @author Jonathan Faubert (jonfaub@gmail.com)
  */
 public class ProjectExplorerActionProvider extends CommonActionProvider
 {
