@@ -37,6 +37,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 public class NavigatorLabelProvider extends LabelProvider implements ILabelProvider, IDescriptionProvider
 {
 	private static final String FOLDER_IMG = "FOLDER_IMG";
+	private static final String PROJECT_IMG = "PROJECT_IMG";
 	
 	private final ImageRegistry fRegistry;
 	
@@ -44,6 +45,7 @@ public class NavigatorLabelProvider extends LabelProvider implements ILabelProvi
 	{
 		fRegistry = QualyzerActivator.getDefault().getImageRegistry();
 		addImage(FOLDER_IMG, QualyzerActivator.PLUGIN_ID, "icons/fldr_obj.gif");
+		addImage(PROJECT_IMG, QualyzerActivator.PLUGIN_ID, "icons/prj_obj.gif");
 	}
 	
 	public void init(ICommonContentExtensionSite aConfig)
@@ -75,7 +77,7 @@ public class NavigatorLabelProvider extends LabelProvider implements ILabelProvi
 		Image image = null;
 		if(element instanceof IProject)
 		{
-			
+			image = getImage(PROJECT_IMG, QualyzerActivator.PLUGIN_ID);
 		}
 		else if(element instanceof ProjectWrapper)
 		{
