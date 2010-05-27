@@ -26,6 +26,8 @@ import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
 import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
+import ca.mcgill.cs.swevo.qualyzer.wizards.pages.NewProjectPageOne;
+import ca.mcgill.cs.swevo.qualyzer.wizards.pages.NewProjectPageTwo;
 
 /**
  * The wizard that controls the creation of a new project.
