@@ -19,10 +19,12 @@ import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
+import ca.mcgill.cs.swevo.qualyzer.providers.WrapperParticipant;
 import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
 import ca.mcgill.cs.swevo.qualyzer.wizards.pages.AddParticipantPage;
 
 /**
+ * The wizard the controls the addition of a new Participant to a project.
  * @author Jonathan Faubert (jonfaub@gmail.com)
  *
  */
@@ -62,6 +64,10 @@ public class AddParticipantWizard extends Wizard
 		return true;
 	}
 	
+	/**
+	 * Gets the participant that was built by the project.
+	 * @return
+	 */
 	public Participant getParticipant()
 	{
 		return fParticipant;

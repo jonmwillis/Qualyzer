@@ -16,8 +16,6 @@ package ca.mcgill.cs.swevo.qualyzer.wizards.pages;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Text;
-
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 
@@ -68,18 +66,7 @@ public class AddInvestigatorPage extends NewProjectPageTwo
 				}
 				else
 				{
-					boolean inUse = false;
-					for(Investigator inves : fProject.getInvestigators())
-					{
-						if(inves.getNickName().equals(getInvestigatorNickname()))
-						{
-							setErrorMessage("That nickname is already in use.");
-							setPageComplete(false);
-							inUse = true;
-							break;
-						}
-					}
-					if(!inUse)
+					if(!idInUse())
 					{
 						setPageComplete(true);
 						setErrorMessage(null);
@@ -89,6 +76,24 @@ public class AddInvestigatorPage extends NewProjectPageTwo
 		};
 	}
 	
+	private boolean idInUse()
+	{
+		for(Investigator inves : fProject.getInvestigators())
+		{
+			if(inves.getNickName().equals(getInvestigatorNickname()))
+			{
+				setErrorMessage("That nickname is already in use.");
+				setPageComplete(false);
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Build the investigator represented by the information entered in the wizard.
+	 * @return The resulting investigator.
+	 */
 	public Investigator getInvestigator()
 	{
 		Investigator investigator = new Investigator();

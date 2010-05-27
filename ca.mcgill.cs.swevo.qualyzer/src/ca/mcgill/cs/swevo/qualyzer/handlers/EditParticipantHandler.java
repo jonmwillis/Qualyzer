@@ -24,7 +24,7 @@ import ca.mcgill.cs.swevo.qualyzer.editors.inputs.ParticipantEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 
 /**
- * 
+ * Opens the Participant Editor for the selected Participant.
  * @author Jonathan Faubert (jonfaub@gmail.com)
  *
  */

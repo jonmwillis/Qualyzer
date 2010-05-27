@@ -86,6 +86,8 @@ public class ParticipantEditorPage extends FormPage
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 2;
 		composite.setLayout(gridLayout);
+		
+		//TODO Make these do something
 		Button plus = toolkit.createButton(composite, "+", SWT.PUSH);
 		Button minus = toolkit.createButton(composite, "-", SWT.PUSH);
 		
@@ -158,21 +160,37 @@ public class ParticipantEditorPage extends FormPage
 		toolkit.paintBordersFor(body);
 	}
 	
+	/**
+	 * Get the Participant Id that was entered.
+	 * @return The Participant Id
+	 */
 	public String getId()
 	{
 		return fID.getText();
 	}
 	
+	/**
+	 * Get the Participant's full name.
+	 * @return The full name field.
+	 */
 	public String getFullname()
 	{
 		return fFullname.getText();
 	}
 	
+	/**
+	 * Get the participant's contact info.
+	 * @return The contact info field.
+	 */
 	public String getContactInfo()
 	{
 		return fContactInfo.getText();
 	}
 
+	/**
+	 * Get the notes related to this participant.
+	 * @return The notes field.
+	 */
 	public String getNotes()
 	{
 		return fNotes.getText();

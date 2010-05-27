@@ -156,6 +156,10 @@ public class AddParticipantPage extends WizardPage
 		return fNotesText.getText();
 	}
 	
+	/**
+	 * Build the participant represented by the information entered in this page.
+	 * @return The participant that was built.
+	 */
 	public Participant getParticipant()
 	{
 		Participant participant = new Participant();

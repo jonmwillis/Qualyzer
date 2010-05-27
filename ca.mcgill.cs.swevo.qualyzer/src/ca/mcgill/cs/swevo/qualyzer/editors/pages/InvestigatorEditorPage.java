@@ -33,6 +33,7 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
 
 /**
+ * The main page of the Investigator editor.
  * @author Jonathan Faubert (jonfaub@gmail.com)
  *
  */
@@ -150,16 +151,28 @@ public class InvestigatorEditorPage extends FormPage
 		toolkit.paintBordersFor(body);
 	}
 	
+	/**
+	 * Get the Nickname that was entered for this Investigator.
+	 * @return The Nickname field.
+	 */
 	public String getNickname()
 	{
 		return fNickname.getText();
 	}
 	
+	/**
+	 * Get the full name that was entered for this Investigator.
+	 * @return The full name field.
+	 */
 	public String getFullname()
 	{
 		return fFullname.getText();
 	}
 	
+	/**
+	 * Get the Institution that was entered for this Investigator.
+	 * @return The Institution field.
+	 */
 	public String getInstitution()
 	{
 		return fInstitution.getText();

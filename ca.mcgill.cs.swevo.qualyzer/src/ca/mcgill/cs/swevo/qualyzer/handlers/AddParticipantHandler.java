@@ -34,10 +34,11 @@ import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 import ca.mcgill.cs.swevo.qualyzer.providers.ProjectWrapper;
+import ca.mcgill.cs.swevo.qualyzer.providers.WrapperParticipant;
 import ca.mcgill.cs.swevo.qualyzer.wizards.AddParticipantWizard;
 
 /**
- * Launches a dialog whenever the New Participant Command is clicked.
+ * Launches a wizard whenever the New Participant Command is clicked.
  * @author Jonathan Faubert (jonfaub@gmail.com)
  *
  */
@@ -63,7 +64,7 @@ public class AddParticipantHandler extends AbstractHandler
 			
 			if(dialog.open() == Window.OK)
 			{
-				view.getCommonViewer().refresh(); //change to wizard.getParticipant() once equality is finished
+				view.getCommonViewer().refresh(new WrapperParticipant(project));
 				openEditor(wizard.getParticipant(), page);
 				//TODO open the editor by calling the command
 			}

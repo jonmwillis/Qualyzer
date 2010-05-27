@@ -28,10 +28,11 @@ import ca.mcgill.cs.swevo.qualyzer.editors.InvestigatorFormEditor;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.InvestigatorEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
+import ca.mcgill.cs.swevo.qualyzer.providers.WrapperInvestigator;
 import ca.mcgill.cs.swevo.qualyzer.wizards.AddInvestigatorWizard;
 
 /**
- * 
+ * Launched a wizard whenever the new Investigator Command is clicked.
  * @author Jonathan Faubert (jonfaub@gmail.com)
  *
  */
@@ -56,7 +57,7 @@ public class AddInvestigatorHandler extends AbstractHandler
 		
 			if(dialog.open() == Window.OK)
 			{
-				view.getCommonViewer().refresh(); //change to wizard.getInvestigator() once equality is finished
+				view.getCommonViewer().refresh(new WrapperInvestigator(project)); //change to wizard.getInvestigator() once equality is finished
 				openEditor(wizard.getInvestigator(), page);
 				//TODO Open the editor by calling the command
 			}

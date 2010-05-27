@@ -26,6 +26,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
 import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
 
 /**
+ * An editor for Investigator Objects.
  * @author Jonathan Faubert (jonfaub@gmail.com)
  *
  */

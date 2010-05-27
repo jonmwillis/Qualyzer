@@ -119,12 +119,49 @@ public class NavigatorContentProvider extends WorkbenchContentProvider
 	 */
 	public boolean hasChildren(Object element)
 	{
-		if (element instanceof IProject || element instanceof ProjectWrapper || element instanceof Project)
+		if (element instanceof IProject || element instanceof Project)
+		{
+			return true;
+		}
+		else if(element instanceof ProjectWrapper)
 		{
 			return true;
 		}
 
 		return false;
+	}
+
+	/**
+	 * Checks if the project in element has children of the type specified by
+	 * the kind of Wrapper element is.
+	 * @param element
+	 * @return
+	 */
+	private boolean projectHasElements(ProjectWrapper element)
+	{
+		boolean hasChildren = false;
+		if(element.getResource().equals("transcript"))
+		{
+			hasChildren = !element.getProject().getTranscripts().isEmpty();
+		}
+		else if(element.getResource().equals("code"))
+		{
+			hasChildren = !element.getProject().getCodes().isEmpty();
+		}
+		else if(element.getResource().equals("investigator"))
+		{
+			hasChildren = !element.getProject().getInvestigators().isEmpty();
+		}
+		else if(element.getResource().equals("participant"))
+		{
+			hasChildren = !element.getProject().getParticipants().isEmpty();
+		}
+		else if(element.getResource().equals("memo"))
+		{
+			hasChildren = !element.getProject().getMemos().isEmpty();
+		}
+			
+		return hasChildren;
 	}
 
 	/*
