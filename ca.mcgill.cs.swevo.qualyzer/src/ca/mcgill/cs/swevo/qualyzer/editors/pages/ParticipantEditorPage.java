@@ -17,7 +17,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
@@ -27,6 +26,8 @@ import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.forms.widgets.TableWrapData;
+import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 
@@ -52,21 +53,27 @@ public class ParticipantEditorPage extends FormPage
 		FormToolkit toolkit = managedForm.getToolkit();
 		Composite body = form.getBody();
 		
-		form.setText(fParticipant.getFullName());
+		form.setText("Participant");
 		
 		//TableWrapLayout layout = new TableWrapLayout();
-		GridLayout layout = new GridLayout();
+		TableWrapLayout layout = new TableWrapLayout();
 		layout.numColumns = 2;
-		GridData td;
+		TableWrapData td;
 		body.setLayout(layout);
 		
 		Label label = toolkit.createLabel(body, "Participant ID:");
 		Text text = toolkit.createText(body, fParticipant.getParticipantId());
-		td = new GridData(SWT.FILL, SWT.NULL, true, false);
+		td = new TableWrapData(TableWrapData.FILL_GRAB);
 		text.setLayoutData(td);
 		
 		label = toolkit.createLabel(body, "Participant Name:");
 		text = toolkit.createText(body, fParticipant.getFullName());
+		td = new TableWrapData(TableWrapData.FILL_GRAB);
+		text.setLayoutData(td);
+		
+		label = toolkit.createLabel(body, "Contact Info:");
+		text = toolkit.createText(body, fParticipant.getContactInfo());
+		td = new TableWrapData(TableWrapData.FILL_GRAB);
 		text.setLayoutData(td);
 		
 		label = toolkit.createLabel(body, "Characteristics");
@@ -78,28 +85,27 @@ public class ParticipantEditorPage extends FormPage
 		Button minus = toolkit.createButton(composite, "-", SWT.PUSH);
 		
 		Table table = toolkit.createTable(body, SWT.BORDER);
-		td = new GridData(SWT.FILL, SWT.FILL, true, false);
-		td.horizontalSpan = 2;
+		td = new TableWrapData(TableWrapData.FILL_GRAB);
+		td.colspan = 2;
 		table.setLayoutData(td);
 		table.setLinesVisible(true);
-//		TableItem item = new TableItem(table, SWT.SINGLE);
-//		item.setText("testing");
+
 		//TODO build the rest of the table
 		
 		label = toolkit.createLabel(body, "Notes");
-		td = new GridData(GridData.FILL);
-		td.horizontalSpan = 2;
+		td = new TableWrapData(TableWrapData.FILL_GRAB);
+		td.colspan = 2;
 		label.setLayoutData(td);
-		text = toolkit.createText(body, "");
-		td = new GridData(SWT.FILL, SWT.FILL, true, false);
-		td.verticalSpan = 2;
-		td.horizontalSpan = 2;
+		text = toolkit.createText(body, fParticipant.getNotes());
+		td = new TableWrapData(TableWrapData.FILL_GRAB);
+		td.rowspan = 2;
+		td.colspan = 2;
 		text.setLayoutData(td);
 		
 		//TODO add +/- buttons
 		Section section = toolkit.createSection(body, Section.EXPANDED | Section.TITLE_BAR | Section.TWISTIE);
-		td = new GridData(SWT.FILL, SWT.NULL, true, false);
-		td.horizontalSpan = 2;
+		td = new TableWrapData(TableWrapData.FILL_GRAB);
+		td.colspan = 2;
 		section.setLayoutData(td);
 		section.addExpansionListener(new ExpansionAdapter(){
 			public void expansionStateChanged(ExpansionEvent e)
@@ -122,8 +128,8 @@ public class ParticipantEditorPage extends FormPage
 		
 		section = toolkit.createSection(body, Section.EXPANDED | Section.TWISTIE | Section.TITLE_BAR);
 		section.setText("Codes");
-		td = new GridData(SWT.FILL, SWT.NULL, true, false);
-		td.horizontalSpan = 2;
+		td = new TableWrapData(TableWrapData.FILL_GRAB);
+		td.colspan = 2;
 		section.setLayoutData(td);
 		section.addExpansionListener(new ExpansionAdapter(){
 			public void expansionStateChanged(ExpansionEvent e)
@@ -133,11 +139,15 @@ public class ParticipantEditorPage extends FormPage
 		});
 		sectionClient = toolkit.createComposite(section);
 		//TODO get all codes related to participant
-		gridLayout = new GridLayout(2, true);
+		gridLayout = new GridLayout();
+		gridLayout.numColumns = 2;
+		gridLayout.makeColumnsEqualWidth = true;
 		sectionClient.setLayout(gridLayout);
-		sectionClient.setLayoutData(td);
+		gd = new GridData(SWT.FILL, SWT.NULL, true, false);
 		label = toolkit.createLabel(sectionClient, "Example code");
+		label.setLayoutData(gd);
 		label = toolkit.createLabel(sectionClient, "Example Interview");
+		label.setLayoutData(gd);
 		section.setClient(sectionClient);
 		
 		toolkit.paintBordersFor(body);
