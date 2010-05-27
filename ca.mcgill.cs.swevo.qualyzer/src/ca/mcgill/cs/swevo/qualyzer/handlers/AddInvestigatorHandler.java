@@ -81,5 +81,32 @@ public class AddInvestigatorHandler extends AbstractHandler
 			e.printStackTrace();
 		}		
 	}
+	
+//	/**
+//	 * @param investigator
+//	 * @param page
+//	 * @throws ExecutionException 
+//	 */
+//	private void openEditor() throws ExecutionException
+//	{
+//		IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(
+//				IHandlerService.class);
+//		try
+//		{
+//			handlerService.executeCommand("ca.mcgill.cs.swevo.qualyzer.commands.editInvestigator", null);
+//		}
+//		catch (NotDefinedException e)
+//		{
+//			e.printStackTrace();
+//		}
+//		catch (NotEnabledException e)
+//		{
+//			e.printStackTrace();
+//		}
+//		catch (NotHandledException e)
+//		{
+//			e.printStackTrace();
+//		}	
+//	}
 
 }

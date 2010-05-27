@@ -12,12 +12,17 @@ package ca.mcgill.cs.swevo.qualyzer.views;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.navigator.CommonActionProvider;
 import org.eclipse.ui.navigator.ICommonActionConstants;
 import org.eclipse.ui.navigator.ICommonActionExtensionSite;
+
+import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
+import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 
 /**
  * 
@@ -40,25 +45,49 @@ public class ProjectExplorerActionProvider extends CommonActionProvider
 		super.init(aSite);
 		final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(
 				IHandlerService.class);
-
 		fDoubleClickAction = new Action()
 		{
 			@Override
 			public void run()
 			{
-				try
+				ISelection selection;
+				selection = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getSelection();
+				if(selection != null && selection instanceof IStructuredSelection)
 				{
-					handlerService.executeCommand("ca.mcgill.cs.swevo.qualyzer.commands.openInterview", null);
+					Object element = ((IStructuredSelection) selection).getFirstElement();
+				
+					String commandId = getCommandId(element);
+					
+					try
+					{
+						handlerService.executeCommand(commandId, null);
+					}
+					// CSOFF:
+					catch (Exception e)
+					{
+						e.printStackTrace();
+					}//CSON:
 				}
-				// CSOFF:
-				catch (Exception e)
-				{
-					e.printStackTrace();
-				}
-				//CSON:
 			}
 		};
-
+	}
+	
+	/**
+	 * @param element
+	 * @return
+	 */
+	private String getCommandId(Object element)
+	{
+		String commandId = "";
+		if(element instanceof Participant)
+		{
+			commandId = "ca.mcgill.cs.swevo.qualyzer.commands.editParticipant";
+		}
+		else if(element instanceof Investigator)
+		{
+			commandId = "ca.mcgill.cs.swevo.qualyzer.commands.editInvestigator";
+		}
+		return commandId;
 	}
 
 	@Override
@@ -66,7 +95,10 @@ public class ProjectExplorerActionProvider extends CommonActionProvider
 	{
 		super.fillActionBars(actionBars);
 		// forward doubleClick to doubleClickAction
-		actionBars.setGlobalActionHandler(ICommonActionConstants.OPEN, fDoubleClickAction);
+		if(fDoubleClickAction.isEnabled())
+		{
+			actionBars.setGlobalActionHandler(ICommonActionConstants.OPEN, fDoubleClickAction);
+		}
 	}
 
 }

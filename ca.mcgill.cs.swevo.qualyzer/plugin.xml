@@ -318,9 +318,14 @@
             class="ca.mcgill.cs.swevo.qualyzer.views.ProjectExplorerActionProvider"
             id="ca.mcgill.cs.swevo.qualyzer.actions.ProjectExplorerActionProvider">
          <enablement>
-            <adapt
-                  type="org.eclipse.core.resources.IFile">
-            </adapt>
+            <or>
+               <adapt
+                     type="ca.mcgill.cs.swevo.qualyzer.model.Participant">
+               </adapt>
+               <adapt
+                     type="ca.mcgill.cs.swevo.qualyzer.model.Investigator">
+               </adapt>
+            </or>
          </enablement>
       </actionProvider>
       <navigatorContent
