@@ -17,9 +17,12 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.editor.FormEditor;
 
+import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.InvestigatorEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.editors.pages.InvestigatorEditorPage;
+import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
+import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
 
 /**
  * @author Jonathan Faubert (jonfaub@gmail.com)
@@ -39,7 +42,7 @@ public class InvestigatorFormEditor extends FormEditor
 	protected void addPages()
 	{
 		fInvestigator = ((InvestigatorEditorInput)getEditorInput()).getInvestigator();
-		this.setPartName(fInvestigator.getNickName());
+		setPartName(fInvestigator.getNickName());
 		fPage = new InvestigatorEditorPage(this, fInvestigator);
 		try
 		{
@@ -57,8 +60,30 @@ public class InvestigatorFormEditor extends FormEditor
 	@Override
 	public void doSave(IProgressMonitor monitor)
 	{
-		// TODO Auto-generated method stub
-
+		fInvestigator.setFullName(fPage.getFullname());
+		fInvestigator.setNickName(fPage.getNickname());
+		fInvestigator.setInstitution(fPage.getInstitution());
+		
+		HibernateDBManager manager;
+		manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(fInvestigator.getProject().getName());
+		HibernateUtil.quietSave(manager, fInvestigator.getProject());
+	}
+	
+	@Override
+	public boolean isDirty()
+	{
+		if(!fInvestigator.getFullName().equals(fPage.getFullname()))
+		{
+			return true;
+		}
+		else if(!fInvestigator.getInstitution().equals(fPage.getInstitution()))
+		{
+			return true;
+		}
+		else
+		{
+			return !fInvestigator.getNickName().equals(fPage.getNickname());
+		}
 	}
 
 	/* (non-Javadoc)
