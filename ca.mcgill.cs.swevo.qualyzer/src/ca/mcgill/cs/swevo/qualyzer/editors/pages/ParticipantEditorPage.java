@@ -39,10 +39,15 @@ import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 public class ParticipantEditorPage extends FormPage
 {
 	private Participant fParticipant;
+	
+	private Text fID;
+	private Text fFullname;
+	private Text fContactInfo;
+	private Text fNotes;
 
 	public ParticipantEditorPage(FormEditor editor, Participant participant)
 	{
-		super(editor, "ParticipantEditorPage", participant.getParticipantId());
+		super(editor, "ParticipantEditorPage", "Participant");
 		fParticipant = participant;
 	}
 	
@@ -62,19 +67,19 @@ public class ParticipantEditorPage extends FormPage
 		body.setLayout(layout);
 		
 		Label label = toolkit.createLabel(body, "Participant ID:");
-		Text text = toolkit.createText(body, fParticipant.getParticipantId());
+		fID = toolkit.createText(body, fParticipant.getParticipantId());
 		td = new TableWrapData(TableWrapData.FILL_GRAB);
-		text.setLayoutData(td);
+		fID.setLayoutData(td);
 		
 		label = toolkit.createLabel(body, "Participant Name:");
-		text = toolkit.createText(body, fParticipant.getFullName());
+		fFullname = toolkit.createText(body, fParticipant.getFullName());
 		td = new TableWrapData(TableWrapData.FILL_GRAB);
-		text.setLayoutData(td);
+		fFullname.setLayoutData(td);
 		
 		label = toolkit.createLabel(body, "Contact Info:");
-		text = toolkit.createText(body, fParticipant.getContactInfo());
+		fContactInfo = toolkit.createText(body, fParticipant.getContactInfo());
 		td = new TableWrapData(TableWrapData.FILL_GRAB);
-		text.setLayoutData(td);
+		fContactInfo.setLayoutData(td);
 		
 		label = toolkit.createLabel(body, "Characteristics");
 		Composite composite = toolkit.createComposite(body);
@@ -96,11 +101,11 @@ public class ParticipantEditorPage extends FormPage
 		td = new TableWrapData(TableWrapData.FILL_GRAB);
 		td.colspan = 2;
 		label.setLayoutData(td);
-		text = toolkit.createText(body, fParticipant.getNotes());
+		fNotes = toolkit.createText(body, fParticipant.getNotes());
 		td = new TableWrapData(TableWrapData.FILL_GRAB);
 		td.rowspan = 2;
 		td.colspan = 2;
-		text.setLayoutData(td);
+		fNotes.setLayoutData(td);
 		
 		//TODO add +/- buttons
 		Section section = toolkit.createSection(body, Section.EXPANDED | Section.TITLE_BAR | Section.TWISTIE);
@@ -153,6 +158,23 @@ public class ParticipantEditorPage extends FormPage
 		toolkit.paintBordersFor(body);
 	}
 	
+	public String getId()
+	{
+		return fID.getText();
+	}
 	
+	public String getFullname()
+	{
+		return fFullname.getText();
+	}
+	
+	public String getContactInfo()
+	{
+		return fContactInfo.getText();
+	}
 
+	public String getNotes()
+	{
+		return fNotes.getText();
+	}
 }

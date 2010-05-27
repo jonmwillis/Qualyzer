@@ -30,6 +30,7 @@ public class AddParticipantWizard extends Wizard
 {
 	private AddParticipantPage fPage;
 	private Project fProject;
+	private Participant fParticipant;
 	
 	public AddParticipantWizard(Project project)
 	{
@@ -50,14 +51,20 @@ public class AddParticipantWizard extends Wizard
 	@Override
 	public boolean performFinish()
 	{
-		Participant	participant = fPage.getParticipant();
-		fProject.getParticipants().add(participant);
-		participant.setProject(fProject);
+		fParticipant = fPage.getParticipant();
+		fProject.getParticipants().add(fParticipant);
+		fParticipant.setProject(fProject);
 		
 		HibernateDBManager manager;
 		manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(fProject.getName());
 		HibernateUtil.quietSave(manager, fProject);
+		
 		return true;
+	}
+	
+	public Participant getParticipant()
+	{
+		return fParticipant;
 	}
 
 }

@@ -14,9 +14,14 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.editor.FormEditor;
+import org.eclipse.ui.navigator.CommonNavigator;
 
+import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.ParticipantEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.editors.pages.ParticipantEditorPage;
+import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
+import ca.mcgill.cs.swevo.qualyzer.model.Participant;
+import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
 
 /**
  * 
@@ -26,6 +31,10 @@ import ca.mcgill.cs.swevo.qualyzer.editors.pages.ParticipantEditorPage;
 public class ParticipantFormEditor extends FormEditor
 {
 	public static final String ID = "ca.mcgill.cs.swevo.qualyzer.editors.ParticipantFormEditor";
+	
+	private Participant fParticipant;
+
+	private ParticipantEditorPage fPage;
 
 	@Override
 	protected void addPages()
@@ -34,10 +43,12 @@ public class ParticipantFormEditor extends FormEditor
 		if(input instanceof ParticipantEditorInput)
 		{
 			ParticipantEditorInput partInput = (ParticipantEditorInput) input;
+			fParticipant = partInput.getParticipant();
 			try
 			{
-				addPage(new ParticipantEditorPage(this, partInput.getParticipant()));
-				this.setPartName(partInput.getParticipant().getParticipantId());
+				fPage = new ParticipantEditorPage(this, fParticipant);
+				addPage(fPage);
+				this.setPartName(fParticipant.getParticipantId());
 			}
 			catch(PartInitException e)
 			{
@@ -50,14 +61,47 @@ public class ParticipantFormEditor extends FormEditor
 	@Override
 	public void doSave(IProgressMonitor monitor)
 	{
-		// TODO Auto-generated method stub
+		fParticipant.setContactInfo(fPage.getContactInfo());
+		fParticipant.setFullName(fPage.getFullname());
+		fParticipant.setNotes(fPage.getNotes());
+		fParticipant.setParticipantId(fPage.getId());
 		
+		HibernateDBManager manager;
+		manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(fParticipant.getProject().getName());
+		HibernateUtil.quietSave(manager, fParticipant);
+		
+		CommonNavigator view;
+		view = (CommonNavigator) getSite().getPage().findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+		view.getCommonViewer().refresh(fParticipant);
 	}
 
 	@Override
-	public void doSaveAs()
-	{		
+	public boolean isDirty()
+	{
+		boolean dirty = false;
+		
+		if(!fParticipant.getNotes().equals(fPage.getNotes()))
+		{
+			dirty = true;
+		}
+		else if(!fParticipant.getFullName().equals(fPage.getFullname()))
+		{
+			dirty = true;
+		}
+		else if(!fParticipant.getParticipantId().equals(fPage.getId()))
+		{
+			dirty = true;
+		}
+		else
+		{
+			dirty = !fParticipant.getContactInfo().equals(fPage.getContactInfo());
+		}
+		
+		return dirty;
 	}
+	
+	@Override
+	public void doSaveAs(){}
 
 	@Override
 	public boolean isSaveAsAllowed()

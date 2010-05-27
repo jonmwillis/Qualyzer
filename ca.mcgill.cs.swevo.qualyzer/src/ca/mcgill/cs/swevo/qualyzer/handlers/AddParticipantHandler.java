@@ -63,9 +63,9 @@ public class AddParticipantHandler extends AbstractHandler
 			
 			if(dialog.open() == Window.OK)
 			{
-				view.getCommonViewer().refresh();
-				//openEditor(participant, page);
-				//TODO open the editor
+				view.getCommonViewer().refresh(); //change to wizard.getParticipant() once equality is finished
+				openEditor(wizard.getParticipant(), page);
+				//TODO open the editor by calling the command
 			}
 		}
 
