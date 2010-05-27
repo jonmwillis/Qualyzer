@@ -109,5 +109,30 @@ public class Participant implements Comparable<Participant>
 	{
 		return fContactInfo;
 	}
+	
+	@Override
+	public int hashCode()
+	{
+		//TODO
+		return super.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object obj)
+	{
+		if(obj == null)
+		{
+			return false;
+		}
+		else if(obj == this)
+		{
+			return true;
+		}
+		else if(obj.getClass().equals(getClass()))
+		{
+			return fParticipantId.equals(((Participant) obj).getParticipantId());
+		}
+		return false;
+	}
 
 }

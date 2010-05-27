@@ -35,10 +35,38 @@ public abstract class ProjectWrapper
 		this.fProject = project;
 	}
 
+	/**
+	 * Get the project that this wrapper belongs to.
+	 * @return The project contained in the wrapper.
+	 */
 	public Project getProject()
 	{
 		return fProject;
 	}
 	
+	/**
+	 * Returns the name of the resource that this wrapper acts as a folder for.
+	 * @return A resource name.
+	 */
 	public abstract String getResource();
+	
+	@Override
+	public int hashCode()
+	{
+		return fProject.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object obj)
+	{
+		if(obj == null)
+		{
+			return false;
+		}
+		if(obj instanceof ProjectWrapper)
+		{
+			return fProject.equals(((ProjectWrapper) obj).getProject());
+		}
+		return false;
+	}
 }
