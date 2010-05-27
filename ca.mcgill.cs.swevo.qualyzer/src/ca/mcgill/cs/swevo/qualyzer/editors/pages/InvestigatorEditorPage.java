@@ -38,6 +38,10 @@ import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
  */
 public class InvestigatorEditorPage extends FormPage
 {
+	private Text fNickname;
+	private Text fFullname;
+	private Text fInstitution;
+	
 	private Investigator fInvestigator;
 	/**
 	 * @param editor
@@ -64,18 +68,18 @@ public class InvestigatorEditorPage extends FormPage
 		body.setLayout(layout);
 		
 		Label label = toolkit.createLabel(body, "Nickname:");
-		Text text = toolkit.createText(body, fInvestigator.getNickName());
-		text.setLayoutData(td);
+		fNickname = toolkit.createText(body, fInvestigator.getNickName());
+		fNickname.setLayoutData(td);
 		
 		label = toolkit.createLabel(body, "Full Name:");
-		text = toolkit.createText(body, fInvestigator.getFullName());
+		fFullname = toolkit.createText(body, fInvestigator.getFullName());
 		td = new TableWrapData(TableWrapData.FILL_GRAB);
-		text.setLayoutData(td);
+		fFullname.setLayoutData(td);
 
 		label = toolkit.createLabel(body, "Institution:");
-		text = toolkit.createText(body, fInvestigator.getInstitution());
+		fInstitution = toolkit.createText(body, fInvestigator.getInstitution());
 		td = new TableWrapData(TableWrapData.FILL_GRAB);
-		text.setLayoutData(td);
+		fInstitution.setLayoutData(td);
 		
 		Section section = toolkit.createSection(body, Section.EXPANDED | Section.TITLE_BAR | Section.TWISTIE);
 		td = new TableWrapData(TableWrapData.FILL_GRAB);
@@ -144,5 +148,20 @@ public class InvestigatorEditorPage extends FormPage
 		section.setClient(sectionClient);
 	
 		toolkit.paintBordersFor(body);
+	}
+	
+	public String getNickname()
+	{
+		return fNickname.getText();
+	}
+	
+	public String getFullname()
+	{
+		return fFullname.getText();
+	}
+	
+	public String getInstitution()
+	{
+		return fInstitution.getText();
 	}
 }
