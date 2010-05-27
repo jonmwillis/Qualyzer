@@ -8,7 +8,7 @@
  * Contributors:
  *     McGill University - initial API and implementation
  *******************************************************************************/
-package ca.mcgill.cs.swevo.qualyzer.wizards;
+package ca.mcgill.cs.swevo.qualyzer.wizards.pages;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -95,7 +95,7 @@ public class NewProjectPageTwo extends WizardPage
 		return fInstitution.getText();
 	}
 	
-	public KeyListener createKeyListener()
+	protected KeyListener createKeyListener()
 	{
 		return new KeyListener() {
 
@@ -110,7 +110,6 @@ public class NewProjectPageTwo extends WizardPage
 				if (!fNickname.getText().isEmpty()) 
 				{
 					setPageComplete(true);
-
 				}
 				else
 				{

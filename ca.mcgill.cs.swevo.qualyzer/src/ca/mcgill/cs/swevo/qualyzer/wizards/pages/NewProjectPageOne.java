@@ -8,7 +8,7 @@
  * Contributors:
  *     McGill University - initial API and implementation
  *******************************************************************************/
-package ca.mcgill.cs.swevo.qualyzer.wizards;
+package ca.mcgill.cs.swevo.qualyzer.wizards.pages;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -70,10 +70,16 @@ public class NewProjectPageOne extends WizardPage
 	private KeyListener createKeyListener()
 	{
 		return new KeyListener(){
-
 			@Override
-			public void keyPressed(KeyEvent e) {}
-
+			public void keyPressed(KeyEvent e)
+			{
+				if(fProjectName.getText().isEmpty())
+				{
+					setPageComplete(false);
+					setErrorMessage(null);
+				}
+			}
+			
 			@Override
 			public void keyReleased(KeyEvent e) 
 			{
@@ -85,15 +91,15 @@ public class NewProjectPageOne extends WizardPage
 					setPageComplete(false);
 					setErrorMessage("This project already exists! Please choose a different name.");
 				}	
-				else if(!fProjectName.getText().isEmpty())
+				else if(!fProjectName.getText().isEmpty() && fProjectName.getText().length() > 0)
 				{
-					setPageComplete(true);
 					setErrorMessage(null);
+					setPageComplete(true);
 				}
 				else
 				{
-					setPageComplete(false);
 					setErrorMessage(null);
+					setPageComplete(false);
 				}
 			}
 		};
