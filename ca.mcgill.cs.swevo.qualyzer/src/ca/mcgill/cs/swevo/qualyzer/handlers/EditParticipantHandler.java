@@ -33,13 +33,12 @@ public class EditParticipantHandler extends AbstractHandler
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
-	{
+	{	
 		IWorkbenchPage page = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage();
 		ISelection selection = page.getSelection();
 		
 		if(selection != null && selection instanceof IStructuredSelection)
 		{
-			System.out.println("enter");
 			IStructuredSelection strucSelection = (IStructuredSelection) selection;
 			Object obj = strucSelection.getFirstElement();
 			
