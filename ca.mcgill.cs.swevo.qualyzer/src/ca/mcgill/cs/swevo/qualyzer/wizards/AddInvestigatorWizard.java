@@ -31,6 +31,7 @@ public class AddInvestigatorWizard extends Wizard
 
 	private AddInvestigatorPage fPage;
 	private Project fProject;
+	private Investigator fInvestigator;
 	
 	public AddInvestigatorWizard(Project project)
 	{
@@ -51,14 +52,19 @@ public class AddInvestigatorWizard extends Wizard
 	@Override
 	public boolean performFinish()
 	{
-		Investigator investigator = fPage.getInvestigator();
-		fProject.getInvestigators().add(investigator);
-		investigator.setProject(fProject);
+		fInvestigator = fPage.getInvestigator();
+		fProject.getInvestigators().add(fInvestigator);
+		fInvestigator.setProject(fProject);
 		
 		HibernateDBManager manager;
 		manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(fProject.getName());
 		HibernateUtil.quietSave(manager, fProject);
 		return true;
+	}
+	
+	public Investigator getInvestigator()
+	{
+		return fInvestigator;
 	}
 
 }
