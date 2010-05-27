@@ -166,7 +166,8 @@
                   label="&amp;New">
                <command
                      commandId="ca.mcgill.cs.swevo.qualyzer.commands.newProject"
-                     label="New &amp;Project"
+                     icon="icons/new_prj.gif"
+                     label="&amp;Project"
                      style="push"
                      tooltip="Create a New Project">
                </command>
@@ -196,19 +197,20 @@
                label="&amp;New">
             <command
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.newProject"
-                  label="New Project"
+                  icon="icons/new_prj.gif"
+                  label="Project"
                   style="push"
                   tooltip="Create a New Project">
             </command>
             <command
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.addParticipant"
-                  label="Add Participant"
+                  label="Participant"
                   style="push"
                   tooltip="Add a Participant">
             </command>
             <command
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.addInvestigator"
-                  label="Add Investigator"
+                  label="Investigator"
                   style="push">
             </command>
          </menu>
@@ -220,14 +222,32 @@
                label="Rename"
                style="push">
          </command>
+      </menuContribution>
+      <menuContribution
+            locationURI="popup:ca.mcgill.cs.swevo.qualyzer.projectexplorer#PopupMenu?after=group.open">
          <command
-               commandId="ca.mcgill.cs.swevo.qualyzer.commands.editParticipant"
-               label="Edit Participant"
+               commandId="ca.mcgill.cs.swevo.qualyzer.commands.openInterview"
+               label="Open"
                style="push">
             <visibleWhen
                   checkEnabled="true">
                <iterate
-                     ifEmpty="true"
+                     ifEmpty="false"
+                     operator="or">
+                  <instanceof
+                        value="ca.mcgill.cs.swevo.qualyzer.model.Transcript">
+                  </instanceof>
+               </iterate>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="ca.mcgill.cs.swevo.qualyzer.commands.editParticipant"
+               label="Open"
+               style="push">
+            <visibleWhen
+                  checkEnabled="true">
+               <iterate
+                     ifEmpty="false"
                      operator="or">
                   <instanceof
                         value="ca.mcgill.cs.swevo.qualyzer.model.Participant">
@@ -237,26 +257,18 @@
          </command>
          <command
                commandId="ca.mcgill.cs.swevo.qualyzer.commands.editInvestigator"
-               label="Edit Investigator"
+               label="Open"
                style="push">
             <visibleWhen
                   checkEnabled="true">
                <iterate
-                     ifEmpty="true"
+                     ifEmpty="false"
                      operator="or">
                   <instanceof
                         value="ca.mcgill.cs.swevo.qualyzer.model.Investigator">
                   </instanceof>
                </iterate>
             </visibleWhen>
-         </command>
-      </menuContribution>
-      <menuContribution
-            locationURI="popup:ca.mcgill.cs.swevo.qualyzer.projectexplorer#PopupMenu?after=group.open">
-         <command
-               commandId="ca.mcgill.cs.swevo.qualyzer.commands.openInterview"
-               label="Open"
-               style="push">
          </command>
       </menuContribution>
    </extension>
