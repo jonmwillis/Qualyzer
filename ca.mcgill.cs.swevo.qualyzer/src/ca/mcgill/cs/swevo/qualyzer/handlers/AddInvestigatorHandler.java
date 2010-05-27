@@ -56,9 +56,9 @@ public class AddInvestigatorHandler extends AbstractHandler
 		
 			if(dialog.open() == Window.OK)
 			{
-				view.getCommonViewer().refresh();
-				//openEditor(investigator, page);
-				//TODO Open the editor
+				view.getCommonViewer().refresh(); //change to wizard.getInvestigator() once equality is finished
+				openEditor(wizard.getInvestigator(), page);
+				//TODO Open the editor by calling the command
 			}
 		}
 

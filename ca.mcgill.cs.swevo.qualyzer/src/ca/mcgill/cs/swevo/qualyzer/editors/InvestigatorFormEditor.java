@@ -16,6 +16,7 @@ package ca.mcgill.cs.swevo.qualyzer.editors;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.editor.FormEditor;
+import org.eclipse.ui.navigator.CommonNavigator;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.InvestigatorEditorInput;
@@ -66,7 +67,11 @@ public class InvestigatorFormEditor extends FormEditor
 		
 		HibernateDBManager manager;
 		manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(fInvestigator.getProject().getName());
-		HibernateUtil.quietSave(manager, fInvestigator.getProject());
+		HibernateUtil.quietSave(manager, fInvestigator);
+		
+		CommonNavigator view;
+		view = (CommonNavigator) getSite().getPage().findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+		view.getCommonViewer().refresh(fInvestigator);
 	}
 	
 	@Override
@@ -90,11 +95,7 @@ public class InvestigatorFormEditor extends FormEditor
 	 * @see org.eclipse.ui.part.EditorPart#doSaveAs()
 	 */
 	@Override
-	public void doSaveAs()
-	{
-		// TODO Auto-generated method stub
-
-	}
+	public void doSaveAs(){}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.part.EditorPart#isSaveAsAllowed()
