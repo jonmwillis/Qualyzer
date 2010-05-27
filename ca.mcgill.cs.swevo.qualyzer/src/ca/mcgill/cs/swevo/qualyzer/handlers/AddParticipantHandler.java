@@ -17,17 +17,16 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.navigator.CommonNavigator;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
-import ca.mcgill.cs.swevo.qualyzer.dialogs.AddParticipantDialog;
 import ca.mcgill.cs.swevo.qualyzer.editors.ParticipantFormEditor;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.ParticipantEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.model.Code;
-import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
 import ca.mcgill.cs.swevo.qualyzer.model.Memo;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
@@ -35,7 +34,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 import ca.mcgill.cs.swevo.qualyzer.providers.ProjectWrapper;
-import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
+import ca.mcgill.cs.swevo.qualyzer.wizards.AddParticipantWizard;
 
 /**
  * Launches a dialog whenever the New Participant Command is clicked.
@@ -52,29 +51,24 @@ public class AddParticipantHandler extends AbstractHandler
 		CommonNavigator view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
 		ISelection selection = page.getSelection();
 		
-		AddParticipantDialog dialog = new AddParticipantDialog(HandlerUtil.getActiveWorkbenchWindow(event).getShell());
-		dialog.create();
-		if(dialog.open() == Window.OK)
+		if (selection != null && selection instanceof IStructuredSelection)
 		{
-			Participant participant = new Participant();
-			participant.setParticipantId(dialog.getParticipantId());
-			participant.setFullName(dialog.getFullname());
-			
-			if (selection != null && selection instanceof IStructuredSelection)
-			{
-				IStructuredSelection strucSelection = (IStructuredSelection) selection;
-				Object element = strucSelection.getFirstElement();
+			IStructuredSelection strucSelection = (IStructuredSelection) selection;
+			Object element = strucSelection.getFirstElement();
 
-				Project project = getProject(element);
-				
-				project.getParticipants().add(participant);
-				HibernateDBManager manager;
-				manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(project.getName());
-				HibernateUtil.quietSave(manager, project);
+			Project project = getProject(element);
+			
+			AddParticipantWizard wizard = new AddParticipantWizard(project);
+			WizardDialog dialog = new WizardDialog(HandlerUtil.getActiveShell(event), wizard);
+			
+			if(dialog.open() == Window.OK)
+			{
 				view.getCommonViewer().refresh();
-				openEditor(participant, page);
+				//openEditor(participant, page);
+				//TODO open the editor
 			}
 		}
+
 		return null;
 	}
 
@@ -110,7 +104,18 @@ public class AddParticipantHandler extends AbstractHandler
 		{
 			project = ((ProjectWrapper) element).getProject();
 		}
-		else if(element instanceof Code)
+		else 
+		{
+			project = checkBaseTypes(element);
+		}
+		return project;
+	}
+	
+	private static Project checkBaseTypes(Object element)
+	{
+		Project project = null;
+		
+		if(element instanceof Code)
 		{
 			project = ((Code) element).getProject();
 		}
@@ -130,7 +135,10 @@ public class AddParticipantHandler extends AbstractHandler
 		{
 			project = ((Memo) element).getProject();
 		}
+		
 		return project;
 	}
+	
+	
 
 }

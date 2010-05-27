@@ -32,6 +32,8 @@ public class Participant implements Comparable<Participant>
 	private String fFullName;
 
 	private String fNotes;
+	
+	private String fContactInfo;
 
 	private Project fProject;
 	
@@ -96,6 +98,16 @@ public class Participant implements Comparable<Participant>
 	public void setProject(Project project)
 	{
 		this.fProject = project;
+	}
+
+	public void setContactInfo(String contactInfo)
+	{
+		this.fContactInfo = contactInfo;
+	}
+
+	public String getContactInfo()
+	{
+		return fContactInfo;
 	}
 
 }
