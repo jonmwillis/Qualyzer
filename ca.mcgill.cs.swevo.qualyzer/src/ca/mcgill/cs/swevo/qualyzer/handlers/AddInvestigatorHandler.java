@@ -16,15 +16,19 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.navigator.CommonNavigator;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
-import ca.mcgill.cs.swevo.qualyzer.dialogs.AddInvestigatorDialog;
+import ca.mcgill.cs.swevo.qualyzer.editors.InvestigatorFormEditor;
+import ca.mcgill.cs.swevo.qualyzer.editors.inputs.InvestigatorEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
+import ca.mcgill.cs.swevo.qualyzer.wizards.AddInvestigatorWizard;
 
 /**
  * 
@@ -42,28 +46,40 @@ public class AddInvestigatorHandler extends AbstractHandler
 		CommonNavigator view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
 		ISelection selection = page.getSelection();
 		
-		AddInvestigatorDialog dialog = new AddInvestigatorDialog(window.getShell());
-		dialog.create();
-		
-		if(dialog.open() == Window.OK)
+		if(selection != null && selection instanceof IStructuredSelection)
 		{
-			Investigator investigator = new Investigator();
-			investigator.setFullName(dialog.getFullname());
-			investigator.setInstitution(dialog.getInstitution());
-			investigator.setNickName(dialog.getNickname());
-			
-			if(selection != null && selection instanceof IStructuredSelection)
+			Object element = ((IStructuredSelection) selection).getFirstElement();
+			Project project = AddParticipantHandler.getProject(element);
+		
+			AddInvestigatorWizard wizard = new AddInvestigatorWizard(project);
+			WizardDialog dialog = new WizardDialog(HandlerUtil.getActiveShell(event), wizard);
+		
+			if(dialog.open() == Window.OK)
 			{
-				Object element = ((IStructuredSelection) selection).getFirstElement();
-				Project project = AddParticipantHandler.getProject(element);
-				project.getInvestigators().add(investigator);
-				investigator.setProject(project);
-				
 				view.getCommonViewer().refresh();
+				//openEditor(investigator, page);
+				//TODO Open the editor
 			}
 		}
-		//TODO add to db and open editor
+
 		return null;
+	}
+
+	/**
+	 * @param investigator
+	 * @param page
+	 */
+	private void openEditor(Investigator investigator, IWorkbenchPage page)
+	{
+		InvestigatorEditorInput input = new InvestigatorEditorInput(investigator);
+		try
+		{
+			page.openEditor(input, InvestigatorFormEditor.ID);
+		}
+		catch (PartInitException e)
+		{
+			e.printStackTrace();
+		}		
 	}
 
 }

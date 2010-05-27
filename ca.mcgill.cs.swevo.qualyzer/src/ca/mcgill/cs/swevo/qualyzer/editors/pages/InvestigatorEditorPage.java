@@ -55,6 +55,8 @@ public class InvestigatorEditorPage extends FormPage
 		final ScrolledForm form = managed.getForm();
 		FormToolkit toolkit = managed.getToolkit();
 		
+		form.setText("Investigator");
+		
 		TableWrapLayout layout = new TableWrapLayout();
 		layout.numColumns = 2;
 		TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB);
