@@ -125,7 +125,7 @@ public class NavigatorContentProvider extends WorkbenchContentProvider
 		}
 		else if(element instanceof ProjectWrapper)
 		{
-			return true;
+			return projectHasElements((ProjectWrapper) element);
 		}
 
 		return false;
@@ -140,23 +140,23 @@ public class NavigatorContentProvider extends WorkbenchContentProvider
 	private boolean projectHasElements(ProjectWrapper element)
 	{
 		boolean hasChildren = false;
-		if(element.getResource().equals("transcript"))
+		if(element.getResource().equals("transcripts"))
 		{
 			hasChildren = !element.getProject().getTranscripts().isEmpty();
 		}
-		else if(element.getResource().equals("code"))
+		else if(element.getResource().equals("codes"))
 		{
 			hasChildren = !element.getProject().getCodes().isEmpty();
 		}
-		else if(element.getResource().equals("investigator"))
+		else if(element.getResource().equals("investigators"))
 		{
 			hasChildren = !element.getProject().getInvestigators().isEmpty();
 		}
-		else if(element.getResource().equals("participant"))
+		else if(element.getResource().equals("participants"))
 		{
 			hasChildren = !element.getProject().getParticipants().isEmpty();
 		}
-		else if(element.getResource().equals("memo"))
+		else if(element.getResource().equals("memos"))
 		{
 			hasChildren = !element.getProject().getMemos().isEmpty();
 		}
