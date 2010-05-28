@@ -131,7 +131,7 @@
       <command
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.OpenInterviewHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.openInterview"
-            name="Open Interview">
+            name="Open Transcript">
       </command>
       <command
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.AddParticipantHandler"
@@ -152,6 +152,24 @@
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.EditInvestigatorHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.editInvestigator"
             name="Edit Investigator">
+      </command>
+      <command
+            id="ca.mcgill.cs.swevo.qualyzer.commands.editCode"
+            name="Edit Code">
+      </command>
+      <command
+            id="ca.mcgill.cs.swevo.qualyzer.commands.openMemo"
+            name="Open Memo">
+      </command>
+      <command
+            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.NewTranscriptHandler"
+            id="ca.mcgill.cs.swevo.qualyzer.commands.newTranscript"
+            name="New Transcript">
+      </command>
+      <command
+            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.TranscriptPropertiesHandler"
+            id="ca.mcgill.cs.swevo.qualyzer.commands.editTranscriptProperties"
+            name="Edit Transcript Properties">
       </command>
    </extension>
    <extension
@@ -206,12 +224,19 @@
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.addParticipant"
                   label="Participant"
                   style="push"
-                  tooltip="Add a Participant">
+                  tooltip="Create a new Participant">
             </command>
             <command
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.addInvestigator"
                   label="Investigator"
-                  style="push">
+                  style="push"
+                  tooltip="Create a new Investigator">
+            </command>
+            <command
+                  commandId="ca.mcgill.cs.swevo.qualyzer.commands.newTranscript"
+                  label="Transcript"
+                  style="push"
+                  tooltip="Create a new Transcript">
             </command>
          </menu>
       </menuContribution>
@@ -220,7 +245,33 @@
          <command
                commandId="org.eclipse.ui.edit.rename"
                label="Rename"
+               style="push"
+               tooltip="Rename this Transcript">
+            <visibleWhen
+                  checkEnabled="true">
+               <iterate
+                     ifEmpty="false"
+                     operator="or">
+                  <instanceof
+                        value="ca.mcgill.cs.swevo.qualyzer.model.Transcript">
+                  </instanceof>
+               </iterate>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="ca.mcgill.cs.swevo.qualyzer.commands.editTranscriptProperties"
+               label="Properties"
                style="push">
+            <visibleWhen
+                  checkEnabled="true">
+               <iterate
+                     ifEmpty="false"
+                     operator="or">
+                  <instanceof
+                        value="ca.mcgill.cs.swevo.qualyzer.model.Transcript">
+                  </instanceof>
+               </iterate>
+            </visibleWhen>
          </command>
       </menuContribution>
       <menuContribution
@@ -228,7 +279,8 @@
          <command
                commandId="ca.mcgill.cs.swevo.qualyzer.commands.openInterview"
                label="Open"
-               style="push">
+               style="push"
+               tooltip="Open a Transcript">
             <visibleWhen
                   checkEnabled="true">
                <iterate
@@ -243,7 +295,8 @@
          <command
                commandId="ca.mcgill.cs.swevo.qualyzer.commands.editParticipant"
                label="Open"
-               style="push">
+               style="push"
+               tooltip="Edit a Participant">
             <visibleWhen
                   checkEnabled="true">
                <iterate
@@ -258,7 +311,8 @@
          <command
                commandId="ca.mcgill.cs.swevo.qualyzer.commands.editInvestigator"
                label="Open"
-               style="push">
+               style="push"
+               tooltip="Edit an Investigator">
             <visibleWhen
                   checkEnabled="true">
                <iterate
@@ -266,6 +320,38 @@
                      operator="or">
                   <instanceof
                         value="ca.mcgill.cs.swevo.qualyzer.model.Investigator">
+                  </instanceof>
+               </iterate>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="ca.mcgill.cs.swevo.qualyzer.commands.openMemo"
+               label="Open"
+               style="push"
+               tooltip="Open a Memo">
+            <visibleWhen
+                  checkEnabled="true">
+               <iterate
+                     ifEmpty="false"
+                     operator="or">
+                  <instanceof
+                        value="ca.mcgill.cs.swevo.qualyzer.model.Memo">
+                  </instanceof>
+               </iterate>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="ca.mcgill.cs.swevo.qualyzer.commands.editCode"
+               label="Open"
+               style="push"
+               tooltip="Edit a Code">
+            <visibleWhen
+                  checkEnabled="true">
+               <iterate
+                     ifEmpty="false"
+                     operator="or">
+                  <instanceof
+                        value="ca.mcgill.cs.swevo.qualyzer.model.Code">
                   </instanceof>
                </iterate>
             </visibleWhen>
