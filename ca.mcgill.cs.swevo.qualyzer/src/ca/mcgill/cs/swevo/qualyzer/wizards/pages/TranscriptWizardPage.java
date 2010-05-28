@@ -55,7 +55,7 @@ public class TranscriptWizardPage extends WizardPage
 	private Project fProject;
 	private ArrayList<Participant> fParticipants;
 	private Text fDescription;
-	private final String workspacePath;
+	private final String fWorkspacePath;
 	
 	public TranscriptWizardPage(Project project)
 	{
@@ -67,7 +67,7 @@ public class TranscriptWizardPage extends WizardPage
 		
 		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(fProject.getName());
 		
-		workspacePath = wProject.getLocation().toString();
+		fWorkspacePath = wProject.getLocation().toString();
 	}
 
 	/* (non-Javadoc)
@@ -292,7 +292,7 @@ public class TranscriptWizardPage extends WizardPage
 		AudioFile audioFile = new AudioFile();
 		
 		String relativePath = fAudioFile.getText();
-		relativePath = relativePath.substring(workspacePath.length());
+		relativePath = relativePath.substring(fWorkspacePath.length());
 		audioFile.setRelativePath(relativePath);
 		transcript.setAudioFile(audioFile);
 		
