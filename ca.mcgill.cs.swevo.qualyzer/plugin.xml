@@ -129,8 +129,8 @@
             name="New Project">
       </command>
       <command
-            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.OpenInterviewHandler"
-            id="ca.mcgill.cs.swevo.qualyzer.commands.openInterview"
+            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.OpenTranscriptHandler"
+            id="ca.mcgill.cs.swevo.qualyzer.commands.openTranscript"
             name="Open Transcript">
       </command>
       <command
@@ -277,7 +277,7 @@
       <menuContribution
             locationURI="popup:ca.mcgill.cs.swevo.qualyzer.projectexplorer#PopupMenu?after=group.open">
          <command
-               commandId="ca.mcgill.cs.swevo.qualyzer.commands.openInterview"
+               commandId="ca.mcgill.cs.swevo.qualyzer.commands.openTranscript"
                label="Open"
                style="push"
                tooltip="Open a Transcript">
@@ -361,12 +361,12 @@
    <extension
          point="org.eclipse.ui.editors">
       <editor
-            class="ca.mcgill.cs.swevo.qualyzer.editors.InterviewEditor"
+            class="ca.mcgill.cs.swevo.qualyzer.editors.TranscriptEditor"
             contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
             extensions="txt"
             icon="icons/sample.gif"
-            id="ca.mcgill.cs.swevo.qualyzer.editors.InterviewEditor"
-            name="Interview Editor">
+            id="ca.mcgill.cs.swevo.qualyzer.editors.TranscriptEditor"
+            name="Transcript Editor">
       </editor>
       <editor
             class="ca.mcgill.cs.swevo.qualyzer.editors.ParticipantFormEditor"
@@ -410,6 +410,9 @@
                </adapt>
                <adapt
                      type="ca.mcgill.cs.swevo.qualyzer.model.Investigator">
+               </adapt>
+               <adapt
+                     type="ca.mcgill.cs.swevo.qualyzer.model.Transcript">
                </adapt>
             </or>
          </enablement>
