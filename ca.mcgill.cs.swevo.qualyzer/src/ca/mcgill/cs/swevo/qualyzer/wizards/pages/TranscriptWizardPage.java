@@ -13,9 +13,12 @@
  */
 package ca.mcgill.cs.swevo.qualyzer.wizards.pages;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
@@ -31,6 +34,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
+import ca.mcgill.cs.swevo.qualyzer.model.AudioFile;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
@@ -41,7 +45,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
  */
 public class TranscriptWizardPage extends WizardPage
 {
-	private static final String AUDIO_PATH = "";  //projectpath/audio/
+	private static final String AUDIO_PATH = File.separator+"audio"+File.separator;  // /audio/ or \\audio\\
 	
 	private Composite fContainer;
 	private Table fTable;
@@ -51,6 +55,7 @@ public class TranscriptWizardPage extends WizardPage
 	private Project fProject;
 	private ArrayList<Participant> fParticipants;
 	private Text fDescription;
+	private final String workspacePath;
 	
 	public TranscriptWizardPage(Project project)
 	{
@@ -59,6 +64,10 @@ public class TranscriptWizardPage extends WizardPage
 		setDescription("Please enter the following information to create a new transcript.");
 		fProject = project;
 		fParticipants = new ArrayList<Participant>();
+		
+		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(fProject.getName());
+		
+		workspacePath = wProject.getLocation().toString();
 	}
 
 	/* (non-Javadoc)
@@ -106,7 +115,7 @@ public class TranscriptWizardPage extends WizardPage
 		gd.horizontalSpan = 2;
 		composite.setLayoutData(gd);
 		
-		label = createLabel(fContainer, "Audio File:");
+		label = createLabel(composite, "Audio File:");
 		
 		fAudioFile = createText(composite);
 		
@@ -191,6 +200,10 @@ public class TranscriptWizardPage extends WizardPage
 			@Override
 			public void keyReleased(KeyEvent e)
 			{
+				if(!fName.getText().isEmpty())
+				{
+					fAudioFile.setText(findAudioFile(fName.getText()));
+				}
 				if(transcriptExists())
 				{
 					setErrorMessage("That name is already in use");
@@ -276,6 +289,12 @@ public class TranscriptWizardPage extends WizardPage
 		transcript.setFileName(fName.getText()+".txt");
 		buildParticipants();
 		transcript.setParticipants(fParticipants);
+		AudioFile audioFile = new AudioFile();
+		
+		String relativePath = fAudioFile.getText();
+		relativePath = relativePath.substring(workspacePath.length());
+		audioFile.setRelativePath(relativePath);
+		transcript.setAudioFile(audioFile);
 		
 		return transcript;
 	}
@@ -297,6 +316,17 @@ public class TranscriptWizardPage extends WizardPage
 				}
 			}
 		}
+	}
+	
+	private String findAudioFile(String filename)
+	{	
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(fProject.getName());
+		
+		String path = project.getLocation() + AUDIO_PATH + filename +".mp3";
+		
+		File file = new File(path);
+		
+		return file.exists() ? path : "";
 	}
 
 }
