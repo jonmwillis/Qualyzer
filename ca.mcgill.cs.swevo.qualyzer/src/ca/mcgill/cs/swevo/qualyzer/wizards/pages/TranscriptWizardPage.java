@@ -14,6 +14,9 @@
 package ca.mcgill.cs.swevo.qualyzer.wizards.pages;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +32,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
@@ -56,17 +60,19 @@ public class TranscriptWizardPage extends WizardPage
 	private ArrayList<Participant> fParticipants;
 	private Text fDescription;
 	private final String fWorkspacePath;
+	private boolean fAudioFileSelected;
 	
 	public TranscriptWizardPage(Project project)
 	{
 		super("New Transcript");
 		setTitle("New Transcript");
 		setDescription("Please enter the following information to create a new transcript.");
+		
 		fProject = project;
 		fParticipants = new ArrayList<Participant>();
+		fAudioFileSelected = false;
 		
 		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(fProject.getName());
-		
 		fWorkspacePath = wProject.getLocation().toString();
 	}
 
@@ -121,6 +127,24 @@ public class TranscriptWizardPage extends WizardPage
 		
 		Button button = new Button(composite, SWT.PUSH);
 		button.setText("Browse");
+		button.addSelectionListener(new SelectionListener(){
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e){}
+
+			@Override
+			public void widgetSelected(SelectionEvent e)
+			{
+					FileDialog dialog = new FileDialog(fContainer.getShell());
+					String file = dialog.open();
+					fAudioFile.setText(file);
+					if(!file.isEmpty())
+					{
+						fAudioFileSelected = true;
+					}
+			}
+			
+		});
 		
 		setControl(fContainer);
 		setPageComplete(false);
@@ -200,7 +224,7 @@ public class TranscriptWizardPage extends WizardPage
 			@Override
 			public void keyReleased(KeyEvent e)
 			{
-				if(!fName.getText().isEmpty())
+				if(!fAudioFileSelected && !fName.getText().isEmpty())
 				{
 					fAudioFile.setText(findAudioFile(fName.getText()));
 				}
@@ -292,10 +316,33 @@ public class TranscriptWizardPage extends WizardPage
 		
 		if(!fAudioFile.getText().isEmpty())
 		{
+			//if the audio file is not in the workspace then copy it there.
 			AudioFile audioFile = new AudioFile();
-			String relativePath = fAudioFile.getText();
-			relativePath = relativePath.substring(fWorkspacePath.length());
-			audioFile.setRelativePath(relativePath);
+			String audioPath = fAudioFile.getText();
+			int i = audioPath.lastIndexOf(File.separatorChar);
+			String relativePath = audioPath.substring(i+1);
+			
+			if(audioPath.indexOf(fWorkspacePath) == -1)
+			{
+				File file = new File(audioPath);
+				File fileCpy = new File(fWorkspacePath+AUDIO_PATH+relativePath);
+				try
+				{
+					FileReader input = new FileReader(file);
+					FileWriter output = new FileWriter(fileCpy);
+					
+					int c;
+					while((c = input.read()) != -1)
+					{
+						output.write(c);
+					}
+				}
+				catch(IOException e)
+				{
+					e.printStackTrace();
+				}
+			}
+			audioFile.setRelativePath(AUDIO_PATH+relativePath);
 			transcript.setAudioFile(audioFile);
 		}
 		
