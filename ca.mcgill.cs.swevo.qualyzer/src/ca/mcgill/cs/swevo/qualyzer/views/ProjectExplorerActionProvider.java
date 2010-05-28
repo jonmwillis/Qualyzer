@@ -23,6 +23,7 @@ import org.eclipse.ui.navigator.ICommonActionExtensionSite;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
+import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 
 /**
  * 
@@ -86,6 +87,10 @@ public class ProjectExplorerActionProvider extends CommonActionProvider
 		else if(element instanceof Investigator)
 		{
 			commandId = "ca.mcgill.cs.swevo.qualyzer.commands.editInvestigator";
+		}
+		else if(element instanceof Transcript)
+		{
+			commandId = "ca.mcgill.cs.swevo.qualyzer.commands.openTranscript";
 		}
 		return commandId;
 	}

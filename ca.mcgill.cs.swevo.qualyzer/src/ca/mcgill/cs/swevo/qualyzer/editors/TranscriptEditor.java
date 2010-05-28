@@ -19,14 +19,14 @@ import org.eclipse.ui.ide.IDEActionFactory;
  * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
  *
  */
-public class InterviewEditor extends TextEditor
+public class TranscriptEditor extends TextEditor
 {
 
-	public static final String ID = "ca.mcgill.cs.swevo.qualyzer.editors.InterviewEditor";
+	public static final String ID = "ca.mcgill.cs.swevo.qualyzer.editors.TranscriptEditor";
 	
 	private ColorManager fColorManager;
 
-	public InterviewEditor()
+	public TranscriptEditor()
 	{
 		super();
 		fColorManager = new ColorManager();

@@ -10,49 +10,57 @@
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.handlers;
 
+import java.io.File;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.handlers.HandlerUtil;
-import org.eclipse.ui.navigator.CommonNavigator;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 
-import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
-import ca.mcgill.cs.swevo.qualyzer.editors.InterviewEditor;
+import ca.mcgill.cs.swevo.qualyzer.editors.TranscriptEditor;
+import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 
 /**
  * 
  * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
  * 
  */
-public class OpenInterviewHandler extends AbstractHandler
+public class OpenTranscriptHandler extends AbstractHandler
 {
 
+	private static final String PATH = "transcripts"+File.separator;
+	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
 	{
 		// Get the view
-		IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow(event);
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		IWorkbenchPage page = window.getActivePage();
-		CommonNavigator view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+
 		// Get the selection
-		ISelection selection = view.getSite().getSelectionProvider().getSelection();
+		ISelection selection = page.getSelection();
 		if (selection != null && selection instanceof IStructuredSelection)
 		{
 			Object obj = ((IStructuredSelection) selection).getFirstElement();
 			// If we had a selection lets open the editor
-			if (obj != null)
+			if (obj != null && obj instanceof Transcript)
 			{
-				FileEditorInput editorInput = new FileEditorInput((IFile) obj);
+				Transcript trans = (Transcript) obj;
+				IProject proj = ResourcesPlugin.getWorkspace().getRoot().getProject(trans.getProject().getName());
+				IFile file = proj.getFile(PATH + trans.getFileName());
+				FileEditorInput editorInput = new FileEditorInput(file);
 				try
 				{
-					page.openEditor(editorInput, InterviewEditor.ID);
+					page.openEditor(editorInput, TranscriptEditor.ID);
 				}
 				catch (PartInitException e)
 				{
