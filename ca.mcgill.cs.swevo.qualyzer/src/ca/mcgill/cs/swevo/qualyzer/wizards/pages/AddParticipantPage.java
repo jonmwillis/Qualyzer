@@ -98,7 +98,7 @@ public class AddParticipantPage extends WizardPage
 			{
 				if(fIdText.getText().isEmpty())
 				{
-					setErrorMessage(null);
+					setErrorMessage("Please enter a Participant Id");
 					setPageComplete(false);
 				}
 				else if(idExists())
