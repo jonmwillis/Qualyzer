@@ -38,15 +38,17 @@ public class AddInvestigatorPage extends NewProjectPageTwo
 	public void createControl(Composite parent)
 	{
 		super.createControl(parent);
+		boolean found = false;
 		for(Investigator inves : fProject.getInvestigators())
 		{
 			if(inves.getNickName().equals(getInvestigatorNickname()))
 			{
 				setErrorMessage("That nickname is already in use.");
+				found = true;
 				break;
 			}
 		}
-		setPageComplete(false);
+		setPageComplete(!found);
 	}
 
 	@Override
@@ -62,7 +64,7 @@ public class AddInvestigatorPage extends NewProjectPageTwo
 				if(getInvestigatorNickname().length() <= 0)
 				{
 					setPageComplete(false);
-					setErrorMessage(null);
+					setErrorMessage("Please enter a nickname for the Investigator");
 				}
 				else
 				{
