@@ -36,6 +36,7 @@ public class NewTranscriptWizard extends Wizard
 {
 	private TranscriptWizardPage fPage;
 	private Project fProject;
+	private Transcript fTranscript;
 	
 	public NewTranscriptWizard(Project project)
 	{
@@ -55,15 +56,15 @@ public class NewTranscriptWizard extends Wizard
 	@Override
 	public boolean performFinish()
 	{
-		Transcript transcript = fPage.getTranscript();
-		fProject.getTranscripts().add(transcript);
-		transcript.setProject(fProject);
-		
+		fTranscript = fPage.getTranscript();
+		fProject.getTranscripts().add(fTranscript);
+		fTranscript.setProject(fProject);
+
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		IProject wProject = root.getProject(fProject.getName());
-		
-		String path = wProject.getLocation()+File.separator+"transcripts"+File.separator+transcript.getFileName();
+		String path = wProject.getLocation()+File.separator+"transcripts"+File.separator+fTranscript.getFileName();
 		File file = new File(path);
+		
 		try
 		{
 			if(!file.createNewFile())
@@ -76,11 +77,20 @@ public class NewTranscriptWizard extends Wizard
 		{
 			e.printStackTrace();
 		}
-		
+
 		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(fProject.getName());
 		HibernateUtil.quietSave(manager, fProject);
-		
+
 		return true;
+	}
+
+
+	/**
+	 * @return
+	 */
+	public Transcript getTranscript()
+	{
+		return fTranscript;
 	}
 
 }

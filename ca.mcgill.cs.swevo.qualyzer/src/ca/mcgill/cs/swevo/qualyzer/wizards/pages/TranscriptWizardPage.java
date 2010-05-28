@@ -289,12 +289,15 @@ public class TranscriptWizardPage extends WizardPage
 		transcript.setFileName(fName.getText()+".txt");
 		buildParticipants();
 		transcript.setParticipants(fParticipants);
-		AudioFile audioFile = new AudioFile();
 		
-		String relativePath = fAudioFile.getText();
-		relativePath = relativePath.substring(fWorkspacePath.length());
-		audioFile.setRelativePath(relativePath);
-		transcript.setAudioFile(audioFile);
+		if(!fAudioFile.getText().isEmpty())
+		{
+			AudioFile audioFile = new AudioFile();
+			String relativePath = fAudioFile.getText();
+			relativePath = relativePath.substring(fWorkspacePath.length());
+			audioFile.setRelativePath(relativePath);
+			transcript.setAudioFile(audioFile);
+		}
 		
 		return transcript;
 	}
