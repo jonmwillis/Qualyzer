@@ -114,6 +114,8 @@ public class ImportAudioFileHandler extends AbstractHandler
 				{
 					out.write(c);
 				}
+				in.close();
+				out.close();
 			}
 			catch(IOException e)
 			{
