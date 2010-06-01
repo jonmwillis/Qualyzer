@@ -13,15 +13,11 @@
  */
 package ca.mcgill.cs.swevo.qualyzer.editors.inputs;
 
-import org.eclipse.core.internal.runtime.AdapterManager;
-import org.eclipse.core.runtime.IAdapterManager;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
-import org.eclipse.ui.model.IWorkbenchAdapter;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
-import ca.mcgill.cs.swevo.qualyzer.providers.WrapperInvestigator;
 
 /**
  * @author Jonathan Faubert (jonfaub@gmail.com)
@@ -86,37 +82,11 @@ public class InvestigatorEditorInput implements IEditorInput
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public Object getAdapter(Class adapter)
 	{
-		if (IWorkbenchAdapter.class.equals(adapter))
-		{
-			return new IWorkbenchAdapter() {
-
-				public Object[] getChildren(Object o) 
-				{
-					return new Object[0];
-				}
-
-				public ImageDescriptor getImageDescriptor(Object object)
-				{
-					return InvestigatorEditorInput.this.getImageDescriptor();
-				}
-
-				public String getLabel(Object o) 
-				{
-					return InvestigatorEditorInput.this.getName();
-				}
-
-				public Object getParent(Object o)
-				{
-					return new WrapperInvestigator(InvestigatorEditorInput.this.getInvestigator().getProject());
-				}
-			};
-		}
-
-		IAdapterManager manager = AdapterManager.getDefault();
-		return manager.getAdapter(this, adapter);
+		return null;
 	}
 
 	public Investigator getInvestigator()

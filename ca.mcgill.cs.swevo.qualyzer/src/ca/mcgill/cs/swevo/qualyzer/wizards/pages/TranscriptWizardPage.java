@@ -49,6 +49,11 @@ import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
  */
 public class TranscriptWizardPage extends WizardPage
 {
+	/**
+	 * 
+	 */
+	private static final int COMPOSITE_COLS = 3;
+
 	private static final String AUDIO_PATH = File.separator+"audio"+File.separator;  // /audio/ or \\audio\\
 	
 	private Composite fContainer;
@@ -86,48 +91,81 @@ public class TranscriptWizardPage extends WizardPage
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 2;
 		fContainer.setLayout(layout);
-		GridData gd;
 		
+		@SuppressWarnings("unused")
 		Label label = createLabel(fContainer, "Transcript name:");
-		
 		fName = createText(fContainer);
 		
 		label = createLabel(fContainer, "Date:");
-		
 		fDate = createText(fContainer);
 		
+		createLongLabel();
+		createTable();
+		
+		label = createLabel(fContainer, "Description:");
+		fDescription = createText(fContainer);
+		
+		Composite composite = createComposite();
+		label = createLabel(composite, "Audio File:");
+		fAudioFile = createText(composite);
+		Button button = new Button(composite, SWT.PUSH);
+		button.setText("Browse");
+		button.addSelectionListener(createButtonListener());
+		
+		setControl(fContainer);
+		setPageComplete(false);
+	}
+
+	/**
+	 * 
+	 */
+	private void createLongLabel()
+	{
+		GridData gd;
+		Label label;
 		label = createLabel(fContainer, "Select the Participants");
 		gd = new GridData(SWT.FILL, SWT.NULL, true, false);
 		gd.horizontalSpan = 2;
 		label.setLayoutData(gd);
-		
+	}
+
+	/**
+	 * @return
+	 */
+	private Composite createComposite()
+	{
+		GridLayout layout;
+		GridData gd;
+		Composite composite = new Composite(fContainer, SWT.NULL);
+		layout = new GridLayout();
+		layout.numColumns = COMPOSITE_COLS;
+		composite.setLayout(layout);
+		gd = new GridData(SWT.FILL, SWT.FILL, true, false);
+		gd.horizontalSpan = 2;
+		composite.setLayoutData(gd);
+		return composite;
+	}
+
+	/**
+	 * 
+	 */
+	private void createTable()
+	{
+		GridData gd;
 		fTable = new Table(fContainer, SWT.MULTI | SWT.BORDER);
 		gd = new GridData(SWT.FILL, SWT.FILL, true, false);
 		gd.horizontalSpan = 2;
 		fTable.setLayoutData(gd);
 		populateTable();
 		fTable.addSelectionListener(createSelectionListener());
-		//TODO Selection listener?
-		
-		label = createLabel(fContainer, "Description:");
-		
-		fDescription = createText(fContainer);
-		
-		Composite composite = new Composite(fContainer, SWT.NULL);
-		layout = new GridLayout();
-		layout.numColumns = 3;
-		composite.setLayout(layout);
-		gd = new GridData(SWT.FILL, SWT.FILL, true, false);
-		gd.horizontalSpan = 2;
-		composite.setLayoutData(gd);
-		
-		label = createLabel(composite, "Audio File:");
-		
-		fAudioFile = createText(composite);
-		
-		Button button = new Button(composite, SWT.PUSH);
-		button.setText("Browse");
-		button.addSelectionListener(new SelectionListener(){
+	}
+
+	/**
+	 * @return
+	 */
+	private SelectionListener createButtonListener()
+	{
+		return new SelectionListener(){
 
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e){}
@@ -136,9 +174,9 @@ public class TranscriptWizardPage extends WizardPage
 			public void widgetSelected(SelectionEvent e)
 			{
 					FileDialog dialog = new FileDialog(fContainer.getShell());
-					dialog.setFilterPath(fWorkspacePath);
+					dialog.setFilterPath(fWorkspacePath+AUDIO_PATH);
 					dialog.setFilterExtensions(new String[]{"*.mp3;*.wav"});
-					dialog.setFilterNames(new String[]{"Audio (mp3, wav)"});
+					dialog.setFilterNames(new String[]{"Audio (.mp3, .wav)"});
 					
 					String file = dialog.open();
 					fAudioFile.setText(file);
@@ -148,10 +186,7 @@ public class TranscriptWizardPage extends WizardPage
 					}
 			}
 			
-		});
-		
-		setControl(fContainer);
-		setPageComplete(false);
+		};
 	}
 
 	/**
@@ -214,12 +249,10 @@ public class TranscriptWizardPage extends WizardPage
 	 * @return
 	 */
 	private KeyListener createKeyListener()
-	{//TODO finish
+	{
 		return new KeyListener(){
-
 			@Override
 			public void keyPressed(KeyEvent e){}
-
 			@Override
 			public void keyReleased(KeyEvent e)
 			{
@@ -370,7 +403,7 @@ public class TranscriptWizardPage extends WizardPage
 	 */
 	private void buildParticipants()
 	{
-		TableItem[] items = fTable.getItems();
+		TableItem[] items = fTable.getSelection();
 		
 		for(Participant participant : fProject.getParticipants())
 		{

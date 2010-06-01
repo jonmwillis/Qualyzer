@@ -63,15 +63,14 @@ public class InvestigatorEditorPage extends FormPage
 	{
 		final ScrolledForm form = managed.getForm();
 		FormToolkit toolkit = managed.getToolkit();
-		
 		form.setText("Investigator");
 		
 		TableWrapLayout layout = new TableWrapLayout();
 		layout.numColumns = 2;
-		TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB);
 		Composite body = form.getBody();
 		body.setLayout(layout);
 		
+		@SuppressWarnings("unused")
 		Label label = toolkit.createLabel(body, "Nickname:");
 		fNickname = createText(toolkit, fInvestigator.getNickName(), body);
 		
@@ -81,61 +80,34 @@ public class InvestigatorEditorPage extends FormPage
 		label = toolkit.createLabel(body, "Institution:");
 		fInstitution = createText(toolkit, fInvestigator.getInstitution(), body);
 		
-		Section section = toolkit.createSection(body, Section.EXPANDED | Section.TITLE_BAR | Section.TWISTIE);
-		td = new TableWrapData(TableWrapData.FILL_GRAB);
-		td.colspan = 2;
-		section.setLayoutData(td);
-		section.setText("Conducted Interviews");
-		section.addExpansionListener(new ExpansionAdapter(){
-			public void expansionStateChanged(ExpansionEvent e)
-			{
-				form.reflow(true);
-			}
-		});
-		Composite sectionClient = toolkit.createComposite(section);
-		GridLayout grid = new GridLayout();
-		grid.numColumns = 1;
-		sectionClient.setLayout(grid);
-		//TODO generate the interview data
-		//TODO make clickable
-		GridData gd = new GridData(SWT.FILL, SWT.NULL, true, false);
-		label = toolkit.createLabel(sectionClient, "Example Interview");
-		label.setLayoutData(gd);
-		section.setClient(sectionClient);
+		createInterviewSection(form, toolkit, body);
 		
-		section = toolkit.createSection(body, Section.EXPANDED | Section.TITLE_BAR | Section.TWISTIE);
-		td = new TableWrapData(TableWrapData.FILL_GRAB);
-		td.colspan = 2;
-		section.setLayoutData(td);
-		section.setText("Coded Interviews");
-		section.addExpansionListener(new ExpansionAdapter(){
-			public void expansionStateChanged(ExpansionEvent e)
-			{
-				form.reflow(true);
-			}
-		});
-		sectionClient = toolkit.createComposite(section);
-		grid = new GridLayout();
-		grid.numColumns = 1;
-		sectionClient.setLayout(grid);
-		//TODO generate the interview data
-		//TODO make clickable
-		gd = new GridData(SWT.FILL, SWT.NULL, true, false);
-		label = toolkit.createLabel(sectionClient, "Example Interview");
-		label.setLayoutData(gd);
-		section.setClient(sectionClient);
+		createCodedSection(form, toolkit, body);
 		
+		createMemoSection(form, toolkit, body);
+	
+		toolkit.paintBordersFor(body);
+	}
+
+	/**
+	 * @param form
+	 * @param toolkit
+	 * @param body
+	 */
+	private void createMemoSection(final ScrolledForm form, FormToolkit toolkit, Composite body)
+	{
+		TableWrapData td;
+		Label label;
+		Section section;
+		Composite sectionClient;
+		GridLayout grid;
+		GridData gd;
 		section = toolkit.createSection(body, Section.EXPANDED | Section.TITLE_BAR | Section.TWISTIE);
 		td = new TableWrapData(TableWrapData.FILL_GRAB);
 		td.colspan = 2;
 		section.setLayoutData(td);
 		section.setText("Memos");
-		section.addExpansionListener(new ExpansionAdapter(){
-			public void expansionStateChanged(ExpansionEvent e)
-			{
-				form.reflow(true);
-			}
-		});
+		section.addExpansionListener(createExpansionListener(form));
 		sectionClient = toolkit.createComposite(section);
 		grid = new GridLayout();
 		grid.numColumns = 1;
@@ -146,8 +118,78 @@ public class InvestigatorEditorPage extends FormPage
 		label = toolkit.createLabel(sectionClient, "Example Memo");
 		label.setLayoutData(gd);
 		section.setClient(sectionClient);
-	
-		toolkit.paintBordersFor(body);
+	}
+
+	/**
+	 * @param form
+	 * @param toolkit
+	 * @param body
+	 */
+	private void createCodedSection(final ScrolledForm form, FormToolkit toolkit, Composite body)
+	{
+		TableWrapData td;
+		Label label;
+		Section section;
+		Composite sectionClient;
+		GridLayout grid;
+		GridData gd;
+		section = toolkit.createSection(body, Section.EXPANDED | Section.TITLE_BAR | Section.TWISTIE);
+		td = new TableWrapData(TableWrapData.FILL_GRAB);
+		td.colspan = 2;
+		section.setLayoutData(td);
+		section.setText("Coded Interviews");
+		section.addExpansionListener(createExpansionListener(form));
+		sectionClient = toolkit.createComposite(section);
+		grid = new GridLayout();
+		grid.numColumns = 1;
+		sectionClient.setLayout(grid);
+		//TODO generate the interview data
+		//TODO make clickable
+		gd = new GridData(SWT.FILL, SWT.NULL, true, false);
+		label = toolkit.createLabel(sectionClient, "Example Interview");
+		label.setLayoutData(gd);
+		section.setClient(sectionClient);
+	}
+
+	/**
+	 * @param form
+	 * @param toolkit
+	 * @param body
+	 */
+	private void createInterviewSection(final ScrolledForm form, FormToolkit toolkit, Composite body)
+	{
+		TableWrapData td;
+		Label label;
+		Section section = toolkit.createSection(body, Section.EXPANDED | Section.TITLE_BAR | Section.TWISTIE);
+		td = new TableWrapData(TableWrapData.FILL_GRAB);
+		td.colspan = 2;
+		section.setLayoutData(td);
+		section.setText("Conducted Interviews");
+		section.addExpansionListener(createExpansionListener(form));
+		Composite sectionClient = toolkit.createComposite(section);
+		GridLayout grid = new GridLayout();
+		grid.numColumns = 1;
+		sectionClient.setLayout(grid);
+		//TODO generate the interview data
+		//TODO make clickable
+		GridData gd = new GridData(SWT.FILL, SWT.NULL, true, false);
+		label = toolkit.createLabel(sectionClient, "Example Interview");
+		label.setLayoutData(gd);
+		section.setClient(sectionClient);
+	}
+
+	/**
+	 * @param form
+	 * @return
+	 */
+	private ExpansionAdapter createExpansionListener(final ScrolledForm form)
+	{
+		return new ExpansionAdapter(){
+			public void expansionStateChanged(ExpansionEvent e)
+			{
+				form.reflow(true);
+			}
+		};
 	}
 	
 	private Text createText(FormToolkit toolkit, String data, Composite parent)
