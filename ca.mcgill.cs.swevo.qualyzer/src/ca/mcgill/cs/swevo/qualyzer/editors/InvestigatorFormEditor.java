@@ -73,23 +73,19 @@ public class InvestigatorFormEditor extends FormEditor
 		CommonNavigator view;
 		view = (CommonNavigator) getSite().getPage().findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
 		view.getCommonViewer().refresh(fInvestigator);
+		
+		fPage.notDirty();
 	}
 	
 	@Override
 	public boolean isDirty()
 	{
-		if(!fInvestigator.getFullName().equals(fPage.getFullname()))
+		if(fPage.isDirty())
 		{
-			return true;
+			setPartName(fInvestigator.getNickName()+(char)0);
 		}
-		else if(!fInvestigator.getInstitution().equals(fPage.getInstitution()))
-		{
-			return true;
-		}
-		else
-		{
-			return !fInvestigator.getNickName().equals(fPage.getNickname());
-		}
+		
+		return fPage.isDirty();
 	}
 
 	/* (non-Javadoc)

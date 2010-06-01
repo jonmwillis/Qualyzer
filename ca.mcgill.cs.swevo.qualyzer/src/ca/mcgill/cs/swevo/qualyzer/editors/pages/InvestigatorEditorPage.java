@@ -14,6 +14,8 @@
 package ca.mcgill.cs.swevo.qualyzer.editors.pages;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -44,6 +46,7 @@ public class InvestigatorEditorPage extends FormPage
 	private Text fInstitution;
 	
 	private Investigator fInvestigator;
+	private boolean fIsDirty;
 	/**
 	 * @param editor
 	 * @param fInvestigator 
@@ -52,6 +55,7 @@ public class InvestigatorEditorPage extends FormPage
 	{
 		super(editor, "Investigator", "Investigator");
 		fInvestigator = investigator;
+		fIsDirty = false;
 	}
 
 	@Override
@@ -69,18 +73,13 @@ public class InvestigatorEditorPage extends FormPage
 		body.setLayout(layout);
 		
 		Label label = toolkit.createLabel(body, "Nickname:");
-		fNickname = toolkit.createText(body, fInvestigator.getNickName());
-		fNickname.setLayoutData(td);
+		fNickname = createText(toolkit, fInvestigator.getNickName(), body);
 		
 		label = toolkit.createLabel(body, "Full Name:");
-		fFullname = toolkit.createText(body, fInvestigator.getFullName());
-		td = new TableWrapData(TableWrapData.FILL_GRAB);
-		fFullname.setLayoutData(td);
+		fFullname = createText(toolkit, fInvestigator.getFullName(), body);
 
 		label = toolkit.createLabel(body, "Institution:");
-		fInstitution = toolkit.createText(body, fInvestigator.getInstitution());
-		td = new TableWrapData(TableWrapData.FILL_GRAB);
-		fInstitution.setLayoutData(td);
+		fInstitution = createText(toolkit, fInvestigator.getInstitution(), body);
 		
 		Section section = toolkit.createSection(body, Section.EXPANDED | Section.TITLE_BAR | Section.TWISTIE);
 		td = new TableWrapData(TableWrapData.FILL_GRAB);
@@ -151,6 +150,22 @@ public class InvestigatorEditorPage extends FormPage
 		toolkit.paintBordersFor(body);
 	}
 	
+	private Text createText(FormToolkit toolkit, String data, Composite parent)
+	{
+		Text text = toolkit.createText(parent, data);
+		TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB);
+		text.setLayoutData(td);
+		text.addKeyListener(createKeyListener());
+		
+		return text;
+	}
+	
+	@Override
+	public boolean isDirty()
+	{
+		return fIsDirty;
+	}
+	
 	/**
 	 * Get the Nickname that was entered for this Investigator.
 	 * @return The Nickname field.
@@ -176,5 +191,33 @@ public class InvestigatorEditorPage extends FormPage
 	public String getInstitution()
 	{
 		return fInstitution.getText();
+	}
+	
+	private KeyListener createKeyListener()
+	{
+		return new KeyListener(){
+
+			@Override
+			public void keyPressed(KeyEvent e)	{}
+
+			@Override
+			public void keyReleased(KeyEvent e)
+			{
+				if(!fIsDirty)
+				{
+					fIsDirty = true;
+					getEditor().isDirty();
+				}
+			}
+			
+		};
+	}
+
+	/**
+	 * 
+	 */
+	public void notDirty()
+	{
+		fIsDirty = false;
 	}
 }
