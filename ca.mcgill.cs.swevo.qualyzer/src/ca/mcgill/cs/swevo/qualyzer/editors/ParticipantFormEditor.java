@@ -73,31 +73,18 @@ public class ParticipantFormEditor extends FormEditor
 		CommonNavigator view;
 		view = (CommonNavigator) getSite().getPage().findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
 		view.getCommonViewer().refresh(fParticipant);
+		fPage.notDirty();
 	}
 
 	@Override
 	public boolean isDirty()
-	{
-		boolean dirty = false;
-		
-		if(!fParticipant.getNotes().equals(fPage.getNotes()))
+	{	
+		if(fPage.isDirty())
 		{
-			dirty = true;
+			char c = 0; //TODO hack
+			setPartName(fParticipant.getParticipantId()+c);
 		}
-		else if(!fParticipant.getFullName().equals(fPage.getFullname()))
-		{
-			dirty = true;
-		}
-		else if(!fParticipant.getParticipantId().equals(fPage.getId()))
-		{
-			dirty = true;
-		}
-		else
-		{
-			dirty = !fParticipant.getContactInfo().equals(fPage.getContactInfo());
-		}
-		
-		return dirty;
+		return fPage.isDirty();
 	}
 	
 	@Override
