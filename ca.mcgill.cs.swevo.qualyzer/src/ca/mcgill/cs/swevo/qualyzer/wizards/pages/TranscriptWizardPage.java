@@ -56,16 +56,18 @@ public class TranscriptWizardPage extends WizardPage
 
 	private static final String AUDIO_PATH = File.separator+"audio"+File.separator;  // /audio/ or \\audio\\
 	
+	protected Table fTable;
+	protected Text fName;
+	protected Text fAudioFile;
+	protected boolean fAudioFileSelected;
+	
 	private Composite fContainer;
-	private Table fTable;
 	private Text fDate;
-	private Text fName;
-	private Text fAudioFile;
 	private Project fProject;
 	private ArrayList<Participant> fParticipants;
 	private Text fDescription;
 	private final String fWorkspacePath;
-	private boolean fAudioFileSelected;
+	
 	
 	public TranscriptWizardPage(Project project)
 	{
@@ -80,7 +82,25 @@ public class TranscriptWizardPage extends WizardPage
 		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(fProject.getName());
 		fWorkspacePath = wProject.getLocation().toString();
 	}
+	
+	public TranscriptWizardPage(Project project, String id)
+	{
+		super(id);
+		setTitle(id);
+		
+		fProject = project;
+		fParticipants = new ArrayList<Participant>();
+		fAudioFileSelected = false;
+		
+		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(fProject.getName());
+		fWorkspacePath = wProject.getLocation().toString();
+	}
 
+	protected Composite getfContainer()
+	{
+		return fContainer;
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
 	 */
@@ -248,7 +268,7 @@ public class TranscriptWizardPage extends WizardPage
 	/**
 	 * @return
 	 */
-	private KeyListener createKeyListener()
+	protected KeyListener createKeyListener()
 	{
 		return new KeyListener(){
 			@Override
@@ -280,7 +300,7 @@ public class TranscriptWizardPage extends WizardPage
 		};
 	}
 	
-	private void setError(String message)
+	protected void setError(String message)
 	{
 		setErrorMessage(message);
 		if(message == null)
@@ -391,6 +411,8 @@ public class TranscriptWizardPage extends WizardPage
 			{
 				output.write(c);
 			}
+			input.close();
+			output.close();
 		}
 		catch(IOException e)
 		{
@@ -417,7 +439,7 @@ public class TranscriptWizardPage extends WizardPage
 		}
 	}
 	
-	private String findAudioFile(String filename)
+	protected String findAudioFile(String filename)
 	{	
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(fProject.getName());
 		
