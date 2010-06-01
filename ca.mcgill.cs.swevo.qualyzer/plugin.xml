@@ -154,10 +154,12 @@
             name="Edit Investigator">
       </command>
       <command
+            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.EditCodeHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.editCode"
             name="Edit Code">
       </command>
       <command
+            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.OpenMemoHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.openMemo"
             name="Open Memo">
       </command>
@@ -170,6 +172,16 @@
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.TranscriptPropertiesHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.editTranscriptProperties"
             name="Edit Transcript Properties">
+      </command>
+      <command
+            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.ImportTranscriptHandler"
+            id="ca.mcgill.cs.swevo.qualyzer.commands.importTranscript"
+            name="Import Transcript">
+      </command>
+      <command
+            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.ImportAudioFileHandler"
+            id="ca.mcgill.cs.swevo.qualyzer.commands.importAudioFile"
+            name="Import Audio File">
       </command>
    </extension>
    <extension
@@ -197,6 +209,32 @@
                   tooltip="Set up the workspace">
             </command>
             <separator
+                  name="fileMenu/closeSeparator"
+                  visible="true">
+            </separator>
+            <command
+                  commandId="org.eclipse.ui.file.close"
+                  label="&amp;Close"
+                  style="push"
+                  tooltip="Close the open editor">
+            </command>
+            <command
+                  commandId="org.eclipse.ui.file.closeAll"
+                  label="C&amp;lose All"
+                  style="push"
+                  tooltip="Close all open editors">
+            </command>
+            <separator
+                  name="fileMenu/saveSeparator"
+                  visible="true">
+            </separator>
+            <command
+                  commandId="org.eclipse.ui.file.save"
+                  label="Save"
+                  style="push"
+                  tooltip="Save the open editor">
+            </command>
+            <separator
                   name="fileMenu/lastSeparator"
                   visible="true">
             </separator>
@@ -216,69 +254,89 @@
             <command
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.newProject"
                   icon="icons/new_prj.gif"
-                  label="Project"
+                  label="&amp;Project"
                   style="push"
                   tooltip="Create a New Project">
             </command>
             <command
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.addParticipant"
-                  label="Participant"
+                  label="P&amp;articipant"
                   style="push"
                   tooltip="Create a new Participant">
+               <visibleWhen
+                     checkEnabled="true">
+                  <iterate
+                        ifEmpty="false"
+                        operator="or">
+                     <or>
+                        <instanceof
+                              value="org.eclipse.core.resources.IProject">
+                        </instanceof>
+                        <instanceof
+                              value="ca.mcgill.cs.swevo.qualyzer.providers.WrapperParticipant">
+                        </instanceof>
+                        <instanceof
+                              value="ca.mcgill.cs.swevo.qualyzer.model.Participant">
+                        </instanceof>
+                     </or>
+                  </iterate>
+               </visibleWhen>
             </command>
             <command
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.addInvestigator"
-                  label="Investigator"
+                  label="&amp;Investigator"
                   style="push"
                   tooltip="Create a new Investigator">
+               <visibleWhen
+                     checkEnabled="true">
+                  <iterate
+                        ifEmpty="false"
+                        operator="or">
+                     <or>
+                        <instanceof
+                              value="org.eclipse.core.resources.IProject">
+                        </instanceof>
+                        <instanceof
+                              value="ca.mcgill.cs.swevo.qualyzer.providers.WrapperInvestigator">
+                        </instanceof>
+                        <instanceof
+                              value="ca.mcgill.cs.swevo.qualyzer.model.Investigator">
+                        </instanceof>
+                     </or>
+                  </iterate>
+               </visibleWhen>
             </command>
             <command
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.newTranscript"
-                  label="Transcript"
+                  label="&amp;Transcript"
                   style="push"
                   tooltip="Create a new Transcript">
+               <visibleWhen
+                     checkEnabled="true">
+                  <iterate
+                        ifEmpty="false"
+                        operator="or">
+                     <or>
+                        <instanceof
+                              value="org.eclipse.core.resources.IProject">
+                        </instanceof>
+                        <instanceof
+                              value="ca.mcgill.cs.swevo.qualyzer.providers.WrapperTranscript">
+                        </instanceof>
+                        <instanceof
+                              value="ca.mcgill.cs.swevo.qualyzer.model.Transcript">
+                        </instanceof>
+                     </or>
+                  </iterate>
+               </visibleWhen>
             </command>
          </menu>
-      </menuContribution>
-      <menuContribution
-            locationURI="popup:ca.mcgill.cs.swevo.qualyzer.projectexplorer#PopupMenu?after=group.edit2">
-         <command
-               commandId="org.eclipse.ui.edit.rename"
-               label="Rename"
-               style="push"
-               tooltip="Rename this Transcript">
-            <visibleWhen
-                  checkEnabled="true">
-               <iterate
-                     ifEmpty="false"
-                     operator="or">
-                  <instanceof
-                        value="ca.mcgill.cs.swevo.qualyzer.model.Transcript">
-                  </instanceof>
-               </iterate>
-            </visibleWhen>
-         </command>
-         <command
-               commandId="ca.mcgill.cs.swevo.qualyzer.commands.editTranscriptProperties"
-               label="Properties"
-               style="push">
-            <visibleWhen
-                  checkEnabled="true">
-               <iterate
-                     ifEmpty="false"
-                     operator="or">
-                  <instanceof
-                        value="ca.mcgill.cs.swevo.qualyzer.model.Transcript">
-                  </instanceof>
-               </iterate>
-            </visibleWhen>
-         </command>
       </menuContribution>
       <menuContribution
             locationURI="popup:ca.mcgill.cs.swevo.qualyzer.projectexplorer#PopupMenu?after=group.open">
          <command
                commandId="ca.mcgill.cs.swevo.qualyzer.commands.openTranscript"
-               label="Open"
+               label="&amp;Open"
                style="push"
                tooltip="Open a Transcript">
             <visibleWhen
@@ -294,7 +352,7 @@
          </command>
          <command
                commandId="ca.mcgill.cs.swevo.qualyzer.commands.editParticipant"
-               label="Open"
+               label="&amp;Open"
                style="push"
                tooltip="Edit a Participant">
             <visibleWhen
@@ -310,7 +368,7 @@
          </command>
          <command
                commandId="ca.mcgill.cs.swevo.qualyzer.commands.editInvestigator"
-               label="Open"
+               label="&amp;Open"
                style="push"
                tooltip="Edit an Investigator">
             <visibleWhen
@@ -326,7 +384,7 @@
          </command>
          <command
                commandId="ca.mcgill.cs.swevo.qualyzer.commands.openMemo"
-               label="Open"
+               label="&amp;Open"
                style="push"
                tooltip="Open a Memo">
             <visibleWhen
@@ -342,7 +400,7 @@
          </command>
          <command
                commandId="ca.mcgill.cs.swevo.qualyzer.commands.editCode"
-               label="Open"
+               label="&amp;Open"
                style="push"
                tooltip="Edit a Code">
             <visibleWhen
@@ -352,6 +410,87 @@
                      operator="or">
                   <instanceof
                         value="ca.mcgill.cs.swevo.qualyzer.model.Code">
+                  </instanceof>
+               </iterate>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+      <menuContribution
+            locationURI="popup:ca.mcgill.cs.swevo.qualyzer.projectexplorer#PopupMenu?after=group.edit2">
+         <command
+               commandId="org.eclipse.ui.edit.rename"
+               label="&amp;Rename"
+               style="push"
+               tooltip="Rename this Transcript">
+            <visibleWhen
+                  checkEnabled="true">
+               <iterate
+                     ifEmpty="false"
+                     operator="or">
+                  <instanceof
+                        value="ca.mcgill.cs.swevo.qualyzer.model.Transcript">
+                  </instanceof>
+               </iterate>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+      <menuContribution
+            locationURI="popup:ca.mcgill.cs.swevo.qualyzer.projectexplorer#PopupMenu?after=group.port">
+         <menu
+               label="&amp;Import">
+            <command
+                  commandId="ca.mcgill.cs.swevo.qualyzer.commands.importTranscript"
+                  label="&amp;Transcript"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="true">
+                  <iterate
+                        ifEmpty="false"
+                        operator="or">
+                     <or>
+                        <instanceof
+                              value="org.eclipse.core.resources.IProject">
+                        </instanceof>
+                        <instanceof
+                              value="ca.mcgill.cs.swevo.qualyzer.providers.WrapperTranscript">
+                        </instanceof>
+                        <instanceof
+                              value="ca.mcgill.cs.swevo.qualyzer.model.Transcript">
+                        </instanceof>
+                     </or>
+                  </iterate>
+               </visibleWhen>
+            </command>
+            <command
+                  commandId="ca.mcgill.cs.swevo.qualyzer.commands.importAudioFile"
+                  label="&amp;Audio File"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="true">
+                  <iterate
+                        ifEmpty="false"
+                        operator="or">
+                     <instanceof
+                           value="ca.mcgill.cs.swevo.qualyzer.model.Transcript">
+                     </instanceof>
+                  </iterate>
+               </visibleWhen>
+            </command>
+         </menu>
+      </menuContribution>
+      <menuContribution
+            locationURI="popup:ca.mcgill.cs.swevo.qualyzer.projectexplorer#PopupMenu?after=group.properties">
+         <command
+               commandId="ca.mcgill.cs.swevo.qualyzer.commands.editTranscriptProperties"
+               label="&amp;Properties"
+               style="push">
+            <visibleWhen
+                  checkEnabled="true">
+               <iterate
+                     ifEmpty="false"
+                     operator="or">
+                  <instanceof
+                        value="ca.mcgill.cs.swevo.qualyzer.model.Transcript">
                   </instanceof>
                </iterate>
             </visibleWhen>
