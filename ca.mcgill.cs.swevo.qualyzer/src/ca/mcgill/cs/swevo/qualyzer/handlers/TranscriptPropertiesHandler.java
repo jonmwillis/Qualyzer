@@ -25,8 +25,7 @@ public class TranscriptPropertiesHandler extends AbstractHandler
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
 	{
-
-		// TODO Auto-generated method stub
+		System.out.println("Edit Transcript Properties Called");
 		return null;
 	}
 

@@ -136,6 +136,10 @@ public class TranscriptWizardPage extends WizardPage
 			public void widgetSelected(SelectionEvent e)
 			{
 					FileDialog dialog = new FileDialog(fContainer.getShell());
+					dialog.setFilterPath(fWorkspacePath);
+					dialog.setFilterExtensions(new String[]{"*.mp3;*.wav"});
+					dialog.setFilterNames(new String[]{"Audio (mp3, wav)"});
+					
 					String file = dialog.open();
 					fAudioFile.setText(file);
 					if(!file.isEmpty())
@@ -165,24 +169,19 @@ public class TranscriptWizardPage extends WizardPage
 			{
 				if(transcriptExists())
 				{
-					setErrorMessage("That name is already in use");
-					setPageComplete(false);
-					return;
+					setError("That name is already in use");
 				}
-				if(fName.getText().isEmpty())
+				else if(fName.getText().isEmpty())
 				{
-					setErrorMessage("Please enter a name");
-					setPageComplete(false);
+					setError("Please enter a name");
 				}
 				else if(fTable.getSelectionCount() > 0)
 				{
-					setErrorMessage(null);
-					setPageComplete(true);
+					setError(null);
 				}
 				else
 				{
-					setErrorMessage("Select at least one participant");
-					setPageComplete(false);
+					setError("Select at least one participant");
 				}
 			}
 		};
@@ -230,27 +229,35 @@ public class TranscriptWizardPage extends WizardPage
 				}
 				if(transcriptExists())
 				{
-					setErrorMessage("That name is already in use");
-					setPageComplete(false);
-					return;
+					setError("That name is already in use");
 				}
-				if(fName.getText().isEmpty())
+				else if(fName.getText().isEmpty())
 				{
-					setErrorMessage("Please enter a name");
-					setPageComplete(false);
+					setError("Please enter a name");
 				}
 				else if(fTable.getSelectionCount() > 0)
 				{
-					setErrorMessage(null);
-					setPageComplete(true);
+					setError(null);
 				}
 				else
 				{
-					setErrorMessage("Select at least one participant");
-					setPageComplete(false);
+					setError("Select at least one participant");
 				}
 			}
 		};
+	}
+	
+	private void setError(String message)
+	{
+		setErrorMessage(message);
+		if(message == null)
+		{
+			setPageComplete(true);
+		}
+		else
+		{
+			setPageComplete(false);
+		}
 	}
 
 	/**
@@ -324,29 +331,38 @@ public class TranscriptWizardPage extends WizardPage
 			
 			if(audioPath.indexOf(fWorkspacePath) == -1)
 			{
-				File file = new File(audioPath);
-				File fileCpy = new File(fWorkspacePath+AUDIO_PATH+relativePath);
-				try
-				{
-					FileReader input = new FileReader(file);
-					FileWriter output = new FileWriter(fileCpy);
-					
-					int c;
-					while((c = input.read()) != -1)
-					{
-						output.write(c);
-					}
-				}
-				catch(IOException e)
-				{
-					e.printStackTrace();
-				}
+				copyAudioFile(audioPath, relativePath);
 			}
 			audioFile.setRelativePath(AUDIO_PATH+relativePath);
 			transcript.setAudioFile(audioFile);
 		}
 		
 		return transcript;
+	}
+
+	/**
+	 * @param audioPath
+	 * @param relativePath
+	 */
+	private void copyAudioFile(String audioPath, String relativePath)
+	{
+		File file = new File(audioPath);
+		File fileCpy = new File(fWorkspacePath+AUDIO_PATH+relativePath);
+		try
+		{
+			FileReader input = new FileReader(file);
+			FileWriter output = new FileWriter(fileCpy);
+			
+			int c;
+			while((c = input.read()) != -1)
+			{
+				output.write(c);
+			}
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	/**
