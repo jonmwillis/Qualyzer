@@ -71,38 +71,45 @@ public class NewProjectPageOne extends WizardPage
 	{
 		return new KeyListener(){
 			@Override
-			public void keyPressed(KeyEvent e)
-			{
-				if(fProjectName.getText().isEmpty())
-				{
-					setPageComplete(false);
-					setErrorMessage(null);
-				}
-			}
+			public void keyPressed(KeyEvent e){}
 			
 			@Override
 			public void keyReleased(KeyEvent e) 
 			{
 				IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-				IProject wProject = root.getProject(fProjectName.getText());
 				
-				if(wProject.exists())
+				if(!fProjectName.getText().isEmpty())
 				{
-					setPageComplete(false);
-					setErrorMessage("This project already exists! Please choose a different name.");
-				}	
-				else if(!fProjectName.getText().isEmpty() && fProjectName.getText().length() > 0)
-				{
-					setErrorMessage(null);
-					setPageComplete(true);
+					IProject wProject = root.getProject(fProjectName.getText());
+					
+					if(wProject.exists())
+					{
+						setError("This project already exists! Please choose a different name.");
+					}	
+					else
+					{
+						setError(null);
+					}
 				}
 				else
 				{
-					setErrorMessage(null);
-					setPageComplete(false);
+					setError("Please enter a name for the project");
 				}
 			}
 		};
+	}
+	
+	private void setError(String message)
+	{
+		setErrorMessage(message);
+		if(message == null)
+		{
+			setPageComplete(true);
+		}
+		else
+		{
+			setPageComplete(false);
+		}
 	}
 	
 	public String getProjectName()
