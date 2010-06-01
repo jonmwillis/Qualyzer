@@ -11,12 +11,12 @@
 package ca.mcgill.cs.swevo.qualyzer.editors.pages;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
@@ -44,11 +44,13 @@ public class ParticipantEditorPage extends FormPage
 	private Text fFullname;
 	private Text fContactInfo;
 	private Text fNotes;
+	private boolean fIsDirty;
 
 	public ParticipantEditorPage(FormEditor editor, Participant participant)
 	{
 		super(editor, "ParticipantEditorPage", "Participant");
 		fParticipant = participant;
+		fIsDirty = false;
 	}
 	
 	@Override
@@ -67,38 +69,14 @@ public class ParticipantEditorPage extends FormPage
 		body.setLayout(layout);
 		
 		Label label = toolkit.createLabel(body, "Participant ID:");
-		fID = toolkit.createText(body, fParticipant.getParticipantId());
-		td = new TableWrapData(TableWrapData.FILL_GRAB);
-		fID.setLayoutData(td);
+		fID = createText(toolkit, fParticipant.getParticipantId(), body);
 		
 		label = toolkit.createLabel(body, "Participant Name:");
-		fFullname = toolkit.createText(body, fParticipant.getFullName());
-		td = new TableWrapData(TableWrapData.FILL_GRAB);
-		fFullname.setLayoutData(td);
+		fFullname = createText(toolkit, fParticipant.getFullName(), body);
 		
 		label = toolkit.createLabel(body, "Contact Info:");
-		fContactInfo = toolkit.createText(body, fParticipant.getContactInfo());
-		td = new TableWrapData(TableWrapData.FILL_GRAB);
-		fContactInfo.setLayoutData(td);
-		
-		label = toolkit.createLabel(body, "Characteristics");
-		Composite composite = toolkit.createComposite(body);
-		GridLayout gridLayout = new GridLayout();
-		gridLayout.numColumns = 2;
-		composite.setLayout(gridLayout);
-		
-		//TODO Make these do something
-		Button plus = toolkit.createButton(composite, "+", SWT.PUSH);
-		Button minus = toolkit.createButton(composite, "-", SWT.PUSH);
-		
-		Table table = toolkit.createTable(body, SWT.BORDER);
-		td = new TableWrapData(TableWrapData.FILL_GRAB);
-		td.colspan = 2;
-		table.setLayoutData(td);
-		table.setLinesVisible(true);
-
-		//TODO build the rest of the table
-		
+		fContactInfo = createText(toolkit, fParticipant.getContactInfo(), body);
+				
 		label = toolkit.createLabel(body, "Notes");
 		td = new TableWrapData(TableWrapData.FILL_GRAB);
 		td.colspan = 2;
@@ -108,21 +86,17 @@ public class ParticipantEditorPage extends FormPage
 		td.rowspan = 2;
 		td.colspan = 2;
 		fNotes.setLayoutData(td);
+		fNotes.addKeyListener(createKeyListener());
 		
 		//TODO add +/- buttons
 		Section section = toolkit.createSection(body, Section.EXPANDED | Section.TITLE_BAR | Section.TWISTIE);
 		td = new TableWrapData(TableWrapData.FILL_GRAB);
 		td.colspan = 2;
 		section.setLayoutData(td);
-		section.addExpansionListener(new ExpansionAdapter(){
-			public void expansionStateChanged(ExpansionEvent e)
-			{
-				form.reflow(true);
-			}
-		});
+		section.addExpansionListener(createExpansionListener(form));
 		section.setText("Interviews");
 		Composite sectionClient = toolkit.createComposite(section);
-		gridLayout = new GridLayout();
+		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 1;
 		sectionClient.setLayout(gridLayout);
 		//TODO build the list of interviews
@@ -138,12 +112,7 @@ public class ParticipantEditorPage extends FormPage
 		td = new TableWrapData(TableWrapData.FILL_GRAB);
 		td.colspan = 2;
 		section.setLayoutData(td);
-		section.addExpansionListener(new ExpansionAdapter(){
-			public void expansionStateChanged(ExpansionEvent e)
-			{
-				form.reflow(true);
-			}
-		});
+		section.addExpansionListener(createExpansionListener(form));
 		sectionClient = toolkit.createComposite(section);
 		//TODO get all codes related to participant
 		gridLayout = new GridLayout();
@@ -158,6 +127,30 @@ public class ParticipantEditorPage extends FormPage
 		section.setClient(sectionClient);
 		
 		toolkit.paintBordersFor(body);
+	}
+
+	/**
+	 * @param form
+	 * @return
+	 */
+	private ExpansionAdapter createExpansionListener(final ScrolledForm form)
+	{
+		return new ExpansionAdapter(){
+			public void expansionStateChanged(ExpansionEvent e)
+			{
+				form.reflow(true);
+			}
+		};
+	}
+	
+	private Text createText(FormToolkit toolkit, String data, Composite parent)
+	{
+		Text text = toolkit.createText(parent, data);
+		TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB);
+		text.setLayoutData(td);
+		text.addKeyListener(createKeyListener());
+		
+		return text;
 	}
 	
 	/**
@@ -194,5 +187,36 @@ public class ParticipantEditorPage extends FormPage
 	public String getNotes()
 	{
 		return fNotes.getText();
+	}
+	
+	private KeyListener createKeyListener()
+	{
+		return new KeyListener(){
+
+			@Override
+			public void keyPressed(KeyEvent e)	{}
+
+			@Override
+			public void keyReleased(KeyEvent e)
+			{
+				if(!fIsDirty)
+				{
+					fIsDirty = true;
+					getEditor().isDirty();
+				}
+			}
+			
+		};
+	}
+	
+	@Override
+	public boolean isDirty()
+	{
+		return fIsDirty;
+	}
+	
+	public void notDirty()
+	{
+		fIsDirty = false;
 	}
 }
