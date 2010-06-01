@@ -13,15 +13,11 @@
  */
 package ca.mcgill.cs.swevo.qualyzer.editors.inputs;
 
-import org.eclipse.core.internal.runtime.AdapterManager;
-import org.eclipse.core.runtime.IAdapterManager;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
-import org.eclipse.ui.model.IWorkbenchAdapter;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
-import ca.mcgill.cs.swevo.qualyzer.providers.WrapperParticipant;
 
 /**
  * @author Jonathan Faubert (jonfaub@gmail.com)
@@ -88,37 +84,11 @@ public class ParticipantEditorInput implements IEditorInput
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public Object getAdapter(Class adapter)
 	{
-		if (IWorkbenchAdapter.class.equals(adapter))
-		{
-			return new IWorkbenchAdapter() {
-
-				public Object[] getChildren(Object o) 
-				{
-					return new Object[0];
-				}
-
-				public ImageDescriptor getImageDescriptor(Object object)
-				{
-					return ParticipantEditorInput.this.getImageDescriptor();
-				}
-
-				public String getLabel(Object o) 
-				{
-					return ParticipantEditorInput.this.getName();
-				}
-
-				public Object getParent(Object o)
-				{
-					return new WrapperParticipant(ParticipantEditorInput.this.getParticipant().getProject());
-				}
-			};
-		}
-
-		IAdapterManager manager = AdapterManager.getDefault();
-		return manager.getAdapter(this, adapter);
+		return null;
 	}
 
 	/**
