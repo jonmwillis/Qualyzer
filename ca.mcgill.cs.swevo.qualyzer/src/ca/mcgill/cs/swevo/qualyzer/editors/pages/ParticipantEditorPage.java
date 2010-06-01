@@ -28,8 +28,10 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
+import org.hibernate.LazyInitializationException;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
+import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 
 /**
  * The form used to edit Participant Data.
@@ -59,15 +61,13 @@ public class ParticipantEditorPage extends FormPage
 		final ScrolledForm form = managedForm.getForm();
 		FormToolkit toolkit = managedForm.getToolkit();
 		Composite body = form.getBody();
-		
 		form.setText("Participant");
 		
-		//TableWrapLayout layout = new TableWrapLayout();
 		TableWrapLayout layout = new TableWrapLayout();
 		layout.numColumns = 2;
-		TableWrapData td;
 		body.setLayout(layout);
 		
+		@SuppressWarnings("unused")
 		Label label = toolkit.createLabel(body, "Participant ID:");
 		fID = createText(toolkit, fParticipant.getParticipantId(), body);
 		
@@ -77,36 +77,44 @@ public class ParticipantEditorPage extends FormPage
 		label = toolkit.createLabel(body, "Contact Info:");
 		fContactInfo = createText(toolkit, fParticipant.getContactInfo(), body);
 				
-		label = toolkit.createLabel(body, "Notes");
-		td = new TableWrapData(TableWrapData.FILL_GRAB);
-		td.colspan = 2;
-		label.setLayoutData(td);
+		label = createLongLabel(toolkit, body, "Notes");
+		createNotesArea(toolkit, body);
+		
+		//TODO add +/- buttons
+		buildInterviewsSection(form, toolkit, body);
+		
+		buildCodesSection(form, toolkit, body);
+		
+		toolkit.paintBordersFor(body);
+	}
+
+	/**
+	 * @param toolkit
+	 * @param body
+	 */
+	private void createNotesArea(FormToolkit toolkit, Composite body)
+	{
+		TableWrapData td;
 		fNotes = toolkit.createText(body, fParticipant.getNotes());
 		td = new TableWrapData(TableWrapData.FILL_GRAB);
 		td.rowspan = 2;
 		td.colspan = 2;
 		fNotes.setLayoutData(td);
 		fNotes.addKeyListener(createKeyListener());
-		
-		//TODO add +/- buttons
-		Section section = toolkit.createSection(body, Section.EXPANDED | Section.TITLE_BAR | Section.TWISTIE);
-		td = new TableWrapData(TableWrapData.FILL_GRAB);
-		td.colspan = 2;
-		section.setLayoutData(td);
-		section.addExpansionListener(createExpansionListener(form));
-		section.setText("Interviews");
-		Composite sectionClient = toolkit.createComposite(section);
-		GridLayout gridLayout = new GridLayout();
-		gridLayout.numColumns = 1;
-		sectionClient.setLayout(gridLayout);
-		//TODO build the list of interviews
-		//TODO make clickable
-		GridData gd = new GridData(SWT.FILL, SWT.NULL, true, false);
-		label = toolkit.createLabel(sectionClient, "An example interview name");
-		label.setLayoutData(gd);
-		sectionClient.setLayoutData(td);
-		section.setClient(sectionClient);
-		
+	}
+
+	/**
+	 * @param form
+	 * @param toolkit
+	 * @param body
+	 */
+	private void buildCodesSection(final ScrolledForm form, FormToolkit toolkit, Composite body)
+	{
+		TableWrapData td;
+		Label label;
+		Section section;
+		Composite sectionClient;
+		GridLayout gridLayout;
 		section = toolkit.createSection(body, Section.EXPANDED | Section.TWISTIE | Section.TITLE_BAR);
 		section.setText("Codes");
 		td = new TableWrapData(TableWrapData.FILL_GRAB);
@@ -119,14 +127,78 @@ public class ParticipantEditorPage extends FormPage
 		gridLayout.numColumns = 2;
 		gridLayout.makeColumnsEqualWidth = true;
 		sectionClient.setLayout(gridLayout);
-		gd = new GridData(SWT.FILL, SWT.NULL, true, false);
+		GridData gd = new GridData(SWT.FILL, SWT.NULL, true, false);
 		label = toolkit.createLabel(sectionClient, "Example code");
 		label.setLayoutData(gd);
 		label = toolkit.createLabel(sectionClient, "Example Interview");
 		label.setLayoutData(gd);
 		section.setClient(sectionClient);
-		
-		toolkit.paintBordersFor(body);
+	}
+
+	/**
+	 * @param form
+	 * @param toolkit
+	 * @param body
+	 */
+	private void buildInterviewsSection(final ScrolledForm form, FormToolkit toolkit, Composite body)
+	{
+		TableWrapData td;
+		Section section = toolkit.createSection(body, Section.EXPANDED | Section.TITLE_BAR | Section.TWISTIE);
+		td = new TableWrapData(TableWrapData.FILL_GRAB);
+		td.colspan = 2;
+		section.setLayoutData(td);
+		section.addExpansionListener(createExpansionListener(form));
+		section.setText("Interviews");
+		Composite sectionClient = toolkit.createComposite(section);
+		GridLayout gridLayout = new GridLayout();
+		gridLayout.numColumns = 1;
+		sectionClient.setLayout(gridLayout);
+		//TODO make clickable
+		buildInterviews(toolkit, sectionClient);
+		sectionClient.setLayoutData(td);
+		section.setClient(sectionClient);
+	}
+
+	/**
+	 * @param toolkit
+	 * @param body
+	 */
+	private Label createLongLabel(FormToolkit toolkit, Composite body, String text)
+	{
+		TableWrapData td;
+		Label label;
+		label = toolkit.createLabel(body, text);
+		td = new TableWrapData(TableWrapData.FILL_GRAB);
+		td.colspan = 2;
+		label.setLayoutData(td);
+		return label;
+	}
+
+	/**
+	 * @param toolkit 
+	 * @param sectionClient 
+	 * 
+	 */
+	private void buildInterviews(FormToolkit toolkit, Composite sectionClient)
+	{
+		try
+		{
+			for(Transcript transcript : fParticipant.getProject().getTranscripts())		
+			{
+				if(transcript.getParticipants().contains(fParticipant))
+				{
+					GridData gd = new GridData(SWT.FILL, SWT.NULL, true, false);
+					Label label = toolkit.createLabel(sectionClient, transcript.getName());
+					label.setLayoutData(gd);	
+				}
+			}
+		}
+		catch(LazyInitializationException e)
+		{
+			Label label = toolkit.createLabel(sectionClient, "example interview - unable to lazily initialize");
+			GridData gd = new GridData(SWT.FILL, SWT.NULL, true, false);
+			label.setLayoutData(gd);
+		}
 	}
 
 	/**
