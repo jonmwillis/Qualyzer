@@ -6,7 +6,9 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Barthelemy Dagenais (bart@cs.mcgill.ca)
+ *     Martin Robillard 
+ *     Jonathan Faubert 
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer;
 
@@ -14,29 +16,13 @@ import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 
 /**
- * 
- * Default perspective of Qualyzer.
- * 
- * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
- *
+ * Default perspective of Qualyzer. Actual setup of the perspective is done
+ * through a perspective extension in plugin.xml.
  */
 public class Perspective implements IPerspectiveFactory
 {
-	public static final String PROJECT_EXPLORER_VIEW_ID = "ca.mcgill.cs.swevo.qualyzer.projectexplorer";
-
-	// CSOFF:
+	@Override
 	public void createInitialLayout(IPageLayout layout)
 	{
-		/* I added all of this to a perspectiveExtension --Jonathan Faubert*/
-		
-//		String editorArea = layout.getEditorArea();
-//
-//		// Top left.
-//		IFolderLayout topLeft = layout.createFolder("topLeft", IPageLayout.LEFT, (float) 0.26, editorArea);//$NON-NLS-1$
-//		topLeft.addView(PROJECT_EXPLORER_VIEW_ID);
-//		topLeft.addPlaceholder(IPageLayout.ID_BOOKMARKS);
-
 	}
-	// CSON:
-
 }
