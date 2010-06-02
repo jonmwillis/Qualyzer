@@ -27,7 +27,6 @@ import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
 import ca.mcgill.cs.swevo.qualyzer.wizards.pages.NewProjectPageOne;
-import ca.mcgill.cs.swevo.qualyzer.wizards.pages.NewProjectPageTwo;
 
 /**
  * The wizard that controls the creation of a new project.
@@ -38,7 +37,6 @@ public class NewProjectWizard extends Wizard
 {
 
 	private NewProjectPageOne fOne;
-	private NewProjectPageTwo fTwo;
 	
 	/**
 	 * Constructor.
@@ -53,10 +51,8 @@ public class NewProjectWizard extends Wizard
 	public void addPages()
 	{
 		fOne = new NewProjectPageOne();
-		fTwo = new NewProjectPageTwo();
 		
 		addPage(fOne);
-		addPage(fTwo);
 	}
 	
 	@Override
@@ -145,9 +141,9 @@ public class NewProjectWizard extends Wizard
 		Project project = new Project();
 		project.setName(fOne.getProjectName());
 		Investigator investigator = new Investigator();
-		investigator.setNickName(fTwo.getInvestigatorNickname());
-		investigator.setFullName(fTwo.getInvestigatorFullname());
-		investigator.setInstitution(fTwo.getInstitution());
+		investigator.setNickName(fOne.getInvestigatorNickname());
+		investigator.setFullName(fOne.getInvestigatorFullname());
+		investigator.setInstitution(fOne.getInstitution());
 		project.getInvestigators().add(investigator);
 		investigator.setProject(project);
 		return project;

@@ -33,13 +33,16 @@ public class NewProjectPageOne extends WizardPage
 
 	private Composite fContainer;
 	private Text fProjectName;
+	private Text fNickname;
+	private Text fFullname;
+	private Text fInstitution;
 	
 	/**
 	 * Constructor.
 	 */
 	public NewProjectPageOne()
 	{
-		super("New Project - 1/2");
+		super("New Project");
 		setTitle("New Project");
 		setDescription("Please enter a name for the project.");
 	}
@@ -51,17 +54,42 @@ public class NewProjectPageOne extends WizardPage
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 2;
 		fContainer.setLayout(layout);
+		
 		Label label = new Label(fContainer, SWT.NULL);
 		label.setText("Project Name");
 		fProjectName = new Text(fContainer, SWT.BORDER);
 		fProjectName.setText("");
-		
-		//Checks if there is anything in the textbox
-		//if not then cannot proceed
 		fProjectName.addKeyListener(createKeyListener());
 		
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		fProjectName.setLayoutData(gd);
+	
+		label = new Label(fContainer, SWT.NULL);
+		label.setText("Investigator Nickname");
+
+		fNickname = new Text(fContainer, SWT.BORDER | SWT.SINGLE);
+		fNickname.setText(System.getProperty("user.name"));
+		
+		//Only allows the user to proceed if a name is entered
+		fNickname.addKeyListener(createKeyListener());
+		
+		label = new Label(fContainer, SWT.NULL);
+		label.setText("Full name");
+		
+		fFullname = new Text(fContainer, SWT.BORDER | SWT.SINGLE);
+		fFullname.setText("");
+		
+		label = new Label(fContainer, SWT.NULL);
+		label.setText("Institution");
+		
+		fInstitution = new Text(fContainer, SWT.BORDER | SWT.SINGLE);
+		fInstitution.setText("");
+		
+		gd = new GridData(GridData.FILL_HORIZONTAL);
+		fNickname.setLayoutData(gd);
+		fFullname.setLayoutData(gd);
+		fInstitution.setLayoutData(gd);
+		
 		// Required to avoid an error in the system
 		setControl(fContainer);
 		setPageComplete(false);
@@ -81,7 +109,15 @@ public class NewProjectPageOne extends WizardPage
 			{
 				IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 				
-				if(!fProjectName.getText().isEmpty())
+				if(fProjectName.getText().isEmpty())
+				{
+					setError("Please enter a name for the project");
+				}
+				else if(fNickname.getText().isEmpty())
+				{
+					setError("Please enter a nickname for the Investigator");
+				}
+				else
 				{
 					IProject wProject = root.getProject(fProjectName.getText());
 					
@@ -93,10 +129,6 @@ public class NewProjectPageOne extends WizardPage
 					{
 						setError(null);
 					}
-				}
-				else
-				{
-					setError("Please enter a name for the project");
 				}
 			}
 		};
@@ -122,5 +154,32 @@ public class NewProjectPageOne extends WizardPage
 	public String getProjectName()
 	{
 		return fProjectName.getText();
+	}
+	
+	/**
+	 * Get the Nickname field.
+	 * @return
+	 */
+	public String getInvestigatorNickname()
+	{
+		return fNickname.getText();
+	}
+	
+	/**
+	 * Get the fullname field.
+	 * @return
+	 */
+	public String getInvestigatorFullname()
+	{
+		return fFullname.getText();
+	}
+	
+	/**
+	 * Get the Institution field.
+	 * @return
+	 */
+	public String getInstitution()
+	{
+		return fInstitution.getText();
 	}
 }
