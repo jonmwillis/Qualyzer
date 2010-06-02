@@ -22,7 +22,6 @@ import org.eclipse.ui.IPerspectiveFactory;
  */
 public class Perspective implements IPerspectiveFactory
 {
-
 	public static final String PROJECT_EXPLORER_VIEW_ID = "ca.mcgill.cs.swevo.qualyzer.projectexplorer";
 
 	// CSOFF:

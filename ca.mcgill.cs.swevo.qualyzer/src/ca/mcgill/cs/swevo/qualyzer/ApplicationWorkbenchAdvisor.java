@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Barthelemy Dagenais (bart@cs.mcgill.ca)
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer;
 
@@ -19,13 +19,9 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.ide.IDE;
 
 /**
- * 
- * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
- * 
  */
 public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor
 {
-
 	private static final String PERSPECTIVE_ID = "ca.mcgill.cs.swevo.qualyzer.perspective";
 
 	public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer)
@@ -57,5 +53,4 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor
 				.getImageDescriptor("icons/prj_obj.gif"), true);
 		super.initialize(configurer);
 	}
-
 }
