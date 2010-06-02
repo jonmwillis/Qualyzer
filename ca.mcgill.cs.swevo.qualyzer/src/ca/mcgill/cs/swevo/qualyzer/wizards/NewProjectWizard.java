@@ -40,6 +40,9 @@ public class NewProjectWizard extends Wizard
 	private NewProjectPageOne fOne;
 	private NewProjectPageTwo fTwo;
 	
+	/**
+	 * Constructor.
+	 */
 	public NewProjectWizard()
 	{
 		super();

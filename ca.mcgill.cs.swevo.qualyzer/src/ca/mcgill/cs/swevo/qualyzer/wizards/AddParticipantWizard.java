@@ -33,6 +33,10 @@ public class AddParticipantWizard extends Wizard
 	private Project fProject;
 	private Participant fParticipant;
 	
+	/**
+	 * Constructor.
+	 * @param project
+	 */
 	public AddParticipantWizard(Project project)
 	{
 		fProject = project;

@@ -26,6 +26,9 @@ public class TranscriptEditor extends TextEditor
 	
 	private ColorManager fColorManager;
 
+	/**
+	 * Constructor.
+	 */
 	public TranscriptEditor()
 	{
 		super();
@@ -55,6 +58,7 @@ public class TranscriptEditor extends TextEditor
 		super.createPartControl(parent);
 	}
 
+	@Override
 	public void dispose()
 	{
 		fColorManager.dispose();

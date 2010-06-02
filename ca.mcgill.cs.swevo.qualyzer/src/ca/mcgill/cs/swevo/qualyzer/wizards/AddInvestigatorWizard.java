@@ -34,6 +34,10 @@ public class AddInvestigatorWizard extends Wizard
 	private Project fProject;
 	private Investigator fInvestigator;
 	
+	/**
+	 * Constructor.
+	 * @param project
+	 */
 	public AddInvestigatorWizard(Project project)
 	{
 		fProject = project;

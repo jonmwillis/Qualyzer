@@ -41,6 +41,10 @@ import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
  */
 public class InvestigatorEditorPage extends FormPage
 {
+	/**
+	 * 
+	 */
+	private static final String INVESTIGATOR = "Investigator";
 	private Text fNickname;
 	private Text fFullname;
 	private Text fInstitution;
@@ -49,11 +53,11 @@ public class InvestigatorEditorPage extends FormPage
 	private boolean fIsDirty;
 	/**
 	 * @param editor
-	 * @param fInvestigator 
+	 * @param investigator 
 	 */
 	public InvestigatorEditorPage(FormEditor editor, Investigator investigator)
 	{
-		super(editor, "Investigator", "Investigator");
+		super(editor, INVESTIGATOR, INVESTIGATOR);
 		fInvestigator = investigator;
 		fIsDirty = false;
 	}
@@ -63,7 +67,7 @@ public class InvestigatorEditorPage extends FormPage
 	{
 		final ScrolledForm form = managed.getForm();
 		FormToolkit toolkit = managed.getToolkit();
-		form.setText("Investigator");
+		form.setText(INVESTIGATOR);
 		
 		TableWrapLayout layout = new TableWrapLayout();
 		layout.numColumns = 2;
@@ -256,7 +260,7 @@ public class InvestigatorEditorPage extends FormPage
 	}
 
 	/**
-	 * 
+	 * Set dirty to false.
 	 */
 	public void notDirty()
 	{

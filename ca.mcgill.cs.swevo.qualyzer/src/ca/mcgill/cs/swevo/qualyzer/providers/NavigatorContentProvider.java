@@ -51,6 +51,7 @@ public class NavigatorContentProvider extends WorkbenchContentProvider
 	 * 
 	 * @see org.eclipse.ui.model.BaseWorkbenchContentProvider#getElements(java.lang.Object)
 	 */
+	@Override
 	public Object[] getElements(Object element)
 	{
 		if(element instanceof IWorkspaceRoot)
@@ -66,6 +67,7 @@ public class NavigatorContentProvider extends WorkbenchContentProvider
 	 * 
 	 * @see org.eclipse.ui.model.BaseWorkbenchContentProvider#getChildren(java.lang.Object)
 	 */
+	@Override
 	public Object[] getChildren(Object element)
 	{
 		if (element instanceof IProject)
@@ -117,6 +119,7 @@ public class NavigatorContentProvider extends WorkbenchContentProvider
 	 * 
 	 * @see org.eclipse.ui.model.BaseWorkbenchContentProvider#hasChildren(java.lang.Object)
 	 */
+	@Override
 	public boolean hasChildren(Object element)
 	{
 		if (element instanceof IProject || element instanceof Project)
@@ -170,6 +173,7 @@ public class NavigatorContentProvider extends WorkbenchContentProvider
 	 * @see org.eclipse.ui.model.WorkbenchContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
 	 * java.lang.Object, java.lang.Object)
 	 */
+	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput)
 	{
 		super.inputChanged(viewer, oldInput, newInput);

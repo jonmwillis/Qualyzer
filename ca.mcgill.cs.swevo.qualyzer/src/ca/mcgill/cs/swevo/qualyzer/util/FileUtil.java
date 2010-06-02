@@ -27,6 +27,12 @@ public final class FileUtil
 {
 	private FileUtil(){}
 
+	/**
+	 * Copies input to the location specified by output.
+	 * @param input The File to be copied.
+	 * @param output The File representing the location to copy to.
+	 * @throws IOException
+	 */
 	public static void copyFile(File input, File output) throws IOException
 	{
 		FileChannel in = null;

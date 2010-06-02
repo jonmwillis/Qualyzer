@@ -27,6 +27,10 @@ public class AddInvestigatorPage extends NewProjectPageTwo
 {
 	private Project fProject;
 	
+	/**
+	 * Constructor.
+	 * @param project
+	 */
 	public AddInvestigatorPage(Project project)
 	{
 		setTitle("Add Investigator");

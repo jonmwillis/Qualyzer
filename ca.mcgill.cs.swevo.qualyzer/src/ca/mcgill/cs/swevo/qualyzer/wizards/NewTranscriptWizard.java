@@ -38,12 +38,16 @@ public class NewTranscriptWizard extends Wizard
 	private Project fProject;
 	private Transcript fTranscript;
 	
+	/**
+	 * Constructor.
+	 * @param project
+	 */
 	public NewTranscriptWizard(Project project)
 	{
 		fProject = project;
 	}
 	
-	
+	@Override
 	public void addPages()
 	{
 		fPage = new TranscriptWizardPage(fProject);

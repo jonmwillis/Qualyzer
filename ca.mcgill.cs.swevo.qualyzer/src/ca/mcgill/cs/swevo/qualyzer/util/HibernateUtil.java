@@ -33,6 +33,10 @@ public final class HibernateUtil
 
 	}
 
+	/**
+	 * Close a session.
+	 * @param session
+	 */
 	public static void quietClose(Session session)
 	{
 		if (session != null)
@@ -48,6 +52,10 @@ public final class HibernateUtil
 		}
 	}
 
+	/**
+	 * Rollback a transaction.
+	 * @param transaction
+	 */
 	public static void quietRollback(Transaction transaction)
 	{
 		if (transaction != null)
@@ -63,6 +71,11 @@ public final class HibernateUtil
 		}
 	}
 
+	/**
+	 * Save an object.
+	 * @param manager
+	 * @param object
+	 */
 	public static void quietSave(HibernateDBManager manager, Object object)
 	{
 		Transaction t = null;
@@ -84,6 +97,11 @@ public final class HibernateUtil
 		}
 	}
 
+	/**
+	 * Save many objects.
+	 * @param manager
+	 * @param objects
+	 */
 	public static void quietSave(HibernateDBManager manager, Object[] objects)
 	{
 		Transaction t = null;
@@ -108,6 +126,11 @@ public final class HibernateUtil
 		}
 	}
 
+	/**
+	 * Refresh an object.
+	 * @param manager
+	 * @param object
+	 */
 	public static void quietRefresh(HibernateDBManager manager, Object object)
 	{
 		Transaction t = null;
@@ -129,6 +152,11 @@ public final class HibernateUtil
 		}
 	}
 
+	/**
+	 * Refresh many objects.
+	 * @param manager
+	 * @param objects
+	 */
 	public static void quietRefresh(HibernateDBManager manager, Object[] objects)
 	{
 		Transaction t = null;

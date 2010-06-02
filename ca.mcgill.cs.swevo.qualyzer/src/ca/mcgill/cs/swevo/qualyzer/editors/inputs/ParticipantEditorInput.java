@@ -27,6 +27,10 @@ public class ParticipantEditorInput implements IEditorInput
 {
 	private Participant fParticipant;
 	
+	/**
+	 * Constructor.
+	 * @param participant
+	 */
 	public ParticipantEditorInput(Participant participant)
 	{
 		fParticipant = participant;

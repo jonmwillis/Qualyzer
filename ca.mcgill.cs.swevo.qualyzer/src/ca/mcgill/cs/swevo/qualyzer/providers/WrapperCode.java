@@ -33,6 +33,7 @@ public class WrapperCode extends ProjectWrapper
 		super(project);
 	}
 	
+	@Override
 	public String getResource()
 	{
 		return RESOURCE;

@@ -27,6 +27,10 @@ public class InvestigatorEditorInput implements IEditorInput
 {
 	private Investigator fInvestigator;
 	
+	/**
+	 * Constructor.
+	 * @param investigator
+	 */
 	public InvestigatorEditorInput(Investigator investigator)
 	{
 		fInvestigator = investigator;
@@ -89,6 +93,10 @@ public class InvestigatorEditorInput implements IEditorInput
 		return null;
 	}
 
+	/**
+	 * Get the investigator to edit.
+	 * @return
+	 */
 	public Investigator getInvestigator()
 	{
 		return fInvestigator;

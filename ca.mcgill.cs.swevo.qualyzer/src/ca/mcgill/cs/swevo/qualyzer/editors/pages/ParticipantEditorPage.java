@@ -48,6 +48,11 @@ public class ParticipantEditorPage extends FormPage
 	private Text fNotes;
 	private boolean fIsDirty;
 
+	/**
+	 * Initialise the form editor.
+	 * @param editor
+	 * @param participant
+	 */
 	public ParticipantEditorPage(FormEditor editor, Participant participant)
 	{
 		super(editor, "ParticipantEditorPage", "Participant");
@@ -154,7 +159,8 @@ public class ParticipantEditorPage extends FormPage
 		gridLayout.numColumns = 1;
 		sectionClient.setLayout(gridLayout);
 		//TODO make clickable
-		buildInterviews(toolkit, sectionClient);
+		//TODO fix the Lazy Initialization Exception
+		//buildInterviews(toolkit, sectionClient);
 		sectionClient.setLayoutData(td);
 		section.setClient(sectionClient);
 	}
@@ -179,6 +185,7 @@ public class ParticipantEditorPage extends FormPage
 	 * @param sectionClient 
 	 * 
 	 */
+	@SuppressWarnings("unused")
 	private void buildInterviews(FormToolkit toolkit, Composite sectionClient)
 	{
 		try
@@ -287,6 +294,9 @@ public class ParticipantEditorPage extends FormPage
 		return fIsDirty;
 	}
 	
+	/**
+	 * Set the Editor to no longer dirty.
+	 */
 	public void notDirty()
 	{
 		fIsDirty = false;

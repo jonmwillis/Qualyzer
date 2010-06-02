@@ -25,6 +25,12 @@ public final class CollectionUtil
 
 	}
 
+	/**
+	 * 
+	 * @param <T>
+	 * @param sortedList
+	 * @param element
+	 */
 	public static <T extends Comparable<T>> void insertSorted(List<T> sortedList, T element)
 	{
 		int index = Collections.binarySearch(sortedList, element);
