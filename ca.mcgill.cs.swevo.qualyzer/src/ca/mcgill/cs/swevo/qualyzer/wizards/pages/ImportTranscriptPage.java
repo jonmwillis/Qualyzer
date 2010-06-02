@@ -43,6 +43,10 @@ public class ImportTranscriptPage extends TranscriptWizardPage
 	private static final int COLS = 3;
 	private Text fTranscriptFile;
 	
+	/**
+	 * 
+	 * @param project
+	 */
 	public ImportTranscriptPage(Project project)
 	{
 		super(project, "Import Transcript");
@@ -97,22 +101,7 @@ public class ImportTranscriptPage extends TranscriptWizardPage
 				dialog.setFilterNames(new String[]{"Text files (.txt)"});
 				String file = dialog.open();
 				fTranscriptFile.setText(file);
-				if(fTranscriptFile.getText().isEmpty() || fileDoesNotExist())
-				{
-					setError("You must choose a transcript file to import");
-				}
-				else if(!fName.getText().isEmpty() && fTable.getSelectionCount() > 0)
-				{
-					setError(null);
-				}
-				else if(fName.getText().isEmpty())
-				{
-					setError("Please enter a name");
-				}
-				else
-				{
-					setError("Select at least one participant");
-				}
+				commonListenerChecks();
 			}
 		};
 	}
@@ -130,26 +119,7 @@ public class ImportTranscriptPage extends TranscriptWizardPage
 				{
 					fAudioFile.setText(findAudioFile(fName.getText()));
 				}
-				if(transcriptExists())
-				{
-					setError("That name is already in use");
-				}
-				else if(fName.getText().isEmpty())
-				{
-					setError("Please enter a name");
-				}
-				else if(fTranscriptFile.getText().isEmpty() || fileDoesNotExist())
-				{
-					setError("You must choose a transcript file to import");
-				}
-				else if(fTable.getSelectionCount() > 0)
-				{
-					setError(null);
-				}
-				else
-				{
-					setError("Select at least one participant");
-				}
+				commonListenerChecks();
 			}
 		};
 	}
@@ -163,26 +133,7 @@ public class ImportTranscriptPage extends TranscriptWizardPage
 			@Override
 			public void widgetSelected(SelectionEvent e)
 			{
-				if(transcriptExists())
-				{
-					setError("That name is already in use");
-				}
-				else if(fName.getText().isEmpty())
-				{
-					setError("Please enter a name");
-				}
-				else if(fTranscriptFile.getText().isEmpty() || fileDoesNotExist())
-				{
-					setError("You must choose a transcript file to import");
-				}
-				else if(fTable.getSelectionCount() > 0)
-				{
-					setError(null);
-				}
-				else
-				{
-					setError("Select at least one participant");
-				}				
+				commonListenerChecks();			
 			}
 		};
 	}
@@ -196,9 +147,40 @@ public class ImportTranscriptPage extends TranscriptWizardPage
 		return !file.exists();
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public String getTranscriptFile()
 	{		
 		return fTranscriptFile.getText();
+	}
+
+	/**
+	 * 
+	 */
+	private void commonListenerChecks()
+	{
+		if(transcriptExists())
+		{
+			setError("That name is already in use");
+		}
+		else if(fName.getText().isEmpty())
+		{
+			setError("Please enter a name");
+		}
+		else if(fTranscriptFile.getText().isEmpty() || fileDoesNotExist())
+		{
+			setError("You must choose a transcript file to import");
+		}
+		else if(fTable.getSelectionCount() > 0)
+		{
+			setError(null);
+		}
+		else
+		{
+			setError("Select at least one participant");
+		}
 	}
 
 }

@@ -14,10 +14,7 @@
 package ca.mcgill.cs.swevo.qualyzer.wizards.pages;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -386,14 +383,7 @@ public class TranscriptWizardPage extends WizardPage
 			
 			if(audioPath.indexOf(fWorkspacePath) == -1)
 			{
-				try
-				{
-					copyAudioFile(audioPath, relativePath);
-				}
-				catch (IOException e)
-				{
-					e.printStackTrace();
-				}
+				copyAudioFile(audioPath, relativePath);
 			}
 			audioFile.setRelativePath(AUDIO_PATH+relativePath);
 			transcript.setAudioFile(audioFile);
@@ -406,12 +396,19 @@ public class TranscriptWizardPage extends WizardPage
 	 * @param audioPath
 	 * @param relativePath
 	 */
-	private void copyAudioFile(String audioPath, String relativePath) throws IOException
+	private void copyAudioFile(String audioPath, String relativePath)
 	{
 		File file = new File(audioPath);
 		File fileCpy = new File(fWorkspacePath+AUDIO_PATH+relativePath);
 		
-		FileUtil.copyFile(file, fileCpy);
+		try
+		{
+			FileUtil.copyFile(file, fileCpy);
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	/**
