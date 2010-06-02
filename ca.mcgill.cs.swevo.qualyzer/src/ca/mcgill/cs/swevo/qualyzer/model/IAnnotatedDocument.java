@@ -6,23 +6,28 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Barthelemy Dagenais (bart@cs.mcgill.ca)
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.model;
 
 import java.util.List;
 
 /**
- * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
- *
  */
 public interface IAnnotatedDocument
 {
-
+	/**
+	 * @return
+	 */
 	List<Participant> getParticipants();
 	
+	/**
+	 * @return
+	 */
 	List<Fragment> getFragments();
 	
+	/**
+	 * @return
+	 */
 	Project getProject();
-	
 }

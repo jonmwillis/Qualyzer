@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Barthelemy Dagenais (bart@cs.mcgill.ca)
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.model;
 
@@ -25,12 +25,9 @@ import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
 import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
 
 /**
- * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
- * 
  */
 public final class PersistenceManager
 {
-
 	public static final String DB_FOLDER = ".db";
 	public static final String QUALYZER_DB_NAME = "qualyzer_db";
 	public static final String QUALYZER_DB_FILE_NAME = "qualyzer_db.data";
@@ -49,16 +46,27 @@ public final class PersistenceManager
 		fActivator = QualyzerActivator.getDefault();
 	}
 
+	/**
+	 * @return
+	 */
 	public static PersistenceManager getInstance()
 	{
 		return INSTANCE;
 	}
 
+	/**
+	 * @param project
+	 * @return
+	 */
 	public IPath getDBPath(IProject project)
 	{
 		return project.getFolder(DB_FOLDER).getFile(QUALYZER_DB_NAME).getRawLocation();
 	}
 
+	/**
+	 * @param project
+	 * @return
+	 */
 	public IPath getDBFilePath(IProject project)
 	{
 		return project.getFolder(DB_FOLDER).getFile(QUALYZER_DB_FILE_NAME).getRawLocation();

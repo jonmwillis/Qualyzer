@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Barthelemy Dagenais (bart@cs.mcgill.ca)
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.model;
 
@@ -20,19 +20,13 @@ import javax.persistence.ManyToOne;
 import org.hibernate.annotations.Type;
 
 /**
- * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
- * 
  */
 @Entity
 public class Code implements Comparable<Code>
 {
-
 	private String fCodeName;
-
 	private String fDescription;
-
 	private Project fProject;
-
 	private Long fPersistenceId;
 
 	/**
@@ -44,20 +38,25 @@ public class Code implements Comparable<Code>
 	}
 
 	/**
-	 * @param codeName
-	 *            the codeName to set
+	 * @param codeName the codeName to set
 	 */
 	public void setCodeName(String codeName)
 	{
 		this.fCodeName = codeName;
 	}
 
+	/**
+	 * @return
+	 */
 	@Type(type = "text")
 	public String getDescription()
 	{
 		return fDescription;
 	}
 
+	/**
+	 * @param description
+	 */
 	public void setDescription(String description)
 	{
 		this.fDescription = description;
@@ -72,6 +71,9 @@ public class Code implements Comparable<Code>
 		this.fPersistenceId = persistenceId;
 	}
 
+	/**
+	 * @return
+	 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Long getPersistenceId()
@@ -79,6 +81,9 @@ public class Code implements Comparable<Code>
 		return fPersistenceId;
 	}
 
+	/**
+	 * @return
+	 */
 	@ManyToOne
 	@JoinColumn(name = "project_persistenceid", nullable = false, insertable = false, updatable = false)
 	public Project getProject()
@@ -86,6 +91,9 @@ public class Code implements Comparable<Code>
 		return fProject;
 	}
 
+	/**
+	 * @param project
+	 */
 	public void setProject(Project project)
 	{
 		this.fProject = project;
@@ -96,5 +104,4 @@ public class Code implements Comparable<Code>
 	{
 		return this.getCodeName().compareTo(code.getCodeName());
 	}
-
 }

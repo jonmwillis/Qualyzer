@@ -6,13 +6,11 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Barthelemy Dagenais (bart@cs.mcgill.ca)
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.model;
 
 /**
- * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
- * 
  */
 public class Timestamp
 {
