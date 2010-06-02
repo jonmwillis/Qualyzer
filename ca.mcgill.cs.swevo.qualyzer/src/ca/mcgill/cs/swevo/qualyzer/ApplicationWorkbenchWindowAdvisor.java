@@ -25,16 +25,22 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor
 	
 	public static final int DEFAULT_HEIGHT = 500;
 	
+	/**
+	 * Just calls the super for now.
+	 * @param configurer
+	 */
 	public ApplicationWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer)
 	{
 		super(configurer);
 	}
 
+	@Override
 	public ActionBarAdvisor createActionBarAdvisor(IActionBarConfigurer configurer)
 	{
 		return new ApplicationActionBarAdvisor(configurer);
 	}
 
+	@Override
 	public void preWindowOpen()
 	{
 		IWorkbenchWindowConfigurer configurer = getWindowConfigurer();

@@ -6,24 +6,26 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     -
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer;
 
 /**
- * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
- *
+ * Unspecified issue in the Qualyzer code.
  */
 public class QualyzerException extends RuntimeException
 {
-
 	private static final long serialVersionUID = 2105440594348845310L;
 
+	/**
+	 * Creates a default exception.
+	 */
 	public QualyzerException()
 	{
 	}
 
 	/**
+	 * Creates an exception.
 	 * @param message
 	 */
 	public QualyzerException(String message)
@@ -32,6 +34,7 @@ public class QualyzerException extends RuntimeException
 	}
 
 	/**
+	 * Creates an exception.
 	 * @param cause
 	 */
 	public QualyzerException(Throwable cause)
@@ -40,6 +43,7 @@ public class QualyzerException extends RuntimeException
 	}
 
 	/**
+	 * Creates an exception.
 	 * @param message
 	 * @param cause
 	 */
@@ -47,5 +51,4 @@ public class QualyzerException extends RuntimeException
 	{
 		super(message, cause);
 	}
-
 }
