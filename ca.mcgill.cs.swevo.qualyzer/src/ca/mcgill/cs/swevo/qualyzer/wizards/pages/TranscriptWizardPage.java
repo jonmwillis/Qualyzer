@@ -379,8 +379,8 @@ public class TranscriptWizardPage extends WizardPage
 			//if the audio file is not in the workspace then copy it there.
 			AudioFile audioFile = new AudioFile();
 			String audioPath = fAudioFile.getText();
-			int i = audioPath.lastIndexOf(File.separatorChar);
-			String relativePath = audioPath.substring(i+1);
+			int i = audioPath.lastIndexOf('.');
+			String relativePath = transcript.getName()+audioPath.substring(i);
 			
 			if(audioPath.indexOf(fWorkspacePath) == -1)
 			{
@@ -406,10 +406,10 @@ public class TranscriptWizardPage extends WizardPage
 			FileReader input = new FileReader(file);
 			FileWriter output = new FileWriter(fileCpy);
 			
-			int c;
-			while((c = input.read()) != -1)
+			char[] cbuf = new char[1024];
+			while((input.read(cbuf)) != -1)
 			{
-				output.write(c);
+				output.write(cbuf);
 			}
 			input.close();
 			output.close();
