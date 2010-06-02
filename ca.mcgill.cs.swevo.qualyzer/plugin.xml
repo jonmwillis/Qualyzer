@@ -202,12 +202,6 @@
                      tooltip="Create a New Project">
                </command>
             </menu>
-            <command
-                  commandId="ca.mcgill.cs.swevo.qualyzer.commands.setup"
-                  label="&amp;Setup"
-                  style="push"
-                  tooltip="Set up the workspace">
-            </command>
             <separator
                   name="fileMenu/closeSeparator"
                   visible="true">
