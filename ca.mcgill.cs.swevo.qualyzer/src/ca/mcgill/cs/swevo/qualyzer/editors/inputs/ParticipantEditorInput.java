@@ -6,84 +6,68 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Jonathan Faubert
+ *     Martin Robillard
  *******************************************************************************/
-/**
- * 
- */
 package ca.mcgill.cs.swevo.qualyzer.editors.inputs;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 
 /**
- * @author Jonathan Faubert (jonfaub@gmail.com)
- *
+ * The input object for the participants form editor.
  */
 public class ParticipantEditorInput implements IEditorInput
 {
 	private Participant fParticipant;
 	
+	/**
+	 * Creates a new object that wraps the participant to edit.
+	 * @param participant The participant object to edit.
+	 */
 	public ParticipantEditorInput(Participant participant)
 	{
 		fParticipant = participant;
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.IEditorInput#exists()
-	 */
 	@Override
 	public boolean exists()
 	{
 		return fParticipant != null;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.IEditorInput#getImageDescriptor()
-	 */
+	// This does not seem to be the method called by the treeviewer, so whatever is
+	// returned here is of no importance. Nevertheless, to respect the interface's 
+	// postcondition, it should not be null.
 	@Override
 	public ImageDescriptor getImageDescriptor()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return ImageDescriptor.getMissingImageDescriptor();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.IEditorInput#getName()
-	 */
 	@Override
 	public String getName()
 	{
-		// TODO Auto-generated method stub
 		return fParticipant.getParticipantId();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.IEditorInput#getPersistable()
-	 */
 	@Override
 	public IPersistableElement getPersistable()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return null; // TODO This cannot return null.
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.IEditorInput#getToolTipText()
-	 */
 	@Override
 	public String getToolTipText()
 	{
-		// TODO Auto-generated method stub
 		return fParticipant.getFullName();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public Object getAdapter(Class adapter)
@@ -106,17 +90,20 @@ public class ParticipantEditorInput implements IEditorInput
 	}
 	
 	@Override
-	public boolean equals(Object obj)
+	public boolean equals(Object object)
 	{
-		if(obj == this)
+		if(object == null)
+		{
+			return false;
+		}
+		if(object == this)
 		{
 			return true;
 		}
-		if(obj.getClass().equals(getClass()))
+		if(object.getClass().equals(getClass()))
 		{
-			return fParticipant.equals(((ParticipantEditorInput) obj).getParticipant());
+			return fParticipant.equals(((ParticipantEditorInput) object).getParticipant());
 		}
 		return false;
 	}
-
 }
