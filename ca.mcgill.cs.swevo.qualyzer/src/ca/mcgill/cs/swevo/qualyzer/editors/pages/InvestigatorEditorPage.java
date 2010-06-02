@@ -252,7 +252,7 @@ public class InvestigatorEditorPage extends FormPage
 				if(!fIsDirty)
 				{
 					fIsDirty = true;
-					getEditor().isDirty();
+					getEditor().editorDirtyStateChanged();
 				}
 			}
 			

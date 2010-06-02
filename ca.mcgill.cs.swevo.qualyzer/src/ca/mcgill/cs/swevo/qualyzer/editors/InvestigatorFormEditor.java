@@ -14,6 +14,7 @@
 package ca.mcgill.cs.swevo.qualyzer.editors;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.navigator.CommonNavigator;
@@ -76,17 +77,6 @@ public class InvestigatorFormEditor extends FormEditor
 		
 		fPage.notDirty();
 	}
-	
-	@Override
-	public boolean isDirty()
-	{
-		if(fPage.isDirty())
-		{
-			setPartName(fInvestigator.getNickName()+(char)0);
-		}
-		
-		return fPage.isDirty();
-	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.part.EditorPart#doSaveAs()
@@ -101,6 +91,17 @@ public class InvestigatorFormEditor extends FormEditor
 	public boolean isSaveAsAllowed()
 	{
 		return false;
+	}
+	
+	// This override is to eliminate the single tab at the bottom of the editor.
+	@Override
+	protected void createPages() 
+	{
+		super.createPages();
+	    if(getPageCount() == 1 && getContainer() instanceof CTabFolder) 
+	    {
+	    	((CTabFolder) getContainer()).setTabHeight(0);
+	    }
 	}
 
 }
