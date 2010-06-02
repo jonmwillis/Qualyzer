@@ -25,11 +25,19 @@ public abstract class ProjectWrapper
 {
 	private Project fProject;
 	
+	/**
+	 * Constructor.
+	 * @param project
+	 */
 	public ProjectWrapper(Project project)
 	{
 		setProject(project);
 	}
 
+	/**
+	 * Sets the project.
+	 * @param project
+	 */
 	public void setProject(Project project)
 	{
 		this.fProject = project;

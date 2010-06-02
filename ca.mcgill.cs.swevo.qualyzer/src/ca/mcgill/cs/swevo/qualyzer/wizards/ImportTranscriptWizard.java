@@ -40,17 +40,26 @@ public class ImportTranscriptWizard extends Wizard
 	private Transcript fTranscript;
 	private Project fProject;
 	
+	/**
+	 * Constructor.
+	 * @param project
+	 */
 	public ImportTranscriptWizard(Project project)
 	{
 		fPage = new ImportTranscriptPage(project);
 		fProject = project;
 	}
 	
+	@Override
 	public void addPages()
 	{
 		addPage(fPage);
 	}
 	
+	/**
+	 * Get the Transcript that was made by the wizard.
+	 * @return
+	 */
 	public Transcript getTranscript()
 	{
 		return fTranscript;

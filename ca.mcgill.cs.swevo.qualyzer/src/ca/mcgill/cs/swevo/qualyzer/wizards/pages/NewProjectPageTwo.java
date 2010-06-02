@@ -33,6 +33,9 @@ public class NewProjectPageTwo extends WizardPage
 	private Text fFullname;
 	private Text fInstitution;
 	
+	/**
+	 * Constructor.
+	 */
 	public NewProjectPageTwo()
 	{
 		super("New Project 2/2");
@@ -40,7 +43,6 @@ public class NewProjectPageTwo extends WizardPage
 		setDescription("Please enter the Investigator's information");
 	}
 	
-	//CSOFF:
 	@Override
 	public void createControl(Composite parent)
 	{
@@ -78,23 +80,38 @@ public class NewProjectPageTwo extends WizardPage
 		setControl(fContainer);
 		setPageComplete(true);
 	}
-	//CSON:
 	
+	/**
+	 * Get the Nickname field.
+	 * @return
+	 */
 	public String getInvestigatorNickname()
 	{
 		return fNickname.getText();
 	}
 	
+	/**
+	 * Get the fullname field.
+	 * @return
+	 */
 	public String getInvestigatorFullname()
 	{
 		return fFullname.getText();
 	}
 	
+	/**
+	 * Get the Institution field.
+	 * @return
+	 */
 	public String getInstitution()
 	{
 		return fInstitution.getText();
 	}
 	
+	/**
+	 * Create a key listener.
+	 * @return
+	 */
 	protected KeyListener createKeyListener()
 	{
 		return new KeyListener() {
@@ -116,7 +133,6 @@ public class NewProjectPageTwo extends WizardPage
 					setPageComplete(false);
 				}
 			}
-
 		};
 	}
 

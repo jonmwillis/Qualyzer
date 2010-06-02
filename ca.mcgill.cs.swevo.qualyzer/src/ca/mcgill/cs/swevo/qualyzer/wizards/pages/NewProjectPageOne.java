@@ -34,6 +34,9 @@ public class NewProjectPageOne extends WizardPage
 	private Composite fContainer;
 	private Text fProjectName;
 	
+	/**
+	 * Constructor.
+	 */
 	public NewProjectPageOne()
 	{
 		super("New Project - 1/2");
@@ -112,6 +115,10 @@ public class NewProjectPageOne extends WizardPage
 		}
 	}
 	
+	/**
+	 * Get the project name field.
+	 * @return
+	 */
 	public String getProjectName()
 	{
 		return fProjectName.getText();

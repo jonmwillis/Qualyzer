@@ -41,6 +41,10 @@ public class NavigatorLabelProvider extends LabelProvider implements ILabelProvi
 	
 	private final ImageRegistry fRegistry;
 	
+	/**
+	 * Constructor.
+	 * Initialises the images.
+	 */
 	public NavigatorLabelProvider()
 	{
 		fRegistry = QualyzerActivator.getDefault().getImageRegistry();
@@ -48,6 +52,10 @@ public class NavigatorLabelProvider extends LabelProvider implements ILabelProvi
 		addImage(PROJECT_IMG, QualyzerActivator.PLUGIN_ID, "icons/prj_obj.gif");
 	}
 	
+	/**
+	 * Do nothing.
+	 * @param aConfig
+	 */
 	public void init(ICommonContentExtensionSite aConfig)
 	{
 	}
@@ -103,8 +111,7 @@ public class NavigatorLabelProvider extends LabelProvider implements ILabelProvi
 		return image;
 	}
 
-	//Only displayed in the status bar
-	// CSOFF:
+	@Override
 	public String getDescription(Object anElement)
 	{
 //		String output = null;
@@ -185,12 +192,20 @@ public class NavigatorLabelProvider extends LabelProvider implements ILabelProvi
 
 		return output;
 	}
-	// CSON:
+	
+	/**
+	 * Do nothing.
+	 * @param aMemento
+	 */
 	public void restoreState(IMemento aMemento)
 	{
 
 	}
 
+	/**
+	 * Do nothing.
+	 * @param aMemento
+	 */
 	public void saveState(IMemento aMemento)
 	{
 	}

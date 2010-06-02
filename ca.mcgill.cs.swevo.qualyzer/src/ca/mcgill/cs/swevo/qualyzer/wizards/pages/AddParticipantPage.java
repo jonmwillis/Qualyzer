@@ -39,6 +39,10 @@ public class AddParticipantPage extends WizardPage
 	private Text fContactInfoText;
 	private Text fNotesText;
 	
+	/**
+	 * Constructor.
+	 * @param project
+	 */
 	public AddParticipantPage(Project project)
 	{
 		super("Add Participant");
@@ -136,21 +140,37 @@ public class AddParticipantPage extends WizardPage
 		fNotesText.setLayoutData(gd);
 	}
 	
+	/**
+	 * Get the Participant ID field.
+	 * @return
+	 */
 	public String getParticipantId()
 	{
 		return fIdText.getText();
 	}
 
+	/**
+	 * Get the Fullname field.
+	 * @return
+	 */
 	public String getFullname()
 	{
 		return fFullNameText.getText();
 	}
 
+	/**
+	 * Get the contact info field.
+	 * @return
+	 */
 	public String getContactInfo()
 	{
 		return fContactInfoText.getText();
 	}
 
+	/**
+	 * Get the notes field.
+	 * @return
+	 */
 	public String getNotes()
 	{
 		return fNotesText.getText();
