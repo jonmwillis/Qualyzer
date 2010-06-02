@@ -495,8 +495,15 @@ public class TranscriptWizardPage extends WizardPage
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(fProject.getName());
 		
 		String path = project.getLocation() + AUDIO_PATH + filename +".mp3";
-		
 		File file = new File(path);
+		
+		if(file.exists())
+		{
+			return path;
+		}
+		
+		path =  project.getLocation() + AUDIO_PATH + filename +".wav";
+		file = new File(path);
 		
 		return file.exists() ? path : "";
 	}

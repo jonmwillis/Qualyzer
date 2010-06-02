@@ -59,8 +59,8 @@ public class ImportTranscriptPage extends TranscriptWizardPage
 	@Override
 	public void createControl(Composite parent)
 	{	
-		if(getfContainer() != null) //TODO hack
-		{
+		if(getfContainer() != null) //TODO hack : I want it to say at the parent when 
+		{								//I call createControl(parent, composite)
 			super.createControl(parent);
 			return;
 		}
@@ -110,13 +110,33 @@ public class ImportTranscriptPage extends TranscriptWizardPage
 				FileDialog dialog = new FileDialog(getShell());
 				dialog.setFilterExtensions(new String[]{"*.txt"});
 				dialog.setFilterNames(new String[]{"Text files (.txt)"});
+				
 				String file = dialog.open();
 				fTranscriptFile.setText(file);
+				
+				if(!fileDoesNotExist())
+				{
+					fillOutForm();
+				}
+				
 				commonListenerChecks();
 			}
 		};
 	}
 	
+	/**
+	 * 
+	 */
+	private void fillOutForm()
+	{
+		int begin = fTranscriptFile.getText().lastIndexOf(File.separatorChar) + 1;
+		int end = fTranscriptFile.getText().lastIndexOf('.');
+		String name = fTranscriptFile.getText().substring(begin, end);
+		
+		fName.setText(name);
+		fAudioFile.setText(findAudioFile(name));
+	}
+
 	@Override
 	protected KeyListener createKeyListener()
 	{
