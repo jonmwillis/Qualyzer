@@ -60,7 +60,7 @@ public class NewTranscriptHandler extends AbstractHandler
 			if(dialog.open() == WizardDialog.OK)
 			{
 				CommonNavigator view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
-				view.getCommonViewer().refresh(new WrapperTranscript(project));
+				view.getCommonViewer().refresh(new WrapperTranscript(wizard.getTranscript().getProject()));
 				openEditor(page, wizard.getTranscript());
 			}
 		}
