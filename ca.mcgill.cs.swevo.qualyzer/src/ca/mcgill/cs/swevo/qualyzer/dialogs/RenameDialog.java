@@ -13,6 +13,7 @@
  */
 package ca.mcgill.cs.swevo.qualyzer.dialogs;
 
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
@@ -135,11 +136,13 @@ public class RenameDialog extends TitleAreaDialog
 				if(transcriptExists())
 				{
 					setErrorMessage("This name is already in use");
-					
+					getButton(IDialogConstants.OK_ID).setEnabled(false);
 				}
 				else
 				{
 					setErrorMessage(null);
+					fName = fNewName.getText();
+					getButton(IDialogConstants.OK_ID).setEnabled(true);
 				}
 			}
 			
@@ -159,6 +162,24 @@ public class RenameDialog extends TitleAreaDialog
 			}
 		}
 		return false;
+	}
+	
+	/**
+	 * Get the new name.
+	 * @return
+	 */
+	public String getName()
+	{
+		return fName;
+	}
+	
+	/**
+	 * See if the audio file should be renamed.
+	 * @return
+	 */
+	public boolean getChangeAudio()
+	{
+		return fChange;
 	}
 	
 }
