@@ -14,8 +14,6 @@
 package ca.mcgill.cs.swevo.qualyzer.wizards;
 
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 
 import org.eclipse.core.resources.IProject;
@@ -27,6 +25,7 @@ import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
+import ca.mcgill.cs.swevo.qualyzer.util.FileUtil;
 import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
 import ca.mcgill.cs.swevo.qualyzer.wizards.pages.ImportTranscriptPage;
 
@@ -73,38 +72,19 @@ public class ImportTranscriptWizard extends Wizard
 		File file = new File(path);
 		File fileOrig = new File(fPage.getTranscriptFile());
 		
-		copyFile(fileOrig, file);
+		try
+		{
+			FileUtil.copyFile(fileOrig, file);
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 
 		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(fProject.getName());
 		HibernateUtil.quietSave(manager, fProject);
 
 		return true;
-	}
-
-	/**
-	 * @param fileOrig
-	 * @param file
-	 */
-	private void copyFile(File fileOrig, File file)
-	{
-		try
-		{
-			FileReader in = new FileReader(fileOrig);
-			FileWriter out = new FileWriter(file);
-			
-			int c;
-			while((c = in.read()) != -1)
-			{
-				out.write(c);
-			}
-			out.close();
-			in.close();
-		}
-		catch(IOException e)
-		{
-			e.printStackTrace();
-		}
-		
 	}
 
 }

@@ -14,9 +14,10 @@
 package ca.mcgill.cs.swevo.qualyzer.wizards.pages;
 
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +43,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.AudioFile;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
+import ca.mcgill.cs.swevo.qualyzer.util.FileUtil;
 
 /**
  * @author Jonathan Faubert (jonfaub@gmail.com)
@@ -384,7 +386,14 @@ public class TranscriptWizardPage extends WizardPage
 			
 			if(audioPath.indexOf(fWorkspacePath) == -1)
 			{
-				copyAudioFile(audioPath, relativePath);
+				try
+				{
+					copyAudioFile(audioPath, relativePath);
+				}
+				catch (IOException e)
+				{
+					e.printStackTrace();
+				}
 			}
 			audioFile.setRelativePath(AUDIO_PATH+relativePath);
 			transcript.setAudioFile(audioFile);
@@ -397,27 +406,12 @@ public class TranscriptWizardPage extends WizardPage
 	 * @param audioPath
 	 * @param relativePath
 	 */
-	private void copyAudioFile(String audioPath, String relativePath)
+	private void copyAudioFile(String audioPath, String relativePath) throws IOException
 	{
 		File file = new File(audioPath);
 		File fileCpy = new File(fWorkspacePath+AUDIO_PATH+relativePath);
-		try
-		{
-			FileReader input = new FileReader(file);
-			FileWriter output = new FileWriter(fileCpy);
-			
-			char[] cbuf = new char[1024];
-			while((input.read(cbuf)) != -1)
-			{
-				output.write(cbuf);
-			}
-			input.close();
-			output.close();
-		}
-		catch(IOException e)
-		{
-			e.printStackTrace();
-		}
+		
+		FileUtil.copyFile(file, fileCpy);
 	}
 
 	/**

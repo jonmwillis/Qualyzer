@@ -11,9 +11,12 @@
 package ca.mcgill.cs.swevo.qualyzer.handlers;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.channels.FileChannel;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -30,6 +33,7 @@ import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.model.AudioFile;
 import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
+import ca.mcgill.cs.swevo.qualyzer.util.FileUtil;
 import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
 
 /**
@@ -64,7 +68,7 @@ public class ImportAudioFileHandler extends AbstractHandler
 				{
 					String ext = fileName.substring(fileName.lastIndexOf('.'));
 					copyFile(element, path, fileName, ext);
-
+					
 					AudioFile audioFile = new AudioFile();
 					audioFile.setRelativePath(AUDIO + ((Transcript) element).getName() + ext);
 					((Transcript) element).setAudioFile(audioFile);
@@ -106,18 +110,9 @@ public class ImportAudioFileHandler extends AbstractHandler
 		{
 			try
 			{
-				FileReader in = new FileReader(file);
-				FileWriter out = new FileWriter(fileCpy);
-				
-				int c;
-				while((c = in.read()) != -1)
-				{
-					out.write(c);
-				}
-				in.close();
-				out.close();
+				FileUtil.copyFile(file, fileCpy);
 			}
-			catch(IOException e)
+			catch (IOException e)
 			{
 				e.printStackTrace();
 			}
