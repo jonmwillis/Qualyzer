@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Barthelemy Dagenais (bart@cs.mcgill.ca)
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.model;
 
@@ -20,56 +20,69 @@ import javax.persistence.ManyToOne;
 import org.hibernate.annotations.Type;
 
 /**
- * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
- * 
  */
 @Entity
 public class Participant implements Comparable<Participant>
 {
-
 	private String fParticipantId;
-
 	private String fFullName;
-
 	private String fNotes;
-	
 	private String fContactInfo;
-
 	private Project fProject;
-	
 	private Long fPersistenceId;
 
+	/**
+	 * @return
+	 */
 	public String getParticipantId()
 	{
 		return fParticipantId;
 	}
 
+	/**
+	 * @param participantId
+	 */
 	public void setParticipantId(String participantId)
 	{
 		this.fParticipantId = participantId;
 	}
 
+	/**
+	 * @return
+	 */
 	public String getFullName()
 	{
 		return fFullName;
 	}
 
+	/**
+	 * @param fullName
+	 */
 	public void setFullName(String fullName)
 	{
 		this.fFullName = fullName;
 	}
 
+	/**
+	 * @return
+	 */
 	@Type(type = "text")
 	public String getNotes()
 	{
 		return fNotes;
 	}
 
+	/**
+	 * @param notes
+	 */
 	public void setNotes(String notes)
 	{
 		this.fNotes = notes;
 	}
 
+	/**
+	 * @return
+	 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Long getPersistenceId()
@@ -77,6 +90,9 @@ public class Participant implements Comparable<Participant>
 		return fPersistenceId;
 	}
 
+	/**
+	 * @param persistenceId
+	 */
 	public void setPersistenceId(Long persistenceId)
 	{
 		this.fPersistenceId = persistenceId;
@@ -88,6 +104,9 @@ public class Participant implements Comparable<Participant>
 		return this.getParticipantId().compareTo(participant.getParticipantId());
 	}
 	
+	/**
+	 * @return
+	 */
 	@ManyToOne
 	@JoinColumn(name = "project_persistenceid", nullable = false, insertable = false, updatable = false)
 	public Project getProject()
@@ -95,16 +114,25 @@ public class Participant implements Comparable<Participant>
 		return fProject;
 	}
 
+	/**
+	 * @param project
+	 */
 	public void setProject(Project project)
 	{
 		this.fProject = project;
 	}
 
+	/**
+	 * @param contactInfo
+	 */
 	public void setContactInfo(String contactInfo)
 	{
 		this.fContactInfo = contactInfo;
 	}
 
+	/**
+	 * @return
+	 */
 	public String getContactInfo()
 	{
 		return fContactInfo;
@@ -118,19 +146,19 @@ public class Participant implements Comparable<Participant>
 	}
 	
 	@Override
-	public boolean equals(Object obj)
+	public boolean equals(Object object)
 	{
-		if(obj == null)
+		if(object == null)
 		{
 			return false;
 		}
-		else if(obj == this)
+		else if(object == this)
 		{
 			return true;
 		}
-		else if(obj.getClass().equals(getClass()))
+		else if(object.getClass().equals(getClass()))
 		{
-			return fParticipantId.equals(((Participant) obj).getParticipantId());
+			return fParticipantId.equals(((Participant) object).getParticipantId());
 		}
 		return false;
 	}

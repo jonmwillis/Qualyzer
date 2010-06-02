@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Barthelemy Dagenais (bart@cs.mcgill.ca)
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.model;
 
@@ -19,41 +19,54 @@ import javax.persistence.OneToOne;
 import org.hibernate.annotations.Type;
 
 /**
- * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
- *
+ * An annotation to a transcript.
  */
 @Entity
 public class Annotation
 {
-
 	private Investigator fInvestigator;
 	
 	private String fComment;
 	
 	private Long fPersistenceId;
 
+	/**
+	 * @return The investigator who authored the annotation.
+	 */
 	@OneToOne
 	public Investigator getInvestigator()
 	{
 		return fInvestigator;
 	}
 
+	/**
+	 * @param investigator
+	 */
 	public void setInvestigator(Investigator investigator)
 	{
 		this.fInvestigator = investigator;
 	}
 
+	/**
+	 * @return
+	 */
 	@Type(type = "text")
 	public String getComment()
 	{
 		return fComment;
 	}
 
+	/**
+	 * @param comment
+	 */
 	public void setComment(String comment)
 	{
 		this.fComment = comment;
 	}
 
+	/**
+	 * @return
+	 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Long getPersistenceId()
@@ -61,6 +74,9 @@ public class Annotation
 		return fPersistenceId;
 	}
 
+	/**
+	 * @param persistenceId
+	 */
 	public void setPersistenceId(Long persistenceId)
 	{
 		this.fPersistenceId = persistenceId;
