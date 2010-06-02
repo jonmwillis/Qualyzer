@@ -212,7 +212,7 @@ public class TranscriptWizardPage extends WizardPage
 	/**
 	 * @return
 	 */
-	private SelectionListener createSelectionListener()
+	protected SelectionListener createSelectionListener()
 	{
 		return new SelectionListener(){
 

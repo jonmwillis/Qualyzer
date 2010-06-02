@@ -37,6 +37,10 @@ import ca.mcgill.cs.swevo.qualyzer.model.Project;
 public class ImportTranscriptPage extends TranscriptWizardPage
 {
 	
+	/**
+	 * 
+	 */
+	private static final int COLS = 3;
 	private Text fTranscriptFile;
 	
 	public ImportTranscriptPage(Project project)
@@ -55,7 +59,7 @@ public class ImportTranscriptPage extends TranscriptWizardPage
 		
 		Composite composite = new Composite(getfContainer(), SWT.NULL);
 		GridLayout layout = new GridLayout();
-		layout.numColumns = 3;
+		layout.numColumns = COLS;
 		composite.setLayout(layout);
 		
 		GridData gd = new GridData(SWT.FILL, SWT.NULL, true, false);
@@ -110,7 +114,6 @@ public class ImportTranscriptPage extends TranscriptWizardPage
 					setError("Select at least one participant");
 				}
 			}
-			
 		};
 	}
 	
@@ -118,10 +121,8 @@ public class ImportTranscriptPage extends TranscriptWizardPage
 	protected KeyListener createKeyListener()
 	{
 		return new KeyListener(){
-
 			@Override
 			public void keyPressed(KeyEvent e){}
-
 			@Override
 			public void keyReleased(KeyEvent e)
 			{
@@ -150,7 +151,39 @@ public class ImportTranscriptPage extends TranscriptWizardPage
 					setError("Select at least one participant");
 				}
 			}
-			
+		};
+	}
+	
+	@Override
+	protected SelectionListener createSelectionListener()
+	{
+		return new SelectionListener(){
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e)	{}
+			@Override
+			public void widgetSelected(SelectionEvent e)
+			{
+				if(transcriptExists())
+				{
+					setError("That name is already in use");
+				}
+				else if(fName.getText().isEmpty())
+				{
+					setError("Please enter a name");
+				}
+				else if(fTranscriptFile.getText().isEmpty() || fileDoesNotExist())
+				{
+					setError("You must choose a transcript file to import");
+				}
+				else if(fTable.getSelectionCount() > 0)
+				{
+					setError(null);
+				}
+				else
+				{
+					setError("Select at least one participant");
+				}				
+			}
 		};
 	}
 	
