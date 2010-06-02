@@ -24,16 +24,19 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor
 {
 	private static final String PERSPECTIVE_ID = "ca.mcgill.cs.swevo.qualyzer.perspective";
 
+	@Override
 	public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer)
 	{
 		return new ApplicationWorkbenchWindowAdvisor(configurer);
 	}
 
+	@Override
 	public String getInitialWindowPerspectiveId()
 	{
 		return PERSPECTIVE_ID;
 	}
 
+	@Override
 	public IAdaptable getDefaultPageInput()
 	{
 		return ResourcesPlugin.getWorkspace().getRoot();
@@ -46,7 +49,8 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor
 
 		IDE.registerAdapters();
 	}
-
+	
+	@Override
 	public void initialize(IWorkbenchConfigurer configurer)
 	{
 		configurer.declareImage(IDE.SharedImages.IMG_OBJ_PROJECT, QualyzerActivator
