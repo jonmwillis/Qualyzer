@@ -167,7 +167,9 @@
       <property name="logLoadErrors" value="true"/>
       <property name="suppressLoadErrors" value="true"/>
     </module>
-    <module name="MultipleStringLiterals"/>
+    <module name="MultipleStringLiterals">
+      <property name="allowedDuplicates" value="2"/>
+    </module>
   </module>
   <module name="FileTabCharacter">
     <property name="severity" value="ignore"/>
