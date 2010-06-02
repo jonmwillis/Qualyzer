@@ -6,11 +6,10 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Barthelemy Dagenais (bart@cs.mcgill.ca)
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.model;
 
-//import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -20,18 +19,11 @@ import org.hibernate.cfg.Configuration;
 import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
 
 /**
- * 
  * A HibernateDBManager manages the connections with a single database.
- * 
- * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
- * 
  */
 public class HibernateDBManager
 {
 	private final SessionFactory fSessionFactory;
-
-	// private final static Logger logger = Logger.getLogger(HibernateUtil.class);
-
 	private final Configuration fConfiguration;
 
 	/**
@@ -43,7 +35,6 @@ public class HibernateDBManager
 	 * @param driver
 	 * @param dialect
 	 */
-	// CSOFF:
 	public HibernateDBManager(String connectionString, String userName, String password, String driver, String dialect)
 	{
 		try
@@ -80,23 +71,28 @@ public class HibernateDBManager
 			throw new QualyzerException(ex);
 		}
 	}
-	//CSON:
-
-
+	
+	/**
+	 * @return
+	 */
 	public Configuration getConfiguration()
 	{
 		return fConfiguration;
 	}
 
+	/**
+	 * @return
+	 */
 	public SessionFactory getSessionFactory()
 	{
 		return fSessionFactory;
 	}
 
+	/**
+	 * @return
+	 */
 	public Session openSession()
 	{
 		return fSessionFactory.openSession();
 	}
-
-	
 }

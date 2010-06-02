@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Barthelemy Dagenais (bart@cs.mcgill.ca)
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.model;
 
@@ -31,33 +31,31 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 /**
- * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
- * 
  */
 @Entity
 @GenericGenerator(name = "uuid-gen", strategy = "uuid")
 public class Transcript implements Comparable<Transcript>, IAnnotatedDocument
 {
 	private AudioFile fAudioFile;
-
 	private List<Participant> fParticipants = new ArrayList<Participant>();
-
 	private List<Fragment> fFragments = new ArrayList<Fragment>();
-
 	private String fName;
-
 	private String fFileName;
-	
 	private Project fProject;
-
 	private Long fPersistenceId;
 
+	/**
+	 * @return
+	 */
 	@OneToOne(cascade = { CascadeType.ALL })
 	public AudioFile getAudioFile()
 	{
 		return fAudioFile;
 	}
 
+	/**
+	 * @param audioFile
+	 */
 	public void setAudioFile(AudioFile audioFile)
 	{
 		this.fAudioFile = audioFile;
@@ -71,6 +69,9 @@ public class Transcript implements Comparable<Transcript>, IAnnotatedDocument
 		return fParticipants;
 	}
 
+	/**
+	 * @param participants
+	 */
 	public void setParticipants(List<Participant> participants)
 	{
 		this.fParticipants = participants;
@@ -84,31 +85,49 @@ public class Transcript implements Comparable<Transcript>, IAnnotatedDocument
 		return fFragments;
 	}
 
+	/**
+	 * @param fragments
+	 */
 	public void setFragments(List<Fragment> fragments)
 	{
 		this.fFragments = fragments;
 	}
 
+	/**
+	 * @return
+	 */
 	public String getName()
 	{
 		return fName;
 	}
 
+	/**
+	 * @param name
+	 */
 	public void setName(String name)
 	{
 		this.fName = name;
 	}
 
+	/**
+	 * @return
+	 */
 	public String getFileName()
 	{
 		return fFileName;
 	}
 
+	/**
+	 * @param fileName
+	 */
 	public void setFileName(String fileName)
 	{
 		this.fFileName = fileName;
 	}
 
+	/**
+	 * @return
+	 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Long getPersistenceId()
@@ -116,6 +135,9 @@ public class Transcript implements Comparable<Transcript>, IAnnotatedDocument
 		return fPersistenceId;
 	}
 
+	/**
+	 * @param persistenceId
+	 */
 	public void setPersistenceId(Long persistenceId)
 	{
 		this.fPersistenceId = persistenceId;
@@ -129,6 +151,9 @@ public class Transcript implements Comparable<Transcript>, IAnnotatedDocument
 		return fProject;
 	}
 
+	/**
+	 * @param project
+	 */
 	public void setProject(Project project)
 	{
 		this.fProject = project;

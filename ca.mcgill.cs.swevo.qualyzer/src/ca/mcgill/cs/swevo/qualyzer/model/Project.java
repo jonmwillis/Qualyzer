@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Barthelemy Dagenais (bart@cs.mcgill.ca)
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.model;
 
@@ -27,26 +27,17 @@ import org.hibernate.annotations.GenericGenerator;
 
 /**
  * A qualitative project.
- * 
- * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
- * 
  */
 @Entity
 @GenericGenerator(name = "uuid-gen", strategy = "uuid")
 public class Project
 {
 	private String fName;
-
 	private Long fPersistenceId;
-
 	private List<Investigator> fInvestigators = new ArrayList<Investigator>();
-
 	private List<Participant> fParticipants = new ArrayList<Participant>();
-
 	private List<Transcript> fTranscripts = new ArrayList<Transcript>();
-
 	private List<Memo> fMemos = new ArrayList<Memo>();
-
 	private List<Code> fCodes = new ArrayList<Code>();
 
 	/**
@@ -58,8 +49,7 @@ public class Project
 	}
 
 	/**
-	 * @param name
-	 *            the name to set
+	 * @param name the name to set
 	 */
 	public void setName(String name)
 	{
@@ -78,8 +68,7 @@ public class Project
 	}
 
 	/**
-	 * @param investigators
-	 *            the investigators to set
+	 * @param investigators the investigators to set
 	 */
 	public void setInvestigators(List<Investigator> investigators)
 	{
@@ -98,8 +87,7 @@ public class Project
 	}
 
 	/**
-	 * @param participants
-	 *            the participants to set
+	 * @param participants the participants to set
 	 */
 	public void setParticipants(List<Participant> participants)
 	{
@@ -118,8 +106,7 @@ public class Project
 	}
 
 	/**
-	 * @param transcripts
-	 *            the transcripts to set
+	 * @param transcripts the transcripts to set
 	 */
 	public void setTranscripts(List<Transcript> transcripts)
 	{
@@ -138,8 +125,7 @@ public class Project
 	}
 
 	/**
-	 * @param memos
-	 *            the memos to set
+	 * @param memos the memos to set
 	 */
 	public void setMemos(List<Memo> memos)
 	{
@@ -158,8 +144,7 @@ public class Project
 	}
 
 	/**
-	 * @param codes
-	 *            the codes to set
+	 * @param codes the codes to set
 	 */
 	public void setCodes(List<Code> codes)
 	{
@@ -175,6 +160,9 @@ public class Project
 		this.fPersistenceId = persistenceId;
 	}
 
+	/**
+	 * @return
+	 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Long getPersistenceId()
@@ -183,19 +171,19 @@ public class Project
 	}
 	
 	@Override
-	public boolean equals(Object obj)
+	public boolean equals(Object object)
 	{
-		if(obj == null)
+		if(object == null)
 		{
 			return false;
 		}
-		else if(obj == this)
+		else if(object == this)
 		{
 			return true;
 		}
-		else if(obj.getClass().equals(getClass()))
+		else if(object.getClass().equals(getClass()))
 		{
-			return fName.equals(((Project) obj).getName());
+			return fName.equals(((Project) object).getName());
 		}
 		return false;
 	}

@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Barthelemy Dagenais (bart@cs.mcgill.ca)
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.model;
 
@@ -17,9 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
 /**
- * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
- *
- */
+  */
 @Entity
 public class CodeEntry
 {
@@ -29,28 +27,43 @@ public class CodeEntry
 	
 	private Long fPersistenceId;
 
+	/**
+	 * @return
+	 */
 	@OneToOne
 	public Code getCode()
 	{
 		return fCode;
 	}
 
+	/**
+	 * @param code
+	 */
 	public void setCode(Code code)
 	{
 		this.fCode = code;
 	}
 
+	/**
+	 * @return
+	 */
 	@OneToOne
 	public Investigator getInvestigator()
 	{
 		return fInvestigator;
 	}
 
+	/**
+	 * @param investigator
+	 */
 	public void setInvestigator(Investigator investigator)
 	{
 		this.fInvestigator = investigator;
 	}
 
+	/**
+	 * @return
+	 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Long getPersistenceId()
@@ -58,6 +71,9 @@ public class CodeEntry
 		return fPersistenceId;
 	}
 
+	/**
+	 * @param persistenceId
+	 */
 	public void setPersistenceId(Long persistenceId)
 	{
 		this.fPersistenceId = persistenceId;

@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Barthelemy Dagenais (bart@cs.mcgill.ca)
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.model;
 
@@ -27,20 +27,18 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 /**
- * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
- * 
  */
 @Entity
 @GenericGenerator(name = "uuid-gen", strategy = "uuid")
 public class Fragment
 {
-
 	private List<Annotation> fAnnotations = new ArrayList<Annotation>();
-
 	private List<CodeEntry> fCodeEntries = new ArrayList<CodeEntry>();
-
 	private Long fPersistenceId;
 
+	/**
+	 * @return
+	 */
 	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
 	@CollectionId(columns = @Column(name = "COL_ID"), type = @Type(type = "string"), generator = "uuid-gen")
 	public List<Annotation> getAnnotations()
@@ -48,11 +46,17 @@ public class Fragment
 		return fAnnotations;
 	}
 
+	/**
+	 * @param annotations
+	 */
 	public void setAnnotations(List<Annotation> annotations)
 	{
 		this.fAnnotations = annotations;
 	}
 
+	/**
+	 * @return
+	 */
 	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
 	@CollectionId(columns = @Column(name = "COL_ID"), type = @Type(type = "string"), generator = "uuid-gen")
 	public List<CodeEntry> getCodeEntries()
@@ -60,11 +64,17 @@ public class Fragment
 		return fCodeEntries;
 	}
 
+	/**
+	 * @param codeEntries
+	 */
 	public void setCodeEntries(List<CodeEntry> codeEntries)
 	{
 		this.fCodeEntries = codeEntries;
 	}
 
+	/**
+	 * @return
+	 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Long getPersistenceId()
@@ -72,6 +82,9 @@ public class Fragment
 		return fPersistenceId;
 	}
 
+	/**
+	 * @param persistenceId
+	 */
 	public void setPersistenceId(Long persistenceId)
 	{
 		this.fPersistenceId = persistenceId;
