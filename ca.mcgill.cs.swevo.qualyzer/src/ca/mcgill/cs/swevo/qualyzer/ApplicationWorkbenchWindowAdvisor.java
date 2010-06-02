@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Barthelemy Dagenais (bart@cs.mcgill.ca)
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer;
 
@@ -17,15 +17,10 @@ import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
 /**
- * 
  * Windows Advisor.
- * 
- * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
- *
  */
 public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor
 {
-
 	public static final int DEFAULT_WIDTH = 600;
 	
 	public static final int DEFAULT_HEIGHT = 500;

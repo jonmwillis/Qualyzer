@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     - 
  *******************************************************************************/
 
 package ca.mcgill.cs.swevo.qualyzer;
@@ -24,11 +24,8 @@ public class Application implements IApplication
 {
 
 	/**
-	 * 
-	 * Does something.
-	 * 
-	 * @param context
-	 *            The context.
+	 * Starts the application. 
+	 * @param context The context.
 	 * @return Status of the Application.
 	 * @see org.eclipse.equinox.app.IApplication#start(org.eclipse.equinox.app.IApplicationContext)
 	 */
@@ -38,7 +35,7 @@ public class Application implements IApplication
 		try
 		{
 			int returnCode = PlatformUI.createAndRunWorkbench(display, new ApplicationWorkbenchAdvisor());
-			if (returnCode == PlatformUI.RETURN_RESTART)
+			if(returnCode == PlatformUI.RETURN_RESTART)
 			{
 				return IApplication.EXIT_RESTART;
 			}
@@ -51,7 +48,6 @@ public class Application implements IApplication
 	}
 
 	/**
-	 * 
 	 * Stops the application.
 	 * 
 	 * @see org.eclipse.equinox.app.IApplication#stop()
