@@ -285,7 +285,7 @@ public class ParticipantEditorPage extends FormPage
 				if(!fIsDirty)
 				{
 					fIsDirty = true;
-					getEditor().isDirty();
+					getEditor().editorDirtyStateChanged();
 				}
 			}
 		};

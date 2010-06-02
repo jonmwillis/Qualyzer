@@ -59,10 +59,11 @@ public class ParticipantFormEditor extends FormEditor
 	@Override
 	public void doSave(IProgressMonitor monitor)
 	{
-		fParticipant.setContactInfo(fPage.getContactInfo());
-		fParticipant.setFullName(fPage.getFullname());
-		fParticipant.setNotes(fPage.getNotes());
 		fParticipant.setParticipantId(fPage.getId());
+		fParticipant.setFullName(fPage.getFullname());
+		//Leaving these out for 0.1, needs to be left out for save to work.
+		//fParticipant.setContactInfo(fPage.getContactInfo());
+		//fParticipant.setNotes(fPage.getNotes());
 		
 		HibernateDBManager manager;
 		manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(fParticipant.getProject().getName());
@@ -73,18 +74,6 @@ public class ParticipantFormEditor extends FormEditor
 		view.getCommonViewer().refresh(fParticipant);
 		fPage.notDirty();
 	}
-
-	@Override
-	public boolean isDirty()
-	{	
-		if(fPage.isDirty())
-		{
-			char c = 0; //TODO hack MR What is the purpose of this hack?
-			setPartName(fParticipant.getParticipantId()+c);
-		}
-		return fPage.isDirty();
-	}
-	
 	
 	/** 
 	 * Does nothing because participant forms cannot be saved with a different name.
