@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Jonathan Faubert
+ *     Martin Robillard
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.providers;
 
@@ -31,29 +32,28 @@ import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 
 /**
  * Label provider for our navigator content.
- * @author Jonathan Faubert (jonfaub@gmail.com)
- *
  */
 public class NavigatorLabelProvider extends LabelProvider implements ILabelProvider, IDescriptionProvider
 {
 	private static final String FOLDER_IMG = "FOLDER_IMG";
 	private static final String PROJECT_IMG = "PROJECT_IMG";
+	private static final String PERSON_IMG = "PERSON_IMG";
 	
 	private final ImageRegistry fRegistry;
 	
 	/**
-	 * Constructor.
-	 * Initialises the images.
+	 * Creates a new label provider for the project navigator.
 	 */
 	public NavigatorLabelProvider()
 	{
 		fRegistry = QualyzerActivator.getDefault().getImageRegistry();
 		addImage(FOLDER_IMG, QualyzerActivator.PLUGIN_ID, "icons/fldr_obj.gif");
 		addImage(PROJECT_IMG, QualyzerActivator.PLUGIN_ID, "icons/prj_obj.gif");
+		addImage(PERSON_IMG, QualyzerActivator.PLUGIN_ID, "icons/person.gif");
 	}
 	
 	/**
-	 * Do nothing.
+	 * Does nothing.
 	 * @param aConfig
 	 */
 	public void init(ICommonContentExtensionSite aConfig)
@@ -97,12 +97,14 @@ public class NavigatorLabelProvider extends LabelProvider implements ILabelProvi
 		}
 		else if(element instanceof Investigator)
 		{
+			image = getImage(PERSON_IMG, QualyzerActivator.PLUGIN_ID);
 		}
 		else if(element instanceof Memo)
 		{
 		}
 		else if(element instanceof Participant)
 		{
+			image = getImage(PERSON_IMG, QualyzerActivator.PLUGIN_ID);
 		}
 		else if(element instanceof Code)
 		{
@@ -111,6 +113,7 @@ public class NavigatorLabelProvider extends LabelProvider implements ILabelProvi
 		return image;
 	}
 
+	//Only displayed in the status bar
 	@Override
 	public String getDescription(Object anElement)
 	{
@@ -194,7 +197,6 @@ public class NavigatorLabelProvider extends LabelProvider implements ILabelProvi
 	}
 	
 	/**
-	 * Do nothing.
 	 * @param aMemento
 	 */
 	public void restoreState(IMemento aMemento)
@@ -203,7 +205,6 @@ public class NavigatorLabelProvider extends LabelProvider implements ILabelProvi
 	}
 
 	/**
-	 * Do nothing.
 	 * @param aMemento
 	 */
 	public void saveState(IMemento aMemento)

@@ -6,11 +6,13 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Jonathan Faubert
+ *     Martin Robillard
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.editors;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.editor.FormEditor;
@@ -24,16 +26,13 @@ import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
 
 /**
- * An editor for Participant objects.
- * @author Jonathan Faubert
- *
+ * A form editor for Participant objects.
  */
 public class ParticipantFormEditor extends FormEditor
 {
 	public static final String ID = "ca.mcgill.cs.swevo.qualyzer.editors.ParticipantFormEditor";
 	
 	private Participant fParticipant;
-
 	private ParticipantEditorPage fPage;
 
 	@Override
@@ -55,7 +54,6 @@ public class ParticipantFormEditor extends FormEditor
 				e.printStackTrace();
 			}
 		}
-		
 	}
 
 	@Override
@@ -81,12 +79,17 @@ public class ParticipantFormEditor extends FormEditor
 	{	
 		if(fPage.isDirty())
 		{
-			char c = 0; //TODO hack
+			char c = 0; //TODO hack MR What is the purpose of this hack?
 			setPartName(fParticipant.getParticipantId()+c);
 		}
 		return fPage.isDirty();
 	}
 	
+	
+	/** 
+	 * Does nothing because participant forms cannot be saved with a different name.
+	 * @see org.eclipse.ui.part.EditorPart#doSaveAs()
+	 */
 	@Override
 	public void doSaveAs(){}
 
@@ -94,5 +97,16 @@ public class ParticipantFormEditor extends FormEditor
 	public boolean isSaveAsAllowed()
 	{
 		return false;
+	}
+	
+	// This override is to eliminate the single tab at the bottom of the editor.
+	@Override
+	protected void createPages() 
+	{
+		super.createPages();
+	    if(getPageCount() == 1 && getContainer() instanceof CTabFolder) 
+	    {
+	    	((CTabFolder) getContainer()).setTabHeight(0);
+	    }
 	}
 }
