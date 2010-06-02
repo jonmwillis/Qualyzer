@@ -58,11 +58,19 @@ public class ImportTranscriptPage extends TranscriptWizardPage
 	 */
 	@Override
 	public void createControl(Composite parent)
-	{
-		super.createControl(parent);
-		
-		Composite composite = new Composite(getfContainer(), SWT.NULL);
+	{	
+		if(getfContainer() != null) //TODO hack
+		{
+			super.createControl(parent);
+			return;
+		}
+		Composite container = new Composite(parent, SWT.NULL);
 		GridLayout layout = new GridLayout();
+		layout.numColumns = 2;
+		container.setLayout(layout);
+				
+		Composite composite = new Composite(container, SWT.NULL);
+		layout = new GridLayout();
 		layout.numColumns = COLS;
 		composite.setLayout(layout);
 		
@@ -81,6 +89,9 @@ public class ImportTranscriptPage extends TranscriptWizardPage
 		Button button = new Button(composite, SWT.PUSH);
 		button.addSelectionListener(createNewSelectionListener());
 		button.setText("Browse");
+		
+		super.createControl(parent, container);
+
 	}
 
 	/**

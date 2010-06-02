@@ -67,7 +67,10 @@ public class TranscriptWizardPage extends WizardPage
 	private Text fDescription;
 	private final String fWorkspacePath;
 	
-	
+	/**
+	 * 
+	 * @param project
+	 */
 	public TranscriptWizardPage(Project project)
 	{
 		super("New Transcript");
@@ -77,11 +80,17 @@ public class TranscriptWizardPage extends WizardPage
 		fProject = project;
 		fParticipants = new ArrayList<Participant>();
 		fAudioFileSelected = false;
+		fContainer = null;
 		
 		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(fProject.getName());
 		fWorkspacePath = wProject.getLocation().toString();
 	}
 	
+	/**
+	 * 
+	 * @param project
+	 * @param id
+	 */
 	public TranscriptWizardPage(Project project, String id)
 	{
 		super(id);
@@ -90,11 +99,16 @@ public class TranscriptWizardPage extends WizardPage
 		fProject = project;
 		fParticipants = new ArrayList<Participant>();
 		fAudioFileSelected = false;
+		fContainer = null;
 		
 		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(fProject.getName());
 		fWorkspacePath = wProject.getLocation().toString();
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	protected Composite getfContainer()
 	{
 		return fContainer;
@@ -106,10 +120,13 @@ public class TranscriptWizardPage extends WizardPage
 	@Override
 	public void createControl(Composite parent)
 	{
-		fContainer = new Composite(parent, SWT.NULL);
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 2;
-		fContainer.setLayout(layout);
+		if(fContainer == null)
+		{
+			fContainer = new Composite(parent, SWT.NULL);
+			GridLayout layout = new GridLayout();
+			layout.numColumns = 2;
+			fContainer.setLayout(layout);
+		}
 		
 		@SuppressWarnings("unused")
 		Label label = createLabel(fContainer, "Transcript name:");
@@ -133,6 +150,17 @@ public class TranscriptWizardPage extends WizardPage
 		
 		setControl(fContainer);
 		setPageComplete(false);
+	}
+	
+	/**
+	 * 
+	 * @param parent
+	 * @param container
+	 */
+	protected void createControl(Composite parent, Composite container)
+	{
+		fContainer = container;
+		createControl(parent);
 	}
 
 	/**
@@ -299,6 +327,10 @@ public class TranscriptWizardPage extends WizardPage
 		};
 	}
 	
+	/**
+	 * Sets the error message and the page complete status.
+	 * @param message
+	 */
 	protected void setError(String message)
 	{
 		setErrorMessage(message);
@@ -339,31 +371,54 @@ public class TranscriptWizardPage extends WizardPage
 		}
 	}
 	
+	/**
+	 * 
+	 * @return The data field.
+	 */
 	public String getDate()
 	{
 		return fDate.getText();
 	}
 	
+	/**
+	 * @return The name field.
+	 */
 	public String getName()
 	{
 		return fName.getText();
 	}
 	
+	/**
+	 * 
+	 * @return The audio file's absoulte path.
+	 */
 	public String getAudioFile()
 	{
 		return fAudioFile.getText();
 	}
 	
+	/**
+	 * 
+	 * @return The Description field.
+	 */
 	public String getTranscriptDescription()
 	{
 		return fDescription.getText();
 	}
 	
+	/**
+	 * 
+	 * @return The list of participants that were selected.
+	 */
 	public List<Participant> getParticipants()
 	{
 		return fParticipants;
 	}
 	
+	/**
+	 * 
+	 * @return The Transcript represented by the data entered in the wizard.
+	 */
 	public Transcript getTranscript()
 	{		
 		Transcript transcript = new Transcript();
@@ -430,6 +485,11 @@ public class TranscriptWizardPage extends WizardPage
 		}
 	}
 	
+	/**
+	 * 
+	 * @param filename
+	 * @return The absolute path of the audio file represented by the filename.
+	 */
 	protected String findAudioFile(String filename)
 	{	
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(fProject.getName());
