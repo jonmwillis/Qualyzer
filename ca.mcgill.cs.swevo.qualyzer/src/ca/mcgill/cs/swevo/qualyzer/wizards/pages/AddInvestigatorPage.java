@@ -13,9 +13,16 @@
  */
 package ca.mcgill.cs.swevo.qualyzer.wizards.pages;
 
+import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
+
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 
@@ -23,9 +30,13 @@ import ca.mcgill.cs.swevo.qualyzer.model.Project;
  * @author Jonathan Faubert (jonfaub@gmail.com)
  *
  */
-public class AddInvestigatorPage extends NewProjectPageTwo
+public class AddInvestigatorPage extends WizardPage
 {
 	private Project fProject;
+	private Composite fContainer;
+	private Text fNickname;
+	private Text fFullname;
+	private Text fInstitution;
 	
 	/**
 	 * Constructor.
@@ -33,6 +44,7 @@ public class AddInvestigatorPage extends NewProjectPageTwo
 	 */
 	public AddInvestigatorPage(Project project)
 	{
+		super("Add Investigator");
 		setTitle("Add Investigator");
 		setDescription("Enter the information for a new Investigator");
 		fProject = project;
@@ -41,22 +53,73 @@ public class AddInvestigatorPage extends NewProjectPageTwo
 	@Override
 	public void createControl(Composite parent)
 	{
-		super.createControl(parent);
-		boolean found = false;
-		for(Investigator inves : fProject.getInvestigators())
+		fContainer = new Composite(parent, SWT.NULL);
+		GridLayout layout = new GridLayout();
+		fContainer.setLayout(layout);
+		layout.numColumns = 2;
+		Label label = new Label(fContainer, SWT.NULL);
+		label.setText("Investigator Nickname");
+
+		fNickname = new Text(fContainer, SWT.BORDER | SWT.SINGLE);
+		fNickname.setText(System.getProperty("user.name"));
+		if(idInUse())
 		{
-			if(inves.getNickName().equals(getInvestigatorNickname()))
-			{
-				setErrorMessage("That nickname is already in use.");
-				found = true;
-				break;
-			}
+			fNickname.setText("");
 		}
-		setPageComplete(!found);
+		
+		//Only allows the user to proceed if a valid name is entered
+		fNickname.addKeyListener(createKeyListener());
+		
+		label = new Label(fContainer, SWT.NULL);
+		label.setText("Full name");
+		
+		fFullname = new Text(fContainer, SWT.BORDER | SWT.SINGLE);
+		fFullname.setText("");
+		
+		label = new Label(fContainer, SWT.NULL);
+		label.setText("Institution");
+		
+		fInstitution = new Text(fContainer, SWT.BORDER | SWT.SINGLE);
+		fInstitution.setText("");
+		
+		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+		fNickname.setLayoutData(gd);
+		fFullname.setLayoutData(gd);
+		fInstitution.setLayoutData(gd);
+		
+		// Required to avoid an error in the system
+		setControl(fContainer);
+		setPageComplete(true);
 	}
 
-	@Override
-	protected KeyListener createKeyListener()
+	/**
+	 * Get the Nickname field.
+	 * @return
+	 */
+	public String getInvestigatorNickname()
+	{
+		return fNickname.getText();
+	}
+	
+	/**
+	 * Get the fullname field.
+	 * @return
+	 */
+	public String getInvestigatorFullname()
+	{
+		return fFullname.getText();
+	}
+	
+	/**
+	 * Get the Institution field.
+	 * @return
+	 */
+	public String getInstitution()
+	{
+		return fInstitution.getText();
+	}
+	
+	private KeyListener createKeyListener()
 	{
 		return new KeyListener(){
 			@Override
@@ -65,18 +128,20 @@ public class AddInvestigatorPage extends NewProjectPageTwo
 			@Override
 			public void keyReleased(KeyEvent e)
 			{
-				if(getInvestigatorNickname().length() <= 0)
+				if(fNickname.getText().isEmpty())
 				{
 					setPageComplete(false);
 					setErrorMessage("Please enter a nickname for the Investigator");
 				}
+				else if(!idInUse())
+				{
+					setPageComplete(true);
+					setErrorMessage(null);
+				}
 				else
 				{
-					if(!idInUse())
-					{
-						setPageComplete(true);
-						setErrorMessage(null);
-					}
+					setErrorMessage("That nickname is already taken");
+					setPageComplete(false);
 				}
 			}
 		};
@@ -86,10 +151,8 @@ public class AddInvestigatorPage extends NewProjectPageTwo
 	{
 		for(Investigator inves : fProject.getInvestigators())
 		{
-			if(inves.getNickName().equals(getInvestigatorNickname()))
+			if(inves.getNickName().equals(fNickname.getText()))
 			{
-				setErrorMessage("That nickname is already in use.");
-				setPageComplete(false);
 				return true;
 			}
 		}
@@ -103,9 +166,9 @@ public class AddInvestigatorPage extends NewProjectPageTwo
 	public Investigator getInvestigator()
 	{
 		Investigator investigator = new Investigator();
-		investigator.setFullName(getInvestigatorFullname());
-		investigator.setNickName(getInvestigatorNickname());
-		investigator.setInstitution(getInstitution());
+		investigator.setFullName(fFullname.getText());
+		investigator.setNickName(fNickname.getText());
+		investigator.setInstitution(fInstitution.getText());
 		return investigator;
 	}
 
