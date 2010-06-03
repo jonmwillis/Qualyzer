@@ -12,6 +12,8 @@ package ca.mcgill.cs.swevo.qualyzer;
 
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 
@@ -22,6 +24,8 @@ import org.eclipse.ui.application.IActionBarConfigurer;
  */
 public class ApplicationActionBarAdvisor extends ActionBarAdvisor
 {
+	private IWorkbenchAction fSaveAction;
+
 	/**
 	  * Actions - important to allocate these only in makeActions, and then use
 	  * them in the fill methods. This ensures that the actions aren't recreated
@@ -44,6 +48,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor
 
 		// exitAction = ActionFactory.QUIT.create(window);
 		// register(exitAction);
+		fSaveAction = ActionFactory.SAVE.create(window);
+		register(fSaveAction);
 	}
 
 	@Override
