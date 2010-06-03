@@ -19,9 +19,8 @@ import org.eclipse.osgi.util.NLS;
  * @author Jonathan Faubert (jonfaub@gmail.com)
  *
  */
-public class Messages extends NLS
+public final class Messages extends NLS
 {
-	private static final String BUNDLE_NAME = "ca.mcgill.cs.swevo.qualyzer.wizards.pages.messages"; //$NON-NLS-1$
 	public static String wizard_pages_AddParticipantPage_addParticipant;
 	public static String wizard_pages_AddParticipantPage_ContactInfo;
 	public static String wizard_pages_AddParticipantPage_enterInfo;
@@ -66,6 +65,7 @@ public class Messages extends NLS
 	public static String wizards_pages_TranscriptWizardPage_selectAParticipant;
 	public static String wizards_pages_TranscriptWizardPage_selectParticipants;
 	public static String wizards_pages_TranscriptWizardPage_transcriptName;
+	private static final String BUNDLE_NAME = "ca.mcgill.cs.swevo.qualyzer.wizards.pages.messages"; //$NON-NLS-1$
 	static
 	{
 		// initialize resource bundle

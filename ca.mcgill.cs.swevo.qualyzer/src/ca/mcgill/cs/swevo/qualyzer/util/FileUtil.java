@@ -35,6 +35,11 @@ public final class FileUtil
 	 */
 	public static void copyFile(File input, File output) throws IOException
 	{
+		if(output.exists())
+		{
+			output.delete();
+		}
+		
 		FileChannel in = null;
 		FileChannel out = null;
 		
