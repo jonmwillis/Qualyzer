@@ -6,38 +6,30 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Barthelemy Dagenais (bart@cs.mcgill.ca)
+ *     Jonathan Faubert
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.handlers;
-
-import java.io.File;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.part.FileEditorInput;
 
-import ca.mcgill.cs.swevo.qualyzer.editors.TranscriptEditor;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
+import ca.mcgill.cs.swevo.qualyzer.util.ResourcesUtil;
 
 /**
- * 
- * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
+ * Handler for the opening of Transcripts.
  * 
  */
 public class OpenTranscriptHandler extends AbstractHandler
 {
 
-	private static final String PATH = "transcripts"+File.separator; //$NON-NLS-1$
 	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
@@ -55,17 +47,7 @@ public class OpenTranscriptHandler extends AbstractHandler
 			if (obj != null && obj instanceof Transcript)
 			{
 				Transcript trans = (Transcript) obj;
-				IProject proj = ResourcesPlugin.getWorkspace().getRoot().getProject(trans.getProject().getName());
-				IFile file = proj.getFile(PATH + trans.getFileName());
-				FileEditorInput editorInput = new FileEditorInput(file);
-				try
-				{
-					page.openEditor(editorInput, TranscriptEditor.ID);
-				}
-				catch (PartInitException e)
-				{
-					e.printStackTrace();
-				}
+				ResourcesUtil.openEditor(page, trans);
 			}
 		}
 		return null;

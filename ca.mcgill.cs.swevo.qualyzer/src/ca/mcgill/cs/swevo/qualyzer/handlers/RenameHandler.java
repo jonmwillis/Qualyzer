@@ -34,6 +34,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 import ca.mcgill.cs.swevo.qualyzer.providers.WrapperTranscript;
 import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
+import ca.mcgill.cs.swevo.qualyzer.util.ResourcesUtil;
 
 /**
  * Qualyzer handler for rename (F2).
@@ -59,7 +60,7 @@ public class RenameHandler extends AbstractHandler
 		if(selection != null && selection instanceof IStructuredSelection)
 		{
 			Object element = ((IStructuredSelection) selection).getFirstElement();
-			Project project = AddParticipantHandler.getProject(element);
+			Project project = ResourcesUtil.getProject(element);
 
 			RenameDialog dialog = new RenameDialog(HandlerUtil.getActiveShell(event).getShell(), project);
 
