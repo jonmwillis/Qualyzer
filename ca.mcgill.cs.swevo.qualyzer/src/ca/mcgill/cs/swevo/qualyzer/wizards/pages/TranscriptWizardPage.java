@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Jonathan Faubert
  *******************************************************************************/
 /**
  * 
@@ -43,7 +43,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 import ca.mcgill.cs.swevo.qualyzer.util.FileUtil;
 
 /**
- * @author Jonathan Faubert (jonfaub@gmail.com)
+ * The only page in the new Transcript Wizard
  *
  */
 public class TranscriptWizardPage extends WizardPage
@@ -53,7 +53,7 @@ public class TranscriptWizardPage extends WizardPage
 	 */
 	private static final int COMPOSITE_COLS = 3;
 
-	private static final String AUDIO_PATH = File.separator+"audio"+File.separator;  // /audio/ or \\audio\\ //$NON-NLS-1$
+	private static final String AUDIO_PATH = File.separator+"audio"+File.separator; //$NON-NLS-1$
 	
 	protected Table fTable;
 	protected Text fName;
@@ -436,7 +436,7 @@ public class TranscriptWizardPage extends WizardPage
 			int i = audioPath.lastIndexOf('.');
 			String relativePath = transcript.getName()+audioPath.substring(i);
 			
-			if(audioPath.indexOf(fWorkspacePath) == -1)
+			if(audioPath.indexOf(fWorkspacePath) == -1 || namesAreDifferent(transcript.getName(), audioPath))
 			{
 				copyAudioFile(audioPath, relativePath);
 			}
@@ -445,6 +445,18 @@ public class TranscriptWizardPage extends WizardPage
 		}
 		
 		return transcript;
+	}
+
+	/**
+	 * @param name
+	 * @param audioPath
+	 * @return
+	 */
+	private boolean namesAreDifferent(String name, String audioPath)
+	{
+		int i = audioPath.lastIndexOf(File.separatorChar) + 1;
+		int j = audioPath.lastIndexOf('.');
+		return !name.equals(audioPath.substring(i, j));
 	}
 
 	/**
