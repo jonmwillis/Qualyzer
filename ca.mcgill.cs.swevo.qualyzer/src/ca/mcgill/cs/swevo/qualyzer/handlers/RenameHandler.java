@@ -29,9 +29,11 @@ import org.eclipse.ui.navigator.CommonNavigator;
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.dialogs.RenameDialog;
 import ca.mcgill.cs.swevo.qualyzer.model.AudioFile;
+import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 import ca.mcgill.cs.swevo.qualyzer.providers.WrapperTranscript;
+import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
 
 /**
  * Qualyzer handler for rename (F2).
@@ -68,6 +70,10 @@ public class RenameHandler extends AbstractHandler
 				if(element instanceof Transcript)
 				{
 					rename((Transcript) element, dialog.getName(), dialog.getChangeAudio());
+					
+					HibernateDBManager manager;
+					manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(project.getName());
+					HibernateUtil.quietSave(manager, element);	
 				}
 				view.getCommonViewer().refresh(new WrapperTranscript(project));
 			}
