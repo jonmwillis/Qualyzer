@@ -6,22 +6,19 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Barthelemy Dagenaisv
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.editors;
 
 import org.eclipse.jface.text.rules.IWhitespaceDetector;
 
 /**
- * 
- * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
- * 
  */
 public class XMLWhitespaceDetector implements IWhitespaceDetector
 {
-
+	@Override
 	public boolean isWhitespace(char c)
 	{
-		return (c == ' ' || c == '\t' || c == '\n' || c == '\r');
+		return c == ' ' || c == '\t' || c == '\n' || c == '\r';
 	}
 }

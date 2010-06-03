@@ -6,12 +6,11 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Barthelemy Dagenais (bart@cs.mcgill.ca)v
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.editors;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.swt.graphics.Color;
@@ -19,30 +18,36 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
 /**
- * 
- * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
- * 
- */
-@SuppressWarnings("unchecked")
+  */
 public class ColorManager
 {
-
-	protected Map fColorTable = new HashMap();
-
+	public static final RGB DEFAULT = new RGB(0, 0, 0);
+	public static final RGB PROC_INSTR = new RGB(128, 128, 128);
+	public static final RGB STRING = new RGB(0, 128, 0);
+	public static final RGB TAG = new RGB(0, 0, 128);
+	public static final RGB XML_COMMENT = new RGB(128, 0, 0);
 	
+	protected Map<RGB, Color> fColorTable = new HashMap<RGB, Color>();
+	
+	/**
+	 * 
+	 */
 	public void dispose()
 	{
-		Iterator e = fColorTable.values().iterator();
-		while (e.hasNext())
+		for(Color c : fColorTable.values())
 		{
-			((Color) e.next()).dispose();
+			c.dispose();
 		}
 	}
 
+	/**
+	 * @param rgb
+	 * @return
+	 */
 	public Color getColor(RGB rgb)
 	{
-		Color color = (Color) fColorTable.get(rgb);
-		if (color == null)
+		Color color = fColorTable.get(rgb);
+		if(color == null)
 		{
 			color = new Color(Display.getCurrent(), rgb);
 			fColorTable.put(rgb, color);

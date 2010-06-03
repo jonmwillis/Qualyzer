@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Barthelemy Dagenais
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.editors;
 
@@ -16,14 +16,12 @@ import org.eclipse.jface.text.ITextDoubleClickStrategy;
 import org.eclipse.jface.text.ITextViewer;
 
 /**
- * 
- * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
- *
  */
 public class XMLDoubleClickStrategy implements ITextDoubleClickStrategy
 {
 	protected ITextViewer fText;
 
+	@Override
 	public void doubleClicked(ITextViewer part)
 	{
 		int pos = part.getSelectedRange().x;
@@ -40,10 +38,16 @@ public class XMLDoubleClickStrategy implements ITextDoubleClickStrategy
 		}
 	}
 
+	
+	/**
+	 * @param caretPos
+	 * @return
+	 */
 	protected boolean selectComment(int caretPos)
 	{
 		IDocument doc = fText.getDocument();
-		int startPos, endPos;
+		int startPos;
+		int endPos;
 
 		try
 		{
@@ -59,12 +63,16 @@ public class XMLDoubleClickStrategy implements ITextDoubleClickStrategy
 					continue;
 				}
 				if (c == Character.LINE_SEPARATOR || c == '\"')
+				{
 					break;
+				}
 				--pos;
 			}
 
 			if (c != '\"')
+			{
 				return false;
+			}
 
 			startPos = pos;
 
@@ -76,11 +84,15 @@ public class XMLDoubleClickStrategy implements ITextDoubleClickStrategy
 			{
 				c = doc.getChar(pos);
 				if (c == Character.LINE_SEPARATOR || c == '\"')
+				{
 					break;
+				}
 				++pos;
 			}
 			if (c != '\"')
+			{
 				return false;
+			}
 
 			endPos = pos;
 
@@ -88,18 +100,24 @@ public class XMLDoubleClickStrategy implements ITextDoubleClickStrategy
 			int len = endPos - offset;
 			fText.setSelectedRange(offset, len);
 			return true;
-		} catch (BadLocationException x)
+		} 
+		catch (BadLocationException x)
 		{
 		}
 
 		return false;
 	}
 
+	/**
+	 * @param caretPos
+	 * @return
+	 */
 	protected boolean selectWord(int caretPos)
 	{
 
 		IDocument doc = fText.getDocument();
-		int startPos, endPos;
+		int startPos;
+		int endPos;
 
 		try
 		{
@@ -111,7 +129,9 @@ public class XMLDoubleClickStrategy implements ITextDoubleClickStrategy
 			{
 				c = doc.getChar(pos);
 				if (!Character.isJavaIdentifierPart(c))
+				{
 					break;
+				}
 				--pos;
 			}
 
@@ -124,7 +144,9 @@ public class XMLDoubleClickStrategy implements ITextDoubleClickStrategy
 			{
 				c = doc.getChar(pos);
 				if (!Character.isJavaIdentifierPart(c))
+				{
 					break;
+				}
 				++pos;
 			}
 
@@ -132,7 +154,8 @@ public class XMLDoubleClickStrategy implements ITextDoubleClickStrategy
 			selectRange(startPos, endPos);
 			return true;
 
-		} catch (BadLocationException x)
+		} 
+		catch (BadLocationException x)
 		{
 		}
 

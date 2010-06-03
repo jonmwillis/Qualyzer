@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Barthelemy Dagenais
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.editors;
 
@@ -17,13 +17,10 @@ import org.eclipse.jface.text.rules.FastPartitioner;
 import org.eclipse.ui.editors.text.FileDocumentProvider;
 
 /**
- * 
- * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
- *
- */
+  */
 public class XMLDocumentProvider extends FileDocumentProvider
 {
-
+	@Override
 	protected IDocument createDocument(Object element) throws CoreException
 	{
 		IDocument document = super.createDocument(element);

@@ -6,11 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Jonathan Faubert
  *******************************************************************************/
-/**
- * 
- */
 package ca.mcgill.cs.swevo.qualyzer.editors;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -28,8 +25,6 @@ import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
 
 /**
  * An editor for Investigator Objects.
- * @author Jonathan Faubert (jonfaub@gmail.com)
- *
  */
 public class InvestigatorFormEditor extends FormEditor
 {
@@ -38,9 +33,6 @@ public class InvestigatorFormEditor extends FormEditor
 	private InvestigatorEditorPage fPage;
 	private Investigator fInvestigator;
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.forms.editor.FormEditor#addPages()
-	 */
 	@Override
 	protected void addPages()
 	{
@@ -57,9 +49,6 @@ public class InvestigatorFormEditor extends FormEditor
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.part.EditorPart#doSave(org.eclipse.core.runtime.IProgressMonitor)
-	 */
 	@Override
 	public void doSave(IProgressMonitor monitor)
 	{
@@ -78,15 +67,9 @@ public class InvestigatorFormEditor extends FormEditor
 		fPage.notDirty();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.part.EditorPart#doSaveAs()
-	 */
 	@Override
 	public void doSaveAs(){}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.part.EditorPart#isSaveAsAllowed()
-	 */
 	@Override
 	public boolean isSaveAsAllowed()
 	{
