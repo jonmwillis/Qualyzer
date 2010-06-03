@@ -77,7 +77,8 @@ public class ImportTranscriptWizard extends Wizard
 
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		IProject wProject = root.getProject(fProject.getName());
-		String path = wProject.getLocation()+File.separator+"transcripts"+File.separator+fTranscript.getFileName(); //$NON-NLS-1$
+		String path = wProject.getLocation()+File.separator+"transcripts"+ //$NON-NLS-1$
+			File.separator+fTranscript.getFileName(); 
 		File file = new File(path);
 		File fileOrig = new File(fPage.getTranscriptFile());
 		

@@ -66,7 +66,8 @@ public class NewTranscriptWizard extends Wizard
 
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		IProject wProject = root.getProject(fProject.getName());
-		String path = wProject.getLocation()+File.separator+"transcripts"+File.separator+fTranscript.getFileName(); //$NON-NLS-1$
+		String path = wProject.getLocation()+File.separator+
+			"transcripts"+File.separator+fTranscript.getFileName(); //$NON-NLS-1$
 		File file = new File(path);
 		
 		try
