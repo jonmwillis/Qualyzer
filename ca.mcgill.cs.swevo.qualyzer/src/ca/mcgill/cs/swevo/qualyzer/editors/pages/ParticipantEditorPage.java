@@ -282,11 +282,24 @@ public class ParticipantEditorPage extends FormPage
 			@Override
 			public void keyReleased(KeyEvent e)
 			{
-				if(!fIsDirty)
+				if(!fIsDirty && fieldHasChanged())
 				{
 					fIsDirty = true;
 					getEditor().editorDirtyStateChanged();
 				}
+			}
+
+			private boolean fieldHasChanged()
+			{
+				if(!fID.getText().equals(fParticipant.getParticipantId()))
+				{
+					return true;
+				}
+				else if(!fFullname.getText().equals(fParticipant.getFullName()))
+				{
+					return true;
+				}
+				return false;
 			}
 		};
 	}
@@ -303,5 +316,6 @@ public class ParticipantEditorPage extends FormPage
 	public void notDirty()
 	{
 		fIsDirty = false;
+		getEditor().editorDirtyStateChanged();
 	}
 }
