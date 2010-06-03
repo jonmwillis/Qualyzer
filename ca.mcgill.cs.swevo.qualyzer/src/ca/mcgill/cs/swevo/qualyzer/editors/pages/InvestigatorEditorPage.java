@@ -244,16 +244,34 @@ public class InvestigatorEditorPage extends FormPage
 		return new KeyListener(){
 
 			@Override
-			public void keyPressed(KeyEvent e)	{}
+			public void keyPressed(KeyEvent e){}
 
 			@Override
 			public void keyReleased(KeyEvent e)
 			{
-				if(!fIsDirty)
+				if(!fIsDirty && fieldHasChanged())
 				{
 					fIsDirty = true;
 					getEditor().editorDirtyStateChanged();
 				}
+			}
+
+			private boolean fieldHasChanged()
+			{
+				boolean hasChanged = false;
+				if(!fNickname.getText().equals(fInvestigator.getNickName()))
+				{
+					hasChanged = true;
+				}
+				else if(!fFullname.getText().equals(fInvestigator.getFullName()))
+				{
+					hasChanged = true;
+				}
+				else if(!fInstitution.getText().equals(fInvestigator.getInstitution()))
+				{
+					hasChanged = true;
+				}
+				return hasChanged;
 			}
 			
 		};
@@ -265,5 +283,6 @@ public class InvestigatorEditorPage extends FormPage
 	public void notDirty()
 	{
 		fIsDirty = false;
+		getEditor().editorDirtyStateChanged();
 	}
 }
