@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Barthelemy Dagenais
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.editors;
 
@@ -15,18 +15,18 @@ import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.MultiLineRule;
 
 /**
- * 
- * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
- * 
  */
 public class TagRule extends MultiLineRule
 {
-
+	/**
+	 * @param token
+	 */
 	public TagRule(IToken token)
 	{
 		super("<", ">", token); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
+	@Override
 	protected boolean sequenceDetected(ICharacterScanner scanner, char[] sequence, boolean eofAllowed)
 	{
 		int c = scanner.read();

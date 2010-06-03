@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Barthelemy Dagenais
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.editors;
 
@@ -21,9 +21,6 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 
 /**
- * 
- * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
- * 
  */
 public class XMLConfiguration extends SourceViewerConfiguration
 {
@@ -32,17 +29,22 @@ public class XMLConfiguration extends SourceViewerConfiguration
 	private XMLScanner fScanner;
 	private ColorManager fColorManager;
 
+	/**
+	 * @param colorManager
+	 */
 	public XMLConfiguration(ColorManager colorManager)
 	{
 		this.fColorManager = colorManager;
 	}
 
+	@Override
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer)
 	{
 		return new String[] { IDocument.DEFAULT_CONTENT_TYPE, XMLPartitionScanner.XML_COMMENT,
 				XMLPartitionScanner.XML_TAG };
 	}
 
+	@Override
 	public ITextDoubleClickStrategy getDoubleClickStrategy(ISourceViewer sourceViewer, String contentType)
 	{
 		if (fDoubleClickStrategy == null)
@@ -52,28 +54,35 @@ public class XMLConfiguration extends SourceViewerConfiguration
 		return fDoubleClickStrategy;
 	}
 
+	/**
+	 * @return
+	 */
 	protected XMLScanner getXMLScanner()
 	{
 		if (fScanner == null)
 		{
 			fScanner = new XMLScanner(fColorManager);
 			fScanner.setDefaultReturnToken(new Token(new TextAttribute(fColorManager
-					.getColor(IXMLColorConstants.DEFAULT))));
+					.getColor(ColorManager.DEFAULT))));
 		}
 		return fScanner;
 	}
 
+	/**
+	 * @return
+	 */
 	protected XMLTagScanner getXMLTagScanner()
 	{
 		if (fTagScanner == null)
 		{
 			fTagScanner = new XMLTagScanner(fColorManager);
 			fTagScanner.setDefaultReturnToken(new Token(new TextAttribute(fColorManager
-					.getColor(IXMLColorConstants.TAG))));
+					.getColor(ColorManager.TAG))));
 		}
 		return fTagScanner;
 	}
 
+	@Override
 	public IPresentationReconciler getPresentationReconciler(ISourceViewer sourceViewer)
 	{
 		PresentationReconciler reconciler = new PresentationReconciler();
@@ -85,13 +94,12 @@ public class XMLConfiguration extends SourceViewerConfiguration
 		dr = new DefaultDamagerRepairer(getXMLScanner());
 		reconciler.setDamager(dr, IDocument.DEFAULT_CONTENT_TYPE);
 		reconciler.setRepairer(dr, IDocument.DEFAULT_CONTENT_TYPE);
-
 		
 		// This is probably what we will need to use. 
 		// A partition scanner will partition the document in coded fragments
 		// Coded fragments will be assigned to a color.
 		NonRuleBasedDamagerRepairer ndr = new NonRuleBasedDamagerRepairer(new TextAttribute(fColorManager
-				.getColor(IXMLColorConstants.XML_COMMENT)));
+				.getColor(ColorManager.XML_COMMENT)));
 		reconciler.setDamager(ndr, XMLPartitionScanner.XML_COMMENT);
 		reconciler.setRepairer(ndr, XMLPartitionScanner.XML_COMMENT);
 

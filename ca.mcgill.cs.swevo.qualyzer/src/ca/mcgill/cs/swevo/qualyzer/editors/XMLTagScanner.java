@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Barthelemy Dagenais
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.editors;
 
@@ -19,16 +19,15 @@ import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.rules.WhitespaceRule;
 
 /**
- * 
- * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
- * 
- */
+  */
 public class XMLTagScanner extends RuleBasedScanner
 {
-
+	/**
+	 * @param manager
+	 */
 	public XMLTagScanner(ColorManager manager)
 	{
-		IToken string = new Token(new TextAttribute(manager.getColor(IXMLColorConstants.STRING)));
+		IToken string = new Token(new TextAttribute(manager.getColor(ColorManager.STRING)));
 
 		IRule[] rules = new IRule[3];
 

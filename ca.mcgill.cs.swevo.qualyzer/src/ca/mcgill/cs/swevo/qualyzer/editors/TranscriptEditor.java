@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Barthelemy Dagenais
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.editors;
 
@@ -15,13 +15,9 @@ import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.ide.IDEActionFactory;
 
 /**
- * 
- * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
- *
  */
 public class TranscriptEditor extends TextEditor
 {
-
 	public static final String ID = "ca.mcgill.cs.swevo.qualyzer.editors.TranscriptEditor"; //$NON-NLS-1$
 	
 	private ColorManager fColorManager;

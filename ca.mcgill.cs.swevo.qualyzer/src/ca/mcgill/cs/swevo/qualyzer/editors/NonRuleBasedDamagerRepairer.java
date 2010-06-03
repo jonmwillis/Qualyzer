@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Barthelemy Dagenais
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.editors;
 
@@ -24,13 +24,9 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.swt.custom.StyleRange;
 
 /**
- * 
- * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
- * 
  */
 public class NonRuleBasedDamagerRepairer implements IPresentationDamager, IPresentationRepairer
 {
-
 	/** The document this object works on. */
 	protected IDocument fDocument;
 
