@@ -262,17 +262,6 @@
                   <iterate
                         ifEmpty="false"
                         operator="or">
-                     <or>
-                        <instanceof
-                              value="org.eclipse.core.resources.IProject">
-                        </instanceof>
-                        <instanceof
-                              value="ca.mcgill.cs.swevo.qualyzer.providers.WrapperParticipant">
-                        </instanceof>
-                        <instanceof
-                              value="ca.mcgill.cs.swevo.qualyzer.model.Participant">
-                        </instanceof>
-                     </or>
                   </iterate>
                </visibleWhen>
             </command>
@@ -286,17 +275,6 @@
                   <iterate
                         ifEmpty="false"
                         operator="or">
-                     <or>
-                        <instanceof
-                              value="org.eclipse.core.resources.IProject">
-                        </instanceof>
-                        <instanceof
-                              value="ca.mcgill.cs.swevo.qualyzer.providers.WrapperInvestigator">
-                        </instanceof>
-                        <instanceof
-                              value="ca.mcgill.cs.swevo.qualyzer.model.Investigator">
-                        </instanceof>
-                     </or>
                   </iterate>
                </visibleWhen>
             </command>
@@ -310,17 +288,6 @@
                   <iterate
                         ifEmpty="false"
                         operator="or">
-                     <or>
-                        <instanceof
-                              value="org.eclipse.core.resources.IProject">
-                        </instanceof>
-                        <instanceof
-                              value="ca.mcgill.cs.swevo.qualyzer.providers.WrapperTranscript">
-                        </instanceof>
-                        <instanceof
-                              value="ca.mcgill.cs.swevo.qualyzer.model.Transcript">
-                        </instanceof>
-                     </or>
                   </iterate>
                </visibleWhen>
             </command>
@@ -441,17 +408,6 @@
                   <iterate
                         ifEmpty="false"
                         operator="or">
-                     <or>
-                        <instanceof
-                              value="org.eclipse.core.resources.IProject">
-                        </instanceof>
-                        <instanceof
-                              value="ca.mcgill.cs.swevo.qualyzer.providers.WrapperTranscript">
-                        </instanceof>
-                        <instanceof
-                              value="ca.mcgill.cs.swevo.qualyzer.model.Transcript">
-                        </instanceof>
-                     </or>
                   </iterate>
                </visibleWhen>
             </command>
