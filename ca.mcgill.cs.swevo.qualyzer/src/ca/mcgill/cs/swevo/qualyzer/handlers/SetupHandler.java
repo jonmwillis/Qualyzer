@@ -59,38 +59,38 @@ public class SetupHandler extends AbstractHandler
 			PersistenceManager manager = PersistenceManager.getInstance();
 			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 
-			IProject project = root.getProject("Navigator Test");
+			IProject project = root.getProject("Navigator Test"); //$NON-NLS-1$
 			
 			project.create(new NullProgressMonitor());
 			project.open(new NullProgressMonitor());
 			
 			manager.initDB(project);
-			HibernateDBManager dbManager = QualyzerActivator.getDefault().getHibernateDBManagers().get("Navigator Test");
+			HibernateDBManager dbManager = QualyzerActivator.getDefault().getHibernateDBManagers().get("Navigator Test"); //$NON-NLS-1$
 
 			Project projectDB = new Project();
-			projectDB.setName("Navigator Test");
+			projectDB.setName("Navigator Test"); //$NON-NLS-1$
 			Investigator inv = new Investigator();
-			inv.setFullName("Jonathan Faubert");
+			inv.setFullName("Jonathan Faubert"); //$NON-NLS-1$
 			projectDB.getInvestigators().add(inv);
 			
 			Code code = new Code();
-			code.setCodeName("code");
+			code.setCodeName("code"); //$NON-NLS-1$
 			projectDB.getCodes().add(code);
 			
 			Memo memo = new Memo();
-			memo.setName("memo");
+			memo.setName("memo"); //$NON-NLS-1$
 			projectDB.getMemos().add(memo);
 			
 			memo = new Memo();
-			memo.setName("memo2");
+			memo.setName("memo2"); //$NON-NLS-1$
 			projectDB.getMemos().add(memo);
 			
 			Participant part = new Participant();
-			part.setFullName("Tester Participant");
+			part.setFullName("Tester Participant"); //$NON-NLS-1$
 			projectDB.getParticipants().add(part);
 			
 			Transcript trans = new Transcript();
-			trans.setName("transcript");
+			trans.setName("transcript"); //$NON-NLS-1$
 			projectDB.getTranscripts().add(trans);
 			
 			HibernateUtil.quietSave(dbManager, projectDB);

@@ -44,7 +44,7 @@ public class InvestigatorEditorPage extends FormPage
 	/**
 	 * 
 	 */
-	private static final String INVESTIGATOR = "Investigator";
+	private static final String INVESTIGATOR = Messages.editors_pages_InvestigatorEditorPage_Investigator;
 	private Text fNickname;
 	private Text fFullname;
 	private Text fInstitution;
@@ -75,13 +75,13 @@ public class InvestigatorEditorPage extends FormPage
 		body.setLayout(layout);
 		
 		@SuppressWarnings("unused")
-		Label label = toolkit.createLabel(body, "Nickname:");
+		Label label = toolkit.createLabel(body, Messages.editors_pages_InvestigatorEditorPage_Nickname);
 		fNickname = createText(toolkit, fInvestigator.getNickName(), body);
 		
-		label = toolkit.createLabel(body, "Full Name:");
+		label = toolkit.createLabel(body, Messages.editors_pages_InvestigatorEditorPage_FulllName);
 		fFullname = createText(toolkit, fInvestigator.getFullName(), body);
 
-		label = toolkit.createLabel(body, "Institution:");
+		label = toolkit.createLabel(body, Messages.editors_pages_InvestigatorEditorPage_Instituion);
 		fInstitution = createText(toolkit, fInvestigator.getInstitution(), body);
 		
 		createInterviewSection(form, toolkit, body);
@@ -110,7 +110,7 @@ public class InvestigatorEditorPage extends FormPage
 		td = new TableWrapData(TableWrapData.FILL_GRAB);
 		td.colspan = 2;
 		section.setLayoutData(td);
-		section.setText("Memos");
+		section.setText(Messages.editors_pages_InvestigatorEditorPage_Memos);
 		section.addExpansionListener(createExpansionListener(form));
 		sectionClient = toolkit.createComposite(section);
 		grid = new GridLayout();
@@ -119,7 +119,7 @@ public class InvestigatorEditorPage extends FormPage
 		//TODO generate the memo data
 		//TODO make clickable
 		gd = new GridData(SWT.FILL, SWT.NULL, true, false);
-		label = toolkit.createLabel(sectionClient, "Example Memo");
+		label = toolkit.createLabel(sectionClient, "Example Memo"); //$NON-NLS-1$
 		label.setLayoutData(gd);
 		section.setClient(sectionClient);
 	}
@@ -141,7 +141,7 @@ public class InvestigatorEditorPage extends FormPage
 		td = new TableWrapData(TableWrapData.FILL_GRAB);
 		td.colspan = 2;
 		section.setLayoutData(td);
-		section.setText("Coded Interviews");
+		section.setText(Messages.editors_pages_InvestigatorEditorPage_CodedInterviews);
 		section.addExpansionListener(createExpansionListener(form));
 		sectionClient = toolkit.createComposite(section);
 		grid = new GridLayout();
@@ -150,7 +150,7 @@ public class InvestigatorEditorPage extends FormPage
 		//TODO generate the interview data
 		//TODO make clickable
 		gd = new GridData(SWT.FILL, SWT.NULL, true, false);
-		label = toolkit.createLabel(sectionClient, "Example Interview");
+		label = toolkit.createLabel(sectionClient, "Example Interview"); //$NON-NLS-1$
 		label.setLayoutData(gd);
 		section.setClient(sectionClient);
 	}
@@ -168,7 +168,7 @@ public class InvestigatorEditorPage extends FormPage
 		td = new TableWrapData(TableWrapData.FILL_GRAB);
 		td.colspan = 2;
 		section.setLayoutData(td);
-		section.setText("Conducted Interviews");
+		section.setText(Messages.editors_pages_InvestigatorEditorPage_ConductedInterviews);
 		section.addExpansionListener(createExpansionListener(form));
 		Composite sectionClient = toolkit.createComposite(section);
 		GridLayout grid = new GridLayout();
@@ -177,7 +177,7 @@ public class InvestigatorEditorPage extends FormPage
 		//TODO generate the interview data
 		//TODO make clickable
 		GridData gd = new GridData(SWT.FILL, SWT.NULL, true, false);
-		label = toolkit.createLabel(sectionClient, "Example Interview");
+		label = toolkit.createLabel(sectionClient, "Example Interview"); //$NON-NLS-1$
 		label.setLayoutData(gd);
 		section.setClient(sectionClient);
 	}

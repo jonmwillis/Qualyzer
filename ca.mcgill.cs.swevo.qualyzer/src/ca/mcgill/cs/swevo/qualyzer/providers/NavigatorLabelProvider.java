@@ -35,9 +35,9 @@ import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
  */
 public class NavigatorLabelProvider extends LabelProvider implements ILabelProvider, IDescriptionProvider
 {
-	private static final String FOLDER_IMG = "FOLDER_IMG";
-	private static final String PROJECT_IMG = "PROJECT_IMG";
-	private static final String PERSON_IMG = "PERSON_IMG";
+	private static final String FOLDER_IMG = "FOLDER_IMG"; //$NON-NLS-1$
+	private static final String PROJECT_IMG = "PROJECT_IMG"; //$NON-NLS-1$
+	private static final String PERSON_IMG = "PERSON_IMG"; //$NON-NLS-1$
 	
 	private final ImageRegistry fRegistry;
 	
@@ -47,9 +47,9 @@ public class NavigatorLabelProvider extends LabelProvider implements ILabelProvi
 	public NavigatorLabelProvider()
 	{
 		fRegistry = QualyzerActivator.getDefault().getImageRegistry();
-		addImage(FOLDER_IMG, QualyzerActivator.PLUGIN_ID, "icons/fldr_obj.gif");
-		addImage(PROJECT_IMG, QualyzerActivator.PLUGIN_ID, "icons/prj_obj.gif");
-		addImage(PERSON_IMG, QualyzerActivator.PLUGIN_ID, "icons/person.gif");
+		addImage(FOLDER_IMG, QualyzerActivator.PLUGIN_ID, "icons/fldr_obj.gif"); //$NON-NLS-1$
+		addImage(PROJECT_IMG, QualyzerActivator.PLUGIN_ID, "icons/prj_obj.gif"); //$NON-NLS-1$
+		addImage(PERSON_IMG, QualyzerActivator.PLUGIN_ID, "icons/person.gif"); //$NON-NLS-1$
 	}
 	
 	/**
@@ -72,7 +72,7 @@ public class NavigatorLabelProvider extends LabelProvider implements ILabelProvi
 	
 	private String computeKey(String key, String pluginID)
 	{
-		return pluginID + "_" + key;
+		return pluginID + "_" + key; //$NON-NLS-1$
 	}
 	
 	private Image getImage(String key, String pluginID)

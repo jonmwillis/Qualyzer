@@ -534,7 +534,7 @@
                id="ca.mcgill.cs.swevo.qualyzer.projectexplorer"
                minimized="false"
                moveable="false"
-               ratio="0.26f"
+               ratio="0.3f"
                relationship="left"
                relative="org.eclipse.ui.editorss"
                showTitle="true"

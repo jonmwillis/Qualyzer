@@ -22,7 +22,7 @@ import org.eclipse.ui.ide.IDE;
  */
 public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor
 {
-	private static final String PERSPECTIVE_ID = "ca.mcgill.cs.swevo.qualyzer.perspective";
+	private static final String PERSPECTIVE_ID = "ca.mcgill.cs.swevo.qualyzer.perspective"; //$NON-NLS-1$
 
 	@Override
 	public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer)
@@ -54,7 +54,7 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor
 	public void initialize(IWorkbenchConfigurer configurer)
 	{
 		configurer.declareImage(IDE.SharedImages.IMG_OBJ_PROJECT, QualyzerActivator
-				.getImageDescriptor("icons/prj_obj.gif"), true);
+				.getImageDescriptor("icons/prj_obj.gif"), true); //$NON-NLS-1$
 		super.initialize(configurer);
 	}
 }

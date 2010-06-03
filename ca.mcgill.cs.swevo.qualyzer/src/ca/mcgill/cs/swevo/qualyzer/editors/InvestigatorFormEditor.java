@@ -33,7 +33,7 @@ import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
  */
 public class InvestigatorFormEditor extends FormEditor
 {
-	public static final String ID = "ca.mcgill.cs.swevo.qualyzer.editors.investigatorFormEditor";
+	public static final String ID = "ca.mcgill.cs.swevo.qualyzer.editors.investigatorFormEditor"; //$NON-NLS-1$
 
 	private InvestigatorEditorPage fPage;
 	private Investigator fInvestigator;

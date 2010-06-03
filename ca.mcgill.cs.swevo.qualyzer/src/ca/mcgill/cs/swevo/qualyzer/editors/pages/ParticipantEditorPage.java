@@ -40,9 +40,9 @@ import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
  */
 public class ParticipantEditorPage extends FormPage
 {
-	private static final String LABEL_PARTICIPANT_NAME = "Participant Name:";
-	private static final String LABEL_PARTICIPANT_ID = "Participant ID:";
-	private static final String LABEL_PARTICIPANT = "Participant";
+	private static final String LABEL_PARTICIPANT_NAME = Messages.editors_pages_ParticipantEditorPage_Name;
+	private static final String LABEL_PARTICIPANT_ID = Messages.editors_pages_ParticipantEditorPage_id;
+	private static final String LABEL_PARTICIPANT = Messages.editors_pages_ParticipantEditorPage_participant;
 	private Participant fParticipant;
 	private Text fID;
 	private Text fFullname;
@@ -57,7 +57,7 @@ public class ParticipantEditorPage extends FormPage
 	 */
 	public ParticipantEditorPage(FormEditor editor, Participant participant)
 	{
-		super(editor, "ParticipantEditorPage", "Participant");
+		super(editor, "ParticipantEditorPage", Messages.editors_pages_ParticipantEditorPage_participant); //$NON-NLS-1$
 		fParticipant = participant;
 		fIsDirty = false;
 	}

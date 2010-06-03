@@ -66,14 +66,14 @@ public class NewTranscriptWizard extends Wizard
 
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		IProject wProject = root.getProject(fProject.getName());
-		String path = wProject.getLocation()+File.separator+"transcripts"+File.separator+fTranscript.getFileName();
+		String path = wProject.getLocation()+File.separator+"transcripts"+File.separator+fTranscript.getFileName(); //$NON-NLS-1$
 		File file = new File(path);
 		
 		try
 		{
 			if(!file.createNewFile())
 			{
-				fPage.setErrorMessage("That transcript file already exists");
+				fPage.setErrorMessage(Messages.wizards_NewTranscriptWizard_alreadyExists);
 				return false;
 			}
 		}

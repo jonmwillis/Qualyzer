@@ -43,9 +43,9 @@ public class RenameHandler extends AbstractHandler
 	/**
 	 * 
 	 */
-	private static final String EXT = ".txt";
-	private static final String TRANSCRIPT = File.separator+"transcripts"+File.separator;
-	private static final String AUDIO = File.separator+"audio"+File.separator;
+	private static final String EXT = ".txt"; //$NON-NLS-1$
+	private static final String TRANSCRIPT = File.separator+"transcripts"+File.separator; //$NON-NLS-1$
+	private static final String AUDIO = File.separator+"audio"+File.separator; //$NON-NLS-1$
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException

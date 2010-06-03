@@ -42,9 +42,9 @@ public class NewProjectPageOne extends WizardPage
 	 */
 	public NewProjectPageOne()
 	{
-		super("New Project");
-		setTitle("New Project");
-		setDescription("Please enter a name for the project.");
+		super(Messages.wizards_pages_NewProjectPageOne_newProject);
+		setTitle(Messages.wizards_pages_NewProjectPageOne_newProject);
+		setDescription(Messages.wizards_pages_NewProjectPageOne_enterAName);
 	}
 	
 	@Override
@@ -56,34 +56,34 @@ public class NewProjectPageOne extends WizardPage
 		fContainer.setLayout(layout);
 		
 		Label label = new Label(fContainer, SWT.NULL);
-		label.setText("Project Name");
+		label.setText(Messages.wizards_pages_NewProjectPageOne_proectName);
 		fProjectName = new Text(fContainer, SWT.BORDER);
-		fProjectName.setText("");
+		fProjectName.setText(""); //$NON-NLS-1$
 		fProjectName.addKeyListener(createKeyListener());
 		
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		fProjectName.setLayoutData(gd);
 	
 		label = new Label(fContainer, SWT.NULL);
-		label.setText("Investigator Nickname");
+		label.setText(Messages.wizards_pages_NewProjectPageOne_Nickname);
 
 		fNickname = new Text(fContainer, SWT.BORDER | SWT.SINGLE);
-		fNickname.setText(System.getProperty("user.name"));
+		fNickname.setText(System.getProperty("user.name")); //$NON-NLS-1$
 		
 		//Only allows the user to proceed if a name is entered
 		fNickname.addKeyListener(createKeyListener());
 		
 		label = new Label(fContainer, SWT.NULL);
-		label.setText("Full name");
+		label.setText(Messages.wizards_pages_NewProjectPageOne_fullName);
 		
 		fFullname = new Text(fContainer, SWT.BORDER | SWT.SINGLE);
-		fFullname.setText("");
+		fFullname.setText(""); //$NON-NLS-1$
 		
 		label = new Label(fContainer, SWT.NULL);
-		label.setText("Institution");
+		label.setText(Messages.wizards_pages_NewProjectPageOne_institution);
 		
 		fInstitution = new Text(fContainer, SWT.BORDER | SWT.SINGLE);
-		fInstitution.setText("");
+		fInstitution.setText(""); //$NON-NLS-1$
 		
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		fNickname.setLayoutData(gd);
@@ -111,11 +111,11 @@ public class NewProjectPageOne extends WizardPage
 				
 				if(fProjectName.getText().isEmpty())
 				{
-					setError("Please enter a name for the project");
+					setError(Messages.wizards_pages_NewProjectPageOne_enterAName);
 				}
 				else if(fNickname.getText().isEmpty())
 				{
-					setError("Please enter a nickname for the Investigator");
+					setError(Messages.wizards_pages_NewProjectPageOne_enterANickname);
 				}
 				else
 				{
@@ -123,7 +123,7 @@ public class NewProjectPageOne extends WizardPage
 					
 					if(wProject.exists())
 					{
-						setError("This project already exists! Please choose a different name.");
+						setError(Messages.wizards_pages_NewProjectPageOne_alreadyExists);
 					}	
 					else
 					{

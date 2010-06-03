@@ -45,9 +45,9 @@ public class AddParticipantPage extends WizardPage
 	 */
 	public AddParticipantPage(Project project)
 	{
-		super("Add Participant");
-		setTitle("Add Participant");
-		setDescription("Enter the information for a new Participant");
+		super(Messages.wizard_pages_AddParticipantPage_addParticipant);
+		setTitle(Messages.wizard_pages_AddParticipantPage_addParticipant);
+		setDescription(Messages.wizard_pages_AddParticipantPage_enterInfo);
 		fProject = project;
 	}
 	
@@ -63,25 +63,25 @@ public class AddParticipantPage extends WizardPage
 		fContainer.setLayout(layout);
 		
 		Label label = new Label(fContainer, SWT.NULL);
-		label.setText("Participant ID");
+		label.setText(Messages.wizard_pages_AddParticipantPage_partID);
 		fIdText = new Text(fContainer, SWT.BORDER);
-		fIdText.setText("");
+		fIdText.setText(""); //$NON-NLS-1$
 		fIdText.addKeyListener(createKeyListener());
 		
 		label = new Label(fContainer, SWT.NULL);
-		label.setText("Full Name");
+		label.setText(Messages.wizard_pages_AddParticipantPage_fullName);
 		fFullNameText = new Text(fContainer, SWT.BORDER);
-		fFullNameText.setText("");
+		fFullNameText.setText(""); //$NON-NLS-1$
 		
 		label = new Label(fContainer, SWT.NULL);
-		label.setText("Contact Info");
+		label.setText(Messages.wizard_pages_AddParticipantPage_ContactInfo);
 		fContactInfoText = new Text(fContainer, SWT.BORDER);
-		fContactInfoText.setText("");
+		fContactInfoText.setText(""); //$NON-NLS-1$
 		
 		label = new Label(fContainer, SWT.NULL);
-		label.setText("Notes");
+		label.setText(Messages.wizard_pages_AddParticipantPage_notes);
 		fNotesText = new Text(fContainer, SWT.BORDER);
-		fNotesText.setText("");
+		fNotesText.setText(""); //$NON-NLS-1$
 		setGridData();
 		setControl(fContainer);
 		setPageComplete(false);
@@ -102,12 +102,12 @@ public class AddParticipantPage extends WizardPage
 			{
 				if(fIdText.getText().isEmpty())
 				{
-					setErrorMessage("Please enter a Participant Id");
+					setErrorMessage(Messages.wizard_pages_AddParticipantPage_pleaseEnterId);
 					setPageComplete(false);
 				}
 				else if(idExists())
 				{
-					setErrorMessage("This ID is already in use.");
+					setErrorMessage(Messages.wizard_pages_AddParticipantPage_idUsed);
 					setPageComplete(false);
 				}
 				else
