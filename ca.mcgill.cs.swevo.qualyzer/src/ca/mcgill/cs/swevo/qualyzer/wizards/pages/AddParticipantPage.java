@@ -138,8 +138,8 @@ public class AddParticipantPage extends WizardPage
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		fIdText.setLayoutData(gd);
 		fFullNameText.setLayoutData(gd);
-		fContactInfoText.setLayoutData(gd);
-		fNotesText.setLayoutData(gd);
+		//fContactInfoText.setLayoutData(gd);
+		//fNotesText.setLayoutData(gd);
 	}
 	
 	/**
@@ -187,8 +187,8 @@ public class AddParticipantPage extends WizardPage
 		Participant participant = new Participant();
 		participant.setParticipantId(getParticipantId());
 		participant.setFullName(getFullname());
-		participant.setNotes(getNotes());
-		participant.setContactInfo(getContactInfo());
+		//participant.setNotes(getNotes());
+		//participant.setContactInfo(getContactInfo());
 		return participant;
 	}
 
