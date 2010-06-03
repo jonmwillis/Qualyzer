@@ -10,9 +10,26 @@
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.handlers;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.window.Window;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.HandlerUtil;
+
+import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
+import ca.mcgill.cs.swevo.qualyzer.dialogs.TranscriptPropertiesDialog;
+import ca.mcgill.cs.swevo.qualyzer.model.AudioFile;
+import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
+import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
+import ca.mcgill.cs.swevo.qualyzer.util.FileUtil;
+import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
 
 /**
  * 
@@ -25,8 +42,75 @@ public class TranscriptPropertiesHandler extends AbstractHandler
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
 	{
-		System.out.println("Edit Transcript Properties Called");
+		ISelection selection = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getSelection();
+		
+		if(selection != null && selection instanceof IStructuredSelection)
+		{
+			Object element = ((IStructuredSelection) selection).getFirstElement();
+			TranscriptPropertiesDialog dialog;
+			dialog = new TranscriptPropertiesDialog(HandlerUtil.getActiveShell(event).getShell(), (Transcript) element);
+			
+			dialog.create();
+			if(dialog.open() == Window.OK)
+			{
+				Transcript transcript = (Transcript) element;
+				String projectName = transcript.getProject().getName();
+				String newDate = dialog.getDate();
+				String audioFile = dialog.getAudioFile();
+				
+				String oldAudio = "";
+				if(transcript.getAudioFile() != null)
+				{
+					oldAudio = projectName + transcript.getAudioFile().getRelativePath();
+				}
+				
+				copyNewAudioFile(transcript, audioFile, oldAudio);
+								
+				transcript.setDate(newDate);
+				//Edit the participant list as necessary
+								
+				HibernateDBManager manager;
+				manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(projectName);
+				HibernateUtil.quietSave(manager, transcript);
+			}
+		}
+		
 		return null;
+	}
+
+	/**
+	 * @param transcript
+	 * @param audioFile
+	 * @param oldAudio
+	 */
+	private void copyNewAudioFile(Transcript transcript, String audioFile, String oldAudio)
+	{
+		if(!oldAudio.equals(audioFile))
+		{
+			AudioFile aFile = new AudioFile();
+			String relativePath = File.separator+"audio"+File.separator;
+			relativePath += transcript.getName() + audioFile.substring(audioFile.lastIndexOf('.'));
+			aFile.setRelativePath(relativePath);
+			transcript.setAudioFile(aFile);
+			
+			//check the paths to make sure they are valid
+			if(!audioFile.isEmpty())
+			{
+				String workspacePath = ResourcesPlugin.getWorkspace().getRoot().getLocation()+File.separator;
+				File input = new File(audioFile);
+				String dest = workspacePath + File.separator + transcript.getProject().getName();
+				dest = dest + relativePath;
+				File output = new File(dest);
+				try
+				{
+					FileUtil.copyFile(input, output);
+				}
+				catch (IOException e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 
 }

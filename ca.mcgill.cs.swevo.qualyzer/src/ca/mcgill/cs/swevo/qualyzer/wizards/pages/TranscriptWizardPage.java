@@ -43,7 +43,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 import ca.mcgill.cs.swevo.qualyzer.util.FileUtil;
 
 /**
- * The only page in the new Transcript Wizard
+ * The only page in the new Transcript Wizard.
  *
  */
 public class TranscriptWizardPage extends WizardPage
@@ -425,6 +425,7 @@ public class TranscriptWizardPage extends WizardPage
 		
 		transcript.setName(fName.getText());
 		transcript.setFileName(fName.getText()+".txt"); //$NON-NLS-1$
+		transcript.setDate(fDate.getText());
 		buildParticipants();
 		transcript.setParticipants(fParticipants);
 		

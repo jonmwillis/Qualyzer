@@ -41,6 +41,7 @@ public class Transcript implements Comparable<Transcript>, IAnnotatedDocument
 	private List<Fragment> fFragments = new ArrayList<Fragment>();
 	private String fName;
 	private String fFileName;
+	private String fDate;
 	private Project fProject;
 	private Long fPersistenceId;
 
@@ -163,6 +164,24 @@ public class Transcript implements Comparable<Transcript>, IAnnotatedDocument
 	public int compareTo(Transcript transcript)
 	{
 		return this.getName().compareTo(transcript.getName());
+	}
+
+	/**
+	 * 
+	 * @param Date
+	 */
+	public void setDate(String date)
+	{
+		this.fDate = date;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String getDate()
+	{
+		return fDate;
 	}
 	
 	
