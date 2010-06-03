@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Jonathan Faubert
  *******************************************************************************/
 /**
  * 
@@ -27,7 +27,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 
 /**
- * @author Jonathan Faubert (jonfaub@gmail.com)
+ * The page of the Add Participant Wizard.
  *
  */
 public class AddParticipantPage extends WizardPage
@@ -73,15 +73,17 @@ public class AddParticipantPage extends WizardPage
 		fFullNameText = new Text(fContainer, SWT.BORDER);
 		fFullNameText.setText(""); //$NON-NLS-1$
 		
-		label = new Label(fContainer, SWT.NULL);
-		label.setText(Messages.wizard_pages_AddParticipantPage_ContactInfo);
-		fContactInfoText = new Text(fContainer, SWT.BORDER);
-		fContactInfoText.setText(""); //$NON-NLS-1$
+		//JF: removing for 0.1 to be consistent with the editor
+//		label = new Label(fContainer, SWT.NULL);
+//		label.setText(Messages.wizard_pages_AddParticipantPage_ContactInfo);
+//		fContactInfoText = new Text(fContainer, SWT.BORDER);
+//		fContactInfoText.setText(""); //$NON-NLS-1$
+//		
+//		label = new Label(fContainer, SWT.NULL);
+//		label.setText(Messages.wizard_pages_AddParticipantPage_notes);
+//		fNotesText = new Text(fContainer, SWT.BORDER);
+//		fNotesText.setText(""); //$NON-NLS-1$
 		
-		label = new Label(fContainer, SWT.NULL);
-		label.setText(Messages.wizard_pages_AddParticipantPage_notes);
-		fNotesText = new Text(fContainer, SWT.BORDER);
-		fNotesText.setText(""); //$NON-NLS-1$
 		setGridData();
 		setControl(fContainer);
 		setPageComplete(false);
