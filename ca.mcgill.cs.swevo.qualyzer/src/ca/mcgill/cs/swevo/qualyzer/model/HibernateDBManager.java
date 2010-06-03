@@ -41,8 +41,9 @@ public class HibernateDBManager
 		{
 			AnnotationConfiguration tempConfiguration = new AnnotationConfiguration().setProperty(
 					"hibernate.connection.url", connectionString) //$NON-NLS-1$
-					.setProperty("hibernate.connection.username", userName).setProperty( //$NON-NLS-1$
-							"hibernate.connection.password", password).setProperty("hibernate.dialect", dialect) //$NON-NLS-1$ //$NON-NLS-2$
+					.setProperty("hibernate.connection.username", userName).setProperty(//$NON-NLS-1$
+							"hibernate.connection.password", password) //$NON-NLS-1$
+							.setProperty("hibernate.dialect", dialect)  //$NON-NLS-1$
 					.setProperty("hibernate.connection.driver_class", driver); //$NON-NLS-1$
 			// .setProperty("hibernate.show_sql","true").setProperty("hibernate.format_sql",
 			// "true");

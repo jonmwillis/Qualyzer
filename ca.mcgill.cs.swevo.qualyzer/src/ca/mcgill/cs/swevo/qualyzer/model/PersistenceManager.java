@@ -84,7 +84,8 @@ public final class PersistenceManager
 		String dbPath = getDBPath(project).toOSString();
 		String connectionString = DB_CONNECTION_STRING.replace("%s", dbPath) + DB_INIT_STRING; //$NON-NLS-1$
 
-		HibernateDBManager dbManager = new HibernateDBManager(connectionString, DB_USERNAME, "", DB_DRIVER, DB_DIALECT); //$NON-NLS-1$
+		HibernateDBManager dbManager;
+		dbManager = new HibernateDBManager(connectionString, DB_USERNAME, "", DB_DRIVER, DB_DIALECT); //$NON-NLS-1$
 
 		// Add DB Manager
 		fActivator.getHibernateDBManagers().put(project.getName(), dbManager);
@@ -105,7 +106,8 @@ public final class PersistenceManager
 		String dbPath = getDBPath(project).toOSString();
 		String connectionString = DB_CONNECTION_STRING.replace("%s", dbPath) + DB_INIT_STRING; //$NON-NLS-1$
 
-		HibernateDBManager dbManager = new HibernateDBManager(connectionString, DB_USERNAME, "", DB_DRIVER, DB_DIALECT); //$NON-NLS-1$
+		HibernateDBManager dbManager;
+		dbManager = new HibernateDBManager(connectionString, DB_USERNAME, "", DB_DRIVER, DB_DIALECT); //$NON-NLS-1$
 
 		// Add DB Manager
 		fActivator.getHibernateDBManagers().put(project.getName(), dbManager);
