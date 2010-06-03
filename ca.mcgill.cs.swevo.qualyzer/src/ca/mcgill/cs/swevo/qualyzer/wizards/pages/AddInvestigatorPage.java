@@ -44,9 +44,9 @@ public class AddInvestigatorPage extends WizardPage
 	 */
 	public AddInvestigatorPage(Project project)
 	{
-		super("Add Investigator");
-		setTitle("Add Investigator");
-		setDescription("Enter the information for a new Investigator");
+		super(Messages.wizards_pages_AddInvestigatorPage_addInvestigator);
+		setTitle(Messages.wizards_pages_AddInvestigatorPage_addInvestigator);
+		setDescription(Messages.wizards_pages_AddInvestigatorPage_enterTheFollowing);
 		fProject = project;
 	}
 	
@@ -58,29 +58,29 @@ public class AddInvestigatorPage extends WizardPage
 		fContainer.setLayout(layout);
 		layout.numColumns = 2;
 		Label label = new Label(fContainer, SWT.NULL);
-		label.setText("Investigator Nickname");
+		label.setText(Messages.wizards_pages_AddInvestigatorPage_nickname);
 
 		fNickname = new Text(fContainer, SWT.BORDER | SWT.SINGLE);
-		fNickname.setText(System.getProperty("user.name"));
+		fNickname.setText(System.getProperty("user.name")); //$NON-NLS-1$
 		if(idInUse())
 		{
-			fNickname.setText("");
+			fNickname.setText(""); //$NON-NLS-1$
 		}
 		
 		//Only allows the user to proceed if a valid name is entered
 		fNickname.addKeyListener(createKeyListener());
 		
 		label = new Label(fContainer, SWT.NULL);
-		label.setText("Full name");
+		label.setText(Messages.wizards_pages_AddInvestigatorPage_fullName);
 		
 		fFullname = new Text(fContainer, SWT.BORDER | SWT.SINGLE);
-		fFullname.setText("");
+		fFullname.setText(""); //$NON-NLS-1$
 		
 		label = new Label(fContainer, SWT.NULL);
-		label.setText("Institution");
+		label.setText(Messages.wizards_pages_AddInvestigatorPage_institution);
 		
 		fInstitution = new Text(fContainer, SWT.BORDER | SWT.SINGLE);
-		fInstitution.setText("");
+		fInstitution.setText(""); //$NON-NLS-1$
 		
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		fNickname.setLayoutData(gd);
@@ -131,7 +131,7 @@ public class AddInvestigatorPage extends WizardPage
 				if(fNickname.getText().isEmpty())
 				{
 					setPageComplete(false);
-					setErrorMessage("Please enter a nickname for the Investigator");
+					setErrorMessage(Messages.wizards_pages_AddInvestigatorPage_enterANickname);
 				}
 				else if(!idInUse())
 				{
@@ -140,7 +140,7 @@ public class AddInvestigatorPage extends WizardPage
 				}
 				else
 				{
-					setErrorMessage("That nickname is already taken");
+					setErrorMessage(Messages.wizards_pages_AddInvestigatorPage_alreadyTaken);
 					setPageComplete(false);
 				}
 			}

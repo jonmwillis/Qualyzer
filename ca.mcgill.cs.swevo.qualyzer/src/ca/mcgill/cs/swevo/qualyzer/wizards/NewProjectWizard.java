@@ -94,17 +94,17 @@ public class NewProjectWizard extends Wizard
 	private void cleanUpFolders(IProject wProject)
 	{
 		String path = wProject.getLocation().toOSString();
-		File dir = new File(path+File.separator+"audio");
+		File dir = new File(path+File.separator+"audio"); //$NON-NLS-1$
 		if(!dir.exists())
 		{
 			dir.delete();
 		}
-		dir = new File(path+File.separator+"transcripts");
+		dir = new File(path+File.separator+"transcripts"); //$NON-NLS-1$
 		if(!dir.exists())
 		{
 			dir.delete();
 		}
-		dir = new File(path+File.separator+"memos");
+		dir = new File(path+File.separator+"memos"); //$NON-NLS-1$
 		if(!dir.exists())
 		{
 			dir.delete();
@@ -119,17 +119,17 @@ public class NewProjectWizard extends Wizard
 	private boolean makeSubFolders(IProject wProject)
 	{
 		String path = wProject.getLocation().toOSString();
-		File dir = new File(path+File.separator+"audio");
+		File dir = new File(path+File.separator+"audio"); //$NON-NLS-1$
 		if(!dir.mkdir())
 		{
 			return false;
 		}
-		dir = new File(path+File.separator+"transcripts");
+		dir = new File(path+File.separator+"transcripts"); //$NON-NLS-1$
 		if(!dir.mkdir())
 		{
 			return false;
 		}
-		dir = new File(path+File.separator+"memos");
+		dir = new File(path+File.separator+"memos"); //$NON-NLS-1$
 		return dir.mkdir();
 	}
 

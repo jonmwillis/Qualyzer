@@ -143,23 +143,23 @@ public class NavigatorContentProvider extends WorkbenchContentProvider
 	private boolean projectHasElements(ProjectWrapper element)
 	{
 		boolean hasChildren = false;
-		if(element.getResource().equals("transcripts"))
+		if(element.getResource().equals("transcripts")) //$NON-NLS-1$
 		{
 			hasChildren = !element.getProject().getTranscripts().isEmpty();
 		}
-		else if(element.getResource().equals("codes"))
+		else if(element.getResource().equals("codes")) //$NON-NLS-1$
 		{
 			hasChildren = !element.getProject().getCodes().isEmpty();
 		}
-		else if(element.getResource().equals("investigators"))
+		else if(element.getResource().equals("investigators")) //$NON-NLS-1$
 		{
 			hasChildren = !element.getProject().getInvestigators().isEmpty();
 		}
-		else if(element.getResource().equals("participants"))
+		else if(element.getResource().equals("participants")) //$NON-NLS-1$
 		{
 			hasChildren = !element.getProject().getParticipants().isEmpty();
 		}
-		else if(element.getResource().equals("memos"))
+		else if(element.getResource().equals("memos")) //$NON-NLS-1$
 		{
 			hasChildren = !element.getProject().getMemos().isEmpty();
 		}

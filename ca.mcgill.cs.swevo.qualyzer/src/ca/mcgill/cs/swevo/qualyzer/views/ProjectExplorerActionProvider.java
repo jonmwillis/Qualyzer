@@ -79,18 +79,18 @@ public class ProjectExplorerActionProvider extends CommonActionProvider
 	 */
 	private String getCommandId(Object element)
 	{
-		String commandId = "";
+		String commandId = ""; //$NON-NLS-1$
 		if(element instanceof Participant)
 		{
-			commandId = "ca.mcgill.cs.swevo.qualyzer.commands.editParticipant";
+			commandId = "ca.mcgill.cs.swevo.qualyzer.commands.editParticipant"; //$NON-NLS-1$
 		}
 		else if(element instanceof Investigator)
 		{
-			commandId = "ca.mcgill.cs.swevo.qualyzer.commands.editInvestigator";
+			commandId = "ca.mcgill.cs.swevo.qualyzer.commands.editInvestigator"; //$NON-NLS-1$
 		}
 		else if(element instanceof Transcript)
 		{
-			commandId = "ca.mcgill.cs.swevo.qualyzer.commands.openTranscript";
+			commandId = "ca.mcgill.cs.swevo.qualyzer.commands.openTranscript"; //$NON-NLS-1$
 		}
 		return commandId;
 	}

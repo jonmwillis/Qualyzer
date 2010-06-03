@@ -22,7 +22,7 @@ import org.eclipse.ui.ide.IDEActionFactory;
 public class TranscriptEditor extends TextEditor
 {
 
-	public static final String ID = "ca.mcgill.cs.swevo.qualyzer.editors.TranscriptEditor";
+	public static final String ID = "ca.mcgill.cs.swevo.qualyzer.editors.TranscriptEditor"; //$NON-NLS-1$
 	
 	private ColorManager fColorManager;
 
@@ -52,8 +52,8 @@ public class TranscriptEditor extends TextEditor
 		// It's probably better to manually add the actions.
 		// Just look at popup menu contribution in org.eclipse.ui.editors for
 		// examples.
-		setRulerContextMenuId("#InterviewRulerContext");
-		setOverviewRulerContextMenuId("#InterviewOverviewRulerContext");
+		setRulerContextMenuId("#InterviewRulerContext"); //$NON-NLS-1$
+		setOverviewRulerContextMenuId("#InterviewOverviewRulerContext"); //$NON-NLS-1$
 
 		super.createPartControl(parent);
 	}

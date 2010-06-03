@@ -37,7 +37,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 public class OpenTranscriptHandler extends AbstractHandler
 {
 
-	private static final String PATH = "transcripts"+File.separator;
+	private static final String PATH = "transcripts"+File.separator; //$NON-NLS-1$
 	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException

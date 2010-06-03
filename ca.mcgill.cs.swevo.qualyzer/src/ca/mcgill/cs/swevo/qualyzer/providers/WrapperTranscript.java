@@ -22,7 +22,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Project;
  */
 public class WrapperTranscript extends ProjectWrapper
 {
-	private static final String RESOURCE = "transcripts";
+	private static final String RESOURCE = "transcripts"; //$NON-NLS-1$
 
 	/**
 	 * @param project

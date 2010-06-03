@@ -28,14 +28,14 @@ import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
  */
 public final class PersistenceManager
 {
-	public static final String DB_FOLDER = ".db";
-	public static final String QUALYZER_DB_NAME = "qualyzer_db";
-	public static final String QUALYZER_DB_FILE_NAME = "qualyzer_db.data";
-	public static final String DB_CONNECTION_STRING = "jdbc:hsqldb:file:%s";
-	public static final String DB_INIT_STRING = ";hsqldb.default_table_type=cached";
-	public static final String DB_USERNAME = "sa";
-	public static final String DB_DIALECT = "org.hibernate.dialect.HSQLDialect";
-	public static final String DB_DRIVER = "org.hsqldb.jdbcDriver";
+	public static final String DB_FOLDER = ".db"; //$NON-NLS-1$
+	public static final String QUALYZER_DB_NAME = "qualyzer_db"; //$NON-NLS-1$
+	public static final String QUALYZER_DB_FILE_NAME = "qualyzer_db.data"; //$NON-NLS-1$
+	public static final String DB_CONNECTION_STRING = "jdbc:hsqldb:file:%s"; //$NON-NLS-1$
+	public static final String DB_INIT_STRING = ";hsqldb.default_table_type=cached"; //$NON-NLS-1$
+	public static final String DB_USERNAME = "sa"; //$NON-NLS-1$
+	public static final String DB_DIALECT = "org.hibernate.dialect.HSQLDialect"; //$NON-NLS-1$
+	public static final String DB_DRIVER = "org.hsqldb.jdbcDriver"; //$NON-NLS-1$
 
 	private static final PersistenceManager INSTANCE = new PersistenceManager();
 
@@ -82,9 +82,9 @@ public final class PersistenceManager
 	{
 		setupDBFolder(project);
 		String dbPath = getDBPath(project).toOSString();
-		String connectionString = DB_CONNECTION_STRING.replace("%s", dbPath) + DB_INIT_STRING;
+		String connectionString = DB_CONNECTION_STRING.replace("%s", dbPath) + DB_INIT_STRING; //$NON-NLS-1$
 
-		HibernateDBManager dbManager = new HibernateDBManager(connectionString, DB_USERNAME, "", DB_DRIVER, DB_DIALECT);
+		HibernateDBManager dbManager = new HibernateDBManager(connectionString, DB_USERNAME, "", DB_DRIVER, DB_DIALECT); //$NON-NLS-1$
 
 		// Add DB Manager
 		fActivator.getHibernateDBManagers().put(project.getName(), dbManager);
@@ -103,9 +103,9 @@ public final class PersistenceManager
 	public void refreshManager(IProject project)
 	{
 		String dbPath = getDBPath(project).toOSString();
-		String connectionString = DB_CONNECTION_STRING.replace("%s", dbPath) + DB_INIT_STRING;
+		String connectionString = DB_CONNECTION_STRING.replace("%s", dbPath) + DB_INIT_STRING; //$NON-NLS-1$
 
-		HibernateDBManager dbManager = new HibernateDBManager(connectionString, DB_USERNAME, "", DB_DRIVER, DB_DIALECT);
+		HibernateDBManager dbManager = new HibernateDBManager(connectionString, DB_USERNAME, "", DB_DRIVER, DB_DIALECT); //$NON-NLS-1$
 
 		// Add DB Manager
 		fActivator.getHibernateDBManagers().put(project.getName(), dbManager);
@@ -129,7 +129,7 @@ public final class PersistenceManager
 			}
 			catch (CoreException ce)
 			{
-				String message = "Could not create .db folder in project " + project.getName();
+				String message = Messages.model_PersistenceManager_error + project.getName();
 				throw new QualyzerException(message, ce);
 			}
 		}
@@ -149,7 +149,7 @@ public final class PersistenceManager
 		Project project = null;
 		try
 		{
-			project = (Project) session.createQuery("from Project").uniqueResult();
+			project = (Project) session.createQuery("from Project").uniqueResult(); //$NON-NLS-1$
 		}
 		finally
 		{

@@ -42,7 +42,7 @@ public class ImportAudioFileHandler extends AbstractHandler
 	/**
 	 * 
 	 */
-	private static final String AUDIO = File.separator+"audio"+File.separator;
+	private static final String AUDIO = File.separator+"audio"+File.separator; //$NON-NLS-1$
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
@@ -84,8 +84,8 @@ public class ImportAudioFileHandler extends AbstractHandler
 	private String openFileDialog(ExecutionEvent event)
 	{
 		FileDialog dialog = new FileDialog(HandlerUtil.getActiveShell(event));
-		dialog.setFilterExtensions(new String[]{"*.mp3;*.wav"});
-		dialog.setFilterNames(new String[]{"Audio (.mp3, .wav)"});
+		dialog.setFilterExtensions(new String[]{"*.mp3;*.wav"}); //$NON-NLS-1$
+		dialog.setFilterNames(new String[]{Messages.handlers_ImportAudioFileHandler_audio});
 		
 		String fileName = dialog.open();
 		return fileName;

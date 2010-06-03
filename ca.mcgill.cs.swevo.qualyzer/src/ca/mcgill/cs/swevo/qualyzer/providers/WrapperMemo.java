@@ -23,7 +23,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Project;
 public class WrapperMemo extends ProjectWrapper
 {
 
-	private static final String RESOURCE = "memos";
+	private static final String RESOURCE = "memos"; //$NON-NLS-1$
 
 	/**
 	 * @param project

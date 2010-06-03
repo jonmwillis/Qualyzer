@@ -77,7 +77,7 @@ public class ImportTranscriptHandler extends AbstractHandler
 	private void openEditor(IWorkbenchPage page, Transcript transcript)
 	{
 		IProject proj = ResourcesPlugin.getWorkspace().getRoot().getProject(transcript.getProject().getName());
-		IFile file = proj.getFile("transcripts" + File.separator + transcript.getFileName());
+		IFile file = proj.getFile("transcripts" + File.separator + transcript.getFileName()); //$NON-NLS-1$
 		FileEditorInput editorInput = new FileEditorInput(file);
 		try
 		{
