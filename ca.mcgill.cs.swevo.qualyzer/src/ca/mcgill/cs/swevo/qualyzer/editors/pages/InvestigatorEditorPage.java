@@ -13,7 +13,9 @@
  */
 package ca.mcgill.cs.swevo.qualyzer.editors.pages;
 
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.layout.GridData;
@@ -80,6 +82,7 @@ public class InvestigatorEditorPage extends FormPage
 		
 		label = toolkit.createLabel(body, Messages.editors_pages_InvestigatorEditorPage_FulllName);
 		fFullname = createText(toolkit, fInvestigator.getFullName(), body);
+		fNickname.addKeyListener(createKeyAdapter(form));
 
 		label = toolkit.createLabel(body, Messages.editors_pages_InvestigatorEditorPage_Instituion);
 		fInstitution = createText(toolkit, fInvestigator.getInstitution(), body);
@@ -91,6 +94,51 @@ public class InvestigatorEditorPage extends FormPage
 		createMemoSection(form, toolkit, body);
 	
 		toolkit.paintBordersFor(body);
+	}
+
+	/**
+	 * @param form 
+	 * @return
+	 */
+	private KeyAdapter createKeyAdapter(final ScrolledForm form)
+	{
+		return new KeyAdapter(){
+			private ScrolledForm fForm = form;
+			
+			@Override
+			public void keyReleased(KeyEvent event)
+			{
+				if(fNickname.getText().isEmpty())
+				{
+					fForm.setMessage("Please enter a nickname", IMessageProvider.ERROR);
+					notDirty();
+				}
+				else if(nicknameInUse())
+				{
+					fForm.setMessage("That nickname is taken", IMessageProvider.ERROR);
+					notDirty();
+				}
+				else
+				{
+					fForm.setMessage(null, IMessageProvider.NONE);
+				}
+			}
+		};
+	}
+
+	/**
+	 * @return
+	 */
+	protected boolean nicknameInUse()
+	{
+		for(Investigator investigator : fInvestigator.getProject().getInvestigators())
+		{
+			if(!investigator.equals(fInvestigator) && fNickname.getText().equals(investigator.getNickName()))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
