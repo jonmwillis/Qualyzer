@@ -46,7 +46,7 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 	 * 
 	 */
 	private static final int COLS = 3;
-	private static final String TRANSCRIPT = File.separator+"transcripts"+File.separator;
+	private static final String TRANSCRIPT = File.separator+"transcripts"+File.separator; //$NON-NLS-1$
 	
 	private final String fProjectName;
 	
@@ -70,14 +70,14 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 		fTranscript = transcript;
 		fParticipants = new ArrayList<Participant>();
 		fProjectName = fTranscript.getProject().getName();
-		fAudioPath = "";
+		fAudioPath = ""; //$NON-NLS-1$
 	}
 	
 	@Override
 	public void create()
 	{
 		super.create();
-		setTitle("Properties");
+		setTitle(Messages.dialogs_TranscriptPropertiesDialog_properties);
 	}
 	
 	@Override
@@ -86,27 +86,27 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 		GridLayout layout = new GridLayout(2, false);
 		parent.setLayout(layout);
 		
-		Label label = createLabel(parent, "Transcript Name:");
+		Label label = createLabel(parent, Messages.dialogs_TranscriptPropertiesDialog_name);
 		label = new Label(parent, SWT.BORDER);
 		label.setText(fTranscript.getName());
 		label.setLayoutData(createTextGridData());
 		
-		label = createLabel(parent, "File path:");
+		label = createLabel(parent, Messages.dialogs_TranscriptPropertiesDialog_path);
 		label = new Label(parent, SWT.BORDER);
 		label.setText(fProjectName + TRANSCRIPT + fTranscript.getFileName());
 		label.setLayoutData(createTextGridData());
 		
-		label = createLabel(parent, "Date:");
+		label = createLabel(parent, Messages.dialogs_TranscriptPropertiesDialog_date);
 		fDate = createText(fTranscript.getDate(), parent);
 		
 		Composite composite = createComposite(parent);
 		
-		label = createLabel(composite, "Participants:");
+		label = createLabel(composite, Messages.dialogs_TranscriptPropertiesDialog_participants);
 		label.setLayoutData(createTextGridData());
 		Button button = new Button(composite, SWT.PUSH);
-		button.setText("+"); //TODO add listener
+		button.setText("+"); //TODO add listener //$NON-NLS-1$
 		button = new Button(composite, SWT.PUSH);
-		button.setText("-"); //TODO add listener
+		button.setText("-"); //TODO add listener //$NON-NLS-1$
 		
 		fTable = new Table(parent, SWT.MULTI);
 		GridData gd = createTextGridData();
@@ -116,7 +116,7 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 		
 		composite = createComposite(parent);
 		
-		label = createLabel(composite, "Audio File Path:");
+		label = createLabel(composite, Messages.dialogs_TranscriptPropertiesDialog_audioPath);
 		if(fTranscript.getAudioFile() != null)
 		{
 			fAudioPath = fProjectName + fTranscript.getAudioFile().getRelativePath();
@@ -125,7 +125,7 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 		fAudioLabel.setText(fAudioPath);
 		fAudioLabel.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false)); //TODO why does this look weird?
 		button = new Button(composite, SWT.PUSH);
-		button.setText("Browse");
+		button.setText(Messages.dialogs_TranscriptPropertiesDialog_Browse);
 		button.addSelectionListener(createSelectionAdapter());
 				
 		return parent;
@@ -143,14 +143,14 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 			{
 				FileDialog dialog = new FileDialog(getShell());
 				//dialog.setFilterPath("");
-				dialog.setFilterExtensions(new String[]{"*.mp3;*.wav"});
-				dialog.setFilterNames(new String[]{"Audio (.mp3, .wav)"});
+				dialog.setFilterExtensions(new String[]{"*.mp3;*.wav"}); //$NON-NLS-1$
+				dialog.setFilterNames(new String[]{Messages.dialogs_TranscriptPropertiesDialog_audioType});
 				
 				fAudioPath = dialog.open();
 				if(fAudioPath != null)
 				{
-					setMessage("Warning, changing the audio file may cause the " +
-							"current audio file to be overwritten.", IMessageProvider.WARNING);
+					setMessage(Messages.dialogs_TranscriptPropertiesDialog_warning +
+							Messages.dialogs_TranscriptPropertiesDialog_warning2, IMessageProvider.WARNING);
 					fAudioLabel.setText(fAudioPath);
 				}
 			}
