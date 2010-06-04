@@ -37,7 +37,9 @@ public class NavigatorLabelProvider extends LabelProvider implements ILabelProvi
 {
 	private static final String FOLDER_IMG = "FOLDER_IMG"; //$NON-NLS-1$
 	private static final String PROJECT_IMG = "PROJECT_IMG"; //$NON-NLS-1$
+	private static final String CPROJECT_IMG = "CPROJECT_IMG"; //$NON-NLS-1$
 	private static final String PERSON_IMG = "PERSON_IMG"; //$NON-NLS-1$
+	private static final String FILE_IMG = "FILE_IMG"; //$NON-NLS-1$
 	
 	private final ImageRegistry fRegistry;
 	
@@ -50,6 +52,8 @@ public class NavigatorLabelProvider extends LabelProvider implements ILabelProvi
 		addImage(FOLDER_IMG, QualyzerActivator.PLUGIN_ID, "icons/fldr_obj.gif"); //$NON-NLS-1$
 		addImage(PROJECT_IMG, QualyzerActivator.PLUGIN_ID, "icons/prj_obj.gif"); //$NON-NLS-1$
 		addImage(PERSON_IMG, QualyzerActivator.PLUGIN_ID, "icons/person.gif"); //$NON-NLS-1$
+		addImage(FILE_IMG, QualyzerActivator.PLUGIN_ID, "icons/file_obj.gif"); //$NON-NLS-1$
+		addImage(CPROJECT_IMG, QualyzerActivator.PLUGIN_ID, "icons/cprj_obj.gif"); //$NON-NLS-1$
 	}
 	
 	/**
@@ -86,7 +90,14 @@ public class NavigatorLabelProvider extends LabelProvider implements ILabelProvi
 		Image image = null;
 		if(element instanceof IProject)
 		{
-			image = getImage(PROJECT_IMG, QualyzerActivator.PLUGIN_ID);
+			if(((IProject) element).isOpen())
+			{
+				image = getImage(PROJECT_IMG, QualyzerActivator.PLUGIN_ID);
+			}
+			else
+			{
+				image = getImage(CPROJECT_IMG, QualyzerActivator.PLUGIN_ID);
+			}
 		}
 		else if(element instanceof ProjectWrapper)
 		{
@@ -94,6 +105,7 @@ public class NavigatorLabelProvider extends LabelProvider implements ILabelProvi
 		}
 		else if(element instanceof Transcript)
 		{
+			image = getImage(FILE_IMG, QualyzerActivator.PLUGIN_ID);
 		}
 		else if(element instanceof Investigator)
 		{

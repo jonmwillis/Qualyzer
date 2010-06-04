@@ -70,7 +70,7 @@ public class NavigatorContentProvider extends WorkbenchContentProvider
 	@Override
 	public Object[] getChildren(Object element)
 	{
-		if (element instanceof IProject)
+		if (element instanceof IProject && ((IProject) element).isOpen())
 		{
 			Project proj = PersistenceManager.getInstance().getProject(((IProject) element).getName());
 			
@@ -122,9 +122,9 @@ public class NavigatorContentProvider extends WorkbenchContentProvider
 	@Override
 	public boolean hasChildren(Object element)
 	{
-		if (element instanceof IProject || element instanceof Project)
+		if (element instanceof IProject)
 		{
-			return true;
+			return ((IProject) element).isOpen();
 		}
 		else if(element instanceof ProjectWrapper)
 		{

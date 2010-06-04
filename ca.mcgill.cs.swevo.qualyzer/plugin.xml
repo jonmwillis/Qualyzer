@@ -184,6 +184,16 @@
             id="ca.mcgill.cs.swevo.qualyzer.commands.importAudioFile"
             name="Import Audio File">
       </command>
+      <command
+            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.CloseProjectHandler"
+            id="ca.mcgill.cs.swevo.qualyzer.commands.closeProject"
+            name="Close Project">
+      </command>
+      <command
+            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.OpenProjectHandler"
+            id="ca.mcgill.cs.swevo.qualyzer.commands.openProject"
+            name="Open Project">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -428,6 +438,40 @@
                </visibleWhen>
             </command>
          </menu>
+      </menuContribution>
+      <menuContribution
+            locationURI="popup:ca.mcgill.cs.swevo.qualyzer.projectexplorer#PopupMenu?after=group.build">
+         <command
+               commandId="ca.mcgill.cs.swevo.qualyzer.commands.closeProject"
+               label="Close Project"
+               style="push"
+               tooltip="Close the selected Project">
+            <visibleWhen
+                  checkEnabled="true">
+               <iterate
+                     ifEmpty="false"
+                     operator="or">
+                  <instanceof
+                        value="org.eclipse.core.resources.IProject">
+                  </instanceof>
+               </iterate>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="ca.mcgill.cs.swevo.qualyzer.commands.openProject"
+               label="Open Project"
+               style="push">
+            <visibleWhen
+                  checkEnabled="true">
+               <iterate
+                     ifEmpty="false"
+                     operator="or">
+                  <instanceof
+                        value="org.eclipse.core.resources.IProject">
+                  </instanceof>
+               </iterate>
+            </visibleWhen>
+         </command>
       </menuContribution>
       <menuContribution
             locationURI="popup:ca.mcgill.cs.swevo.qualyzer.projectexplorer#PopupMenu?after=group.properties">
