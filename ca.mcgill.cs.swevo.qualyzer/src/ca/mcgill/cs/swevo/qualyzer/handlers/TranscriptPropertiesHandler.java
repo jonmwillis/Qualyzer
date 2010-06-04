@@ -67,7 +67,7 @@ public class TranscriptPropertiesHandler extends AbstractHandler
 				copyNewAudioFile(transcript, audioFile, oldAudio);
 								
 				transcript.setDate(newDate);
-				//Edit the participant list as necessary
+				transcript.setParticipants(dialog.getParticipants());
 								
 				HibernateDBManager manager;
 				manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(projectName);
