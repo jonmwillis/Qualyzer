@@ -14,9 +14,10 @@
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            name="Perspective"
             class="ca.mcgill.cs.swevo.qualyzer.Perspective"
-            id="ca.mcgill.cs.swevo.qualyzer.perspective">
+            fixed="true"
+            id="ca.mcgill.cs.swevo.qualyzer.perspective"
+            name="Perspective">
       </perspective>
    </extension>
    <extension
