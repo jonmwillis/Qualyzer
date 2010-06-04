@@ -451,9 +451,15 @@
                <iterate
                      ifEmpty="false"
                      operator="or">
-                  <instanceof
-                        value="org.eclipse.core.resources.IProject">
-                  </instanceof>
+                  <and>
+                     <instanceof
+                           value="org.eclipse.core.resources.IProject">
+                     </instanceof>
+                     <test
+                           property="org.eclipse.core.resources.open"
+                           value="open">
+                     </test>
+                  </and>
                </iterate>
             </visibleWhen>
          </command>
@@ -466,9 +472,17 @@
                <iterate
                      ifEmpty="false"
                      operator="or">
-                  <instanceof
-                        value="org.eclipse.core.resources.IProject">
-                  </instanceof>
+                  <and>
+                     <instanceof
+                           value="org.eclipse.core.resources.IProject">
+                     </instanceof>
+                     <not>
+                        <test
+                              property="org.eclipse.core.resources.open"
+                              value="open">
+                        </test>
+                     </not>
+                  </and>
                </iterate>
             </visibleWhen>
          </command>
