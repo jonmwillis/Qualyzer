@@ -194,6 +194,11 @@
             id="ca.mcgill.cs.swevo.qualyzer.commands.openProject"
             name="Open Project">
       </command>
+      <command
+            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.DeleteParticipantHandler"
+            id="ca.mcgill.cs.swevo.qualyzer.commands.deleteParticipant"
+            name="Delete Participant">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -401,6 +406,22 @@
                      operator="or">
                   <instanceof
                         value="ca.mcgill.cs.swevo.qualyzer.model.Transcript">
+                  </instanceof>
+               </iterate>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="ca.mcgill.cs.swevo.qualyzer.commands.deleteParticipant"
+               label="Delete"
+               style="push"
+               tooltip="Delete this participant">
+            <visibleWhen
+                  checkEnabled="true">
+               <iterate
+                     ifEmpty="false"
+                     operator="or">
+                  <instanceof
+                        value="ca.mcgill.cs.swevo.qualyzer.model.Participant">
                   </instanceof>
                </iterate>
             </visibleWhen>
