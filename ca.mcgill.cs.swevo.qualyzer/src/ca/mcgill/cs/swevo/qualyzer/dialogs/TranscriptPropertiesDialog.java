@@ -14,9 +14,12 @@
 package ca.mcgill.cs.swevo.qualyzer.dialogs;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -29,8 +32,14 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.dialogs.ElementListSelectionDialog;
+import org.hibernate.Session;
 
+import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
+import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
+import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 
 /**
@@ -50,7 +59,7 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 	private Transcript fTranscript;
 	private Text fDate;
 	private String fAudioPath;
-	//private List<Participant> fParticipants; //TODO implement once lazy load works
+	private List<Participant> fParticipants;
 	private Table fTable;
 	
 	private String fDateS;
@@ -65,7 +74,7 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 	{
 		super(shell);
 		fTranscript = transcript;
-		//fParticipants = new ArrayList<Participant>();
+		fParticipants = new ArrayList<Participant>();
 		fProjectName = fTranscript.getProject().getName();
 		fAudioPath = ""; //$NON-NLS-1$
 	}
@@ -101,15 +110,17 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 		label = createLabel(composite, Messages.dialogs_TranscriptPropertiesDialog_participants);
 		label.setLayoutData(createTextGridData());
 		Button button = new Button(composite, SWT.PUSH);
-		button.setText("+"); //TODO add listener //$NON-NLS-1$
+		button.setText("+"); //$NON-NLS-1$
+		button.addSelectionListener(createAddListener());
 		button = new Button(composite, SWT.PUSH);
-		button.setText("-"); //TODO add listener //$NON-NLS-1$
+		button.setText("-"); //$NON-NLS-1$
+		button.addSelectionListener(createRemoveListener());
 		
 		fTable = new Table(parent, SWT.MULTI);
 		GridData gd = createTextGridData();
 		gd.horizontalSpan = 2;
 		fTable.setLayoutData(gd);
-		//TODO fill out table with participants
+		buildParticipants();
 		
 		composite = createComposite(parent);
 		
@@ -126,6 +137,89 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 		button.addSelectionListener(createSelectionAdapter());
 				
 		return parent;
+	}
+
+	/**
+	 * @return
+	 */
+	private SelectionAdapter createRemoveListener()
+	{
+		return new SelectionAdapter(){
+			
+			@Override
+			public void widgetSelected(SelectionEvent e)
+			{
+				while(fTable.getSelectionCount() > 0)
+				{
+					fTable.remove(fTable.getSelectionIndex());
+				}
+			}
+		};
+	}
+
+	/**
+	 * @return
+	 */
+	private SelectionAdapter createAddListener()
+	{
+		return new SelectionAdapter(){
+			
+			@Override
+			public void widgetSelected(SelectionEvent e)
+			{
+				List<Participant> list = fTranscript.getProject().getParticipants();
+				ElementListSelectionDialog dialog = new ElementListSelectionDialog(getShell(), new LabelProvider());
+				String[] names = new String[list.size()];
+				for(int i = 0; i < list.size(); i++)
+				{
+					names[i] = list.get(i).getParticipantId();
+				}
+				dialog.setElements(names);
+				dialog.setTitle("Which participants would you like to add");
+				dialog.open();
+				Object[] result = dialog.getResult();
+				for(Object s : result)
+				{
+					if(notInTable(s))
+					{
+						TableItem item = new TableItem(fTable, SWT.NULL);
+						item.setText((String)s);
+					}
+				}
+			}
+		};
+	}
+
+	/**
+	 * @param s
+	 * @return
+	 */
+	protected boolean notInTable(Object s)
+	{
+		for(TableItem item : fTable.getItems())
+		{
+			if(item.getText().equals(s))
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * 
+	 */
+	private void buildParticipants()
+	{
+		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(fProjectName);
+		Session s = manager.openSession();
+		Object o = s.get(Transcript.class, fTranscript.getPersistenceId());
+		
+		for(Participant p : ((Transcript) o).getParticipants())
+		{
+			TableItem item = new TableItem(fTable, SWT.NULL);
+			item.setText(p.getParticipantId());
+		}
 	}
 
 	/**
@@ -237,6 +331,24 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 	private void save()
 	{
 		fDateS = fDate.getText();
-		//TODO save participants
+		for(TableItem item : fTable.getItems())
+		{
+			for(Participant participant : fTranscript.getProject().getParticipants())
+			{
+				if(item.getText().equals(participant.getParticipantId()))
+				{
+					fParticipants.add(participant);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Get the list of participants in this transcript.
+	 * @return
+	 */
+	public List<Participant> getParticipants()
+	{
+		return fParticipants;
 	}
 }
