@@ -23,13 +23,18 @@ import org.eclipse.jface.text.rules.WhitespaceRule;
 public class XMLTagScanner extends RuleBasedScanner
 {
 	/**
+	 * 
+	 */
+	private static final int THREE = 3;
+
+	/**
 	 * @param manager
 	 */
 	public XMLTagScanner(ColorManager manager)
 	{
 		IToken string = new Token(new TextAttribute(manager.getColor(ColorManager.STRING)));
 
-		IRule[] rules = new IRule[3];
+		IRule[] rules = new IRule[THREE];
 
 		// Add rule for double quotes
 		rules[0] = new SingleLineRule("\"", "\"", string, '\\'); //$NON-NLS-1$ //$NON-NLS-2$

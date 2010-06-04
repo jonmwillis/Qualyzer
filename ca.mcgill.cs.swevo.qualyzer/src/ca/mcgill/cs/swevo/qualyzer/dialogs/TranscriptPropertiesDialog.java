@@ -14,8 +14,6 @@
 package ca.mcgill.cs.swevo.qualyzer.dialogs;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -33,7 +31,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 
-import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 
 /**
@@ -53,7 +50,7 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 	private Transcript fTranscript;
 	private Text fDate;
 	private String fAudioPath;
-	private List<Participant> fParticipants;
+	//private List<Participant> fParticipants; //TODO implement once lazy load works
 	private Table fTable;
 	
 	private String fDateS;
@@ -68,7 +65,7 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 	{
 		super(shell);
 		fTranscript = transcript;
-		fParticipants = new ArrayList<Participant>();
+		//fParticipants = new ArrayList<Participant>();
 		fProjectName = fTranscript.getProject().getName();
 		fAudioPath = ""; //$NON-NLS-1$
 	}
