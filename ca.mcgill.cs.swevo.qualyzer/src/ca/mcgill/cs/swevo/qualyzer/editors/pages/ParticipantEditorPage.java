@@ -11,29 +11,21 @@
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.editors.pages;
 
-import org.eclipse.swt.SWT;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.FormPage;
-import org.eclipse.ui.forms.events.ExpansionAdapter;
-import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
-import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
-import org.hibernate.LazyInitializationException;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
-import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 
 /**
  * The form used to edit participant data.
@@ -76,6 +68,7 @@ public class ParticipantEditorPage extends FormPage
 		
 		toolkit.createLabel(body, LABEL_PARTICIPANT_ID);
 		fID = createText(toolkit, fParticipant.getParticipantId(), body);
+		fID.addKeyListener(createKeyAdapter(form));
 		
 		toolkit.createLabel(body, LABEL_PARTICIPANT_NAME);
 		fFullname = createText(toolkit, fParticipant.getFullName(), body);
@@ -93,6 +86,36 @@ public class ParticipantEditorPage extends FormPage
 		//buildCodesSection(form, toolkit, body);
 		
 		toolkit.paintBordersFor(body);
+	}
+
+	/**
+	 * @return
+	 */
+	private KeyAdapter createKeyAdapter(final ScrolledForm form)
+	{
+		return new KeyAdapter(){
+			private ScrolledForm fForm = form;
+			
+			@Override
+			public void keyReleased(KeyEvent event)
+			{
+				if(fID.getText().isEmpty())
+				{
+					fForm.setMessage("Please enter an ID", IMessageProvider.ERROR);
+					notDirty();
+				}
+				else if(idInUse())
+				{
+					fForm.setMessage("That ID is taken", IMessageProvider.ERROR);
+					notDirty();
+				}
+				else
+				{
+					fForm.setMessage(null, IMessageProvider.NONE);
+				}
+			}
+			
+		};
 	}
 
 	/**
@@ -213,6 +236,21 @@ public class ParticipantEditorPage extends FormPage
 //			label.setLayoutData(gd);
 //		}
 //	}
+
+	/**
+	 * @return
+	 */
+	protected boolean idInUse()
+	{
+		for(Participant participant : fParticipant.getProject().getParticipants())
+		{
+			if(!participant.equals(fParticipant) && participant.getParticipantId().equals(fID.getText()))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 
 	/**
 	 * @param form
