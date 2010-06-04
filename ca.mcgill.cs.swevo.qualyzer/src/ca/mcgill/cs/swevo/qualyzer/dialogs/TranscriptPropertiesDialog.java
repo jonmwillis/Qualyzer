@@ -17,6 +17,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -153,6 +154,12 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 				{
 					fTable.remove(fTable.getSelectionIndex());
 				}
+				
+				if(fTable.getItemCount() <= 0)
+				{
+					setErrorMessage("There must be at least one Participant");
+					getButton(IDialogConstants.OK_ID).setEnabled(false);
+				}
 			}
 		};
 	}
@@ -185,6 +192,12 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 						TableItem item = new TableItem(fTable, SWT.NULL);
 						item.setText((String)s);
 					}
+				}
+				
+				if(fTable.getItemCount() > 0)
+				{
+					setErrorMessage(null);
+					getButton(IDialogConstants.OK_ID).setEnabled(true);
 				}
 			}
 		};
