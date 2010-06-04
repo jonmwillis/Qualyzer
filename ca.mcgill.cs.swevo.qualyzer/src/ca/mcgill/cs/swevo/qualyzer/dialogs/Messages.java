@@ -27,6 +27,16 @@ public class Messages extends NLS
 	public static String dialogs_RenameDialog_NewName;
 	public static String dialogs_RenameDialog_RenameTheTranscript;
 	public static String dialogs_RenameDialog_RenameTranscript;
+	public static String dialogs_TranscriptPropertiesDialog_audioPath;
+	public static String dialogs_TranscriptPropertiesDialog_audioType;
+	public static String dialogs_TranscriptPropertiesDialog_Browse;
+	public static String dialogs_TranscriptPropertiesDialog_date;
+	public static String dialogs_TranscriptPropertiesDialog_name;
+	public static String dialogs_TranscriptPropertiesDialog_participants;
+	public static String dialogs_TranscriptPropertiesDialog_path;
+	public static String dialogs_TranscriptPropertiesDialog_properties;
+	public static String dialogs_TranscriptPropertiesDialog_warning;
+	public static String dialogs_TranscriptPropertiesDialog_warning2;
 	static
 	{
 		// initialize resource bundle
