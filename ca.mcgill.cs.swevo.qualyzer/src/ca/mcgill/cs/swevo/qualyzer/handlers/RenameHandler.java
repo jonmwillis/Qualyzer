@@ -21,6 +21,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -83,23 +84,35 @@ public class RenameHandler extends AbstractHandler
 	}
 
 	/**
-	 * @param element
+	 * @param transcript
 	 * @param name
 	 * @param changeAudio
 	 */
-	private void rename(Transcript element, String name, boolean changeAudio)
+	private void rename(Transcript transcript, String name, boolean changeAudio)
 	{	
-		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(element.getProject().getName());
+		boolean closed = false;
+		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		IEditorReference[] editors = activePage.getEditorReferences();
+		for(IEditorReference editor : editors)
+		{
+			if(editor.getName().equals(transcript.getFileName()))
+			{
+				activePage.closeEditor(editor.getEditor(true), true);
+				closed = true;
+			}
+		}
+		
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(transcript.getProject().getName());
 		
 		String projectPath = project.getLocation().toString();
-		File origFile = new File(projectPath + TRANSCRIPT + element.getFileName());
+		File origFile = new File(projectPath + TRANSCRIPT + transcript.getFileName());
 		File newFile = new File(projectPath + TRANSCRIPT + name + EXT);
 		
 		origFile.renameTo(newFile);
 		
 		if(changeAudio)
 		{
-			AudioFile audio = element.getAudioFile();
+			AudioFile audio = transcript.getAudioFile();
 			if(audio != null)
 			{
 				origFile = new File(projectPath + audio.getRelativePath());
@@ -112,8 +125,13 @@ public class RenameHandler extends AbstractHandler
 			}
 		}
 		
-		element.setName(name);
-		element.setFileName(name+EXT);
+		transcript.setName(name);
+		transcript.setFileName(name+EXT);
+		
+		if(closed)
+		{
+			ResourcesUtil.openEditor(activePage, transcript);
+		}
 	}
 
 }
