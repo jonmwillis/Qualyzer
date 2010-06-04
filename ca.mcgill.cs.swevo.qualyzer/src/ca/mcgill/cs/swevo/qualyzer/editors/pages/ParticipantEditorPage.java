@@ -12,20 +12,36 @@
 package ca.mcgill.cs.swevo.qualyzer.editors.pages;
 
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.FormPage;
+import org.eclipse.ui.forms.events.ExpansionAdapter;
+import org.eclipse.ui.forms.events.ExpansionEvent;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
+import org.hibernate.Session;
 
+import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
+import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
+import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
+import ca.mcgill.cs.swevo.qualyzer.util.ResourcesUtil;
 
 /**
  * The form used to edit participant data.
@@ -81,7 +97,7 @@ public class ParticipantEditorPage extends FormPage
 //		createNotesArea(toolkit, body);
 		
 		//TODO add +/- buttons
-		//buildInterviewsSection(form, toolkit, body);
+		buildTranscriptSection(form, toolkit, body);
 		
 		//buildCodesSection(form, toolkit, body);
 		
@@ -172,26 +188,24 @@ public class ParticipantEditorPage extends FormPage
 	 * @param toolkit
 	 * @param body
 	 */
-	// Let's leave this out for 0.1
-//	private void buildInterviewsSection(final ScrolledForm form, FormToolkit toolkit, Composite body)
-//	{
-//		TableWrapData td;
-//		Section section = toolkit.createSection(body, Section.EXPANDED | Section.TITLE_BAR | Section.TWISTIE);
-//		td = new TableWrapData(TableWrapData.FILL_GRAB);
-//		td.colspan = 2;
-//		section.setLayoutData(td);
-//		section.addExpansionListener(createExpansionListener(form));
-//		section.setText("Interviews");
-//		Composite sectionClient = toolkit.createComposite(section);
-//		GridLayout gridLayout = new GridLayout();
-//		gridLayout.numColumns = 1;
-//		sectionClient.setLayout(gridLayout);
-//		//TODO make clickable
-//TODO fix the Lazy Initialization Exception
-//		buildInterviews(toolkit, sectionClient);
-//		sectionClient.setLayoutData(td);
-//		section.setClient(sectionClient);
-//	}
+	private void buildTranscriptSection(final ScrolledForm form, FormToolkit toolkit, Composite body)
+	{
+		TableWrapData td;
+		Section section = toolkit.createSection(body, Section.EXPANDED | Section.TITLE_BAR | Section.TWISTIE);
+		td = new TableWrapData(TableWrapData.FILL_GRAB);
+		td.colspan = 2;
+		section.setLayoutData(td);
+		section.addExpansionListener(createExpansionListener(form));
+		section.setText("Transcripts");
+		Composite sectionClient = toolkit.createComposite(section);
+		GridLayout gridLayout = new GridLayout();
+		gridLayout.numColumns = 1;
+		sectionClient.setLayout(gridLayout);
+		//TODO make clickable
+		buildInterviews(toolkit, sectionClient);
+		sectionClient.setLayoutData(td);
+		section.setClient(sectionClient);
+	}
 
 	/**
 	 * @param toolkit
@@ -214,28 +228,42 @@ public class ParticipantEditorPage extends FormPage
 	 * @param sectionClient 
 	 * 
 	 */
-	// Let's leave this out for 0.1
-//	private void buildInterviews(FormToolkit toolkit, Composite sectionClient)
-//	{
-//		try
-//		{
-//			for(Transcript transcript : fParticipant.getProject().getTranscripts())		
-//			{
-//				if(transcript.getParticipants().contains(fParticipant))
-//				{
-//					GridData gd = new GridData(SWT.FILL, SWT.NULL, true, false);
-//					Label label = toolkit.createLabel(sectionClient, transcript.getName());
-//					label.setLayoutData(gd);	
-//				}
-//			}
-//		}
-//		catch(LazyInitializationException e)
-//		{
-//			Label label = toolkit.createLabel(sectionClient, "example interview - unable to lazily initialize");
-//			GridData gd = new GridData(SWT.FILL, SWT.NULL, true, false);
-//			label.setLayoutData(gd);
-//		}
-//	}
+	private void buildInterviews(FormToolkit toolkit, Composite sectionClient)
+	{
+		String projectName = fParticipant.getProject().getName();
+		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(projectName);
+		Session session = manager.openSession();
+		for(Transcript transcript : fParticipant.getProject().getTranscripts())		
+		{
+			Object object = session.get(Transcript.class, transcript.getPersistenceId());
+			if(((Transcript) object).getParticipants().contains(fParticipant))
+			{
+				GridData gd = new GridData(SWT.FILL, SWT.NULL, true, false);
+				Hyperlink link = toolkit.createHyperlink(sectionClient, transcript.getName(), SWT.WRAP);
+				link.addHyperlinkListener(createHyperlinkListener(transcript));
+			}
+		}
+	}
+
+	/**
+	 * @param transcript
+	 * @return
+	 */
+	private HyperlinkAdapter createHyperlinkListener(final Transcript transcript)
+	{
+		return new HyperlinkAdapter(){
+			private Transcript fTrans = transcript;
+
+			@Override
+			public void linkActivated(HyperlinkEvent e)
+			{
+				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+				ResourcesUtil.openEditor(page, fTrans);
+			}
+
+
+		};
+	}
 
 	/**
 	 * @return
@@ -256,16 +284,15 @@ public class ParticipantEditorPage extends FormPage
 	 * @param form
 	 * @return
 	 */
-	// Let's leave this out for 0.1
-//	private ExpansionAdapter createExpansionListener(final ScrolledForm form)
-//	{
-//		return new ExpansionAdapter(){
-//			public void expansionStateChanged(ExpansionEvent e)
-//			{
-//				form.reflow(true);
-//			}
-//		};
-//	}
+	private ExpansionAdapter createExpansionListener(final ScrolledForm form)
+	{
+		return new ExpansionAdapter(){
+			public void expansionStateChanged(ExpansionEvent e)
+			{
+				form.reflow(true);
+			}
+		};
+	}
 	
 	private Text createText(FormToolkit toolkit, String data, Composite parent)
 	{
