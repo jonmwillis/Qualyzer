@@ -13,6 +13,7 @@ package ca.mcgill.cs.swevo.qualyzer.handlers;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
@@ -51,11 +52,16 @@ public class ImportTranscriptHandler extends AbstractHandler
 			
 			if(dialog.open() == Window.OK)
 			{
+				CommonNavigator view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+				view.getCommonViewer().refresh(new WrapperTranscript(wizard.getTranscript().getProject()));
+				
+				if(element instanceof IProject)
+				{
+					view.getCommonViewer().refresh(element);
+				}
+				
 				ResourcesUtil.openEditor(page, wizard.getTranscript());
 			}
-			
-			CommonNavigator view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
-			view.getCommonViewer().refresh(new WrapperTranscript(wizard.getTranscript().getProject()));
 		}
 		
 		return null;
