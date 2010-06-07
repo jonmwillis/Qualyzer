@@ -184,6 +184,28 @@ public class Transcript implements Comparable<Transcript>, IAnnotatedDocument
 		return fDate;
 	}
 	
+	@Override
+	public int hashCode()
+	{
+		//TODO implement
+		return super.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object obj)
+	{
+		if(obj == null)
+		{
+			return false;
+		}
+		if(obj.getClass() != getClass())
+		{
+			return false;
+		}
+		
+		return fName.equals(((Transcript) obj).getName());
+	}
+	
 	
 
 }
