@@ -29,13 +29,13 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class TranscriptDeleteDialog extends TitleAreaDialog
 {
-	private boolean deleteAudio;
-	private boolean deleteParticipants;
-	private boolean deleteCodes;
+	private boolean fDeleteAudio;
+	private boolean fDeleteParticipants;
+	private boolean fDeleteCodes;
 	
-	private Button audioButton;
-	private Button participantButton;
-	private Button codeButton;
+	private Button fAudioButton;
+	private Button fParticipantButton;
+	private Button fCodeButton;
 	
 	/**
 	 * Constructor.
@@ -44,9 +44,9 @@ public class TranscriptDeleteDialog extends TitleAreaDialog
 	public TranscriptDeleteDialog(Shell shell)
 	{
 		super(shell);
-		deleteAudio = false;
-		deleteParticipants = false;
-		deleteCodes = false;
+		fDeleteAudio = false;
+		fDeleteParticipants = false;
+		fDeleteCodes = false;
 	}
 	
 	@Override
@@ -54,7 +54,8 @@ public class TranscriptDeleteDialog extends TitleAreaDialog
 	{
 		super.create();
 		setTitle("Delete Transcript");
-		setMessage("Deleting this transcript will also remove it from disk.", IMessageProvider.WARNING);
+		setMessage("Deleting this transcript will remove it from disk along with all associated annotations.", 
+				IMessageProvider.WARNING);
 	}
 	
 	@Override
@@ -76,17 +77,17 @@ public class TranscriptDeleteDialog extends TitleAreaDialog
 		label.setLayoutData(gd);
 		
 		gd = new GridData(SWT.FILL, SWT.NULL, true, false);
-		audioButton = new Button(composite, SWT.CHECK);
+		fAudioButton = new Button(composite, SWT.CHECK);
 		label = new Label(composite, SWT.NULL);
 		label.setText("Delete associated audio file");
 		label.setLayoutData(gd);
 		
-		codeButton = new Button(composite, SWT.CHECK);
+		fCodeButton = new Button(composite, SWT.CHECK);
 		label = new Label(composite, SWT.NULL);
 		label.setText("Delete codes only used with this transcript");
 		label.setLayoutData(gd);
 		
-		participantButton = new Button(composite, SWT.CHECK);
+		fParticipantButton = new Button(composite, SWT.CHECK);
 		label = new Label(composite, SWT.NULL);
 		label.setText("Delete participants only associated with this transcript");
 		label.setLayoutData(gd);
@@ -97,9 +98,9 @@ public class TranscriptDeleteDialog extends TitleAreaDialog
 	@Override
 	public void okPressed()
 	{
-		deleteAudio = audioButton.getSelection();
-		deleteParticipants = participantButton.getSelection();
-		deleteCodes = codeButton.getSelection();
+		fDeleteAudio = fAudioButton.getSelection();
+		fDeleteParticipants = fParticipantButton.getSelection();
+		fDeleteCodes = fCodeButton.getSelection();
 		
 		super.okPressed();
 	}
@@ -110,7 +111,7 @@ public class TranscriptDeleteDialog extends TitleAreaDialog
 	 */
 	public boolean getDeleteAudio()
 	{
-		return deleteAudio;
+		return fDeleteAudio;
 	}
 	
 	/**
@@ -119,7 +120,7 @@ public class TranscriptDeleteDialog extends TitleAreaDialog
 	 */
 	public boolean getDeleteParticipants()
 	{
-		return deleteParticipants;
+		return fDeleteParticipants;
 	}
 	
 	/**
@@ -128,7 +129,7 @@ public class TranscriptDeleteDialog extends TitleAreaDialog
 	 */
 	public boolean getDeleteCodes()
 	{
-		return deleteCodes;
+		return fDeleteCodes;
 	}
 	
 	
