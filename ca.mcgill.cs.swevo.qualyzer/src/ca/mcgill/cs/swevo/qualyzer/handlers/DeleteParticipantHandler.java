@@ -59,15 +59,15 @@ public class DeleteParticipantHandler extends AbstractHandler
 					.get(project.getName());
 				ArrayList<Object> conflicts = checkForConflicts(participant, project, manager.openSession());
 				
+				Shell shell = HandlerUtil.getActiveShell(event).getShell();
 				if(conflicts.size() > 0)
 				{
-					//Open error dialog...
-					//for now print to console
-					printErrors(conflicts);
+					String errorMsg = printErrors(conflicts);
+					MessageDialog.openError(shell, "Cannot Delete Participant", errorMsg);
 				}
 				else
 				{
-					Shell shell = HandlerUtil.getActiveShell(event).getShell();
+					
 					boolean check = MessageDialog.openConfirm(shell, "Delete this Participant", 
 							"Are you sure you want to delete this participant?");
 					
@@ -91,19 +91,22 @@ public class DeleteParticipantHandler extends AbstractHandler
 	/**
 	 * @param conflicts
 	 */
-	private void printErrors(ArrayList<Object> conflicts)
+	private String printErrors(ArrayList<Object> conflicts)
 	{
+		String output = "Cannot delete participant due to the following conflicts:";
 		for(Object obj : conflicts)
 		{
 			if(obj instanceof Memo)
 			{
-				System.out.println("Memo - " + ((Memo) obj).getName());
+				output += "\nMemo: " + ((Memo) obj).getName();
 			}
 			else if(obj instanceof Transcript)
 			{
-				System.out.println("Transcript - " + ((Transcript) obj).getName());
+				output += "\nTranscript: " + ((Transcript) obj).getName();
 			}
 		}
+		
+		return output;
 	}
 
 	/**
