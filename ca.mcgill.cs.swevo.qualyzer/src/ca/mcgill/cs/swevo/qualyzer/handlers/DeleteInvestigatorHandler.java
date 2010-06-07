@@ -63,12 +63,13 @@ public class DeleteInvestigatorHandler extends AbstractHandler
 				if(conflicts.size() > 0)
 				{
 					String errorMsg = printErrors(conflicts);
-					MessageDialog.openError(shell, "Cannot Delete Investigator", errorMsg);
+					MessageDialog.openError(shell, Messages._handlers_DeleteInvestigatorHandler_cannotDelete, errorMsg);
 				}
 				else
 				{
-					boolean check = MessageDialog.openConfirm(shell, "Delete this Investigator", 
-							"Are you sure you want to delete this investigator?");
+					boolean check = MessageDialog.openConfirm(shell, 
+							Messages._handlers_DeleteInvestigatorHandler_deleteInvestigator, 
+							Messages._handlers_DeleteInvestigatorHandler_confirm);
 					
 					if(check)
 					{
@@ -79,7 +80,6 @@ public class DeleteInvestigatorHandler extends AbstractHandler
 								page.closeEditor(editor.getEditor(true), true);
 							}
 						}
-						
 						project.getInvestigators().remove(investigator);
 						investigator.setProject(null);
 						HibernateUtil.quietSave(manager, project);
@@ -100,10 +100,10 @@ public class DeleteInvestigatorHandler extends AbstractHandler
 	 */
 	private String printErrors(ArrayList<String> conflicts)
 	{
-		String output = "Cannot delete investigator due to the following conflicts:";
+		String output = Messages._handlers_DeleteInvestigatorHandler_conflicts;
 		for(String str : conflicts)
 		{
-			output += "\n"+str;
+			output += "\n"+str; //$NON-NLS-1$
 		}
 		
 		return output;
@@ -123,7 +123,7 @@ public class DeleteInvestigatorHandler extends AbstractHandler
 		{
 			if(memo.getAuthor().equals(investigator))
 			{
-				conflicts.add("Transcript: " + memo.getName());
+				conflicts.add(Messages._handlers_DeleteInvestigatorHandler_memo + memo.getName());
 			}
 		}
 		

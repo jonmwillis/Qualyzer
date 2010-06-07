@@ -45,7 +45,7 @@ import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
  */
 public class DeleteTranscriptHandler extends AbstractHandler
 {
-	private static final String TRANSCRIPT = File.separator + "transcripts" + File.separator;
+	private static final String TRANSCRIPT = File.separator + "transcripts" + File.separator; //$NON-NLS-1$
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException

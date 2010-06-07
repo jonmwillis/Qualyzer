@@ -64,12 +64,13 @@ public class DeleteParticipantHandler extends AbstractHandler
 				if(conflicts.size() > 0)
 				{
 					String errorMsg = printErrors(conflicts);
-					MessageDialog.openError(shell, "Cannot Delete Participant", errorMsg);
+					MessageDialog.openError(shell, Messages.handlers_DeleteParticipantHandler_cannotDelete, errorMsg);
 				}
 				else
 				{
-					boolean check = MessageDialog.openConfirm(shell, "Delete this Participant", 
-							"Are you sure you want to delete this participant?");
+					boolean check = MessageDialog.openConfirm(shell, 
+							Messages.handlers_DeleteParticipantHandler_deleteParticipant, 
+							Messages.handlers_DeleteParticipantHandler_confirm);
 					
 					if(check)
 					{
@@ -82,7 +83,6 @@ public class DeleteParticipantHandler extends AbstractHandler
 						}
 						project.getParticipants().remove(participant);
 						participant.setProject(null);
-						
 						HibernateUtil.quietSave(manager, project);
 			
 						CommonNavigator view;
@@ -100,16 +100,16 @@ public class DeleteParticipantHandler extends AbstractHandler
 	 */
 	private String printErrors(ArrayList<Object> conflicts)
 	{
-		String output = "Cannot delete participant due to the following conflicts:";
+		String output = Messages.handlers_DeleteParticipantHandler_conflicts;
 		for(Object obj : conflicts)
 		{
 			if(obj instanceof Memo)
 			{
-				output += "\nMemo: " + ((Memo) obj).getName();
+				output += Messages.handlers_DeleteParticipantHandler_memo + ((Memo) obj).getName();
 			}
 			else if(obj instanceof Transcript)
 			{
-				output += "\nTranscript: " + ((Transcript) obj).getName();
+				output += Messages.handlers_DeleteParticipantHandler_transcript + ((Transcript) obj).getName();
 			}
 		}
 		
