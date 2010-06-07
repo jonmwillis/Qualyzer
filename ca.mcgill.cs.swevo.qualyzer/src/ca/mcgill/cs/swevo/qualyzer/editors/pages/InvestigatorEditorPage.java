@@ -110,12 +110,14 @@ public class InvestigatorEditorPage extends FormPage
 			{
 				if(fNickname.getText().isEmpty())
 				{
-					fForm.setMessage("Please enter a nickname", IMessageProvider.ERROR);
+					fForm.setMessage(Messages.editors_pages_InvestigatorEditorPage_enterNickname, 
+							IMessageProvider.ERROR);
 					notDirty();
 				}
 				else if(nicknameInUse())
 				{
-					fForm.setMessage("That nickname is taken", IMessageProvider.ERROR);
+					fForm.setMessage(Messages.editors_pages_InvestigatorEditorPage_nicknameTaken, 
+							IMessageProvider.ERROR);
 					notDirty();
 				}
 				else

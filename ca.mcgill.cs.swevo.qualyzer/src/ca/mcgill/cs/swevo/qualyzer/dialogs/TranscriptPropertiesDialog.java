@@ -157,7 +157,7 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 				
 				if(fTable.getItemCount() <= 0)
 				{
-					setErrorMessage("There must be at least one Participant");
+					setErrorMessage(Messages.dialogs_TranscriptPropertiesDialog_needOne);
 					getButton(IDialogConstants.OK_ID).setEnabled(false);
 				}
 			}
@@ -182,7 +182,7 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 					names[i] = list.get(i).getParticipantId();
 				}
 				dialog.setElements(names);
-				dialog.setTitle("Which participants would you like to add");
+				dialog.setTitle(Messages.dialogs_TranscriptPropertiesDialog_addWhich);
 				dialog.open();
 				Object[] result = dialog.getResult();
 				for(Object s : result)

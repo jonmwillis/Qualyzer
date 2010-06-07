@@ -117,12 +117,12 @@ public class ParticipantEditorPage extends FormPage
 			{
 				if(fID.getText().isEmpty())
 				{
-					fForm.setMessage("Please enter an ID", IMessageProvider.ERROR);
+					fForm.setMessage(Messages.editors_pages_ParticipantEditorPage_enterID, IMessageProvider.ERROR);
 					notDirty();
 				}
 				else if(idInUse())
 				{
-					fForm.setMessage("That ID is taken", IMessageProvider.ERROR);
+					fForm.setMessage(Messages.editors_pages_ParticipantEditorPage_idTaken, IMessageProvider.ERROR);
 					notDirty();
 				}
 				else
@@ -196,7 +196,7 @@ public class ParticipantEditorPage extends FormPage
 		td.colspan = 2;
 		section.setLayoutData(td);
 		section.addExpansionListener(createExpansionListener(form));
-		section.setText("Transcripts");
+		section.setText(Messages.editors_pages_ParticipantEditorPage_transcripts);
 		Composite sectionClient = toolkit.createComposite(section);
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 1;

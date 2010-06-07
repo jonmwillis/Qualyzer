@@ -58,7 +58,7 @@ public class TranscriptPropertiesHandler extends AbstractHandler
 				String newDate = dialog.getDate();
 				String audioFile = dialog.getAudioFile();
 				
-				String oldAudio = "";
+				String oldAudio = ""; //$NON-NLS-1$
 				if(transcript.getAudioFile() != null)
 				{
 					oldAudio = projectName + transcript.getAudioFile().getRelativePath();
@@ -88,7 +88,7 @@ public class TranscriptPropertiesHandler extends AbstractHandler
 		if(!oldAudio.equals(audioFile))
 		{
 			AudioFile aFile = new AudioFile();
-			String relativePath = File.separator+"audio"+File.separator;
+			String relativePath = File.separator+"audio"+File.separator; //$NON-NLS-1$
 			relativePath += transcript.getName() + audioFile.substring(audioFile.lastIndexOf('.'));
 			aFile.setRelativePath(relativePath);
 			transcript.setAudioFile(aFile);

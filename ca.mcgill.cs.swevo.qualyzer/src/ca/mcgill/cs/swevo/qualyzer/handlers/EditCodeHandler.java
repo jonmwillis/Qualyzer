@@ -25,7 +25,7 @@ public class EditCodeHandler extends AbstractHandler
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
 	{
-		System.out.println("Edit code command called");
+		System.out.println("Edit code command called"); //$NON-NLS-1$
 		return null;
 	}
 

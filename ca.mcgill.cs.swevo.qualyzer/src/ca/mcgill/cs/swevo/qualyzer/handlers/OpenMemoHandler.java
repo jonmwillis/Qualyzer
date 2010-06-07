@@ -25,7 +25,7 @@ public class OpenMemoHandler extends AbstractHandler
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
 	{
-		System.out.println("Open Memo command called");
+		System.out.println("Open Memo command called"); //$NON-NLS-1$
 		return null;
 	}
 

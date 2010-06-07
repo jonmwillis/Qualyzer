@@ -22,6 +22,17 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS
 {
 	private static final String BUNDLE_NAME = "ca.mcgill.cs.swevo.qualyzer.handlers.messages"; //$NON-NLS-1$
+	public static String _handlers_DeleteInvestigatorHandler_cannotDelete;
+	public static String _handlers_DeleteInvestigatorHandler_confirm;
+	public static String _handlers_DeleteInvestigatorHandler_conflicts;
+	public static String _handlers_DeleteInvestigatorHandler_deleteInvestigator;
+	public static String _handlers_DeleteInvestigatorHandler_memo;
+	public static String handlers_DeleteParticipantHandler_cannotDelete;
+	public static String handlers_DeleteParticipantHandler_confirm;
+	public static String handlers_DeleteParticipantHandler_conflicts;
+	public static String handlers_DeleteParticipantHandler_deleteParticipant;
+	public static String handlers_DeleteParticipantHandler_memo;
+	public static String handlers_DeleteParticipantHandler_transcript;
 	public static String handlers_ImportAudioFileHandler_audio;
 	static
 	{

@@ -24,14 +24,19 @@ public class Messages extends NLS
 	private static final String BUNDLE_NAME = "ca.mcgill.cs.swevo.qualyzer.editors.pages.messages"; //$NON-NLS-1$
 	public static String editors_pages_InvestigatorEditorPage_CodedInterviews;
 	public static String editors_pages_InvestigatorEditorPage_ConductedInterviews;
+	public static String editors_pages_InvestigatorEditorPage_enterNickname;
 	public static String editors_pages_InvestigatorEditorPage_FulllName;
 	public static String editors_pages_InvestigatorEditorPage_Instituion;
 	public static String editors_pages_InvestigatorEditorPage_Investigator;
 	public static String editors_pages_InvestigatorEditorPage_Memos;
 	public static String editors_pages_InvestigatorEditorPage_Nickname;
+	public static String editors_pages_InvestigatorEditorPage_nicknameTaken;
+	public static String editors_pages_ParticipantEditorPage_enterID;
 	public static String editors_pages_ParticipantEditorPage_id;
+	public static String editors_pages_ParticipantEditorPage_idTaken;
 	public static String editors_pages_ParticipantEditorPage_Name;
 	public static String editors_pages_ParticipantEditorPage_participant;
+	public static String editors_pages_ParticipantEditorPage_transcripts;
 	static
 	{
 		// initialize resource bundle
