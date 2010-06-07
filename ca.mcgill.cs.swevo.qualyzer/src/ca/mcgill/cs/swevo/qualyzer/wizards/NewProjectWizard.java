@@ -152,6 +152,10 @@ public class NewProjectWizard extends Wizard
 		return project;
 	}
 	
+	/**
+	 * Gets the IProject created by the wizard. Used to properly expand the node.
+	 * @return
+	 */
 	public IProject getProjectReference()
 	{
 		return fProject;
