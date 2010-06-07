@@ -203,7 +203,7 @@ public class Transcript implements Comparable<Transcript>, IAnnotatedDocument
 			return false;
 		}
 		
-		return fName.equals(((Transcript) obj).getName());
+		return fPersistenceId == ((Transcript) obj).fPersistenceId;
 	}
 	
 	
