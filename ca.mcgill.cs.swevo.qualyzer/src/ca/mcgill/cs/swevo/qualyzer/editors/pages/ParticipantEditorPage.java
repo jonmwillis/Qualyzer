@@ -241,6 +241,7 @@ public class ParticipantEditorPage extends FormPage
 				GridData gd = new GridData(SWT.FILL, SWT.NULL, true, false);
 				Hyperlink link = toolkit.createHyperlink(sectionClient, transcript.getName(), SWT.WRAP);
 				link.addHyperlinkListener(createHyperlinkListener(transcript));
+				link.setLayoutData(gd);
 			}
 		}
 	}
