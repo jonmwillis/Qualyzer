@@ -19,6 +19,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -67,17 +68,23 @@ public class DeleteParticipantHandler extends AbstractHandler
 				}
 				else
 				{
-					
 					boolean check = MessageDialog.openConfirm(shell, "Delete this Participant", 
 							"Are you sure you want to delete this participant?");
 					
 					if(check)
 					{
+						for(IEditorReference editor : page.getEditorReferences())
+						{
+							if(editor.getName().equals(participant.getParticipantId()))
+							{
+								page.closeEditor(editor.getEditor(true), true);
+							}
+						}
 						project.getParticipants().remove(participant);
 						participant.setProject(null);
 						
 						HibernateUtil.quietSave(manager, project);
-						
+			
 						CommonNavigator view;
 						view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
 						view.getCommonViewer().refresh(new WrapperParticipant(project));
@@ -143,6 +150,7 @@ public class DeleteParticipantHandler extends AbstractHandler
 				}
 			}
 		}
+		
 		return conflicts;
 	}
 
