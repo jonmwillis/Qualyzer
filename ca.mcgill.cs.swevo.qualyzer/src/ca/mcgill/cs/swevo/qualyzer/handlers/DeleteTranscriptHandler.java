@@ -21,6 +21,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -69,6 +70,15 @@ public class DeleteTranscriptHandler extends AbstractHandler
 					
 				if(check == Window.OK)
 				{
+					IEditorReference[] editors = page.getEditorReferences();
+					for(IEditorReference editor : editors)
+					{
+						if(editor.getName().equals(transcript.getFileName()))
+						{
+							page.closeEditor(editor.getEditor(true), true);
+						}
+					}
+					
 					delete(transcript, dialog.getDeleteAudio(), dialog.getDeleteCodes(), 
 							dialog.getDeleteParticipants());
 										
@@ -159,6 +169,8 @@ public class DeleteTranscriptHandler extends AbstractHandler
 				participant.setProject(null);
 			}
 		}
+		
+		session.close();
 	}
 
 }
