@@ -199,6 +199,16 @@
             id="ca.mcgill.cs.swevo.qualyzer.commands.deleteParticipant"
             name="Delete Participant">
       </command>
+      <command
+            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.DeleteInvestigatorHandler"
+            id="ca.mcgill.cs.swevo.qualyzer.commands.deleteInvestigator"
+            name="Delete Investigator">
+      </command>
+      <command
+            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.DeleteTranscriptHandler"
+            id="ca.mcgill.cs.swevo.qualyzer.commands.deleteTranscript"
+            name="Delete Transcript">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -419,9 +429,41 @@
                   checkEnabled="true">
                <iterate
                      ifEmpty="false"
-                     operator="or">
+                     operator="and">
                   <instanceof
                         value="ca.mcgill.cs.swevo.qualyzer.model.Participant">
+                  </instanceof>
+               </iterate>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="ca.mcgill.cs.swevo.qualyzer.commands.deleteInvestigator"
+               label="Delete"
+               style="push"
+               tooltip="Delete this investigator">
+            <visibleWhen
+                  checkEnabled="true">
+               <iterate
+                     ifEmpty="false"
+                     operator="and">
+                  <instanceof
+                        value="ca.mcgill.cs.swevo.qualyzer.model.Investigator">
+                  </instanceof>
+               </iterate>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="ca.mcgill.cs.swevo.qualyzer.commands.deleteTranscript"
+               label="Delete"
+               style="push"
+               tooltip="Delete this transcript">
+            <visibleWhen
+                  checkEnabled="true">
+               <iterate
+                     ifEmpty="false"
+                     operator="and">
+                  <instanceof
+                        value="ca.mcgill.cs.swevo.qualyzer.model.Transcript">
                   </instanceof>
                </iterate>
             </visibleWhen>
