@@ -37,6 +37,7 @@ public class NewProjectWizard extends Wizard
 {
 
 	private NewProjectPageOne fOne;
+	private IProject fProject;
 	
 	/**
 	 * Constructor.
@@ -78,6 +79,8 @@ public class NewProjectWizard extends Wizard
 			manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(wProject.getName());
 			HibernateUtil.quietSave(manager, project);
 			root.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
+			
+			fProject = wProject;
 		}
 		catch(CoreException e)
 		{
@@ -147,6 +150,11 @@ public class NewProjectWizard extends Wizard
 		project.getInvestigators().add(investigator);
 		investigator.setProject(project);
 		return project;
+	}
+	
+	public IProject getProjectReference()
+	{
+		return fProject;
 	}
 
 }
