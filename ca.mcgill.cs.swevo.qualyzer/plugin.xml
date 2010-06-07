@@ -236,13 +236,13 @@
                   commandId="org.eclipse.ui.file.close"
                   label="&amp;Close"
                   style="push"
-                  tooltip="Close the open editor">
+                  tooltip="Close the Open Editor">
             </command>
             <command
                   commandId="org.eclipse.ui.file.closeAll"
                   label="C&amp;lose All"
                   style="push"
-                  tooltip="Close all open editors">
+                  tooltip="Close All Open Editors">
             </command>
             <separator
                   name="fileMenu/saveSeparator"
@@ -253,7 +253,7 @@
                   icon="icons/save.gif"
                   label="Save"
                   style="push"
-                  tooltip="Save the open editor">
+                  tooltip="Save the Open Editor">
             </command>
             <separator
                   name="fileMenu/lastSeparator"
@@ -263,7 +263,7 @@
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.exit"
                   label="E&amp;xit"
                   style="push"
-                  tooltip="Exit the application">
+                  tooltip="Exit the Application">
             </command>
          </menu>
       </menuContribution>
@@ -283,7 +283,7 @@
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.addParticipant"
                   label="P&amp;articipant"
                   style="push"
-                  tooltip="Create a new Participant">
+                  tooltip="Create a New Participant">
                <visibleWhen
                      checkEnabled="true">
                   <iterate
@@ -296,7 +296,7 @@
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.addInvestigator"
                   label="&amp;Investigator"
                   style="push"
-                  tooltip="Create a new Investigator">
+                  tooltip="Create a New Investigator">
                <visibleWhen
                      checkEnabled="true">
                   <iterate
@@ -309,7 +309,7 @@
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.newTranscript"
                   label="&amp;Transcript"
                   style="push"
-                  tooltip="Create a new Transcript">
+                  tooltip="Create a New Transcript">
                <visibleWhen
                      checkEnabled="true">
                   <iterate
@@ -426,7 +426,7 @@
                icon="icons/delete.gif"
                label="Delete"
                style="push"
-               tooltip="Delete this participant">
+               tooltip="Delete this Participant">
             <visibleWhen
                   checkEnabled="true">
                <iterate
@@ -443,7 +443,7 @@
                icon="icons/delete.gif"
                label="Delete"
                style="push"
-               tooltip="Delete this investigator">
+               tooltip="Delete this Investigator">
             <visibleWhen
                   checkEnabled="true">
                <iterate
@@ -460,7 +460,7 @@
                icon="icons/delete.gif"
                label="Delete"
                style="push"
-               tooltip="Delete this transcript">
+               tooltip="Delete this Transcript">
             <visibleWhen
                   checkEnabled="true">
                <iterate
@@ -480,7 +480,8 @@
             <command
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.importTranscript"
                   label="&amp;Transcript"
-                  style="push">
+                  style="push"
+                  tooltip="Import a Transcript">
                <visibleWhen
                      checkEnabled="true">
                   <iterate
@@ -492,7 +493,8 @@
             <command
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.importAudioFile"
                   label="&amp;Audio File"
-                  style="push">
+                  style="push"
+                  tooltip="Import an Audio File">
                <visibleWhen
                      checkEnabled="true">
                   <iterate
@@ -512,7 +514,7 @@
                commandId="ca.mcgill.cs.swevo.qualyzer.commands.closeProject"
                label="Close Project"
                style="push"
-               tooltip="Close the selected Project">
+               tooltip="Close the Selected Project">
             <visibleWhen
                   checkEnabled="true">
                <iterate
@@ -533,7 +535,8 @@
          <command
                commandId="ca.mcgill.cs.swevo.qualyzer.commands.openProject"
                label="Open Project"
-               style="push">
+               style="push"
+               tooltip="Open the Selected Project">
             <visibleWhen
                   checkEnabled="true">
                <iterate
@@ -559,7 +562,8 @@
          <command
                commandId="ca.mcgill.cs.swevo.qualyzer.commands.editTranscriptProperties"
                label="&amp;Properties"
-               style="push">
+               style="push"
+               tooltip="Edit this Transcript&apos;s Properties">
             <visibleWhen
                   checkEnabled="true">
                <iterate
