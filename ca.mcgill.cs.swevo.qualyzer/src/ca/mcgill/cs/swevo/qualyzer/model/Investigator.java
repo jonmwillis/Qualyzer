@@ -132,7 +132,7 @@ public class Investigator
 		}
 		else if(object.getClass().equals(getClass()))
 		{
-			return fNickName.equals(((Investigator) object).getNickName());
+			return fPersistenceId == ((Investigator) object).getPersistenceId();
 		}
 		return false;
 	}
