@@ -183,7 +183,7 @@ public class Project
 		}
 		else if(object.getClass().equals(getClass()))
 		{
-			return fName.equals(((Project) object).getName());
+			return fPersistenceId == ((Project) object).fPersistenceId;
 		}
 		return false;
 	}

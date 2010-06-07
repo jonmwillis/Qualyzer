@@ -250,6 +250,7 @@
             </separator>
             <command
                   commandId="org.eclipse.ui.file.save"
+                  icon="icons/save.gif"
                   label="Save"
                   style="push"
                   tooltip="Save the open editor">
@@ -422,6 +423,7 @@
          </command>
          <command
                commandId="ca.mcgill.cs.swevo.qualyzer.commands.deleteParticipant"
+               icon="icons/delete.gif"
                label="Delete"
                style="push"
                tooltip="Delete this participant">
@@ -438,6 +440,7 @@
          </command>
          <command
                commandId="ca.mcgill.cs.swevo.qualyzer.commands.deleteInvestigator"
+               icon="icons/delete.gif"
                label="Delete"
                style="push"
                tooltip="Delete this investigator">
@@ -454,6 +457,7 @@
          </command>
          <command
                commandId="ca.mcgill.cs.swevo.qualyzer.commands.deleteTranscript"
+               icon="icons/delete.gif"
                label="Delete"
                style="push"
                tooltip="Delete this transcript">
