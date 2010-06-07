@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Jonathan Faubert
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.providers;
 
@@ -29,14 +29,12 @@ import ca.mcgill.cs.swevo.qualyzer.model.Project;
 
 /**
  * The content provider for our navigator content.
- * @author Jonathan Faubert (jonfaub@gmail.com)
- *
  */
 public class NavigatorContentProvider extends WorkbenchContentProvider
 {
 
 	private static final Object[] NO_CHILDREN = new Object[0];
-	private Viewer viewer;
+	private Viewer fViewer;
 
 	/**
 	 *  
@@ -46,11 +44,6 @@ public class NavigatorContentProvider extends WorkbenchContentProvider
 		super();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.model.BaseWorkbenchContentProvider#getElements(java.lang.Object)
-	 */
 	@Override
 	public Object[] getElements(Object element)
 	{
@@ -62,11 +55,6 @@ public class NavigatorContentProvider extends WorkbenchContentProvider
 		return NO_CHILDREN;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.model.BaseWorkbenchContentProvider#getChildren(java.lang.Object)
-	 */
 	@Override
 	public Object[] getChildren(Object element)
 	{
@@ -114,11 +102,6 @@ public class NavigatorContentProvider extends WorkbenchContentProvider
 		return NO_CHILDREN;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.model.BaseWorkbenchContentProvider#hasChildren(java.lang.Object)
-	 */
 	@Override
 	public boolean hasChildren(Object element)
 	{
@@ -167,17 +150,11 @@ public class NavigatorContentProvider extends WorkbenchContentProvider
 		return hasChildren;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.model.WorkbenchContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
-	 * java.lang.Object, java.lang.Object)
-	 */
 	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput)
 	{
 		super.inputChanged(viewer, oldInput, newInput);
-		this.viewer = viewer;
+		this.fViewer = viewer;
 	}
 
 	/**
@@ -188,13 +165,13 @@ public class NavigatorContentProvider extends WorkbenchContentProvider
 	protected void processDelta(IResourceDelta delta)
 	{
 
-		Control ctrl = viewer.getControl();
+		Control ctrl = fViewer.getControl();
 		if (ctrl == null || ctrl.isDisposed())
 		{
 			return;
 		}
 
-		final Collection runnables = new ArrayList();
+		final Collection<Runnable> runnables = new ArrayList<Runnable>();
 		processDelta(delta, runnables);
 
 		if (runnables.isEmpty())
@@ -203,7 +180,7 @@ public class NavigatorContentProvider extends WorkbenchContentProvider
 		}
 
 		// Are we in the UIThread? If so spin it until we are done
-		if (ctrl.getDisplay().getThread() == Thread.currentThread())
+		if(ctrl.getDisplay().getThread() == Thread.currentThread())
 		{
 			runUpdates(runnables);
 		}
@@ -211,16 +188,11 @@ public class NavigatorContentProvider extends WorkbenchContentProvider
 		{
 			ctrl.getDisplay().asyncExec(new Runnable()
 			{
-				/*
-				 * (non-Javadoc)
-				 * 
-				 * @see java.lang.Runnable#run()
-				 */
 				public void run()
 				{
 					// Abort if this happens after disposes
-					Control ctrl = viewer.getControl();
-					if (ctrl == null || ctrl.isDisposed())
+					Control ctrl = fViewer.getControl();
+					if(ctrl == null || ctrl.isDisposed())
 					{
 						return;
 					}
@@ -235,11 +207,11 @@ public class NavigatorContentProvider extends WorkbenchContentProvider
 	/**
 	 * Process a resource delta. Add any runnables
 	 */
-	private void processDelta(IResourceDelta delta, Collection runnables)
+	private void processDelta(IResourceDelta delta, Collection<Runnable> runnables)
 	{
 		// he widget may have been destroyed
 		// by the time this is run. Check for this and do nothing if so.
-		Control ctrl = viewer.getControl();
+		Control ctrl = fViewer.getControl();
 		if (ctrl == null || ctrl.isDisposed())
 		{
 			return;
@@ -366,9 +338,9 @@ public class NavigatorContentProvider extends WorkbenchContentProvider
 		{
 			public void run()
 			{
-				if (viewer instanceof AbstractTreeViewer)
+				if (fViewer instanceof AbstractTreeViewer)
 				{
-					AbstractTreeViewer treeViewer = (AbstractTreeViewer) viewer;
+					AbstractTreeViewer treeViewer = (AbstractTreeViewer) fViewer;
 					// Disable redraw until the operation is finished so we don't
 					// get a flash of both the new and old item (in the case of
 					// rename)
@@ -399,43 +371,29 @@ public class NavigatorContentProvider extends WorkbenchContentProvider
 				}
 				else
 				{
-					((StructuredViewer) viewer).refresh(resource);
+					((StructuredViewer) fViewer).refresh(resource);
 				}
 			}
 		};
 		runnables.add(addAndRemove);
 	}
 
-	/**
-	 * Return a runnable for refreshing a resource.
-	 * 
-	 * @param resource
-	 * @return Runnable
-	 */
 	private Runnable getRefreshRunnable(final IResource resource)
 	{
 		return new Runnable()
 		{
 			public void run()
 			{
-				((StructuredViewer) viewer).refresh(resource);
+				((StructuredViewer) fViewer).refresh(resource);
 			}
 		};
 	}
 
-	/**
-	 * Run all of the runnables that are the widget updates.
-	 * 
-	 * @param runnables
-	 */
-	private void runUpdates(Collection runnables)
+	private void runUpdates(Collection<Runnable> runnables)
 	{
-		Iterator runnableIterator = runnables.iterator();
-		while (runnableIterator.hasNext())
+		for(Runnable runnable : runnables)
 		{
-			((Runnable) runnableIterator.next()).run();
+			runnable.run();
 		}
-
 	}
-
 }
