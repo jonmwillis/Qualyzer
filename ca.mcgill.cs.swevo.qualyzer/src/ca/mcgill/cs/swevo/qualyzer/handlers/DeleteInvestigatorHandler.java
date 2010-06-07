@@ -19,6 +19,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -66,15 +67,21 @@ public class DeleteInvestigatorHandler extends AbstractHandler
 				}
 				else
 				{
-					
 					boolean check = MessageDialog.openConfirm(shell, "Delete this Investigator", 
 							"Are you sure you want to delete this investigator?");
 					
 					if(check)
 					{
+						for(IEditorReference editor : page.getEditorReferences())
+						{
+							if(editor.getName().equals(investigator.getNickName()))
+							{
+								page.closeEditor(editor.getEditor(true), true);
+							}
+						}
+						
 						project.getInvestigators().remove(investigator);
 						investigator.setProject(null);
-						
 						HibernateUtil.quietSave(manager, project);
 						
 						CommonNavigator view;
@@ -124,6 +131,7 @@ public class DeleteInvestigatorHandler extends AbstractHandler
 		
 		//TODO Check annotations?
 		
+		openSession.close();
 		return conflicts;
 	}
 
