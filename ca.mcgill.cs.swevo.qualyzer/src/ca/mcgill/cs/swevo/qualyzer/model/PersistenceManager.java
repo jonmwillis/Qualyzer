@@ -226,7 +226,7 @@ public final class PersistenceManager
 		}
 		catch(HibernateException e)
 		{
-			System.out.println("Exception while deleting participant");
+			System.out.println("Exception while deleting participant"); //$NON-NLS-1$
 			e.printStackTrace();
 			HibernateUtil.quietRollback(t);
 		}
@@ -273,7 +273,7 @@ public final class PersistenceManager
 		}
 		catch(HibernateException e)
 		{
-			System.out.println("Exception while deleting investigator");
+			System.out.println("Exception while deleting investigator"); //$NON-NLS-1$
 			e.printStackTrace();
 			HibernateUtil.quietRollback(t);
 		}
@@ -320,7 +320,7 @@ public final class PersistenceManager
 		}
 		catch(HibernateException e)
 		{
-			System.out.println("Exception while deleting transcript");
+			System.out.println("Exception while deleting transcript"); //$NON-NLS-1$
 			e.printStackTrace();
 			HibernateUtil.quietRollback(t);
 		}
