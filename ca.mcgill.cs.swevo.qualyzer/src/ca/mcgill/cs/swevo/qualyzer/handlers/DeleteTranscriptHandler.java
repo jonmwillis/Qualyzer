@@ -11,6 +11,7 @@
 package ca.mcgill.cs.swevo.qualyzer.handlers;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -21,7 +22,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -32,12 +32,9 @@ import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.dialogs.TranscriptDeleteDialog;
 import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
+import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
-import ca.mcgill.cs.swevo.qualyzer.providers.WrapperCode;
-import ca.mcgill.cs.swevo.qualyzer.providers.WrapperParticipant;
-import ca.mcgill.cs.swevo.qualyzer.providers.WrapperTranscript;
-import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
 
 /**
  * Hander for the delete transcript command.
@@ -59,7 +56,6 @@ public class DeleteTranscriptHandler extends AbstractHandler
 			if(element instanceof Transcript)
 			{
 				Transcript transcript = (Transcript) element;
-				Project project = transcript.getProject();
 				
 				Shell shell = HandlerUtil.getActiveShell(event).getShell();
 				
@@ -69,24 +65,13 @@ public class DeleteTranscriptHandler extends AbstractHandler
 				int check = dialog.open();
 					
 				if(check == Window.OK)
-				{
-					IEditorReference[] editors = page.getEditorReferences();
-					for(IEditorReference editor : editors)
-					{
-						if(editor.getName().equals(transcript.getFileName()))
-						{
-							page.closeEditor(editor.getEditor(true), true);
-						}
-					}
-					
+				{	
 					delete(transcript, dialog.getDeleteAudio(), dialog.getDeleteCodes(), 
 							dialog.getDeleteParticipants());
 										
 					CommonNavigator view;
 					view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
-					view.getCommonViewer().refresh(new WrapperTranscript(project));
-					view.getCommonViewer().refresh(new WrapperParticipant(project));
-					view.getCommonViewer().refresh(new WrapperCode(project));
+					view.getCommonViewer().refresh();
 				}
 			}
 		}
@@ -104,10 +89,11 @@ public class DeleteTranscriptHandler extends AbstractHandler
 		Project project = transcript.getProject();
 		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(project.getName());
 		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(project.getName());
+		ArrayList<Participant> participants = null;
 		
 		if(deleteParticipants)
 		{
-			deleteParticipants(transcript, project, manager);
+			participants = deleteParticipants(transcript, project, manager);
 		}
 		
 		if(deleteCodes)
@@ -124,14 +110,15 @@ public class DeleteTranscriptHandler extends AbstractHandler
 		File file = new File(wProject.getLocation() + TRANSCRIPT + transcript.getFileName());
 		file.delete();
 		
-		project.getTranscripts().remove(transcript);
-		transcript.setProject(null);
-		transcript.setFragments(null);
-		transcript.setParticipants(null);
-		transcript.setAudioFile(null);
+		PersistenceManager.getInstance().deleteTranscript(transcript, manager);
 		
-		HibernateUtil.quietSave(manager, transcript);
-		HibernateUtil.quietSave(manager, project);
+		if(participants != null)
+		{
+			for(Participant p : participants)
+			{
+				PersistenceManager.getInstance().deleteParticipant(p, manager);
+			}
+		}
 	}
 
 	/**
@@ -139,10 +126,12 @@ public class DeleteTranscriptHandler extends AbstractHandler
 	 * @param project
 	 * @param manager 
 	 */
-	private void deleteParticipants(Transcript transcript, Project project, HibernateDBManager manager)
+	private ArrayList<Participant> deleteParticipants(Transcript transcript, Project project, 
+			HibernateDBManager manager)
 	{
 		Session session = manager.openSession();
-		
+		ArrayList<Participant> toDelete = new ArrayList<Participant>();
+				
 		Object lTranscript = session.get(Transcript.class, transcript.getPersistenceId());
 		for(Participant participant : ((Transcript) lTranscript).getParticipants())
 		{
@@ -165,12 +154,13 @@ public class DeleteTranscriptHandler extends AbstractHandler
 			}
 			if(!found)
 			{
-				project.getParticipants().remove(participant);
-				participant.setProject(null);
+				toDelete.add(participant);
 			}
 		}
 		
 		session.close();
+		
+		return toDelete;
 	}
 
 }
