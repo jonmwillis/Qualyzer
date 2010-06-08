@@ -66,6 +66,7 @@ public class RenameHandler extends AbstractHandler
 			RenameDialog dialog = new RenameDialog(HandlerUtil.getActiveShell(event).getShell(), project);
 
 			dialog.create();
+			dialog.setCurrentName(((Transcript) element).getName());
 			
 			if(dialog.open() == Window.OK)
 			{
