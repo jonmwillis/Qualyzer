@@ -237,6 +237,53 @@ public final class PersistenceManager
 		}
 	}
 	
+	/**
+	 * Try to delete an investigator.
+	 * @param participant
+	 * @param manager
+	 */
+	public void deleteInvestigator(Investigator investigator, HibernateDBManager manager)
+	{
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		IEditorReference[] editors = page.getEditorReferences();
+		for(IEditorReference editor : editors)
+		{
+			if(editor.getName().equals(investigator.getNickName()))
+			{
+				page.closeEditor(editor.getEditor(true), true);
+			}
+		}
+		
+		Object project = null;
+		Session session = null;
+		Transaction t = null;
+		try
+		{
+			session = manager.openSession();
+			t = session.beginTransaction();
+			
+			project = session.get(Project.class, investigator.getProject().getPersistenceId());
+			Object inv = session.get(Investigator.class, investigator.getPersistenceId());
+			
+			((Project) project).getInvestigators().remove(inv);
+			
+			session.delete(inv);
+			session.flush();
+			t.commit();
+		}
+		catch(HibernateException e)
+		{
+			System.out.println("Exception while deleting investigator");
+			e.printStackTrace();
+			HibernateUtil.quietRollback(t);
+		}
+		finally
+		{
+			HibernateUtil.quietClose(session);
+			HibernateUtil.quietSave(manager, project);
+		}
+	}
+	
 	
 
 }
