@@ -233,6 +233,7 @@ public class ParticipantEditorPage extends FormPage
 		String projectName = fParticipant.getProject().getName();
 		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(projectName);
 		Session session = manager.openSession();
+		
 		for(Transcript transcript : fParticipant.getProject().getTranscripts())		
 		{
 			Object object = session.get(Transcript.class, transcript.getPersistenceId());
@@ -244,6 +245,8 @@ public class ParticipantEditorPage extends FormPage
 				link.setLayoutData(gd);
 			}
 		}
+		
+		session.close();
 	}
 
 	/**

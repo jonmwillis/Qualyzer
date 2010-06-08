@@ -57,8 +57,7 @@ public class DeleteParticipantHandler extends AbstractHandler
 				HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers()
 					.get(project.getName());
 				
-				Session session = manager.openSession();
-				ArrayList<Object> conflicts = checkForConflicts(participant, project, session);
+				ArrayList<Object> conflicts = checkForConflicts(participant, project, manager.openSession());
 				
 				Shell shell = HandlerUtil.getActiveShell(event).getShell();
 				if(conflicts.size() > 0)
@@ -141,6 +140,7 @@ public class DeleteParticipantHandler extends AbstractHandler
 			}
 		}
 		
+		session.close();
 		return conflicts;
 	}
 
