@@ -233,6 +233,8 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 			TableItem item = new TableItem(fTable, SWT.NULL);
 			item.setText(p.getParticipantId());
 		}
+		
+		s.close();
 	}
 
 	/**
