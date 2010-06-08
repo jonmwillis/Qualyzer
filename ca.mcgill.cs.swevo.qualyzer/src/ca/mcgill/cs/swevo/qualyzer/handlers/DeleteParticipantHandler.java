@@ -19,7 +19,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -30,10 +29,9 @@ import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Memo;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
+import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
-import ca.mcgill.cs.swevo.qualyzer.providers.WrapperParticipant;
-import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
 
 /**
  * The handler for the delete participant command.
@@ -58,7 +56,9 @@ public class DeleteParticipantHandler extends AbstractHandler
 				
 				HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers()
 					.get(project.getName());
-				ArrayList<Object> conflicts = checkForConflicts(participant, project, manager.openSession());
+				
+				Session session = manager.openSession();
+				ArrayList<Object> conflicts = checkForConflicts(participant, project, session);
 				
 				Shell shell = HandlerUtil.getActiveShell(event).getShell();
 				if(conflicts.size() > 0)
@@ -74,20 +74,10 @@ public class DeleteParticipantHandler extends AbstractHandler
 					
 					if(check)
 					{
-						for(IEditorReference editor : page.getEditorReferences())
-						{
-							if(editor.getName().equals(participant.getParticipantId()))
-							{
-								page.closeEditor(editor.getEditor(true), true);
-							}
-						}
-						project.getParticipants().remove(participant);
-						participant.setProject(null);
-						HibernateUtil.quietSave(manager, project);
-			
+						PersistenceManager.getInstance().deleteParticipant(participant, manager);
 						CommonNavigator view;
 						view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
-						view.getCommonViewer().refresh(new WrapperParticipant(project));
+						view.getCommonViewer().refresh();
 					}
 				}
 			}
