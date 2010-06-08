@@ -18,6 +18,7 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
@@ -71,7 +72,8 @@ public class NewProjectWizard extends Wizard
 			if(!makeSubFolders(wProject))
 			{
 				cleanUpFolders(wProject);
-				//TODO display error message and quit.
+				MessageDialog.openError(getShell(), "Project Creation Failure", 
+						"Failed to create the folders required by the project.");
 			}
 			
 			PersistenceManager.getInstance().initDB(wProject);

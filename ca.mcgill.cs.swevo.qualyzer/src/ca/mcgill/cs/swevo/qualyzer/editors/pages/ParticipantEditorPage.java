@@ -201,7 +201,6 @@ public class ParticipantEditorPage extends FormPage
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 1;
 		sectionClient.setLayout(gridLayout);
-		//TODO make clickable
 		buildInterviews(toolkit, sectionClient);
 		sectionClient.setLayoutData(td);
 		section.setClient(sectionClient);

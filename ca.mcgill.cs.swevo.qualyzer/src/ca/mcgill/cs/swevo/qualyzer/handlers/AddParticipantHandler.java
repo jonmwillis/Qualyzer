@@ -62,7 +62,6 @@ public class AddParticipantHandler extends AbstractHandler
 				}
 				
 				ResourcesUtil.openEditor(page, wizard.getParticipant());
-				//TODO open the editor by calling the command
 			}
 		}
 
