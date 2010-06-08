@@ -26,11 +26,15 @@ import org.eclipse.ui.navigator.CommonNavigator;
 import org.hibernate.Session;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
+import ca.mcgill.cs.swevo.qualyzer.model.Annotation;
+import ca.mcgill.cs.swevo.qualyzer.model.CodeEntry;
+import ca.mcgill.cs.swevo.qualyzer.model.Fragment;
 import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
 import ca.mcgill.cs.swevo.qualyzer.model.Memo;
 import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
+import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 
 /**
  * Handler for the Delete Investigator Command.
@@ -38,6 +42,11 @@ import ca.mcgill.cs.swevo.qualyzer.model.Project;
  */
 public class DeleteInvestigatorHandler extends AbstractHandler
 {
+
+	/**
+	 * 
+	 */
+	private static final String NEWLINE = "\n"; //$NON-NLS-1$
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
@@ -92,7 +101,7 @@ public class DeleteInvestigatorHandler extends AbstractHandler
 		String output = Messages._handlers_DeleteInvestigatorHandler_conflicts;
 		for(String str : conflicts)
 		{
-			output += "\n"+str; //$NON-NLS-1$
+			output += NEWLINE+str; 
 		}
 		
 		return output;
@@ -101,10 +110,10 @@ public class DeleteInvestigatorHandler extends AbstractHandler
 	/**
 	 * @param investigator
 	 * @param project
-	 * @param openSession
+	 * @param session
 	 * @return
 	 */
-	private ArrayList<String> checkForConflicts(Investigator investigator, Project project, Session openSession)
+	private ArrayList<String> checkForConflicts(Investigator investigator, Project project, Session session)
 	{
 		ArrayList<String> conflicts = new ArrayList<String>();
 		
@@ -114,14 +123,147 @@ public class DeleteInvestigatorHandler extends AbstractHandler
 			{
 				conflicts.add(Messages._handlers_DeleteInvestigatorHandler_memo + memo.getName());
 			}
+			else
+			{
+				Object lMemo = session.get(Memo.class, memo.getPersistenceId());
+				int numAnnotations = 0;
+				int numCodeEntries = 0;
+				for(Fragment fragment : ((Memo) lMemo).getFragments())
+				{
+					numAnnotations += countAnnotations(investigator, fragment);	
+					numCodeEntries += countCodeEntries(investigator, fragment);
+				}
+				String str = buildMemoString(numAnnotations, numCodeEntries, memo);
+				if(!str.isEmpty())
+				{
+					conflicts.add(str);
+				}
+			}
 		}
 		
-		//TODO Check codes?
+		for(Transcript transcript : project.getTranscripts())
+		{
+			Object lTranscript = session.get(Transcript.class, transcript.getPersistenceId());
+			int numAnnotations = 0;
+			int numCodeEntries = 0;
+			for(Fragment fragment : ((Transcript) lTranscript).getFragments())
+			{
+				numAnnotations += countAnnotations(investigator, fragment);	
+				numCodeEntries += countCodeEntries(investigator, fragment);
+			}
+			String str = buildTranscriptString(numAnnotations, numCodeEntries, transcript);
+			if(!str.isEmpty())
+			{
+				conflicts.add(str);
+			}
+		}
 		
-		//TODO Check annotations?
-		
-		openSession.close();
+		session.close();
 		return conflicts;
+	}
+
+	/**
+	 * @param numAnnotations
+	 * @param numCodeEntries
+	 * @param memo
+	 * @return
+	 */
+	private String buildMemoString(int numAnnotations, int numCodeEntries, Memo memo)
+	{
+		String str = "";
+		if(numAnnotations == 1)
+		{
+			str += "1 Annotation in Memo:" + memo.getName();
+		}
+		else if(numAnnotations > 1)
+		{
+			str += numAnnotations+" Annotations in Memo:" + memo.getName();
+		}
+		
+		if(numAnnotations > 0 && numCodeEntries > 0)
+		{
+			str += NEWLINE;
+		}
+		
+		if(numCodeEntries == 1)
+		{	
+			str += "1 Code Entry in Memo: " + memo.getName();
+		}
+		else if(numCodeEntries > 1)
+		{
+			str += numCodeEntries + " Code Entries in Memo: " + memo.getName();
+		}
+		
+		return str;
+	}
+	
+	/**
+	 * @param numAnnotations
+	 * @param numCodeEntries
+	 * @param memo
+	 * @return
+	 */
+	private String buildTranscriptString(int numAnnotations, int numCodeEntries, Transcript transcript)
+	{
+		String str = "";
+		if(numAnnotations == 1)
+		{
+			str += "1 Annotation in Transcript:" + transcript.getName();
+		}
+		else if(numAnnotations > 1)
+		{
+			str += numAnnotations+" Annotations in Transcript:" + transcript.getName();
+		}
+		
+		if(numAnnotations > 0 && numCodeEntries > 0)
+		{
+			str += NEWLINE;
+		}
+		
+		if(numCodeEntries == 1)
+		{	
+			str += "1 Code Entry in Transcript: " + transcript.getName();
+		}
+		else if(numCodeEntries > 1)
+		{
+			str += numCodeEntries + " Code Entries in Transcript: " + transcript.getName();
+		}
+		
+		return str;
+	}
+
+	/**
+	 * @param investigator
+	 * @param fragment
+	 */
+	private int countCodeEntries(Investigator investigator, Fragment fragment)
+	{
+		int count = 0;
+		for(CodeEntry codeEntry : fragment.getCodeEntries())
+		{
+			if(codeEntry.getInvestigator().equals(investigator))
+			{
+				count++;
+			}
+		}
+		return count;
+	}
+
+	/**
+	 * @param investigator
+	 * @param fragment
+	 */
+	private int countAnnotations(Investigator investigator, Fragment fragment)
+	{
+		int count = 0;
+		for(Annotation annotation : fragment.getAnnotations())
+		{
+			if(annotation.getInvestigator().equals(investigator))
+			{
+				count++;
+			}
+		}
+		return count;
 	}
 
 }
