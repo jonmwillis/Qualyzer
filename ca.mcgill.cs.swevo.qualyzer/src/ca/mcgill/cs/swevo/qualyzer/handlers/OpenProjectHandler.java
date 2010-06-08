@@ -48,7 +48,6 @@ public class OpenProjectHandler extends AbstractHandler
 				}
 				catch (CoreException e)
 				{
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				
