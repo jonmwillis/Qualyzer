@@ -284,6 +284,51 @@ public final class PersistenceManager
 		}
 	}
 	
-	
+	/**
+	 * Try to delete a transcript.
+	 * @param participant
+	 * @param manager
+	 */
+	public void deleteTranscript(Transcript transcript, HibernateDBManager manager)
+	{
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		IEditorReference[] editors = page.getEditorReferences();
+		for(IEditorReference editor : editors)
+		{
+			if(editor.getName().equals(transcript.getFileName()))
+			{
+				page.closeEditor(editor.getEditor(true), true);
+			}
+		}
+		
+		Object project = null;
+		Session session = null;
+		Transaction t = null;
+		try
+		{
+			session = manager.openSession();
+			t = session.beginTransaction();
+			
+			project = session.get(Project.class, transcript.getProject().getPersistenceId());
+			Object trans = session.get(Transcript.class, transcript.getPersistenceId());
+			
+			((Project) project).getTranscripts().remove(trans);
+			
+			session.delete(trans);
+			session.flush();
+			t.commit();
+		}
+		catch(HibernateException e)
+		{
+			System.out.println("Exception while deleting transcript");
+			e.printStackTrace();
+			HibernateUtil.quietRollback(t);
+		}
+		finally
+		{
+			HibernateUtil.quietClose(session);
+			HibernateUtil.quietSave(manager, project);
+		}
+	}
 
 }
