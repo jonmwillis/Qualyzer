@@ -89,7 +89,7 @@ public class AddInvestigatorPage extends WizardPage
 		
 		// Required to avoid an error in the system
 		setControl(fContainer);
-		setPageComplete(true);
+		setPageComplete(!fNickname.getText().isEmpty());
 	}
 
 	/**
