@@ -15,9 +15,14 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
 import org.hibernate.Hibernate;
+import org.hibernate.HibernateException;
 import org.hibernate.LockOptions;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
@@ -184,5 +189,54 @@ public final class PersistenceManager
 			HibernateUtil.quietClose(session);
 		}
 	}
+	
+	/**
+	 * Try to delete a participant.
+	 * @param participant
+	 * @param manager
+	 */
+	public void deleteParticipant(Participant participant, HibernateDBManager manager)
+	{
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		IEditorReference[] editors = page.getEditorReferences();
+		for(IEditorReference editor : editors)
+		{
+			if(editor.getName().equals(participant.getParticipantId()))
+			{
+				page.closeEditor(editor.getEditor(true), true);
+			}
+		}
+		
+		Object project = null;
+		Session session = null;
+		Transaction t = null;
+		try
+		{
+			session = manager.openSession();
+			t = session.beginTransaction();
+			
+			project = session.get(Project.class, participant.getProject().getPersistenceId());
+			Object part = session.get(Participant.class, participant.getPersistenceId());
+			
+			((Project) project).getParticipants().remove(part);
+			
+			session.delete(part);
+			session.flush();
+			t.commit();
+		}
+		catch(HibernateException e)
+		{
+			System.out.println("Exception while deleting participant");
+			e.printStackTrace();
+			HibernateUtil.quietRollback(t);
+		}
+		finally
+		{
+			HibernateUtil.quietClose(session);
+			HibernateUtil.quietSave(manager, project);
+		}
+	}
+	
+	
 
 }
