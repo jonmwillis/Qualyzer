@@ -43,6 +43,7 @@ public class RenameDialog extends TitleAreaDialog
 	private String fName;
 	private boolean fChange;
 	private Project fProject;
+	private String fOldName;
 	
 	/**
 	 * Constructor.
@@ -156,7 +157,7 @@ public class RenameDialog extends TitleAreaDialog
 	{
 		for(Transcript transcript : fProject.getTranscripts())
 		{
-			if(transcript.getName().equals(fNewName.getText()))
+			if(!fOldName.equals(fNewName.getText()) && transcript.getName().equals(fNewName.getText()))
 			{
 				return true;
 			}
@@ -180,6 +181,14 @@ public class RenameDialog extends TitleAreaDialog
 	public boolean getChangeAudio()
 	{
 		return fChange;
+	}
+
+	/**
+	 * @param name
+	 */
+	public void setCurrentName(String name)
+	{
+		fOldName = name;
 	}
 	
 }
