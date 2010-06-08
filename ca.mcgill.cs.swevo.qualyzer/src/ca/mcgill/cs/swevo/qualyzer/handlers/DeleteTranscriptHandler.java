@@ -112,6 +112,8 @@ public class DeleteTranscriptHandler extends AbstractHandler
 		
 		PersistenceManager.getInstance().deleteTranscript(transcript, manager);
 		
+		//TODO delete annotations?
+		
 		if(participants != null)
 		{
 			for(Participant p : participants)
