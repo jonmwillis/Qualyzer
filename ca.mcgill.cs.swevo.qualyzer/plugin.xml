@@ -209,6 +209,11 @@
             id="ca.mcgill.cs.swevo.qualyzer.commands.deleteTranscript"
             name="%command.name.deleteTranscript">
       </command>
+      <command
+            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.AboutQualyzerHandler"
+            id="ca.mcgill.cs.swevo.qualyzer.commands.aboutQualyzer"
+            name="About Qualyzer">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -264,6 +269,16 @@
                   label="%command.label.exit"
                   style="push"
                   tooltip="%command.tooltip.exitApp">
+            </command>
+         </menu>
+         <menu
+               id="helpMenu"
+               label="&amp;Help"
+               tooltip="Help">
+            <command
+                  commandId="ca.mcgill.cs.swevo.qualyzer.commands.aboutQualyzer"
+                  label="&amp;About Qualyzer"
+                  style="push">
             </command>
          </menu>
       </menuContribution>
