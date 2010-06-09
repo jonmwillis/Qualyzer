@@ -26,6 +26,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.hibernate.annotations.CollectionId;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
@@ -36,6 +38,9 @@ import org.hibernate.annotations.Type;
 @GenericGenerator(name = "uuid-gen", strategy = "uuid")
 public class Transcript implements Comparable<Transcript>, IAnnotatedDocument
 {
+	private static final int NUM1 = 3;
+	private static final int NUM2 = 67;
+	
 	private AudioFile fAudioFile;
 	private List<Participant> fParticipants = new ArrayList<Participant>();
 	private List<Fragment> fFragments = new ArrayList<Fragment>();
@@ -187,8 +192,8 @@ public class Transcript implements Comparable<Transcript>, IAnnotatedDocument
 	@Override
 	public int hashCode()
 	{
-		//TODO implement
-		return super.hashCode();
+		return new HashCodeBuilder(NUM1, NUM2).append(fName)
+			.append(fFileName).append(fProject).toHashCode();
 	}
 	
 	@Override
@@ -203,7 +208,11 @@ public class Transcript implements Comparable<Transcript>, IAnnotatedDocument
 			return false;
 		}
 		
-		return fPersistenceId == ((Transcript) obj).fPersistenceId;
+		Transcript transcript = (Transcript) obj;
+		
+		return new EqualsBuilder().append(fName, transcript.fName)
+			.append(fFileName, transcript.fFileName)
+			.append(fProject, transcript.fProject).isEquals();
 	}
 	
 	

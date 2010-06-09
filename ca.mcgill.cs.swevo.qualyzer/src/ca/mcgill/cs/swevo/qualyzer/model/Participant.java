@@ -17,6 +17,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.hibernate.annotations.Type;
 
 /**
@@ -141,8 +143,8 @@ public class Participant implements Comparable<Participant>
 	@Override
 	public int hashCode()
 	{
-		//TODO
-		return super.hashCode();
+		return new HashCodeBuilder().append(fParticipantId)
+			.append(fProject).toHashCode();
 	}
 	
 	@Override
@@ -158,7 +160,9 @@ public class Participant implements Comparable<Participant>
 		}
 		else if(object.getClass().equals(getClass()))
 		{
-			return fParticipantId.equals(((Participant) object).getParticipantId());
+			Participant part = (Participant) object;
+			return new EqualsBuilder().append(fParticipantId, part.fParticipantId)
+				.append(fProject, part.fProject).isEquals();
 		}
 		return false;
 	}

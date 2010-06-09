@@ -13,6 +13,9 @@
  */
 package ca.mcgill.cs.swevo.qualyzer.providers;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 
 /**
@@ -61,7 +64,7 @@ public abstract class ProjectWrapper
 	@Override
 	public int hashCode()
 	{
-		return fProject.hashCode();
+		return new HashCodeBuilder().append(fProject).toHashCode();
 	}
 	
 	@Override
@@ -73,7 +76,8 @@ public abstract class ProjectWrapper
 		}
 		if(obj instanceof ProjectWrapper)
 		{
-			return fProject.equals(((ProjectWrapper) obj).getProject());
+			ProjectWrapper wrapper = (ProjectWrapper) obj;
+			return new EqualsBuilder().append(fProject, wrapper.fProject).isEquals();
 		}
 		return false;
 	}
