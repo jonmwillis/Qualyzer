@@ -17,6 +17,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 /**
  */
 @Entity
@@ -115,8 +118,8 @@ public class Investigator
 	@Override
 	public int hashCode()
 	{
-		//TODO
-		return super.hashCode();
+		return new HashCodeBuilder().append(fNickName)
+			.append(fProject).toHashCode();
 	}
 	
 	@Override
@@ -132,7 +135,10 @@ public class Investigator
 		}
 		else if(object.getClass().equals(getClass()))
 		{
-			return fPersistenceId == ((Investigator) object).getPersistenceId();
+			Investigator inves = (Investigator) object;
+			
+			return new EqualsBuilder().append(fNickName, inves.fNickName)
+				.append(fProject, inves.fProject).isEquals();
 		}
 		return false;
 	}

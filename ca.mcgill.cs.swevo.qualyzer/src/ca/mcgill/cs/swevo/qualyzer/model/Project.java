@@ -23,6 +23,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.hibernate.annotations.GenericGenerator;
 
 /**
@@ -183,7 +185,8 @@ public class Project
 		}
 		else if(object.getClass().equals(getClass()))
 		{
-			return fPersistenceId == ((Project) object).fPersistenceId;
+			Project proj = (Project) object;
+			return new EqualsBuilder().append(fName, proj.fName).isEquals();
 		}
 		return false;
 	}
@@ -191,8 +194,7 @@ public class Project
 	@Override
 	public int hashCode()
 	{
-		//TODO implement
-		return super.hashCode();
+		return new HashCodeBuilder().append(fName).toHashCode();
 	}
 
 }
