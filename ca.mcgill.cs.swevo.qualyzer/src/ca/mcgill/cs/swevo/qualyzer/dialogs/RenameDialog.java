@@ -61,8 +61,8 @@ public class RenameDialog extends TitleAreaDialog
 	public void create()
 	{
 		super.create();
-		setTitle("Renaming Transcript");
-		setMessage("Rename the transcript");
+		setTitle(Messages.getString("dialogs.RenameDialog.renamingTranscript")); //$NON-NLS-1$
+		setMessage(Messages.getString("dialogs.RenameDialog.renameTranscript")); //$NON-NLS-1$
 	}
 	
 	@Override
@@ -78,7 +78,7 @@ public class RenameDialog extends TitleAreaDialog
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 		
 		Label label = new Label(composite, SWT.NULL);
-		label.setText("New Name:");
+		label.setText(Messages.getString("dialogs.RenameDialog.newName")); //$NON-NLS-1$
 		
 		fNewName = new Text(composite, SWT.BORDER);
 		fNewName.setText(""); //$NON-NLS-1$
@@ -96,7 +96,7 @@ public class RenameDialog extends TitleAreaDialog
 		fChangeAudio.setSelection(true);
 		
 		label = new Label(composite, SWT.NULL);
-		label.setText("Rename the audio file as well");
+		label.setText(Messages.getString("dialogs.RenameDialog.audioToo")); //$NON-NLS-1$
 		label.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 		
 		return parent;
@@ -136,7 +136,7 @@ public class RenameDialog extends TitleAreaDialog
 			{
 				if(transcriptExists())
 				{
-					setErrorMessage("This name is already in use");
+					setErrorMessage(Messages.getString("dialogs.RenameDialog.nameInUse")); //$NON-NLS-1$
 					getButton(IDialogConstants.OK_ID).setEnabled(false);
 				}
 				else

@@ -46,7 +46,8 @@ public class InvestigatorEditorPage extends FormPage
 	/**
 	 * 
 	 */
-	private static final String INVESTIGATOR = "Investigator";
+	private static final String INVESTIGATOR = Messages.getString(
+			"editors.pages.InvestigatorEditorPage.investigator"); //$NON-NLS-1$
 	private Text fNickname;
 	private Text fFullname;
 	private Text fInstitution;
@@ -77,14 +78,17 @@ public class InvestigatorEditorPage extends FormPage
 		body.setLayout(layout);
 		
 		@SuppressWarnings("unused")
-		Label label = toolkit.createLabel(body, "Nickname:");
+		Label label = toolkit.createLabel(body, 
+				Messages.getString("editors.pages.InvestigatorEditorPage.nickname")); //$NON-NLS-1$
 		fNickname = createText(toolkit, fInvestigator.getNickName(), body);
 		
-		label = toolkit.createLabel(body, "Full Name:");
+		label = toolkit.createLabel(body, 
+				Messages.getString("editors.pages.InvestigatorEditorPage.fullName")); //$NON-NLS-1$
 		fFullname = createText(toolkit, fInvestigator.getFullName(), body);
 		fNickname.addKeyListener(createKeyAdapter(form));
 
-		label = toolkit.createLabel(body, "Institution:");
+		label = toolkit.createLabel(body, 
+				Messages.getString("editors.pages.InvestigatorEditorPage.institution")); //$NON-NLS-1$
 		fInstitution = createText(toolkit, fInvestigator.getInstitution(), body);
 		
 		createInterviewSection(form, toolkit, body);
@@ -110,13 +114,15 @@ public class InvestigatorEditorPage extends FormPage
 			{
 				if(fNickname.getText().isEmpty())
 				{
-					fForm.setMessage("Please enter a nickname", 
+					fForm.setMessage(
+							Messages.getString("editors.pages.InvestigatorEditorPage.enterNickname"),  //$NON-NLS-1$
 							IMessageProvider.ERROR);
 					notDirty();
 				}
 				else if(nicknameInUse())
 				{
-					fForm.setMessage("That nickname is taken", 
+					fForm.setMessage(
+							Messages.getString("editors.pages.InvestigatorEditorPage.nicknameTaken"),  //$NON-NLS-1$
 							IMessageProvider.ERROR);
 					notDirty();
 				}
@@ -160,7 +166,7 @@ public class InvestigatorEditorPage extends FormPage
 		td = new TableWrapData(TableWrapData.FILL_GRAB);
 		td.colspan = 2;
 		section.setLayoutData(td);
-		section.setText("Memos");
+		section.setText(Messages.getString("editors.pages.InvestigatorEditorPage.memos")); //$NON-NLS-1$
 		section.addExpansionListener(createExpansionListener(form));
 		sectionClient = toolkit.createComposite(section);
 		grid = new GridLayout();
@@ -191,7 +197,7 @@ public class InvestigatorEditorPage extends FormPage
 		td = new TableWrapData(TableWrapData.FILL_GRAB);
 		td.colspan = 2;
 		section.setLayoutData(td);
-		section.setText("Coded Transcripts");
+		section.setText(Messages.getString("editors.pages.InvestigatorEditorPage.codedTranscripts")); //$NON-NLS-1$
 		section.addExpansionListener(createExpansionListener(form));
 		sectionClient = toolkit.createComposite(section);
 		grid = new GridLayout();
@@ -218,7 +224,7 @@ public class InvestigatorEditorPage extends FormPage
 		td = new TableWrapData(TableWrapData.FILL_GRAB);
 		td.colspan = 2;
 		section.setLayoutData(td);
-		section.setText("Transcripts for Conducted Interviews");
+		section.setText(Messages.getString("editors.pages.InvestigatorEditorPage.transcriptsConducted")); //$NON-NLS-1$
 		section.addExpansionListener(createExpansionListener(form));
 		Composite sectionClient = toolkit.createComposite(section);
 		GridLayout grid = new GridLayout();

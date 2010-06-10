@@ -72,8 +72,9 @@ public class NewProjectWizard extends Wizard
 			if(!makeSubFolders(wProject))
 			{
 				cleanUpFolders(wProject);
-				MessageDialog.openError(getShell(), "Project Creation Failure", 
-						"Failed to create the folders required by the project.");
+				MessageDialog.openError(getShell(), 
+						Messages.getString("wizards.NewProjectWizard.failure"),  //$NON-NLS-1$
+						Messages.getString("wizards.NewProjectWizard.errorMessage")); //$NON-NLS-1$
 			}
 			
 			PersistenceManager.getInstance().initDB(wProject);

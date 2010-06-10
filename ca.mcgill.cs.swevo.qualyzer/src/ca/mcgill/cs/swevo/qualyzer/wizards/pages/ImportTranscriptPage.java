@@ -49,8 +49,8 @@ public class ImportTranscriptPage extends TranscriptWizardPage
 	 */
 	public ImportTranscriptPage(Project project)
 	{
-		super(project, "Import Transcript");
-		setDescription("Please enter the following information to import a transcript");
+		super(project, Messages.getString("wizards.pages.ImportTranscriptPage.importTranscript")); //$NON-NLS-1$
+		setDescription(Messages.getString("wizards.pages.ImportTranscriptPage.enterInfo")); //$NON-NLS-1$
 	}
 
 	/* (non-Javadoc)
@@ -79,7 +79,7 @@ public class ImportTranscriptPage extends TranscriptWizardPage
 		composite.setLayoutData(gd);
 		
 		Label label = new Label(composite, SWT.NULL);
-		label.setText("Filename:");
+		label.setText(Messages.getString("wizards.pages.ImportTranscriptPage.filename")); //$NON-NLS-1$
 		fTranscriptFile = new Text(composite, SWT.BORDER);
 		fTranscriptFile.setText(""); //$NON-NLS-1$
 		gd = new GridData(SWT.FILL, SWT.NULL, true, false);
@@ -88,7 +88,7 @@ public class ImportTranscriptPage extends TranscriptWizardPage
 		
 		Button button = new Button(composite, SWT.PUSH);
 		button.addSelectionListener(createNewSelectionListener());
-		button.setText("Browse");
+		button.setText(Messages.getString("wizards.pages.ImportTranscriptPage.browse")); //$NON-NLS-1$
 		
 		super.createControl(parent, container);
 
@@ -109,7 +109,8 @@ public class ImportTranscriptPage extends TranscriptWizardPage
 			{
 				FileDialog dialog = new FileDialog(getShell());
 				dialog.setFilterExtensions(new String[]{"*.txt"}); //$NON-NLS-1$
-				dialog.setFilterNames(new String[]{"Text files (.txt)"});
+				dialog.setFilterNames(new String[]{Messages.getString(
+						"wizards.pages.ImportTranscriptPage.textExt")}); //$NON-NLS-1$
 				
 				String file = dialog.open();
 				fTranscriptFile.setText(file);
@@ -194,15 +195,15 @@ public class ImportTranscriptPage extends TranscriptWizardPage
 	{
 		if(fTranscriptFile.getText().isEmpty() || fileDoesNotExist())
 		{
-			setError("You must choose a transcript file to import");
+			setError(Messages.getString("wizards.pages.ImportTranscriptPage.chooseFile")); //$NON-NLS-1$
 		}
 		else if(fName.getText().isEmpty())
 		{
-			setError("Please enter a name");
+			setError(Messages.getString("wizards.pages.ImportTranscriptPage.enterName")); //$NON-NLS-1$
 		}
 		else if(transcriptExists())
 		{
-			setError("That name is already in use");
+			setError(Messages.getString("wizards.pages.ImportTranscriptPage.nameInUse")); //$NON-NLS-1$
 		}
 		else if(fTable.getSelectionCount() > 0)
 		{
@@ -210,7 +211,7 @@ public class ImportTranscriptPage extends TranscriptWizardPage
 		}
 		else
 		{
-			setError("Select at least one participant");
+			setError(Messages.getString("wizards.pages.ImportTranscriptPage.selectParticipant")); //$NON-NLS-1$
 		}
 	}
 

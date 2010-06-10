@@ -48,9 +48,13 @@ import ca.mcgill.cs.swevo.qualyzer.util.ResourcesUtil;
  */
 public class ParticipantEditorPage extends FormPage
 {
-	private static final String LABEL_PARTICIPANT_NAME = "Participant Name:";
-	private static final String LABEL_PARTICIPANT_ID = "Participant ID:";
-	private static final String LABEL_PARTICIPANT = "Participant";
+	private static final String LABEL_PARTICIPANT_NAME = Messages.getString(
+			"editors.pages.ParticipantEditorPage.participantName"); //$NON-NLS-1$
+	private static final String LABEL_PARTICIPANT_ID = Messages.getString(
+			"editors.pages.ParticipantEditorPage.participantId"); //$NON-NLS-1$
+	private static final String LABEL_PARTICIPANT = Messages.getString(
+			"editors.pages.ParticipantEditorPage.participant"); //$NON-NLS-1$
+	
 	private Participant fParticipant;
 	private Text fID;
 	private Text fFullname;
@@ -65,7 +69,7 @@ public class ParticipantEditorPage extends FormPage
 	 */
 	public ParticipantEditorPage(FormEditor editor, Participant participant)
 	{
-		super(editor, "ParticipantEditorPage", LABEL_PARTICIPANT); //$NON-NLS-1$
+		super(editor, LABEL_PARTICIPANT, LABEL_PARTICIPANT);
 		fParticipant = participant;
 		fIsDirty = false;
 	}
@@ -117,12 +121,14 @@ public class ParticipantEditorPage extends FormPage
 			{
 				if(fID.getText().isEmpty())
 				{
-					fForm.setMessage("Please enter an ID", IMessageProvider.ERROR);
+					fForm.setMessage(Messages.getString(
+							"editors.pages.ParticipantEditorPage.enterId"), IMessageProvider.ERROR); //$NON-NLS-1$
 					notDirty();
 				}
 				else if(idInUse())
 				{
-					fForm.setMessage("That ID is taken", IMessageProvider.ERROR);
+					fForm.setMessage(Messages.getString(
+							"editors.pages.ParticipantEditorPage.idTaken"), IMessageProvider.ERROR); //$NON-NLS-1$
 					notDirty();
 				}
 				else
@@ -196,7 +202,7 @@ public class ParticipantEditorPage extends FormPage
 		td.colspan = 2;
 		section.setLayoutData(td);
 		section.addExpansionListener(createExpansionListener(form));
-		section.setText("Transcripts");
+		section.setText(Messages.getString("editors.pages.ParticipantEditorPage.transcripts")); //$NON-NLS-1$
 		Composite sectionClient = toolkit.createComposite(section);
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 1;

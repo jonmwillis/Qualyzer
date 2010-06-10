@@ -45,9 +45,9 @@ public class AddParticipantPage extends WizardPage
 	 */
 	public AddParticipantPage(Project project)
 	{
-		super("Add Participant");
-		setTitle("Add Participant");
-		setDescription("Enter the information for a new Participant");
+		super(Messages.getString("wizards.pages.AddParticipantPage.addParticipant")); //$NON-NLS-1$
+		setTitle(Messages.getString("wizards.pages.AddParticipantPage.addParticipant")); //$NON-NLS-1$
+		setDescription(Messages.getString("wizards.pages.AddParticipantPage.enterInfo")); //$NON-NLS-1$
 		fProject = project;
 	}
 	
@@ -63,13 +63,13 @@ public class AddParticipantPage extends WizardPage
 		fContainer.setLayout(layout);
 		
 		Label label = new Label(fContainer, SWT.NULL);
-		label.setText("Participant ID");
+		label.setText(Messages.getString("wizards.pages.AddParticipantPage.participantId")); //$NON-NLS-1$
 		fIdText = new Text(fContainer, SWT.BORDER);
 		fIdText.setText(""); //$NON-NLS-1$
 		fIdText.addKeyListener(createKeyListener());
 		
 		label = new Label(fContainer, SWT.NULL);
-		label.setText("Full Name");
+		label.setText(Messages.getString("wizards.pages.AddParticipantPage.fullName")); //$NON-NLS-1$
 		fFullNameText = new Text(fContainer, SWT.BORDER);
 		fFullNameText.setText(""); //$NON-NLS-1$
 		
@@ -104,12 +104,12 @@ public class AddParticipantPage extends WizardPage
 			{
 				if(fIdText.getText().isEmpty())
 				{
-					setErrorMessage("Please enter a Participant Id");
+					setErrorMessage(Messages.getString("wizards.pages.AddParticipantPage.enterId")); //$NON-NLS-1$
 					setPageComplete(false);
 				}
 				else if(idExists())
 				{
-					setErrorMessage("This ID is already in use.");
+					setErrorMessage(Messages.getString("wizards.pages.AddParticipantPage.idInUse")); //$NON-NLS-1$
 					setPageComplete(false);
 				}
 				else

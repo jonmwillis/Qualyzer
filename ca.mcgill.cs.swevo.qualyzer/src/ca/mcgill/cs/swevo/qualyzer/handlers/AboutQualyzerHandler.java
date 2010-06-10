@@ -24,13 +24,14 @@ import org.eclipse.ui.handlers.HandlerUtil;
  */
 public class AboutQualyzerHandler extends AbstractHandler
 {
-	private static final String COPYRIGHT = "Copyright (c) 2010 McGill University" +
-			"\nAll rights reserved. This program and the accompanying materials" +
-			"\nare made available under the terms of the Eclipse Public License v1.0" +
-			"\nwhich accompanies this distribution, and is available at" +
-			"\nhttp://www.eclipse.org/legal/epl-v10.html" +
-			"\n\nContributors:" +
-			"\n\tMcGill University - initial API and implementation";
+	private static final String COPYRIGHT = 
+		Messages.getString("handlers.AboutQualyzerHandler.copyright1") + //$NON-NLS-1$
+			Messages.getString("handlers.AboutQualyzerHandler.copyright2") + //$NON-NLS-1$
+			Messages.getString("handlers.AboutQualyzerHandler.copyright3") + //$NON-NLS-1$
+			Messages.getString("handlers.AboutQualyzerHandler.copyright4") + //$NON-NLS-1$
+			Messages.getString("handlers.AboutQualyzerHandler.copyright5") + //$NON-NLS-1$
+			Messages.getString("handlers.AboutQualyzerHandler.copyright6") + //$NON-NLS-1$
+			Messages.getString("handlers.AboutQualyzerHandler.copyright7"); //$NON-NLS-1$
 	
 	
 	@Override
@@ -38,7 +39,8 @@ public class AboutQualyzerHandler extends AbstractHandler
 	{
 		Shell shell = HandlerUtil.getActiveShell(event).getShell();
 		
-		MessageDialog.openInformation(shell, "About Qualyzer", COPYRIGHT);
+		MessageDialog.openInformation(shell, 
+				Messages.getString("handlers.AboutQualyzerHandler.about"), COPYRIGHT); //$NON-NLS-1$
 		return null;
 	}
 
