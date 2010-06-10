@@ -85,7 +85,7 @@ public class ImportAudioFileHandler extends AbstractHandler
 	{
 		FileDialog dialog = new FileDialog(HandlerUtil.getActiveShell(event));
 		dialog.setFilterExtensions(new String[]{"*.mp3;*.wav"}); //$NON-NLS-1$
-		dialog.setFilterNames(new String[]{Messages.handlers_ImportAudioFileHandler_audio});
+		dialog.setFilterNames(new String[]{"Audio (.mp3, .wav)"});
 		
 		String fileName = dialog.open();
 		return fileName;

@@ -53,8 +53,8 @@ public class TranscriptDeleteDialog extends TitleAreaDialog
 	public void create()
 	{
 		super.create();
-		setTitle(Messages.dialogs_TranscriptDeleteDialog_deleteTranscript);
-		setMessage(Messages.dialogs_TranscriptDeleteDialog_warning, 
+		setTitle("Delete Transcript");
+		setMessage("Deleting this transcript will remove it from disk along with all associated annotations.", 
 				IMessageProvider.WARNING);
 	}
 	
@@ -72,24 +72,24 @@ public class TranscriptDeleteDialog extends TitleAreaDialog
 		composite.setLayoutData(gd);
 		
 		Label label = new Label(composite, SWT.NULL);
-		label.setText(Messages.dialogs_TranscriptDeleteDialog_confirm);
+		label.setText("Are you sure you want to delete this transcript?");
 		
 		label.setLayoutData(gd);
 		
 		gd = new GridData(SWT.FILL, SWT.NULL, true, false);
 		fAudioButton = new Button(composite, SWT.CHECK);
 		label = new Label(composite, SWT.NULL);
-		label.setText(Messages.dialogs_TranscriptDeleteDialog_deleteAudio);
+		label.setText("Delete associated audio file");
 		label.setLayoutData(gd);
 		
 		fCodeButton = new Button(composite, SWT.CHECK);
 		label = new Label(composite, SWT.NULL);
-		label.setText(Messages.dialogs_TranscriptDeleteDialog_deleteCodes);
+		label.setText("Delete codes only used with this transcript");
 		label.setLayoutData(gd);
 		
 		fParticipantButton = new Button(composite, SWT.CHECK);
 		label = new Label(composite, SWT.NULL);
-		label.setText(Messages.dialogs_TranscriptDeleteDialog_deleteParticipants);
+		label.setText("Delete participants only associated with this transcript");
 		label.setLayoutData(gd);
 		
 		return parent;

@@ -74,7 +74,7 @@ public class NewTranscriptWizard extends Wizard
 		{
 			if(!file.createNewFile())
 			{
-				fPage.setErrorMessage(Messages.wizards_NewTranscriptWizard_alreadyExists);
+				fPage.setErrorMessage("That transcript file already exists");
 				return false;
 			}
 		}

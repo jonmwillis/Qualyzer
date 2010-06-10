@@ -84,7 +84,7 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 	public void create()
 	{
 		super.create();
-		setTitle(Messages.dialogs_TranscriptPropertiesDialog_properties);
+		setTitle("Properties");
 	}
 	
 	@Override
@@ -93,22 +93,22 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 		GridLayout layout = new GridLayout(2, false);
 		parent.setLayout(layout);
 		
-		Label label = createLabel(parent, Messages.dialogs_TranscriptPropertiesDialog_name);
+		Label label = createLabel(parent, "Transcript Name:");
 		label = new Label(parent, SWT.BORDER);
 		label.setText(fTranscript.getName());
 		label.setLayoutData(createTextGridData());
 		
-		label = createLabel(parent, Messages.dialogs_TranscriptPropertiesDialog_path);
+		label = createLabel(parent, "File path:");
 		label = new Label(parent, SWT.BORDER);
 		label.setText(fProjectName + TRANSCRIPT + fTranscript.getFileName());
 		label.setLayoutData(createTextGridData());
 		
-		label = createLabel(parent, Messages.dialogs_TranscriptPropertiesDialog_date);
+		label = createLabel(parent, "Date:");
 		fDate = createText(fTranscript.getDate(), parent);
 		
 		Composite composite = createComposite(parent);
 		
-		label = createLabel(composite, Messages.dialogs_TranscriptPropertiesDialog_participants);
+		label = createLabel(composite, "Participants:");
 		label.setLayoutData(createTextGridData());
 		Button button = new Button(composite, SWT.PUSH);
 		button.setText("+"); //$NON-NLS-1$
@@ -125,7 +125,7 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 		
 		composite = createComposite(parent);
 		
-		label = createLabel(composite, Messages.dialogs_TranscriptPropertiesDialog_audioPath);
+		label = createLabel(composite, "Audio File Path:");
 		if(fTranscript.getAudioFile() != null)
 		{
 			fAudioPath = fProjectName + fTranscript.getAudioFile().getRelativePath();
@@ -134,7 +134,7 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 		fAudioLabel.setText(fAudioPath);
 		fAudioLabel.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false)); //TODO why does this look weird?
 		button = new Button(composite, SWT.PUSH);
-		button.setText(Messages.dialogs_TranscriptPropertiesDialog_Browse);
+		button.setText("Browse");
 		button.addSelectionListener(createSelectionAdapter());
 				
 		return parent;
@@ -157,7 +157,7 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 				
 				if(fTable.getItemCount() <= 0)
 				{
-					setErrorMessage(Messages.dialogs_TranscriptPropertiesDialog_needOne);
+					setErrorMessage("There must be at least one Participant");
 					getButton(IDialogConstants.OK_ID).setEnabled(false);
 				}
 			}
@@ -182,7 +182,7 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 					names[i] = list.get(i).getParticipantId();
 				}
 				dialog.setElements(names);
-				dialog.setTitle(Messages.dialogs_TranscriptPropertiesDialog_addWhich);
+				dialog.setTitle("Which participants would you like to add");
 				dialog.open();
 				Object[] result = dialog.getResult();
 				for(Object s : result)
@@ -250,13 +250,13 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 				FileDialog dialog = new FileDialog(getShell());
 				//dialog.setFilterPath("");
 				dialog.setFilterExtensions(new String[]{"*.mp3;*.wav"}); //$NON-NLS-1$
-				dialog.setFilterNames(new String[]{Messages.dialogs_TranscriptPropertiesDialog_audioType});
+				dialog.setFilterNames(new String[]{"Audio (.mp3, .wav)"});
 				
 				fAudioPath = dialog.open();
 				if(fAudioPath != null)
 				{
-					setMessage(Messages.dialogs_TranscriptPropertiesDialog_warning +
-							Messages.dialogs_TranscriptPropertiesDialog_warning2, IMessageProvider.WARNING);
+					setMessage("Warning, changing the audio file may cause the " +
+							"current audio file to be overwritten.", IMessageProvider.WARNING);
 					fAudioLabel.setText(fAudioPath);
 				}
 			}

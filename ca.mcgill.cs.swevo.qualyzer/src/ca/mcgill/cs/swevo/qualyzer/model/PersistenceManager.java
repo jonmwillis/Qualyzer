@@ -136,7 +136,7 @@ public final class PersistenceManager
 			}
 			catch (CoreException ce)
 			{
-				String message = Messages.model_PersistenceManager_error + project.getName();
+				String message = "Could not create .db folder in project " + project.getName();
 				throw new QualyzerException(message, ce);
 			}
 		}
