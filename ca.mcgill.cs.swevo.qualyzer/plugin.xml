@@ -545,6 +545,7 @@
                label="%menu.label.import">
             <command
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.importTranscript"
+                  icon="icons/file_obj.gif"
                   label="%command.label.transcript"
                   style="push"
                   tooltip="%command.tooltip.importTranscript">
