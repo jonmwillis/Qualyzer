@@ -70,13 +70,13 @@ public class DeleteInvestigatorHandler extends AbstractHandler
 				if(conflicts.size() > 0)
 				{
 					String errorMsg = printErrors(conflicts);
-					MessageDialog.openError(shell, Messages._handlers_DeleteInvestigatorHandler_cannotDelete, errorMsg);
+					MessageDialog.openError(shell, "Cannot Delete Investigator", errorMsg);
 				}
 				else
 				{
 					boolean check = MessageDialog.openConfirm(shell, 
-							Messages._handlers_DeleteInvestigatorHandler_deleteInvestigator, 
-							Messages._handlers_DeleteInvestigatorHandler_confirm);
+							"Delete this Investigator", 
+							"Are you sure you want to delete this investigator?");
 					
 					if(check)
 					{
@@ -98,7 +98,7 @@ public class DeleteInvestigatorHandler extends AbstractHandler
 	 */
 	private String printErrors(ArrayList<String> conflicts)
 	{
-		String output = Messages._handlers_DeleteInvestigatorHandler_conflicts;
+		String output = "Cannot delete investigator due to the following conflicts:";
 		for(String str : conflicts)
 		{
 			output += NEWLINE+str; 
@@ -121,7 +121,7 @@ public class DeleteInvestigatorHandler extends AbstractHandler
 		{
 			if(memo.getAuthor().equals(investigator))
 			{
-				conflicts.add(Messages._handlers_DeleteInvestigatorHandler_memo + memo.getName());
+				conflicts.add("Memo:" + memo.getName());
 			}
 			else
 			{

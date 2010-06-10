@@ -44,9 +44,9 @@ public class AddInvestigatorPage extends WizardPage
 	 */
 	public AddInvestigatorPage(Project project)
 	{
-		super(Messages.wizards_pages_AddInvestigatorPage_addInvestigator);
-		setTitle(Messages.wizards_pages_AddInvestigatorPage_addInvestigator);
-		setDescription(Messages.wizards_pages_AddInvestigatorPage_enterTheFollowing);
+		super("Add Investigator");
+		setTitle("Add Investigator");
+		setDescription("Enter the information for a new Investigator");
 		fProject = project;
 	}
 	
@@ -58,7 +58,7 @@ public class AddInvestigatorPage extends WizardPage
 		fContainer.setLayout(layout);
 		layout.numColumns = 2;
 		Label label = new Label(fContainer, SWT.NULL);
-		label.setText(Messages.wizards_pages_AddInvestigatorPage_nickname);
+		label.setText("Nickname");
 
 		fNickname = new Text(fContainer, SWT.BORDER | SWT.SINGLE);
 		fNickname.setText(System.getProperty("user.name")); //$NON-NLS-1$
@@ -71,13 +71,13 @@ public class AddInvestigatorPage extends WizardPage
 		fNickname.addKeyListener(createKeyListener());
 		
 		label = new Label(fContainer, SWT.NULL);
-		label.setText(Messages.wizards_pages_AddInvestigatorPage_fullName);
+		label.setText("Full Name");
 		
 		fFullname = new Text(fContainer, SWT.BORDER | SWT.SINGLE);
 		fFullname.setText(""); //$NON-NLS-1$
 		
 		label = new Label(fContainer, SWT.NULL);
-		label.setText(Messages.wizards_pages_AddInvestigatorPage_institution);
+		label.setText("Institution");
 		
 		fInstitution = new Text(fContainer, SWT.BORDER | SWT.SINGLE);
 		fInstitution.setText(""); //$NON-NLS-1$
@@ -131,7 +131,7 @@ public class AddInvestigatorPage extends WizardPage
 				if(fNickname.getText().isEmpty())
 				{
 					setPageComplete(false);
-					setErrorMessage(Messages.wizards_pages_AddInvestigatorPage_enterANickname);
+					setErrorMessage("Please enter a nickname for the Investigator");
 				}
 				else if(!idInUse())
 				{
@@ -140,7 +140,7 @@ public class AddInvestigatorPage extends WizardPage
 				}
 				else
 				{
-					setErrorMessage(Messages.wizards_pages_AddInvestigatorPage_alreadyTaken);
+					setErrorMessage("That nickname is already taken");
 					setPageComplete(false);
 				}
 			}

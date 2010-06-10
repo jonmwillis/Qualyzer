@@ -48,9 +48,9 @@ import ca.mcgill.cs.swevo.qualyzer.util.ResourcesUtil;
  */
 public class ParticipantEditorPage extends FormPage
 {
-	private static final String LABEL_PARTICIPANT_NAME = Messages.editors_pages_ParticipantEditorPage_Name;
-	private static final String LABEL_PARTICIPANT_ID = Messages.editors_pages_ParticipantEditorPage_id;
-	private static final String LABEL_PARTICIPANT = Messages.editors_pages_ParticipantEditorPage_participant;
+	private static final String LABEL_PARTICIPANT_NAME = "Participant Name:";
+	private static final String LABEL_PARTICIPANT_ID = "Participant ID:";
+	private static final String LABEL_PARTICIPANT = "Participant";
 	private Participant fParticipant;
 	private Text fID;
 	private Text fFullname;
@@ -65,7 +65,7 @@ public class ParticipantEditorPage extends FormPage
 	 */
 	public ParticipantEditorPage(FormEditor editor, Participant participant)
 	{
-		super(editor, "ParticipantEditorPage", Messages.editors_pages_ParticipantEditorPage_participant); //$NON-NLS-1$
+		super(editor, "ParticipantEditorPage", LABEL_PARTICIPANT); //$NON-NLS-1$
 		fParticipant = participant;
 		fIsDirty = false;
 	}
@@ -117,12 +117,12 @@ public class ParticipantEditorPage extends FormPage
 			{
 				if(fID.getText().isEmpty())
 				{
-					fForm.setMessage(Messages.editors_pages_ParticipantEditorPage_enterID, IMessageProvider.ERROR);
+					fForm.setMessage("Please enter an ID", IMessageProvider.ERROR);
 					notDirty();
 				}
 				else if(idInUse())
 				{
-					fForm.setMessage(Messages.editors_pages_ParticipantEditorPage_idTaken, IMessageProvider.ERROR);
+					fForm.setMessage("That ID is taken", IMessageProvider.ERROR);
 					notDirty();
 				}
 				else
@@ -196,7 +196,7 @@ public class ParticipantEditorPage extends FormPage
 		td.colspan = 2;
 		section.setLayoutData(td);
 		section.addExpansionListener(createExpansionListener(form));
-		section.setText(Messages.editors_pages_ParticipantEditorPage_transcripts);
+		section.setText("Transcripts");
 		Composite sectionClient = toolkit.createComposite(section);
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 1;

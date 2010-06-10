@@ -45,9 +45,9 @@ public class AddParticipantPage extends WizardPage
 	 */
 	public AddParticipantPage(Project project)
 	{
-		super(Messages.wizard_pages_AddParticipantPage_addParticipant);
-		setTitle(Messages.wizard_pages_AddParticipantPage_addParticipant);
-		setDescription(Messages.wizard_pages_AddParticipantPage_enterInfo);
+		super("Add Participant");
+		setTitle("Add Participant");
+		setDescription("Enter the information for a new Participant");
 		fProject = project;
 	}
 	
@@ -63,24 +63,24 @@ public class AddParticipantPage extends WizardPage
 		fContainer.setLayout(layout);
 		
 		Label label = new Label(fContainer, SWT.NULL);
-		label.setText(Messages.wizard_pages_AddParticipantPage_partID);
+		label.setText("Participant ID");
 		fIdText = new Text(fContainer, SWT.BORDER);
 		fIdText.setText(""); //$NON-NLS-1$
 		fIdText.addKeyListener(createKeyListener());
 		
 		label = new Label(fContainer, SWT.NULL);
-		label.setText(Messages.wizard_pages_AddParticipantPage_fullName);
+		label.setText("Full Name");
 		fFullNameText = new Text(fContainer, SWT.BORDER);
 		fFullNameText.setText(""); //$NON-NLS-1$
 		
 		//JF: removing for 0.1 to be consistent with the editor
 //		label = new Label(fContainer, SWT.NULL);
-//		label.setText(Messages.wizard_pages_AddParticipantPage_ContactInfo);
+//		label.setText("Contact Info");
 //		fContactInfoText = new Text(fContainer, SWT.BORDER);
 //		fContactInfoText.setText(""); //$NON-NLS-1$
 //		
 //		label = new Label(fContainer, SWT.NULL);
-//		label.setText(Messages.wizard_pages_AddParticipantPage_notes);
+//		label.setText("Notes");
 //		fNotesText = new Text(fContainer, SWT.BORDER);
 //		fNotesText.setText(""); //$NON-NLS-1$
 		
@@ -104,12 +104,12 @@ public class AddParticipantPage extends WizardPage
 			{
 				if(fIdText.getText().isEmpty())
 				{
-					setErrorMessage(Messages.wizard_pages_AddParticipantPage_pleaseEnterId);
+					setErrorMessage("Please enter a Participant Id");
 					setPageComplete(false);
 				}
 				else if(idExists())
 				{
-					setErrorMessage(Messages.wizard_pages_AddParticipantPage_idUsed);
+					setErrorMessage("This ID is already in use.");
 					setPageComplete(false);
 				}
 				else
