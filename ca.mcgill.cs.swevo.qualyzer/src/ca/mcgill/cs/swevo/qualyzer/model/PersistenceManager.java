@@ -136,7 +136,7 @@ public final class PersistenceManager
 			}
 			catch (CoreException ce)
 			{
-				String message = "Could not create .db folder in project " + project.getName();
+				String message = "Could not create .db folder in project " + project.getName(); //$NON-NLS-1$
 				throw new QualyzerException(message, ce);
 			}
 		}

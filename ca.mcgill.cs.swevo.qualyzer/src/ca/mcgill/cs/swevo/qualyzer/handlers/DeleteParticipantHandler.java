@@ -63,13 +63,14 @@ public class DeleteParticipantHandler extends AbstractHandler
 				if(conflicts.size() > 0)
 				{
 					String errorMsg = printErrors(conflicts);
-					MessageDialog.openError(shell, "Cannot Delete Participant", errorMsg);
+					MessageDialog.openError(shell, Messages.getString(
+							"handlers.DeleteParticipantHandler.cannotDelete"), errorMsg); //$NON-NLS-1$
 				}
 				else
 				{
 					boolean check = MessageDialog.openConfirm(shell, 
-							"Delete this Participant", 
-							"Are you sure you want to delete this participant?");
+							Messages.getString("handlers.DeleteParticipantHandler.deleteParticipant"),  //$NON-NLS-1$
+							Messages.getString("handlers.DeleteParticipantHandler.confirm")); //$NON-NLS-1$
 					
 					if(check)
 					{
@@ -89,16 +90,18 @@ public class DeleteParticipantHandler extends AbstractHandler
 	 */
 	private String printErrors(ArrayList<Object> conflicts)
 	{
-		String output = "Cannot delete participant due to the following conflicts";
+		String output = Messages.getString("handlers.DeleteParticipantHandler.conflicts"); //$NON-NLS-1$
 		for(Object obj : conflicts)
 		{
 			if(obj instanceof Memo)
 			{
-				output += "\nMemo:" + ((Memo) obj).getName();
+				output += Messages.getString(
+						"handlers.DeleteParticipantHandler.memo") + ((Memo) obj).getName(); //$NON-NLS-1$
 			}
 			else if(obj instanceof Transcript)
 			{
-				output += "\nTranscript:"+ ((Transcript) obj).getName();
+				output += Messages.getString(
+						"handlers.DeleteParticipantHandler.transcript")+ ((Transcript) obj).getName(); //$NON-NLS-1$
 			}
 		}
 		

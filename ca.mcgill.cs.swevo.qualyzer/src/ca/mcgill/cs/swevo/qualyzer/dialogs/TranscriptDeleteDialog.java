@@ -53,8 +53,8 @@ public class TranscriptDeleteDialog extends TitleAreaDialog
 	public void create()
 	{
 		super.create();
-		setTitle("Delete Transcript");
-		setMessage("Deleting this transcript will remove it from disk along with all associated annotations.", 
+		setTitle(Messages.getString("dialogs.TranscriptDeleteDialog.deleteTrancript")); //$NON-NLS-1$
+		setMessage(Messages.getString("dialogs.TranscriptDeleteDialog.warning"),  //$NON-NLS-1$
 				IMessageProvider.WARNING);
 	}
 	
@@ -72,24 +72,24 @@ public class TranscriptDeleteDialog extends TitleAreaDialog
 		composite.setLayoutData(gd);
 		
 		Label label = new Label(composite, SWT.NULL);
-		label.setText("Are you sure you want to delete this transcript?");
+		label.setText(Messages.getString("dialogs.TranscriptDeleteDialog.confirm")); //$NON-NLS-1$
 		
 		label.setLayoutData(gd);
 		
 		gd = new GridData(SWT.FILL, SWT.NULL, true, false);
 		fAudioButton = new Button(composite, SWT.CHECK);
 		label = new Label(composite, SWT.NULL);
-		label.setText("Delete associated audio file");
+		label.setText(Messages.getString("dialogs.TranscriptDeleteDialog.deleteAudio")); //$NON-NLS-1$
 		label.setLayoutData(gd);
 		
 		fCodeButton = new Button(composite, SWT.CHECK);
 		label = new Label(composite, SWT.NULL);
-		label.setText("Delete codes only used with this transcript");
+		label.setText(Messages.getString("dialogs.TranscriptDeleteDialog.deleteCodes")); //$NON-NLS-1$
 		label.setLayoutData(gd);
 		
 		fParticipantButton = new Button(composite, SWT.CHECK);
 		label = new Label(composite, SWT.NULL);
-		label.setText("Delete participants only associated with this transcript");
+		label.setText(Messages.getString("dialogs.TranscriptDeleteDialog.deleteParticipants")); //$NON-NLS-1$
 		label.setLayoutData(gd);
 		
 		return parent;

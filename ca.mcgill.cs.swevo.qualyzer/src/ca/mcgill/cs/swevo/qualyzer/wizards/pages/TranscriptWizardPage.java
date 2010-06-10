@@ -73,9 +73,9 @@ public class TranscriptWizardPage extends WizardPage
 	 */
 	public TranscriptWizardPage(Project project)
 	{
-		super("New Transcript");
-		setTitle("New Transcript");
-		setDescription("Please enter the following information to create a new transcript.");
+		super(Messages.getString("wizards.pages.TranscriptWizardPage.newTranscript")); //$NON-NLS-1$
+		setTitle(Messages.getString("wizards.pages.TranscriptWizardPage.newTranscript")); //$NON-NLS-1$
+		setDescription(Messages.getString("wizards.pages.TranscriptWizardPage.enterInfo")); //$NON-NLS-1$
 		
 		fProject = project;
 		fParticipants = new ArrayList<Participant>();
@@ -129,23 +129,26 @@ public class TranscriptWizardPage extends WizardPage
 		}
 		
 		@SuppressWarnings("unused")
-		Label label = createLabel(fContainer, "Transcript name:");
+		Label label = createLabel(fContainer, 
+				Messages.getString("wizards.pages.TranscriptWizardPage.name")); //$NON-NLS-1$
 		fName = createText(fContainer);
 		
-		label = createLabel(fContainer, "Date:");
+		label = createLabel(fContainer, Messages.getString("wizards.pages.TranscriptWizardPage.date")); //$NON-NLS-1$
 		fDate = createText(fContainer);
 		
 		createLongLabel();
 		createTable();
 		
-		label = createLabel(fContainer, "Description:");
+		label = createLabel(fContainer, 
+				Messages.getString("wizards.pages.TranscriptWizardPage.description")); //$NON-NLS-1$
 		fDescription = createText(fContainer);
 		
 		Composite composite = createComposite();
-		label = createLabel(composite, "Audio File:");
+		label = createLabel(composite, 
+				Messages.getString("wizards.pages.TranscriptWizardPage.audioFile")); //$NON-NLS-1$
 		fAudioFile = createText(composite);
 		Button button = new Button(composite, SWT.PUSH);
-		button.setText("Browse");
+		button.setText(Messages.getString("wizards.pages.TranscriptWizardPage.browse")); //$NON-NLS-1$
 		button.addSelectionListener(createButtonListener());
 		
 		setControl(fContainer);
@@ -170,7 +173,8 @@ public class TranscriptWizardPage extends WizardPage
 	{
 		GridData gd;
 		Label label;
-		label = createLabel(fContainer, "Select the Participants");
+		label = createLabel(fContainer, 
+				Messages.getString("wizards.pages.TranscriptWizardPage.selectParticipants")); //$NON-NLS-1$
 		gd = new GridData(SWT.FILL, SWT.NULL, true, false);
 		gd.horizontalSpan = 2;
 		label.setLayoutData(gd);
@@ -223,7 +227,8 @@ public class TranscriptWizardPage extends WizardPage
 					FileDialog dialog = new FileDialog(fContainer.getShell());
 					dialog.setFilterPath(fWorkspacePath+AUDIO_PATH);
 					dialog.setFilterExtensions(new String[]{"*.mp3;*.wav"}); //$NON-NLS-1$
-					dialog.setFilterNames(new String[]{"Audio (.mp3, .wav)"});
+					dialog.setFilterNames(new String[]{Messages.getString(
+							"wizards.pages.TranscriptWizardPage.audioExt")}); //$NON-NLS-1$
 					
 					String file = dialog.open();
 					fAudioFile.setText(file);
@@ -251,11 +256,11 @@ public class TranscriptWizardPage extends WizardPage
 			{
 				if(transcriptExists())
 				{
-					setError("That name is already in use");
+					setError(Messages.getString("wizards.pages.TranscriptWizardPage.nameInUse")); //$NON-NLS-1$
 				}
 				else if(fName.getText().isEmpty())
 				{
-					setError("Please enter a name");
+					setError(Messages.getString("wizards.pages.TranscriptWizardPage.enterName")); //$NON-NLS-1$
 				}
 				else if(fTable.getSelectionCount() > 0)
 				{
@@ -263,7 +268,7 @@ public class TranscriptWizardPage extends WizardPage
 				}
 				else
 				{
-					setError("Select at least one participant");
+					setError(Messages.getString("wizards.pages.TranscriptWizardPage.selectOne")); //$NON-NLS-1$
 				}
 			}
 		};
@@ -309,11 +314,11 @@ public class TranscriptWizardPage extends WizardPage
 				}
 				if(transcriptExists())
 				{
-					setError("That name is already in use");
+					setError(Messages.getString("wizards.pages.TranscriptWizardPage.nameInUse")); //$NON-NLS-1$
 				}
 				else if(fName.getText().isEmpty())
 				{
-					setError("Please enter a name");
+					setError(Messages.getString("wizards.pages.TranscriptWizardPage.enterName")); //$NON-NLS-1$
 				}
 				else if(fTable.getSelectionCount() > 0)
 				{
@@ -321,7 +326,7 @@ public class TranscriptWizardPage extends WizardPage
 				}
 				else
 				{
-					setError("Select at least one participant");
+					setError(Messages.getString("wizards.pages.TranscriptWizardPage.selectOne")); //$NON-NLS-1$
 				}
 			}
 		};

@@ -44,9 +44,9 @@ public class AddInvestigatorPage extends WizardPage
 	 */
 	public AddInvestigatorPage(Project project)
 	{
-		super("Add Investigator");
-		setTitle("Add Investigator");
-		setDescription("Enter the information for a new Investigator");
+		super(Messages.getString("wizards.pages.AddInvestigatorPage.addInvestigator")); //$NON-NLS-1$
+		setTitle(Messages.getString("wizards.pages.AddInvestigatorPage.addInvestigator")); //$NON-NLS-1$
+		setDescription(Messages.getString("wizards.pages.AddInvestigatorPage.enterInfo")); //$NON-NLS-1$
 		fProject = project;
 	}
 	
@@ -58,7 +58,7 @@ public class AddInvestigatorPage extends WizardPage
 		fContainer.setLayout(layout);
 		layout.numColumns = 2;
 		Label label = new Label(fContainer, SWT.NULL);
-		label.setText("Nickname");
+		label.setText(Messages.getString("wizards.pages.AddInvestigatorPage.nickname")); //$NON-NLS-1$
 
 		fNickname = new Text(fContainer, SWT.BORDER | SWT.SINGLE);
 		fNickname.setText(System.getProperty("user.name")); //$NON-NLS-1$
@@ -71,13 +71,13 @@ public class AddInvestigatorPage extends WizardPage
 		fNickname.addKeyListener(createKeyListener());
 		
 		label = new Label(fContainer, SWT.NULL);
-		label.setText("Full Name");
+		label.setText(Messages.getString("wizards.pages.AddInvestigatorPage.fullName")); //$NON-NLS-1$
 		
 		fFullname = new Text(fContainer, SWT.BORDER | SWT.SINGLE);
 		fFullname.setText(""); //$NON-NLS-1$
 		
 		label = new Label(fContainer, SWT.NULL);
-		label.setText("Institution");
+		label.setText(Messages.getString("wizards.pages.AddInvestigatorPage.insitution")); //$NON-NLS-1$
 		
 		fInstitution = new Text(fContainer, SWT.BORDER | SWT.SINGLE);
 		fInstitution.setText(""); //$NON-NLS-1$
@@ -131,7 +131,8 @@ public class AddInvestigatorPage extends WizardPage
 				if(fNickname.getText().isEmpty())
 				{
 					setPageComplete(false);
-					setErrorMessage("Please enter a nickname for the Investigator");
+					setErrorMessage(Messages.getString(
+							"wizards.pages.AddInvestigatorPage.enterNickname")); //$NON-NLS-1$
 				}
 				else if(!idInUse())
 				{
@@ -140,7 +141,8 @@ public class AddInvestigatorPage extends WizardPage
 				}
 				else
 				{
-					setErrorMessage("That nickname is already taken");
+					setErrorMessage(Messages.getString(
+							"wizards.pages.AddInvestigatorPage.nicknameTaken")); //$NON-NLS-1$
 					setPageComplete(false);
 				}
 			}

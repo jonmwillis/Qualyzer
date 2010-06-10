@@ -26,7 +26,7 @@
             allowMultiple="false"
             class="org.eclipse.ui.navigator.CommonNavigator"
             id="ca.mcgill.cs.swevo.qualyzer.projectexplorer"
-            name="Project Explorer"
+            name="%view.name"
             restorable="true">
       </view>
    </extension>
@@ -117,102 +117,102 @@
       <command
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.ExitHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.exit"
-            name="Exit">
+            name="%command.name.exit">
       </command>
       <command
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.SetupHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.setup"
-            name="Setup">
+            name="%command.name.setup">
       </command>
       <command
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.NewProjectHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.newProject"
-            name="New Project">
+            name="%command.name.newProject">
       </command>
       <command
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.OpenTranscriptHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.openTranscript"
-            name="Open Transcript">
+            name="%command.name.openTranscript">
       </command>
       <command
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.AddParticipantHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.addParticipant"
-            name="Add Participant">
+            name="%command.name.addParticipant">
       </command>
       <command
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.EditParticipantHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.editParticipant"
-            name="Edit Participant">
+            name="%command.name.editParticipant">
       </command>
       <command
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.AddInvestigatorHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.addInvestigator"
-            name="Add Investigator">
+            name="%command.name.addInvestigator">
       </command>
       <command
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.EditInvestigatorHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.editInvestigator"
-            name="Edit Investigator">
+            name="%command.name.editInvestigator">
       </command>
       <command
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.EditCodeHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.editCode"
-            name="Edit Code">
+            name="%command.name.editCode">
       </command>
       <command
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.OpenMemoHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.openMemo"
-            name="Open Memo">
+            name="%command.name.openMemo">
       </command>
       <command
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.NewTranscriptHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.newTranscript"
-            name="New Transcript">
+            name="%command.name.newTranscript">
       </command>
       <command
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.TranscriptPropertiesHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.editTranscriptProperties"
-            name="Edit Transcript Properties">
+            name="%command.name.transcriptProperties">
       </command>
       <command
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.ImportTranscriptHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.importTranscript"
-            name="Import Transcript">
+            name="%command.name.importTranscript">
       </command>
       <command
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.ImportAudioFileHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.importAudioFile"
-            name="Import Audio File">
+            name="%command.name.importAudioFile">
       </command>
       <command
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.CloseProjectHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.closeProject"
-            name="Close Project">
+            name="%command.name.closeProject">
       </command>
       <command
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.OpenProjectHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.openProject"
-            name="Open Project">
+            name="%command.name.openProject">
       </command>
       <command
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.DeleteParticipantHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.deleteParticipant"
-            name="Delete Participant">
+            name="%command.name.deleteParticipant">
       </command>
       <command
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.DeleteInvestigatorHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.deleteInvestigator"
-            name="Delete Investigator">
+            name="%command.name.deleteInvestigator">
       </command>
       <command
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.DeleteTranscriptHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.deleteTranscript"
-            name="Delete Transcript">
+            name="%command.name.deleteTranscript">
       </command>
       <command
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.AboutQualyzerHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.aboutQualyzer"
-            name="About Qualyzer">
+            name="%command.name.aboutQualyzer">
       </command>
    </extension>
    <extension
@@ -221,16 +221,16 @@
             locationURI="menu:org.eclipse.ui.main.menu">
          <menu
                id="fileMenu"
-               label="&amp;File">
+               label="%menu.label.file">
             <menu
                   id="fileNew"
-                  label="&amp;New">
+                  label="%menu.label.new">
                <command
                      commandId="ca.mcgill.cs.swevo.qualyzer.commands.newProject"
                      icon="icons/new_prj.gif"
-                     label="&amp;Project"
+                     label="%command.label.project"
                      style="push"
-                     tooltip="Create a New Project">
+                     tooltip="%command.tooltip.createNewProject">
                </command>
             </menu>
             <separator
@@ -239,15 +239,15 @@
             </separator>
             <command
                   commandId="org.eclipse.ui.file.close"
-                  label="&amp;Close"
+                  label="%command.label.close"
                   style="push"
-                  tooltip="Close the Open Editor">
+                  tooltip="%command.tooltip.closeEditor">
             </command>
             <command
                   commandId="org.eclipse.ui.file.closeAll"
-                  label="C&amp;lose All"
+                  label="%command.label.closeAll"
                   style="push"
-                  tooltip="Close All Open Editors">
+                  tooltip="%command.tooltip.closeAllEditors">
             </command>
             <separator
                   name="fileMenu/saveSeparator"
@@ -256,9 +256,9 @@
             <command
                   commandId="org.eclipse.ui.file.save"
                   icon="icons/save.gif"
-                  label="&amp;Save"
+                  label="%command.label.save"
                   style="push"
-                  tooltip="Save the Open Editor">
+                  tooltip="%command.tooltip.saveEditor">
             </command>
             <separator
                   name="fileMenu/lastSeparator"
@@ -266,18 +266,18 @@
             </separator>
             <command
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.exit"
-                  label="E&amp;xit"
+                  label="%command.label.exit"
                   style="push"
-                  tooltip="Exit the Application">
+                  tooltip="%command.tooltip.exitApp">
             </command>
          </menu>
          <menu
                id="helpMenu"
-               label="&amp;Help"
-               tooltip="Help">
+               label="%menu.label.help"
+               tooltip="%menu.tooltip.help">
             <command
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.aboutQualyzer"
-                  label="&amp;About Qualyzer"
+                  label="%command.label.aboutQualyzer"
                   style="push">
             </command>
          </menu>
@@ -286,20 +286,20 @@
             locationURI="popup:ca.mcgill.cs.swevo.qualyzer.projectexplorer#PopupMenu?after=group.new">
          <menu
                id="fileNew"
-               label="&amp;New">
+               label="%menu.label.new">
             <command
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.newProject"
                   icon="icons/new_prj.gif"
-                  label="&amp;Project"
+                  label="%command.label.project"
                   style="push"
-                  tooltip="Create a New Project">
+                  tooltip="%command.tooltip.createNewProject">
             </command>
             <command
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.addParticipant"
                   icon="icons/person.gif"
-                  label="P&amp;articipant"
+                  label="%command.label.particpant"
                   style="push"
-                  tooltip="Create a New Participant">
+                  tooltip="%command.tooltip.createParticipant">
                <visibleWhen
                      checkEnabled="true">
                   <iterate
@@ -327,9 +327,9 @@
             <command
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.addInvestigator"
                   icon="icons/person.gif"
-                  label="&amp;Investigator"
+                  label="%command.label.investigator"
                   style="push"
-                  tooltip="Create a New Investigator">
+                  tooltip="%command.tooltip.createInvestigator">
                <visibleWhen
                      checkEnabled="true">
                   <iterate
@@ -357,9 +357,9 @@
             <command
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.newTranscript"
                   icon="icons/file_obj.gif"
-                  label="&amp;Transcript"
+                  label="%command.label.transcript"
                   style="push"
-                  tooltip="Create a New Transcript">
+                  tooltip="%command.tooltip.createTranscript">
                <visibleWhen
                      checkEnabled="true">
                   <iterate
@@ -390,9 +390,9 @@
             locationURI="popup:ca.mcgill.cs.swevo.qualyzer.projectexplorer#PopupMenu?after=group.open">
          <command
                commandId="ca.mcgill.cs.swevo.qualyzer.commands.openTranscript"
-               label="&amp;Open"
+               label="%command.label.open"
                style="push"
-               tooltip="Open a Transcript">
+               tooltip="%command.tooltip.openTranscript">
             <visibleWhen
                   checkEnabled="true">
                <iterate
@@ -406,9 +406,9 @@
          </command>
          <command
                commandId="ca.mcgill.cs.swevo.qualyzer.commands.editParticipant"
-               label="&amp;Open"
+               label="%command.label.open"
                style="push"
-               tooltip="Edit a Participant">
+               tooltip="%command.tooltip.editParticipant">
             <visibleWhen
                   checkEnabled="true">
                <iterate
@@ -422,9 +422,9 @@
          </command>
          <command
                commandId="ca.mcgill.cs.swevo.qualyzer.commands.editInvestigator"
-               label="&amp;Open"
+               label="%command.label.open"
                style="push"
-               tooltip="Edit an Investigator">
+               tooltip="%command.tooltip.editInvestigator">
             <visibleWhen
                   checkEnabled="true">
                <iterate
@@ -438,9 +438,9 @@
          </command>
          <command
                commandId="ca.mcgill.cs.swevo.qualyzer.commands.openMemo"
-               label="&amp;Open"
+               label="%command.label.open"
                style="push"
-               tooltip="Open a Memo">
+               tooltip="%command.tooltip.openMemo">
             <visibleWhen
                   checkEnabled="true">
                <iterate
@@ -454,9 +454,9 @@
          </command>
          <command
                commandId="ca.mcgill.cs.swevo.qualyzer.commands.editCode"
-               label="&amp;Open"
+               label="%command.label.open"
                style="push"
-               tooltip="Edit a Code">
+               tooltip="%command.tooltip.editCode">
             <visibleWhen
                   checkEnabled="true">
                <iterate
@@ -473,9 +473,9 @@
             locationURI="popup:ca.mcgill.cs.swevo.qualyzer.projectexplorer#PopupMenu?after=group.edit2">
          <command
                commandId="org.eclipse.ui.edit.rename"
-               label="&amp;Rename"
+               label="%command.label.rename"
                style="push"
-               tooltip="Rename this Transcript">
+               tooltip="%command.tooltip.renameTranscript">
             <visibleWhen
                   checkEnabled="true">
                <iterate
@@ -490,9 +490,9 @@
          <command
                commandId="ca.mcgill.cs.swevo.qualyzer.commands.deleteParticipant"
                icon="icons/delete.gif"
-               label="&amp;Delete"
+               label="%command.label.delete"
                style="push"
-               tooltip="Delete this Participant">
+               tooltip="%command.tooltip.deleteParticipant">
             <visibleWhen
                   checkEnabled="true">
                <iterate
@@ -507,9 +507,9 @@
          <command
                commandId="ca.mcgill.cs.swevo.qualyzer.commands.deleteInvestigator"
                icon="icons/delete.gif"
-               label="&amp;Delete"
+               label="%command.label.delete"
                style="push"
-               tooltip="Delete this Investigator">
+               tooltip="%command.tooltip.deleteInvestigator">
             <visibleWhen
                   checkEnabled="true">
                <iterate
@@ -524,9 +524,9 @@
          <command
                commandId="ca.mcgill.cs.swevo.qualyzer.commands.deleteTranscript"
                icon="icons/delete.gif"
-               label="&amp;Delete"
+               label="%command.label.delete"
                style="push"
-               tooltip="Delete this Transcript">
+               tooltip="%command.tooltip.deleteTranscript">
             <visibleWhen
                   checkEnabled="true">
                <iterate
@@ -542,12 +542,12 @@
       <menuContribution
             locationURI="popup:ca.mcgill.cs.swevo.qualyzer.projectexplorer#PopupMenu?after=group.port">
          <menu
-               label="&amp;Import">
+               label="%menu.label.import">
             <command
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.importTranscript"
-                  label="&amp;Transcript"
+                  label="%command.label.transcript"
                   style="push"
-                  tooltip="Import a Transcript">
+                  tooltip="%command.tooltip.importTranscript">
                <visibleWhen
                      checkEnabled="true">
                   <iterate
@@ -574,9 +574,9 @@
             </command>
             <command
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.importAudioFile"
-                  label="&amp;Audio File"
+                  label="%command.label.audioFile"
                   style="push"
-                  tooltip="Import an Audio File">
+                  tooltip="%command.tooltip.importAudioFile">
                <visibleWhen
                      checkEnabled="true">
                   <iterate
@@ -594,9 +594,9 @@
             locationURI="popup:ca.mcgill.cs.swevo.qualyzer.projectexplorer#PopupMenu?after=group.build">
          <command
                commandId="ca.mcgill.cs.swevo.qualyzer.commands.closeProject"
-               label="Close Project"
+               label="%command.label.closeProject"
                style="push"
-               tooltip="Close the Selected Project">
+               tooltip="%command.tooltip.closeProject">
             <visibleWhen
                   checkEnabled="true">
                <iterate
@@ -616,9 +616,9 @@
          </command>
          <command
                commandId="ca.mcgill.cs.swevo.qualyzer.commands.openProject"
-               label="Open Project"
+               label="%command.label.openProject"
                style="push"
-               tooltip="Open the Selected Project">
+               tooltip="%command.tooltip.openproject">
             <visibleWhen
                   checkEnabled="true">
                <iterate
@@ -643,9 +643,9 @@
             locationURI="popup:ca.mcgill.cs.swevo.qualyzer.projectexplorer#PopupMenu?after=group.properties">
          <command
                commandId="ca.mcgill.cs.swevo.qualyzer.commands.editTranscriptProperties"
-               label="&amp;Properties"
+               label="%command.label.Properties"
                style="push"
-               tooltip="Edit this Transcript&apos;s Properties">
+               tooltip="%command.tooltip.editProperties">
             <visibleWhen
                   checkEnabled="true">
                <iterate
@@ -667,21 +667,21 @@
             extensions="txt"
             icon="icons/sample.gif"
             id="ca.mcgill.cs.swevo.qualyzer.editors.TranscriptEditor"
-            name="Transcript Editor">
+            name="%editor.name.transcript">
       </editor>
       <editor
             class="ca.mcgill.cs.swevo.qualyzer.editors.ParticipantFormEditor"
             default="false"
             icon="icons/sample.gif"
             id="ca.mcgill.cs.swevo.qualyzer.editors.ParticipantFormEditor"
-            name="Participant Form Editor">
+            name="%editor.name.participant">
       </editor>
       <editor
             class="ca.mcgill.cs.swevo.qualyzer.editors.InvestigatorFormEditor"
             default="false"
             icon="icons/sample.gif"
             id="ca.mcgill.cs.swevo.qualyzer.editors.investigatorFormEditor"
-            name="Investigator Form Editor">
+            name="%editor.name.investigator">
       </editor>
    </extension>
    <extension
@@ -723,7 +723,7 @@
             contentProvider="ca.mcgill.cs.swevo.qualyzer.providers.NavigatorContentProvider"
             id="ca.mcgill.cs.swevo.qualyzer.model.navigatorcontent"
             labelProvider="ca.mcgill.cs.swevo.qualyzer.providers.NavigatorLabelProvider"
-            name="Qualyzer Navigator Content"
+            name="%navigatorContent.name"
             priority="normal">
          <enablement>
             <or>

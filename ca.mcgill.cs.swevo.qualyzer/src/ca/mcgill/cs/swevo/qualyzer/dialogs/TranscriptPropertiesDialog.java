@@ -84,7 +84,7 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 	public void create()
 	{
 		super.create();
-		setTitle("Properties");
+		setTitle(Messages.getString("dialogs.TranscriptPropertiesDialog.properties")); //$NON-NLS-1$
 	}
 	
 	@Override
@@ -93,29 +93,23 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 		GridLayout layout = new GridLayout(2, false);
 		parent.setLayout(layout);
 		
-		Label label = createLabel(parent, "Transcript Name:");
+		Label label = createLabel(parent, Messages.getString("dialogs.TranscriptPropertiesDialog.name")); //$NON-NLS-1$
 		label = new Label(parent, SWT.BORDER);
 		label.setText(fTranscript.getName());
 		label.setLayoutData(createTextGridData());
 		
-		label = createLabel(parent, "File path:");
+		label = createLabel(parent, Messages.getString("dialogs.TranscriptPropertiesDialog.path")); //$NON-NLS-1$
 		label = new Label(parent, SWT.BORDER);
 		label.setText(fProjectName + TRANSCRIPT + fTranscript.getFileName());
 		label.setLayoutData(createTextGridData());
 		
-		label = createLabel(parent, "Date:");
+		label = createLabel(parent, Messages.getString("dialogs.TranscriptPropertiesDialog.date")); //$NON-NLS-1$
 		fDate = createText(fTranscript.getDate(), parent);
 		
 		Composite composite = createComposite(parent);
 		
-		label = createLabel(composite, "Participants:");
-		label.setLayoutData(createTextGridData());
-		Button button = new Button(composite, SWT.PUSH);
-		button.setText("+"); //$NON-NLS-1$
-		button.addSelectionListener(createAddListener());
-		button = new Button(composite, SWT.PUSH);
-		button.setText("-"); //$NON-NLS-1$
-		button.addSelectionListener(createRemoveListener());
+		Button button;
+		createParticipantButtonBar(composite);
 		
 		fTable = new Table(parent, SWT.MULTI);
 		GridData gd = createTextGridData();
@@ -125,7 +119,9 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 		
 		composite = createComposite(parent);
 		
-		label = createLabel(composite, "Audio File Path:");
+		label = createLabel(composite, 
+				Messages.getString("dialogs.TranscriptPropertiesDialog.audioPath")); //$NON-NLS-1$
+		
 		if(fTranscript.getAudioFile() != null)
 		{
 			fAudioPath = fProjectName + fTranscript.getAudioFile().getRelativePath();
@@ -134,10 +130,27 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 		fAudioLabel.setText(fAudioPath);
 		fAudioLabel.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false)); //TODO why does this look weird?
 		button = new Button(composite, SWT.PUSH);
-		button.setText("Browse");
+		button.setText(Messages.getString("dialogs.TranscriptPropertiesDialog.browse")); //$NON-NLS-1$
 		button.addSelectionListener(createSelectionAdapter());
 				
 		return parent;
+	}
+
+	/**
+	 * @param composite
+	 */
+	private void createParticipantButtonBar(Composite composite)
+	{
+		Label label;
+		label = createLabel(composite, 
+				Messages.getString("dialogs.TranscriptPropertiesDialog.participants")); //$NON-NLS-1$
+		label.setLayoutData(createTextGridData());
+		Button button = new Button(composite, SWT.PUSH);
+		button.setText("+"); //$NON-NLS-1$
+		button.addSelectionListener(createAddListener());
+		button = new Button(composite, SWT.PUSH);
+		button.setText("-"); //$NON-NLS-1$
+		button.addSelectionListener(createRemoveListener());
 	}
 
 	/**
@@ -157,7 +170,7 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 				
 				if(fTable.getItemCount() <= 0)
 				{
-					setErrorMessage("There must be at least one Participant");
+					setErrorMessage(Messages.getString("dialogs.TranscriptPropertiesDialog.atLeastOne")); //$NON-NLS-1$
 					getButton(IDialogConstants.OK_ID).setEnabled(false);
 				}
 			}
@@ -182,7 +195,7 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 					names[i] = list.get(i).getParticipantId();
 				}
 				dialog.setElements(names);
-				dialog.setTitle("Which participants would you like to add");
+				dialog.setTitle(Messages.getString("dialogs.TranscriptPropertiesDialog.addWhich")); //$NON-NLS-1$
 				dialog.open();
 				Object[] result = dialog.getResult();
 				for(Object s : result)
@@ -250,13 +263,15 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 				FileDialog dialog = new FileDialog(getShell());
 				//dialog.setFilterPath("");
 				dialog.setFilterExtensions(new String[]{"*.mp3;*.wav"}); //$NON-NLS-1$
-				dialog.setFilterNames(new String[]{"Audio (.mp3, .wav)"});
+				dialog.setFilterNames(
+						new String[]{Messages.getString("dialogs.TranscriptPropertiesDialog.audioExt")}); //$NON-NLS-1$
 				
 				fAudioPath = dialog.open();
 				if(fAudioPath != null)
 				{
-					setMessage("Warning, changing the audio file may cause the " +
-							"current audio file to be overwritten.", IMessageProvider.WARNING);
+					setMessage(Messages.getString("dialogs.TranscriptPropertiesDialog.warning1") + //$NON-NLS-1$
+							Messages.getString("dialogs.TranscriptPropertiesDialog.warning2"), //$NON-NLS-1$
+							IMessageProvider.WARNING); 
 					fAudioLabel.setText(fAudioPath);
 				}
 			}

@@ -70,13 +70,14 @@ public class DeleteInvestigatorHandler extends AbstractHandler
 				if(conflicts.size() > 0)
 				{
 					String errorMsg = printErrors(conflicts);
-					MessageDialog.openError(shell, "Cannot Delete Investigator", errorMsg);
+					MessageDialog.openError(shell, Messages.getString(
+							"handlers.DeleteInvestigatorHandler.cannotDelete"), errorMsg); //$NON-NLS-1$
 				}
 				else
 				{
 					boolean check = MessageDialog.openConfirm(shell, 
-							"Delete this Investigator", 
-							"Are you sure you want to delete this investigator?");
+							Messages.getString("handlers.DeleteInvestigatorHandler.deleteInvestigator"),  //$NON-NLS-1$
+							Messages.getString("handlers.DeleteInvestigatorHandler.confirm")); //$NON-NLS-1$
 					
 					if(check)
 					{
@@ -98,7 +99,7 @@ public class DeleteInvestigatorHandler extends AbstractHandler
 	 */
 	private String printErrors(ArrayList<String> conflicts)
 	{
-		String output = "Cannot delete investigator due to the following conflicts:";
+		String output = Messages.getString("handlers.DeleteInvestigatorHandler.conflicts"); //$NON-NLS-1$
 		for(String str : conflicts)
 		{
 			output += NEWLINE+str; 
@@ -121,7 +122,8 @@ public class DeleteInvestigatorHandler extends AbstractHandler
 		{
 			if(memo.getAuthor().equals(investigator))
 			{
-				conflicts.add("Memo:" + memo.getName());
+				conflicts.add(Messages.getString(
+						"handlers.DeleteInvestigatorHandler.memo") + memo.getName()); //$NON-NLS-1$
 			}
 			else
 			{
@@ -170,14 +172,16 @@ public class DeleteInvestigatorHandler extends AbstractHandler
 	 */
 	private String buildMemoString(int numAnnotations, int numCodeEntries, Memo memo)
 	{
-		String str = "";
+		String str = ""; //$NON-NLS-1$
 		if(numAnnotations == 1)
 		{
-			str += "1 Annotation in Memo:" + memo.getName();
+			str += Messages.getString(
+					"handlers.DeleteInvestigatorHandler.oneAnnotationMemo") + memo.getName(); //$NON-NLS-1$
 		}
 		else if(numAnnotations > 1)
 		{
-			str += numAnnotations+" Annotations in Memo:" + memo.getName();
+			str += numAnnotations+Messages.getString(
+					"handlers.DeleteInvestigatorHandler.annotationsMemo") + memo.getName(); //$NON-NLS-1$
 		}
 		
 		if(numAnnotations > 0 && numCodeEntries > 0)
@@ -187,11 +191,12 @@ public class DeleteInvestigatorHandler extends AbstractHandler
 		
 		if(numCodeEntries == 1)
 		{	
-			str += "1 Code Entry in Memo: " + memo.getName();
+			str += Messages.getString("handlers.DeleteInvestigatorHandler.oneCodeMemo") + memo.getName(); //$NON-NLS-1$
 		}
 		else if(numCodeEntries > 1)
 		{
-			str += numCodeEntries + " Code Entries in Memo: " + memo.getName();
+			str += numCodeEntries + Messages.getString(
+					"handlers.DeleteInvestigatorHandler.codesMemo") + memo.getName(); //$NON-NLS-1$
 		}
 		
 		return str;
@@ -205,14 +210,16 @@ public class DeleteInvestigatorHandler extends AbstractHandler
 	 */
 	private String buildTranscriptString(int numAnnotations, int numCodeEntries, Transcript transcript)
 	{
-		String str = "";
+		String str = ""; //$NON-NLS-1$
 		if(numAnnotations == 1)
 		{
-			str += "1 Annotation in Transcript:" + transcript.getName();
+			str += Messages.getString("handlers.DeleteInvestigatorHandler.oneAnnotationTranscript") + //$NON-NLS-1$
+				transcript.getName(); 
 		}
 		else if(numAnnotations > 1)
 		{
-			str += numAnnotations+" Annotations in Transcript:" + transcript.getName();
+			str += numAnnotations+Messages.getString(
+					"handlers.DeleteInvestigatorHandler.annotationsTranscript") + transcript.getName(); //$NON-NLS-1$
 		}
 		
 		if(numAnnotations > 0 && numCodeEntries > 0)
@@ -222,11 +229,13 @@ public class DeleteInvestigatorHandler extends AbstractHandler
 		
 		if(numCodeEntries == 1)
 		{	
-			str += "1 Code Entry in Transcript: " + transcript.getName();
+			str += Messages.getString(
+					"handlers.DeleteInvestigatorHandler.oneCodeTranscript") + transcript.getName(); //$NON-NLS-1$
 		}
 		else if(numCodeEntries > 1)
 		{
-			str += numCodeEntries + " Code Entries in Transcript: " + transcript.getName();
+			str += numCodeEntries + Messages.getString(
+					"handlers.DeleteInvestigatorHandler.codesTranscript") + transcript.getName(); //$NON-NLS-1$
 		}
 		
 		return str;
