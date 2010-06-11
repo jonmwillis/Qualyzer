@@ -45,8 +45,9 @@ public class DeleteProjectHandler extends AbstractHandler
 			{
 				Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 				
-				boolean confirm = MessageDialog.openConfirm(shell, "Delete Project", 
-						"Are you sure you want to delete this project? All contents will be removed from the disk.");
+				boolean confirm = MessageDialog.openConfirm(shell, 
+						Messages.getString("handler.DeleteProjectHandler.deleteProject"),  //$NON-NLS-1$
+						Messages.getString("handler.DeleteProjectHandler.confirm")); //$NON-NLS-1$
 				
 				if(confirm)
 				{
@@ -63,7 +64,7 @@ public class DeleteProjectHandler extends AbstractHandler
 					}
 					catch(CoreException e)
 					{
-						System.out.println("error");
+						e.printStackTrace();
 					}
 				}
 			}
