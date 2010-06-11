@@ -306,7 +306,7 @@
                   style="push"
                   tooltip="%command.tooltip.createParticipant">
                <visibleWhen
-                     checkEnabled="true">
+                     checkEnabled="false">
                   <iterate
                         ifEmpty="false"
                         operator="or">
@@ -336,7 +336,7 @@
                   style="push"
                   tooltip="%command.tooltip.createInvestigator">
                <visibleWhen
-                     checkEnabled="true">
+                     checkEnabled="false">
                   <iterate
                         ifEmpty="false"
                         operator="and">
@@ -366,7 +366,7 @@
                   style="push"
                   tooltip="%command.tooltip.createTranscript">
                <visibleWhen
-                     checkEnabled="true">
+                     checkEnabled="false">
                   <iterate
                         ifEmpty="false"
                         operator="and">
@@ -399,7 +399,7 @@
                style="push"
                tooltip="%command.tooltip.openTranscript">
             <visibleWhen
-                  checkEnabled="true">
+                  checkEnabled="false">
                <iterate
                      ifEmpty="false"
                      operator="or">
@@ -415,7 +415,7 @@
                style="push"
                tooltip="%command.tooltip.editParticipant">
             <visibleWhen
-                  checkEnabled="true">
+                  checkEnabled="false">
                <iterate
                      ifEmpty="false"
                      operator="or">
@@ -431,7 +431,7 @@
                style="push"
                tooltip="%command.tooltip.editInvestigator">
             <visibleWhen
-                  checkEnabled="true">
+                  checkEnabled="false">
                <iterate
                      ifEmpty="false"
                      operator="or">
@@ -447,7 +447,7 @@
                style="push"
                tooltip="%command.tooltip.openMemo">
             <visibleWhen
-                  checkEnabled="true">
+                  checkEnabled="false">
                <iterate
                      ifEmpty="false"
                      operator="or">
@@ -463,7 +463,7 @@
                style="push"
                tooltip="%command.tooltip.editCode">
             <visibleWhen
-                  checkEnabled="true">
+                  checkEnabled="false">
                <iterate
                      ifEmpty="false"
                      operator="or">
@@ -482,7 +482,7 @@
                style="push"
                tooltip="%command.tooltip.renameTranscript">
             <visibleWhen
-                  checkEnabled="true">
+                  checkEnabled="false">
                <iterate
                      ifEmpty="false"
                      operator="or">
@@ -499,7 +499,7 @@
                style="push"
                tooltip="%command.tooltip.deleteParticipant">
             <visibleWhen
-                  checkEnabled="true">
+                  checkEnabled="false">
                <iterate
                      ifEmpty="false"
                      operator="and">
@@ -516,7 +516,7 @@
                style="push"
                tooltip="%command.tooltip.deleteInvestigator">
             <visibleWhen
-                  checkEnabled="true">
+                  checkEnabled="false">
                <iterate
                      ifEmpty="false"
                      operator="and">
@@ -533,7 +533,7 @@
                style="push"
                tooltip="%command.tooltip.deleteTranscript">
             <visibleWhen
-                  checkEnabled="true">
+                  checkEnabled="false">
                <iterate
                      ifEmpty="false"
                      operator="and">
@@ -550,7 +550,7 @@
                style="push"
                tooltip="Delete this Project">
             <visibleWhen
-                  checkEnabled="true">
+                  checkEnabled="false">
                <iterate
                      ifEmpty="false"
                      operator="and">
@@ -572,7 +572,7 @@
                   style="push"
                   tooltip="%command.tooltip.importTranscript">
                <visibleWhen
-                     checkEnabled="true">
+                     checkEnabled="false">
                   <iterate
                         ifEmpty="false"
                         operator="and">
@@ -601,7 +601,7 @@
                   style="push"
                   tooltip="%command.tooltip.importAudioFile">
                <visibleWhen
-                     checkEnabled="true">
+                     checkEnabled="false">
                   <iterate
                         ifEmpty="false"
                         operator="or">
@@ -621,7 +621,7 @@
                style="push"
                tooltip="%command.tooltip.closeProject">
             <visibleWhen
-                  checkEnabled="true">
+                  checkEnabled="false">
                <iterate
                      ifEmpty="false"
                      operator="or">
@@ -643,7 +643,7 @@
                style="push"
                tooltip="%command.tooltip.openproject">
             <visibleWhen
-                  checkEnabled="true">
+                  checkEnabled="false">
                <iterate
                      ifEmpty="false"
                      operator="or">
@@ -670,7 +670,7 @@
                style="push"
                tooltip="%command.tooltip.editProperties">
             <visibleWhen
-                  checkEnabled="true">
+                  checkEnabled="false">
                <iterate
                      ifEmpty="false"
                      operator="or">
