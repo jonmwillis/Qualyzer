@@ -26,6 +26,9 @@ import org.hibernate.annotations.Type;
 @Entity
 public class Participant implements Comparable<Participant>
 {
+	private static final int NUM = 23339;
+	private static final int NUM2 = 34905;
+	
 	private String fParticipantId;
 	private String fFullName;
 	private String fNotes;
@@ -143,7 +146,7 @@ public class Participant implements Comparable<Participant>
 	@Override
 	public int hashCode()
 	{
-		return new HashCodeBuilder().append(fParticipantId)
+		return new HashCodeBuilder(NUM, NUM2).append(fParticipantId)
 			.append(fProject).toHashCode();
 	}
 	

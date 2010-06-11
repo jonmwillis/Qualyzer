@@ -25,6 +25,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.hibernate.annotations.CollectionId;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
@@ -35,6 +37,9 @@ import org.hibernate.annotations.Type;
 @GenericGenerator(name = "uuid-gen", strategy = "uuid")
 public class Memo implements Comparable<Memo>, IAnnotatedDocument
 {
+	private static final int NUM = 58793;
+	private static final int NUM2 = 1651;
+	
 	private Investigator fAuthor;
 	private List<Fragment> fFragments = new ArrayList<Fragment>();
 	private List<Participant> fParticipants = new ArrayList<Participant>();
@@ -164,6 +169,44 @@ public class Memo implements Comparable<Memo>, IAnnotatedDocument
 		return this.getName().compareTo(memo.getName());
 	}
 	
-	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode()
+	{
+		return new HashCodeBuilder(NUM, NUM2).append(fName)
+			.append(fAuthor).append(fProject).append(fFileName).toHashCode();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+		{
+			return true;
+		}
+		if (obj == null)
+		{
+			return false;
+		}
+		if (getClass() != obj.getClass())
+		{
+			return false;
+		}
+		else
+		{
+			Memo memo = (Memo) obj;
+			return new EqualsBuilder().append(fName, memo.fName).append(fAuthor, memo.fAuthor)
+				.append(fProject, memo.fProject).append(fFileName, memo.fFileName).isEquals();
+		}
+	}
 
 }

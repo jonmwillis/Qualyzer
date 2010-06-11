@@ -17,6 +17,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.hibernate.annotations.Type;
 
 /**
@@ -24,6 +26,9 @@ import org.hibernate.annotations.Type;
 @Entity
 public class Code implements Comparable<Code>
 {
+	private static final int NUM = 24651;
+	private static final int NUM2 = 23959;
+	
 	private String fCodeName;
 	private String fDescription;
 	private Project fProject;
@@ -103,5 +108,30 @@ public class Code implements Comparable<Code>
 	public int compareTo(Code code)
 	{
 		return this.getCodeName().compareTo(code.getCodeName());
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return new HashCodeBuilder(NUM, NUM2).append(fCodeName).append(fProject).toHashCode();
+	}
+	
+	@Override
+	public boolean equals(Object obj)
+	{
+		if(this == obj)
+		{
+			return true;
+		}
+		else if(obj == null)
+		{
+			return false;
+		}
+		else if(obj.getClass().equals(getClass()))
+		{
+			Code code = (Code) obj;
+			return new EqualsBuilder().append(fCodeName, code.fCodeName).append(fProject, code.fProject).isEquals();
+		}
+		return false;
 	}
 }

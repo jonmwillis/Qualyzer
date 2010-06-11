@@ -34,6 +34,9 @@ import org.hibernate.annotations.GenericGenerator;
 @GenericGenerator(name = "uuid-gen", strategy = "uuid")
 public class Project
 {
+	private static final int NUM = 19145;
+	private static final int NUM2 = 52511;
+	
 	private String fName;
 	private Long fPersistenceId;
 	private List<Investigator> fInvestigators = new ArrayList<Investigator>();
@@ -194,7 +197,7 @@ public class Project
 	@Override
 	public int hashCode()
 	{
-		return new HashCodeBuilder().append(fName).toHashCode();
+		return new HashCodeBuilder(NUM, NUM2).append(fName).toHashCode();
 	}
 
 }

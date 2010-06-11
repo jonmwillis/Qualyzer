@@ -16,11 +16,17 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 /**
   */
 @Entity
 public class CodeEntry
 {
+	private static final int NUM = 32363;
+	private static final int NUM2 = 33841;
+	
 	private Code fCode;
 	
 	private Investigator fInvestigator;
@@ -77,6 +83,32 @@ public class CodeEntry
 	public void setPersistenceId(Long persistenceId)
 	{
 		this.fPersistenceId = persistenceId;
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return new HashCodeBuilder(NUM, NUM2).append(fCode).append(fInvestigator).toHashCode();
+	}
+	
+	@Override
+	public boolean equals(Object obj)
+	{
+		if(obj == null)
+		{
+			return false;
+		}
+		else if(obj == this)
+		{
+			return true;
+		}
+		else if(obj.getClass().equals(getClass()))
+		{
+			CodeEntry entry = (CodeEntry) obj;
+			return new EqualsBuilder().append(fCode, entry.fCode).append(fInvestigator, entry.fInvestigator).isEquals();
+		}
+		
+		return false;
 	}
 	
 	
