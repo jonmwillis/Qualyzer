@@ -214,6 +214,11 @@
             id="ca.mcgill.cs.swevo.qualyzer.commands.aboutQualyzer"
             name="%command.name.aboutQualyzer">
       </command>
+      <command
+            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.DeleteProjectHandler"
+            id="ca.mcgill.cs.swevo.qualyzer.commands.deleteProject"
+            name="Delete Project">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -534,6 +539,23 @@
                      operator="and">
                   <instanceof
                         value="ca.mcgill.cs.swevo.qualyzer.model.Transcript">
+                  </instanceof>
+               </iterate>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="ca.mcgill.cs.swevo.qualyzer.commands.deleteProject"
+               icon="icons/delete.gif"
+               label="%command.label.delete"
+               style="push"
+               tooltip="Delete this Project">
+            <visibleWhen
+                  checkEnabled="true">
+               <iterate
+                     ifEmpty="false"
+                     operator="and">
+                  <instanceof
+                        value="org.eclipse.core.resources.IProject">
                   </instanceof>
                </iterate>
             </visibleWhen>
