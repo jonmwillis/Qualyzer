@@ -25,6 +25,9 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 @Entity
 public class Investigator
 {
+	private static final int NUM = 21799;
+	private static final int NUM2 = 11947;
+	
 	private String fNickName;
 	private String fFullName;
 	private String fInstitution;
@@ -118,7 +121,7 @@ public class Investigator
 	@Override
 	public int hashCode()
 	{
-		return new HashCodeBuilder().append(fNickName)
+		return new HashCodeBuilder(NUM, NUM2).append(fNickName)
 			.append(fProject).toHashCode();
 	}
 	

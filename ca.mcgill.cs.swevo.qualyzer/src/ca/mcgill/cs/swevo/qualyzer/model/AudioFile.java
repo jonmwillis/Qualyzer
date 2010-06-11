@@ -15,12 +15,18 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 /**
  * An audio file corresponding to a transcript.
  */
 @Entity
 public class AudioFile
 {
+	private static final int NUM = 2403;
+	private static final int NUM2 = 46665;
+	
 	// Path relative to the workspace.
 	private String fRelativePath;
 	
@@ -58,6 +64,32 @@ public class AudioFile
 	public void setPersistenceId(Long persistenceId)
 	{
 		this.fPersistenceId = persistenceId;
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return new HashCodeBuilder(NUM, NUM2).append(fRelativePath).toHashCode();
+	}
+	
+	@Override
+	public boolean equals(Object obj)
+	{
+		if(obj == null)
+		{
+			return false;
+		}
+		else if(obj == this)
+		{
+			return true;
+		}
+		else if(obj.getClass().equals(getClass()))
+		{
+			AudioFile file = (AudioFile) obj;
+			return new EqualsBuilder().append(fRelativePath, file.fRelativePath).isEquals();
+		}
+		
+		return false;
 	}
 	
 	

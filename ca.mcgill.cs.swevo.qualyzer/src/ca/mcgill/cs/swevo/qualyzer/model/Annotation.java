@@ -16,6 +16,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.hibernate.annotations.Type;
 
 /**
@@ -24,6 +26,9 @@ import org.hibernate.annotations.Type;
 @Entity
 public class Annotation
 {
+	private static final int NUM = 60525;
+	private static final int NUM2 = 8921;
+	
 	private Investigator fInvestigator;
 	
 	private String fComment;
@@ -82,6 +87,31 @@ public class Annotation
 		this.fPersistenceId = persistenceId;
 	}
 	
+	@Override
+	public int hashCode()
+	{
+		return new HashCodeBuilder(NUM, NUM2).append(fComment).append(fInvestigator).toHashCode();
+	}
 	
+	@Override
+	public boolean equals(Object obj)
+	{
+		if(obj == this)
+		{
+			return true;
+		}
+		else if(obj == null)
+		{
+			return false;
+		}
+		else if(obj.getClass().equals(getClass()))
+		{
+			Annotation annot = (Annotation) obj;
+			return new EqualsBuilder().append(fComment, annot.fComment)
+				.append(fInvestigator, annot.fInvestigator).isEquals();
+		}
+		
+		return false;
+	}
 	
 }
