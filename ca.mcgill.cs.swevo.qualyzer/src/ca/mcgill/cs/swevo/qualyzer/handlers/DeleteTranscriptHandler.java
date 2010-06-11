@@ -101,7 +101,7 @@ public class DeleteTranscriptHandler extends AbstractHandler
 			//TODO delete codes
 		}
 		
-		if(deleteAudio)
+		if(deleteAudio && transcript.getAudioFile() != null)
 		{
 			File file = new File(wProject.getLocation() + transcript.getAudioFile().getRelativePath());
 			file.delete();
