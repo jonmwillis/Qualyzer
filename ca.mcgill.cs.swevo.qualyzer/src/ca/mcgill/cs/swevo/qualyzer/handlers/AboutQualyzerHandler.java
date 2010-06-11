@@ -24,6 +24,11 @@ import org.eclipse.ui.handlers.HandlerUtil;
  */
 public class AboutQualyzerHandler extends AbstractHandler
 {
+	private static final String DESCRIPTION = "Qualyzer supports researchers conducting qualitative inquiries " +
+			"by helping them manage participants, transcripts, and memos.\n\n";
+	
+	private static final String WEB = "Come visit us at http://bitbucket.org/qualyzer/main/wiki/Home\n\n";
+	
 	private static final String COPYRIGHT = 
 		Messages.getString("handlers.AboutQualyzerHandler.copyright1") + //$NON-NLS-1$
 			Messages.getString("handlers.AboutQualyzerHandler.copyright2") + //$NON-NLS-1$
@@ -40,7 +45,7 @@ public class AboutQualyzerHandler extends AbstractHandler
 		Shell shell = HandlerUtil.getActiveShell(event).getShell();
 		
 		MessageDialog.openInformation(shell, 
-				Messages.getString("handlers.AboutQualyzerHandler.about"), COPYRIGHT); //$NON-NLS-1$
+				Messages.getString("handlers.AboutQualyzerHandler.about"), DESCRIPTION+WEB+COPYRIGHT); //$NON-NLS-1$
 		return null;
 	}
 
