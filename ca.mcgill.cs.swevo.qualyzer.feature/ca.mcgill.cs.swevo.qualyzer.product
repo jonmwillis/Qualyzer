@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Qualyzer" uid="ca.mcgill.cs.swevo.qualyzer.product" id="ca.mcgill.cs.swevo.qualyzer.product" application="ca.mcgill.cs.swevo.qualyzer.application" version="1.0.0.qualifier" useFeatures="true" includeLaunchers="true">
+<product name="Qualyzer" uid="ca.mcgill.cs.swevo.qualyzer.product" id="ca.mcgill.cs.swevo.qualyzer.product" application="ca.mcgill.cs.swevo.qualyzer.application" version="0.1.0" useFeatures="true" includeLaunchers="true">
+
 
    <configIni use="default">
    </configIni>
@@ -14,12 +15,13 @@
 
    <splash
       location="ca.mcgill.cs.swevo.qualyzer" />
-   <launcher>
+   <launcher name="qualyzer">
       <solaris/>
       <win useIco="false">
          <bmp/>
       </win>
    </launcher>
+
 
    <vm>
    </vm>
