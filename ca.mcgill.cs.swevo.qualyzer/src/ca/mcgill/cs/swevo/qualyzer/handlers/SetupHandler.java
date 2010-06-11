@@ -13,23 +13,12 @@ package ca.mcgill.cs.swevo.qualyzer.handlers;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
-
-import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
-import ca.mcgill.cs.swevo.qualyzer.model.Code;
-import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
-import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
-import ca.mcgill.cs.swevo.qualyzer.model.Memo;
-import ca.mcgill.cs.swevo.qualyzer.model.Participant;
-import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
-import ca.mcgill.cs.swevo.qualyzer.model.Project;
-import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
-import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.part.FileEditorInput;
 
 /**
  * Test command used to setup a basic project.
@@ -54,53 +43,69 @@ public class SetupHandler extends AbstractHandler
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
 	{
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject("Project");
+		IFile file = project.getFile("doc.rtf");
+		
+		FileEditorInput input = new FileEditorInput(file);
+		
 		try
 		{
-			PersistenceManager manager = PersistenceManager.getInstance();
-			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-
-			IProject project = root.getProject("Navigator Test"); //$NON-NLS-1$
-			
-			project.create(new NullProgressMonitor());
-			project.open(new NullProgressMonitor());
-			
-			manager.initDB(project);
-			HibernateDBManager dbManager = QualyzerActivator.getDefault().getHibernateDBManagers().get("Navigator Test"); //$NON-NLS-1$
-
-			Project projectDB = new Project();
-			projectDB.setName("Navigator Test"); //$NON-NLS-1$
-			Investigator inv = new Investigator();
-			inv.setFullName("Jonathan Faubert"); //$NON-NLS-1$
-			projectDB.getInvestigators().add(inv);
-			
-			Code code = new Code();
-			code.setCodeName("code"); //$NON-NLS-1$
-			projectDB.getCodes().add(code);
-			
-			Memo memo = new Memo();
-			memo.setName("memo"); //$NON-NLS-1$
-			projectDB.getMemos().add(memo);
-			
-			memo = new Memo();
-			memo.setName("memo2"); //$NON-NLS-1$
-			projectDB.getMemos().add(memo);
-			
-			Participant part = new Participant();
-			part.setFullName("Tester Participant"); //$NON-NLS-1$
-			projectDB.getParticipants().add(part);
-			
-			Transcript trans = new Transcript();
-			trans.setName("transcript"); //$NON-NLS-1$
-			projectDB.getTranscripts().add(trans);
-			
-			HibernateUtil.quietSave(dbManager, projectDB);
-			
-			root.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
+			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(input, "ca.mcgill.cs.swevo.qualyzer.editors.colorer");
 		}
-		catch (CoreException e)
+		catch (PartInitException e)
 		{
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		
+//		try
+//		{
+//			PersistenceManager manager = PersistenceManager.getInstance();
+//			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+//
+//			IProject project = root.getProject("Navigator Test"); //$NON-NLS-1$
+//			
+//			project.create(new NullProgressMonitor());
+//			project.open(new NullProgressMonitor());
+//			
+//			manager.initDB(project);
+//			HibernateDBManager dbManager = QualyzerActivator.getDefault().getHibernateDBManagers().get("Navigator Test"); //$NON-NLS-1$
+//
+//			Project projectDB = new Project();
+//			projectDB.setName("Navigator Test"); //$NON-NLS-1$
+//			Investigator inv = new Investigator();
+//			inv.setFullName("Jonathan Faubert"); //$NON-NLS-1$
+//			projectDB.getInvestigators().add(inv);
+//			
+//			Code code = new Code();
+//			code.setCodeName("code"); //$NON-NLS-1$
+//			projectDB.getCodes().add(code);
+//			
+//			Memo memo = new Memo();
+//			memo.setName("memo"); //$NON-NLS-1$
+//			projectDB.getMemos().add(memo);
+//			
+//			memo = new Memo();
+//			memo.setName("memo2"); //$NON-NLS-1$
+//			projectDB.getMemos().add(memo);
+//			
+//			Participant part = new Participant();
+//			part.setFullName("Tester Participant"); //$NON-NLS-1$
+//			projectDB.getParticipants().add(part);
+//			
+//			Transcript trans = new Transcript();
+//			trans.setName("transcript"); //$NON-NLS-1$
+//			projectDB.getTranscripts().add(trans);
+//			
+//			HibernateUtil.quietSave(dbManager, projectDB);
+//			
+//			root.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
+//		}
+//		catch (CoreException e)
+//		{
+//			e.printStackTrace();
+//		}
 		return null;
 	}
 	//CSON:

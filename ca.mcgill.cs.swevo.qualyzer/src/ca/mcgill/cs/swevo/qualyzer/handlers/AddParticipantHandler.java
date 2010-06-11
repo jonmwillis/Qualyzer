@@ -13,7 +13,6 @@ package ca.mcgill.cs.swevo.qualyzer.handlers;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
@@ -55,11 +54,6 @@ public class AddParticipantHandler extends AbstractHandler
 			if(dialog.open() == Window.OK)
 			{
 				view.getCommonViewer().refresh(new WrapperParticipant(project));
-				
-				if(element instanceof IProject)
-				{
-					view.getCommonViewer().refresh(element);
-				}
 				
 				ResourcesUtil.openEditor(page, wizard.getParticipant());
 			}
