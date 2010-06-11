@@ -750,14 +750,32 @@
             priority="normal">
          <enablement>
             <or>
-               <adapt
-                     type="org.eclipse.core.resources.IProject">
-               </adapt>
                <instanceof
-                     value="org.eclipse.core.resources.IResource">
+                     value="org.eclipse.core.resources.IWorkspaceRoot">
+               </instanceof>
+               <instanceof
+                     value="org.eclipse.core.resources.IProject">
+               </instanceof>
+               <instanceof
+                     value="ca.mcgill.cs.swevo.qualyzer.providers.ProjectWrapper">
+               </instanceof>
+               <instanceof
+                     value="ca.mcgill.cs.swevo.qualyzer.model.Investigator">
+               </instanceof>
+               <instanceof
+                     value="ca.mcgill.cs.swevo.qualyzer.model.Participant">
+               </instanceof>
+               <instanceof
+                     value="ca.mcgill.cs.swevo.qualyzer.model.Transcript">
+               </instanceof>
+               <instanceof
+                     value="ca.mcgill.cs.swevo.qualyzer.model.Code">
+               </instanceof>
+               <instanceof
+                     value="ca.mcgill.cs.swevo.qualyzer.model.Memo">
                </instanceof>
             </or>
-         </enablement>
+         </enablement>>
       </navigatorContent>
    </extension>
    <extension
