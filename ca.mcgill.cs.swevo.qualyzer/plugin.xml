@@ -685,11 +685,102 @@
             locationURI="menu:ca.mcgill.cs.swevo.qualyzer.projectexplorer">
          <menu
                id="chevronNew"
-               label="New">
+               label="%menu.label.new">
             <command
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.newProject"
-                  label="Project"
+                  icon="icons/new_prj.gif"
+                  label="%command.label.project"
                   style="push">
+            </command>
+            <command
+                  commandId="ca.mcgill.cs.swevo.qualyzer.commands.addParticipant"
+                  icon="icons/person.gif"
+                  label="%command.label.particpant"
+                  style="push"
+                  tooltip="%command.tooltip.createParticipant">
+               <visibleWhen
+                     checkEnabled="false">
+                  <iterate
+                        ifEmpty="false"
+                        operator="or">
+                     <or>
+                        <and>
+                           <instanceof
+                                 value="org.eclipse.core.resources.IProject">
+                           </instanceof>
+                           <test
+                                 property="org.eclipse.core.resources.open"
+                                 value="open">
+                           </test>
+                        </and>
+                        <not>
+                           <instanceof
+                                 value="org.eclipse.core.resources.IProject">
+                           </instanceof>
+                        </not>
+                     </or>
+                  </iterate>
+               </visibleWhen>
+            </command>
+            <command
+                  commandId="ca.mcgill.cs.swevo.qualyzer.commands.addInvestigator"
+                  icon="icons/person.gif"
+                  label="%command.label.investigator"
+                  style="push"
+                  tooltip="%command.tooltip.createInvestigator">
+               <visibleWhen
+                     checkEnabled="false">
+                  <iterate
+                        ifEmpty="false"
+                        operator="and">
+                     <or>
+                        <and>
+                           <instanceof
+                                 value="org.eclipse.core.resources.IProject">
+                           </instanceof>
+                           <test
+                                 property="org.eclipse.core.resources.open"
+                                 value="open">
+                           </test>
+                        </and>
+                        <not>
+                           <instanceof
+                                 value="org.eclipse.core.resources.IProject">
+                           </instanceof>
+                        </not>
+                     </or>
+                  </iterate>
+               </visibleWhen>
+            </command>
+            <command
+                  commandId="ca.mcgill.cs.swevo.qualyzer.commands.newTranscript"
+                  icon="icons/file_obj.gif"
+                  label="%command.label.transcript"
+                  style="push"
+                  tooltip="%command.tooltip.createTranscript">
+               <visibleWhen
+                     checkEnabled="false">
+                  <iterate
+                        ifEmpty="false"
+                        operator="and">
+                     <or>
+                        <and>
+                           <instanceof
+                                 value="org.eclipse.core.resources.IProject">
+                           </instanceof>
+                           <test
+                                 property="org.eclipse.core.resources.open"
+                                 value="open">
+                           </test>
+                        </and>
+                        <not>
+                           <instanceof
+                                 value="org.eclipse.core.resources.IProject">
+                           </instanceof>
+                        </not>
+                     </or>
+                  </iterate>
+               </visibleWhen>
             </command>
          </menu>
       </menuContribution>
