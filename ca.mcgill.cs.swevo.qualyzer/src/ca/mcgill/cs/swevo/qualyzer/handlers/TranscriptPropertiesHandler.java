@@ -30,6 +30,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 import ca.mcgill.cs.swevo.qualyzer.util.FileUtil;
 import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
+import ca.mcgill.cs.swevo.qualyzer.util.ResourcesUtil;
 
 /**
  * 
@@ -72,6 +73,8 @@ public class TranscriptPropertiesHandler extends AbstractHandler
 				HibernateDBManager manager;
 				manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(projectName);
 				HibernateUtil.quietSave(manager, transcript);
+				
+				ResourcesUtil.refreshParticipants();
 			}
 		}
 		
