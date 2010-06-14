@@ -24,7 +24,7 @@
          point="org.eclipse.ui.views">
       <view
             allowMultiple="false"
-            class="org.eclipse.ui.navigator.CommonNavigator"
+            class="ca.mcgill.cs.swevo.qualyzer.views.ProjectExplorerView"
             id="ca.mcgill.cs.swevo.qualyzer.projectexplorer"
             name="%view.name"
             restorable="true">
@@ -680,6 +680,9 @@
                </iterate>
             </visibleWhen>
          </command>
+      </menuContribution>
+      <menuContribution
+            locationURI="menu:ca.mcgill.cs.swevo.qualyzer.projectexplorer">
       </menuContribution>
    </extension>
    <extension
