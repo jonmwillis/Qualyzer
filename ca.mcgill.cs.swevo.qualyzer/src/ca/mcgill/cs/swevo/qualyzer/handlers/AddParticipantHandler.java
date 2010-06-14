@@ -23,7 +23,6 @@ import org.eclipse.ui.navigator.CommonNavigator;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
-import ca.mcgill.cs.swevo.qualyzer.providers.WrapperParticipant;
 import ca.mcgill.cs.swevo.qualyzer.util.ResourcesUtil;
 import ca.mcgill.cs.swevo.qualyzer.wizards.AddParticipantWizard;
 
@@ -53,7 +52,7 @@ public class AddParticipantHandler extends AbstractHandler
 			
 			if(dialog.open() == Window.OK)
 			{
-				view.getCommonViewer().refresh(new WrapperParticipant(project));
+				view.getCommonViewer().refresh();
 				
 				ResourcesUtil.openEditor(page, wizard.getParticipant());
 			}

@@ -33,7 +33,6 @@ import ca.mcgill.cs.swevo.qualyzer.model.AudioFile;
 import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
-import ca.mcgill.cs.swevo.qualyzer.providers.WrapperTranscript;
 import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
 import ca.mcgill.cs.swevo.qualyzer.util.ResourcesUtil;
 
@@ -78,7 +77,7 @@ public class RenameHandler extends AbstractHandler
 					manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(project.getName());
 					HibernateUtil.quietSave(manager, element);	
 				}
-				view.getCommonViewer().refresh(new WrapperTranscript(project));
+				view.getCommonViewer().refresh();
 			}
 		}
 		return null;
