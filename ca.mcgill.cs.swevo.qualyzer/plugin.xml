@@ -683,6 +683,15 @@
       </menuContribution>
       <menuContribution
             locationURI="menu:ca.mcgill.cs.swevo.qualyzer.projectexplorer">
+         <menu
+               id="chevronNew"
+               label="New">
+            <command
+                  commandId="ca.mcgill.cs.swevo.qualyzer.commands.newProject"
+                  label="Project"
+                  style="push">
+            </command>
+         </menu>
       </menuContribution>
    </extension>
    <extension

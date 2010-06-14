@@ -28,9 +28,9 @@ public final class CommonViewerUtil
 	
 	/**
 	 * Set the property of the CommonViewer to hide the link button and the customise actions.
-	 * @param desc
-	 * @param prop
-	 * @param val
+	 * @param desc The NavigatorViewerDescriptor.
+	 * @param prop The property you want to change.
+	 * @param val The value to change it to.
 	 */
 	public static void setProperty(NavigatorViewerDescriptor desc, String prop, String val)
 	{
@@ -43,11 +43,10 @@ public final class CommonViewerUtil
 				if(field.getName().equals("properties"))
 				{
 					field.setAccessible(true);
-					Object o = field.get(desc);
-					Properties p = (Properties) o;
-					p.setProperty(prop, val);
+					Object object = field.get(desc);
+					Properties properties = (Properties) object;
+					properties.setProperty(prop, val);
 					field.setAccessible(false);
-				
 				}
 			}
 		}
