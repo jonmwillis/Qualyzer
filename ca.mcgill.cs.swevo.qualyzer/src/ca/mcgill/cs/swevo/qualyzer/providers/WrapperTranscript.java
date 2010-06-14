@@ -25,6 +25,9 @@ import ca.mcgill.cs.swevo.qualyzer.model.Project;
  */
 public class WrapperTranscript extends ProjectWrapper
 {
+	private static final int NUM1 = 61705;
+	private static final int NUM2 = 30143;
+	
 	private static final String RESOURCE = "transcripts"; //$NON-NLS-1$
 
 	/**
@@ -44,7 +47,7 @@ public class WrapperTranscript extends ProjectWrapper
 	@Override
 	public int hashCode()
 	{
-		return new HashCodeBuilder().appendSuper(super.hashCode()).toHashCode();
+		return new HashCodeBuilder(NUM1, NUM2).appendSuper(super.hashCode()).toHashCode();
 	}
 	
 	@Override

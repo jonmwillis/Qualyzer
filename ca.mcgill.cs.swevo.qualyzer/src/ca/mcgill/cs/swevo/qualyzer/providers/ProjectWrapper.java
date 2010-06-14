@@ -26,6 +26,9 @@ import ca.mcgill.cs.swevo.qualyzer.model.Project;
  */
 public abstract class ProjectWrapper
 {
+	private static final int NUM1 = 35367;
+	private static final int NUM2 = 21853;
+	
 	private Project fProject;
 	
 	/**
@@ -64,7 +67,7 @@ public abstract class ProjectWrapper
 	@Override
 	public int hashCode()
 	{
-		return new HashCodeBuilder().append(fProject).toHashCode();
+		return new HashCodeBuilder(NUM1, NUM2).append(fProject).toHashCode();
 	}
 	
 	@Override
