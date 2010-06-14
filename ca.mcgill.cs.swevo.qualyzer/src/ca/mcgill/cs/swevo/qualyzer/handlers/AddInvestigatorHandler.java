@@ -24,7 +24,6 @@ import org.eclipse.ui.navigator.CommonNavigator;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
-import ca.mcgill.cs.swevo.qualyzer.providers.WrapperInvestigator;
 import ca.mcgill.cs.swevo.qualyzer.util.ResourcesUtil;
 import ca.mcgill.cs.swevo.qualyzer.wizards.AddInvestigatorWizard;
 
@@ -53,7 +52,7 @@ public class AddInvestigatorHandler extends AbstractHandler
 		
 			if(dialog.open() == Window.OK)
 			{
-				view.getCommonViewer().refresh(new WrapperInvestigator(project));
+				view.getCommonViewer().refresh();
 				
 				ResourcesUtil.openEditor(page, wizard.getInvestigator());
 			}

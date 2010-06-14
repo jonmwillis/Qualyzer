@@ -23,7 +23,6 @@ import org.eclipse.ui.navigator.CommonNavigator;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
-import ca.mcgill.cs.swevo.qualyzer.providers.WrapperTranscript;
 import ca.mcgill.cs.swevo.qualyzer.util.ResourcesUtil;
 import ca.mcgill.cs.swevo.qualyzer.wizards.NewTranscriptWizard;
 
@@ -51,7 +50,7 @@ public class NewTranscriptHandler extends AbstractHandler
 			if(dialog.open() == WizardDialog.OK)
 			{
 				CommonNavigator view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
-				view.getCommonViewer().refresh(new WrapperTranscript(wizard.getTranscript().getProject()));
+				view.getCommonViewer().refresh();
 				
 				ResourcesUtil.refreshParticipants();
 				
