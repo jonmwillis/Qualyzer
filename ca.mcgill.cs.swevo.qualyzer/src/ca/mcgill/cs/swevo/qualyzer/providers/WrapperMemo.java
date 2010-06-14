@@ -25,7 +25,9 @@ import ca.mcgill.cs.swevo.qualyzer.model.Project;
  */
 public class WrapperMemo extends ProjectWrapper
 {
-
+	private static final int NUM1 = 44437;
+	private static final int NUM2 = 64661;
+	
 	private static final String RESOURCE = "memos"; //$NON-NLS-1$
 
 	/**
@@ -45,7 +47,7 @@ public class WrapperMemo extends ProjectWrapper
 	@Override
 	public int hashCode()
 	{
-		return new HashCodeBuilder().appendSuper(super.hashCode()).toHashCode();
+		return new HashCodeBuilder(NUM1, NUM2).appendSuper(super.hashCode()).toHashCode();
 	}
 	
 	@Override
