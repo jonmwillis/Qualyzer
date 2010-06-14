@@ -17,7 +17,7 @@
             class="ca.mcgill.cs.swevo.qualyzer.Perspective"
             fixed="true"
             id="ca.mcgill.cs.swevo.qualyzer.perspective"
-            name="Perspective">
+            name="%perspective.name">
       </perspective>
    </extension>
    <extension
@@ -35,7 +35,7 @@
          point="org.eclipse.core.runtime.products">
       <product
             application="ca.mcgill.cs.swevo.qualyzer.application"
-            name="Qualyzer">
+            name="%product.name">
          <property
                name="windowImages"
                value="icons/alt_window_16.gif,icons/alt_window_32.gif">
@@ -217,7 +217,7 @@
       <command
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.DeleteProjectHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.deleteProject"
-            name="Delete Project">
+            name="%command.name.deleteProject">
       </command>
    </extension>
    <extension
@@ -548,7 +548,7 @@
                icon="icons/delete.gif"
                label="%command.label.delete"
                style="push"
-               tooltip="Delete this Project">
+               tooltip="%command.tooltip.deleteProject">
             <visibleWhen
                   checkEnabled="false">
                <iterate
