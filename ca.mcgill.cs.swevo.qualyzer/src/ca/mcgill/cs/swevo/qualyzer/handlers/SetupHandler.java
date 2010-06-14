@@ -43,14 +43,14 @@ public class SetupHandler extends AbstractHandler
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
 	{
-		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject("Project");
-		IFile file = project.getFile("doc.rtf");
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject("Project"); //$NON-NLS-1$
+		IFile file = project.getFile("doc.rtf"); //$NON-NLS-1$
 		
 		FileEditorInput input = new FileEditorInput(file);
 		
 		try
 		{
-			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(input, "ca.mcgill.cs.swevo.qualyzer.editors.colorer");
+			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(input, "ca.mcgill.cs.swevo.qualyzer.editors.colorer"); //$NON-NLS-1$
 		}
 		catch (PartInitException e)
 		{
