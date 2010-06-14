@@ -1,11 +1,11 @@
 Manifest-Version: 1.0
 Eclipse-RegisterBuddy: org.hibernate
 Bundle-ManifestVersion: 2
-Bundle-Name: Qualyzer
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: ca.mcgill.cs.swevo.qualyzer; singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: ca.mcgill.cs.swevo.qualyzer.QualyzerActivator
-Bundle-Vendor: McGill University
+Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.ui.navigator.resources;bundle-version="3.4.1",
