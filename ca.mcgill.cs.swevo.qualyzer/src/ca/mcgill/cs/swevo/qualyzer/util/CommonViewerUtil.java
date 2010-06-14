@@ -40,7 +40,7 @@ public final class CommonViewerUtil
 			
 			for(Field field : fields)
 			{
-				if(field.getName().equals("properties"))
+				if(field.getName().equals("properties")) //$NON-NLS-1$
 				{
 					field.setAccessible(true);
 					Object object = field.get(desc);
