@@ -18,8 +18,11 @@ import java.io.File;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 
 import ca.mcgill.cs.swevo.qualyzer.editors.InvestigatorFormEditor;
@@ -150,5 +153,33 @@ public final class ResourcesUtil
 		{
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * Will refresh the transcript lists of all the participant editors attached to this transcript.
+	 * @param transcript
+	 */
+	public static void refreshParticipants()
+	{
+		IWorkbenchPage[] pages = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPages();
+		
+		//TODO maybe initialize the lazy list
+		
+
+		for(IWorkbenchPage page : pages)
+		{
+			for(IEditorReference editor : page.getEditorReferences())
+			{
+				IEditorPart editorPart = editor.getEditor(true);
+				if(editorPart instanceof ParticipantFormEditor)
+				{
+					Participant part = ((ParticipantEditorInput) editorPart.getEditorInput()).getParticipant();
+					page.closeEditor(editorPart, true);
+					openEditor(page, part);
+				}
+			}
+		}
+		
+		
 	}
 }
