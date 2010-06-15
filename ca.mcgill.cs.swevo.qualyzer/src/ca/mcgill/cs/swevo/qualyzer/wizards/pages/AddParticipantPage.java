@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Text;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
+import ca.mcgill.cs.swevo.qualyzer.util.ResourcesUtil;
 
 /**
  * The page of the Add Participant Wizard.
@@ -106,6 +107,11 @@ public class AddParticipantPage extends WizardPage
 				{
 					setErrorMessage(Messages.getString("wizards.pages.AddParticipantPage.enterId")); //$NON-NLS-1$
 					setPageComplete(false);
+				}
+				else if(!ResourcesUtil.verifyID(fIdText.getText()))
+				{
+					setPageComplete(false);
+					setErrorMessage(Messages.getString("wizards.pages.AddParticipantPage.invalidID")); //$NON-NLS-1$
 				}
 				else if(idExists())
 				{
