@@ -125,6 +125,12 @@ public class ParticipantEditorPage extends FormPage
 							"editors.pages.ParticipantEditorPage.enterId"), IMessageProvider.ERROR); //$NON-NLS-1$
 					notDirty();
 				}
+				else if(!ResourcesUtil.verifyID(fID.getText()))
+				{
+					fForm.setMessage(Messages.getString("editors.pages.ParticipantEditorPage.invalidID"), //$NON-NLS-1$
+							IMessageProvider.ERROR);
+					notDirty();
+				}
 				else if(idInUse())
 				{
 					fForm.setMessage(Messages.getString(

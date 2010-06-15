@@ -191,7 +191,33 @@ public final class ResourcesUtil
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Verifies that an id is valid.
+	 * An id is valid if and only if it contains only alpha-numeric characters and '_' or '-'.
+	 * @param id 
+	 * @return 
+	 */
+	public static boolean verifyID(String id)
+	{
+		for(int i = 0; i < id.length(); i++)
+		{
+			char c = id.charAt(i);
+			if((c <= 'Z' && c >= 'A') || (c >= 'a' && c <= 'z')) //isAlpha
+			{
+				continue;
+			}
+			else if(c >= '0' && c <= '9' || c == '_' || c == '-') //is digit or _ or -
+			{
+				continue;
+			}
+			else
+			{
+				return false;
+			}
+		}
 		
-		
+		return true;
 	}
 }
