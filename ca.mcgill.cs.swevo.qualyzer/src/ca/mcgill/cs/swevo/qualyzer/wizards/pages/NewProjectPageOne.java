@@ -23,6 +23,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+import ca.mcgill.cs.swevo.qualyzer.util.ResourcesUtil;
+
 /**
  * The first page of the New Project Wizard.
  * @author Jonathan Faubert
@@ -112,6 +114,10 @@ public class NewProjectPageOne extends WizardPage
 				if(fProjectName.getText().isEmpty())
 				{
 					setError(Messages.getString("wizards.pages.NewProjectPageOne.enterName")); //$NON-NLS-1$
+				}
+				else if(!ResourcesUtil.verifyID(fProjectName.getText()))
+				{
+					setError(Messages.getString("wizards.pages.NewProjectPageOne.invalidName")); //$NON-NLS-1$
 				}
 				else
 				{
