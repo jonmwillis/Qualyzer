@@ -159,12 +159,9 @@ public final class ResourcesUtil
 	 * Will refresh the transcript lists of all the participant editors attached to this transcript.
 	 * @param transcript
 	 */
-	public static void refreshParticipants()
+	public static void refreshParticipants(Project project)
 	{
 		IWorkbenchPage[] pages = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPages();
-		
-		//TODO maybe initialize the lazy list
-		
 
 		for(IWorkbenchPage page : pages)
 		{
@@ -174,8 +171,23 @@ public final class ResourcesUtil
 				if(editorPart instanceof ParticipantFormEditor)
 				{
 					Participant part = ((ParticipantEditorInput) editorPart.getEditorInput()).getParticipant();
+					Participant refreshedPart = null;
+					
+					for(Participant participant : project.getParticipants())
+					{
+						if(participant.equals(part))
+						{
+							refreshedPart = participant;
+							break;
+						}
+					}
+					
 					page.closeEditor(editorPart, true);
-					openEditor(page, part);
+					
+					if(refreshedPart != null)
+					{
+						openEditor(page, refreshedPart);
+					}
 				}
 			}
 		}

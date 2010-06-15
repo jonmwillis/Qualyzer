@@ -74,7 +74,7 @@ public class TranscriptPropertiesHandler extends AbstractHandler
 				manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(projectName);
 				HibernateUtil.quietSave(manager, transcript);
 				
-				ResourcesUtil.refreshParticipants();
+				ResourcesUtil.refreshParticipants(transcript.getProject());
 			}
 		}
 		
