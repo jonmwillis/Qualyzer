@@ -301,7 +301,7 @@
             </command>
             <command
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.addParticipant"
-                  icon="icons/person.gif"
+                  icon="icons/people.png"
                   label="%command.label.particpant"
                   style="push"
                   tooltip="%command.tooltip.createParticipant">
@@ -331,7 +331,7 @@
             </command>
             <command
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.addInvestigator"
-                  icon="icons/person.gif"
+                  icon="icons/people.png"
                   label="%command.label.investigator"
                   style="push"
                   tooltip="%command.tooltip.createInvestigator">
@@ -598,6 +598,7 @@
             </command>
             <command
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.importAudioFile"
+                  icon="icons/audio.png"
                   label="%command.label.audioFile"
                   style="push"
                   tooltip="%command.tooltip.importAudioFile">
@@ -695,7 +696,7 @@
             </command>
             <command
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.addParticipant"
-                  icon="icons/person.gif"
+                  icon="icons/people.png"
                   label="%command.label.particpant"
                   style="push"
                   tooltip="%command.tooltip.createParticipant">
@@ -725,7 +726,7 @@
             </command>
             <command
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.addInvestigator"
-                  icon="icons/person.gif"
+                  icon="icons/people.png"
                   label="%command.label.investigator"
                   style="push"
                   tooltip="%command.tooltip.createInvestigator">
@@ -799,14 +800,14 @@
       <editor
             class="ca.mcgill.cs.swevo.qualyzer.editors.ParticipantFormEditor"
             default="false"
-            icon="icons/person.gif"
+            icon="icons/people.png"
             id="ca.mcgill.cs.swevo.qualyzer.editors.ParticipantFormEditor"
             name="%editor.name.participant">
       </editor>
       <editor
             class="ca.mcgill.cs.swevo.qualyzer.editors.InvestigatorFormEditor"
             default="false"
-            icon="icons/person.gif"
+            icon="icons/people.png"
             id="ca.mcgill.cs.swevo.qualyzer.editors.investigatorFormEditor"
             name="%editor.name.investigator">
       </editor>
