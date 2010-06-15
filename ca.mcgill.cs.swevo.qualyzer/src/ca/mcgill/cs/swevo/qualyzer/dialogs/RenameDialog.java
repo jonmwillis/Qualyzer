@@ -63,6 +63,7 @@ public class RenameDialog extends TitleAreaDialog
 		super.create();
 		setTitle(Messages.getString("dialogs.RenameDialog.renamingTranscript")); //$NON-NLS-1$
 		setMessage(Messages.getString("dialogs.RenameDialog.renameTranscript")); //$NON-NLS-1$
+		this.getButton(IDialogConstants.OK_ID).setEnabled(false);
 	}
 	
 	@Override
@@ -134,7 +135,12 @@ public class RenameDialog extends TitleAreaDialog
 			@Override
 			public void keyReleased(KeyEvent e)
 			{
-				if(transcriptExists())
+				if(fNewName.getText().isEmpty())
+				{
+					setErrorMessage(null);
+					getButton(IDialogConstants.OK_ID).setEnabled(false);
+				}
+				else if(transcriptExists())
 				{
 					setErrorMessage(Messages.getString("dialogs.RenameDialog.nameInUse")); //$NON-NLS-1$
 					getButton(IDialogConstants.OK_ID).setEnabled(false);
