@@ -42,7 +42,8 @@ public class ProjectExplorerView extends CommonNavigator
 		
 		CommonViewerUtil.setProperty(desc, 
 				INavigatorViewerDescriptor.PROP_HIDE_AVAILABLE_CUSTOMIZATIONS_DIALOG, "true"); //$NON-NLS-1$
-		CommonViewerUtil.setProperty(desc, INavigatorViewerDescriptor.PROP_HIDE_LINK_WITH_EDITOR_ACTION, "true"); //$NON-NLS-1$
+		CommonViewerUtil.setProperty(desc, INavigatorViewerDescriptor.PROP_HIDE_LINK_WITH_EDITOR_ACTION,
+				"true"); //$NON-NLS-1$
 		
 		return viewer;
 	}
