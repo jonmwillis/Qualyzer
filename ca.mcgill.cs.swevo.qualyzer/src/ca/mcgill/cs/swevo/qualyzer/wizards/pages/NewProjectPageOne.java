@@ -113,10 +113,6 @@ public class NewProjectPageOne extends WizardPage
 				{
 					setError(Messages.getString("wizards.pages.NewProjectPageOne.enterName")); //$NON-NLS-1$
 				}
-				else if(fNickname.getText().isEmpty())
-				{
-					setError(Messages.getString("wizards.pages.NewProjectPageOne.enterNickname")); //$NON-NLS-1$
-				}
 				else
 				{
 					IProject wProject = root.getProject(fProjectName.getText());
@@ -124,7 +120,11 @@ public class NewProjectPageOne extends WizardPage
 					if(wProject.exists())
 					{
 						setError(Messages.getString("wizards.pages.NewProjectPageOne.alreadyExists")); //$NON-NLS-1$
-					}	
+					}
+					else if(fNickname.getText().isEmpty())
+					{
+						setError(Messages.getString("wizards.pages.NewProjectPageOne.enterNickname")); //$NON-NLS-1$
+					}
 					else
 					{
 						setError(null);

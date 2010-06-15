@@ -62,7 +62,7 @@ public class InvestigatorFormEditor extends FormEditor
 		
 		CommonNavigator view;
 		view = (CommonNavigator) getSite().getPage().findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
-		view.getCommonViewer().refresh(fInvestigator);
+		view.getCommonViewer().refresh();
 		
 		setPartName(fInvestigator.getNickName());
 		fPage.notDirty();

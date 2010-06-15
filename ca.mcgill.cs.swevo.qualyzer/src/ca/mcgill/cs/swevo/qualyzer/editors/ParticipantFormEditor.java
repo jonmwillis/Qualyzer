@@ -71,7 +71,7 @@ public class ParticipantFormEditor extends FormEditor
 		
 		CommonNavigator view;
 		view = (CommonNavigator) getSite().getPage().findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
-		view.getCommonViewer().refresh(fParticipant);
+		view.getCommonViewer().refresh();
 		
 		setPartName(fParticipant.getParticipantId());
 		fPage.notDirty();
