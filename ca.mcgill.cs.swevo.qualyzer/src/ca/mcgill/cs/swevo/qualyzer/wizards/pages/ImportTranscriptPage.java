@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
+import ca.mcgill.cs.swevo.qualyzer.util.ResourcesUtil;
 
 /**
  * @author Jonathan Faubert (jonfaub@gmail.com)
@@ -200,6 +201,10 @@ public class ImportTranscriptPage extends TranscriptWizardPage
 		else if(fName.getText().isEmpty())
 		{
 			setError(Messages.getString("wizards.pages.ImportTranscriptPage.enterName")); //$NON-NLS-1$
+		}
+		else if(!ResourcesUtil.verifyID(fName.getText()))
+		{
+			setError(Messages.getString("wizards.pages.ImportTranscriptPage.invalidName")); //$NON-NLS-1$
 		}
 		else if(transcriptExists())
 		{
