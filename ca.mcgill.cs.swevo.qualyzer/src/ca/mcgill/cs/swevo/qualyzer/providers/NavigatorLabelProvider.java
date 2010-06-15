@@ -51,7 +51,7 @@ public class NavigatorLabelProvider extends LabelProvider implements ILabelProvi
 		fRegistry = QualyzerActivator.getDefault().getImageRegistry();
 		addImage(FOLDER_IMG, QualyzerActivator.PLUGIN_ID, "icons/fldr_obj.gif"); //$NON-NLS-1$
 		addImage(PROJECT_IMG, QualyzerActivator.PLUGIN_ID, "icons/prj_obj.gif"); //$NON-NLS-1$
-		addImage(PERSON_IMG, QualyzerActivator.PLUGIN_ID, "icons/person.gif"); //$NON-NLS-1$
+		addImage(PERSON_IMG, QualyzerActivator.PLUGIN_ID, "icons/people.png"); //$NON-NLS-1$
 		addImage(FILE_IMG, QualyzerActivator.PLUGIN_ID, "icons/file_obj.gif"); //$NON-NLS-1$
 		addImage(CPROJECT_IMG, QualyzerActivator.PLUGIN_ID, "icons/cprj_obj.gif"); //$NON-NLS-1$
 	}
