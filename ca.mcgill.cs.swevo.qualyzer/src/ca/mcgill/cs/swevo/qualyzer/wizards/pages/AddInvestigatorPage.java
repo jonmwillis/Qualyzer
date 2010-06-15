@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Text;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
+import ca.mcgill.cs.swevo.qualyzer.util.ResourcesUtil;
 
 /**
  * @author Jonathan Faubert (jonfaub@gmail.com)
@@ -133,6 +134,11 @@ public class AddInvestigatorPage extends WizardPage
 					setPageComplete(false);
 					setErrorMessage(Messages.getString(
 							"wizards.pages.AddInvestigatorPage.enterNickname")); //$NON-NLS-1$
+				}
+				else if(!ResourcesUtil.verifyID(fNickname.getText()))
+				{
+					setPageComplete(false);
+					setErrorMessage(Messages.getString("wizards.pages.AddInvestigatorPage.invalidName")); //$NON-NLS-1$
 				}
 				else if(!idInUse())
 				{
