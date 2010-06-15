@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.Text;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
+import ca.mcgill.cs.swevo.qualyzer.util.ResourcesUtil;
 
 /**
  * @author Jonathan Faubert (jonfaub@gmail.com)
@@ -138,6 +139,11 @@ public class RenameDialog extends TitleAreaDialog
 				if(fNewName.getText().isEmpty())
 				{
 					setErrorMessage(null);
+					getButton(IDialogConstants.OK_ID).setEnabled(false);
+				}
+				else if(!ResourcesUtil.verifyID(fNewName.getText()))
+				{
+					setErrorMessage(Messages.getString("dialogs.RenameDialog.invalidID")); //$NON-NLS-1$
 					getButton(IDialogConstants.OK_ID).setEnabled(false);
 				}
 				else if(transcriptExists())

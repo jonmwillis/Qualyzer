@@ -41,6 +41,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 import ca.mcgill.cs.swevo.qualyzer.util.FileUtil;
+import ca.mcgill.cs.swevo.qualyzer.util.ResourcesUtil;
 
 /**
  * The only page in the new Transcript Wizard.
@@ -262,6 +263,10 @@ public class TranscriptWizardPage extends WizardPage
 				{
 					setError(Messages.getString("wizards.pages.TranscriptWizardPage.enterName")); //$NON-NLS-1$
 				}
+				else if(!ResourcesUtil.verifyID(fName.getText()))
+				{
+					setError(Messages.getString("wizards.pages.TranscriptWizardPage.invalidName")); //$NON-NLS-1$
+				}
 				else if(fTable.getSelectionCount() > 0)
 				{
 					setError(null);
@@ -319,6 +324,10 @@ public class TranscriptWizardPage extends WizardPage
 				else if(fName.getText().isEmpty())
 				{
 					setError(Messages.getString("wizards.pages.TranscriptWizardPage.enterName")); //$NON-NLS-1$
+				}
+				else if(!ResourcesUtil.verifyID(fName.getText()))
+				{
+					setError(Messages.getString("wizards.pages.TranscriptWizardPage.invalidName")); //$NON-NLS-1$
 				}
 				else if(fTable.getSelectionCount() > 0)
 				{
