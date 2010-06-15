@@ -564,6 +564,7 @@
       <menuContribution
             locationURI="popup:ca.mcgill.cs.swevo.qualyzer.projectexplorer#PopupMenu?after=group.port">
          <menu
+               icon="icons/import.gif"
                label="%menu.label.import">
             <command
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.importTranscript"
@@ -791,21 +792,21 @@
             class="ca.mcgill.cs.swevo.qualyzer.editors.TranscriptEditor"
             contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
             extensions="txt"
-            icon="icons/sample.gif"
+            icon="icons/file_obj.gif"
             id="ca.mcgill.cs.swevo.qualyzer.editors.TranscriptEditor"
             name="%editor.name.transcript">
       </editor>
       <editor
             class="ca.mcgill.cs.swevo.qualyzer.editors.ParticipantFormEditor"
             default="false"
-            icon="icons/sample.gif"
+            icon="icons/person.gif"
             id="ca.mcgill.cs.swevo.qualyzer.editors.ParticipantFormEditor"
             name="%editor.name.participant">
       </editor>
       <editor
             class="ca.mcgill.cs.swevo.qualyzer.editors.InvestigatorFormEditor"
             default="false"
-            icon="icons/sample.gif"
+            icon="icons/person.gif"
             id="ca.mcgill.cs.swevo.qualyzer.editors.investigatorFormEditor"
             name="%editor.name.investigator">
       </editor>
