@@ -29,12 +29,12 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.hibernate.Session;
 
@@ -52,13 +52,17 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 	/**
 	 * 
 	 */
+	private static final String SLASH = "/";
+	/**
+	 * 
+	 */
 	private static final int COLS = 3;
 	private static final String TRANSCRIPT = File.separator+"transcripts"+File.separator; //$NON-NLS-1$
 	
 	private final String fProjectName;
 	
 	private Transcript fTranscript;
-	private Text fDate;
+	private DateTime fDate;
 	private String fAudioPath;
 	private List<Participant> fParticipants;
 	private Table fTable;
@@ -104,7 +108,7 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 		label.setLayoutData(createTextGridData());
 		
 		label = createLabel(parent, Messages.getString("dialogs.TranscriptPropertiesDialog.date")); //$NON-NLS-1$
-		fDate = createText(fTranscript.getDate(), parent);
+		fDate = createDate(fTranscript.getDate(), parent);
 		
 		Composite composite = createComposite(parent);
 		
@@ -134,6 +138,21 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 		button.addSelectionListener(createSelectionAdapter());
 				
 		return parent;
+	}
+
+	/**
+	 * @param date
+	 * @param parent
+	 * @return
+	 */
+	private DateTime createDate(String date, Composite parent)
+	{
+		DateTime datetime = new DateTime(parent, SWT.BORDER | SWT.DATE);
+		String[] info = date.split(SLASH);
+		datetime.setDate(Integer.parseInt(info[2]), Integer.parseInt(info[0])-1, Integer.parseInt(info[1]));
+		datetime.setLayoutData(createTextGridData());
+		
+		return datetime;
 	}
 
 	/**
@@ -305,15 +324,6 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 		
 		return label;
 	}
-	
-	private Text createText(String info, Composite parent)
-	{
-		Text text = new Text(parent, SWT.BORDER);
-		text.setText(info);
-		text.setLayoutData(createTextGridData());
-		
-		return text;
-	}
 
 	/**
 	 * @return
@@ -360,7 +370,7 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 	
 	private void save()
 	{
-		fDateS = fDate.getText();
+		fDateS = (fDate.getMonth()+1) +SLASH+ fDate.getDay() +SLASH+ fDate.getYear();
 		for(TableItem item : fTable.getItems())
 		{
 			for(Participant participant : fTranscript.getProject().getParticipants())

@@ -30,6 +30,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
@@ -62,7 +63,7 @@ public class TranscriptWizardPage extends WizardPage
 	protected boolean fAudioFileSelected;
 	
 	private Composite fContainer;
-	private Text fDate;
+	private DateTime fDate;
 	private Project fProject;
 	private ArrayList<Participant> fParticipants;
 	private Text fDescription;
@@ -135,7 +136,7 @@ public class TranscriptWizardPage extends WizardPage
 		fName = createText(fContainer);
 		
 		label = createLabel(fContainer, Messages.getString("wizards.pages.TranscriptWizardPage.date")); //$NON-NLS-1$
-		fDate = createText(fContainer);
+		fDate = createDate(fContainer);
 		
 		createLongLabel();
 		createTable();
@@ -156,6 +157,16 @@ public class TranscriptWizardPage extends WizardPage
 		setPageComplete(false);
 	}
 	
+	/**
+	 * @param fContainer2
+	 * @return
+	 */
+	private DateTime createDate(Composite container)
+	{
+		DateTime date = new DateTime(container, SWT.DATE | SWT.BORDER);
+		return date;
+	}
+
 	/**
 	 * 
 	 * @param parent
@@ -391,7 +402,7 @@ public class TranscriptWizardPage extends WizardPage
 	 */
 	public String getDate()
 	{
-		return fDate.getText();
+		return (fDate.getMonth()+1)+"/"+ fDate.getDay() +"/"+ fDate.getYear();
 	}
 	
 	/**
@@ -439,7 +450,7 @@ public class TranscriptWizardPage extends WizardPage
 		
 		transcript.setName(fName.getText());
 		transcript.setFileName(fName.getText()+".txt"); //$NON-NLS-1$
-		transcript.setDate(fDate.getText());
+		transcript.setDate(getDate());
 		buildParticipants();
 		transcript.setParticipants(fParticipants);
 		
