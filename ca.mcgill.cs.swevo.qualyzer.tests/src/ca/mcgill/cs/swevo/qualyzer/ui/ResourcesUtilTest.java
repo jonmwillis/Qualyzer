@@ -17,6 +17,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
 import org.junit.Test;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Code;
@@ -94,5 +97,62 @@ public class ResourcesUtilTest
 		assertEquals(ResourcesUtil.getProject(wT), project);
 		assertEquals(ResourcesUtil.getProject(wC), project);
 
+	}
+	
+	/**
+	 * test open investigator editor.
+	 */
+	@Test
+	public void openEditorTest()
+	{
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		Investigator i = new Investigator();
+		
+		i.setFullName("Jonathan Faubert");
+		i.setNickName("jon");
+		i.setInstitution("Bob Riley University");
+		
+		ResourcesUtil.openEditor(page, i);
+		
+		boolean found = false;
+		for(IEditorReference editor : page.getEditorReferences())
+		{
+			if(editor.getName().equals(i.getNickName()))
+			{
+				found = true;
+				break;
+			}
+		}
+		
+		assertTrue(found);
+	}
+	
+	/**
+	 * test open participant editor.
+	 */
+	@Test
+	public void openEditorTest2()
+	{
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		Participant p = new Participant();
+		Project proj = new Project();
+		proj.getParticipants().add(p);
+		
+		p.setFullName("Jonathan Faubert");
+		p.setParticipantId("jon");
+		
+		ResourcesUtil.openEditor(page, p);
+		
+		boolean found = false;
+		for(IEditorReference editor : page.getEditorReferences())
+		{
+			if(editor.getName().equals(p.getParticipantId()))
+			{
+				found = true;
+				break;
+			}
+		}
+		
+		assertTrue(found);
 	}
 }
