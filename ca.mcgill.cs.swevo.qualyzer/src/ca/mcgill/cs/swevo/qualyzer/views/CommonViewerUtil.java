@@ -10,7 +10,7 @@
  *******************************************************************************/
 
 
-package ca.mcgill.cs.swevo.qualyzer.util;
+package ca.mcgill.cs.swevo.qualyzer.views;
 
 import java.lang.reflect.Field;
 import java.util.Properties;

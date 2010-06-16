@@ -19,7 +19,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
-import ca.mcgill.cs.swevo.qualyzer.util.ResourcesUtil;
+import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
  * Opens the Participant Editor for the selected Participant.

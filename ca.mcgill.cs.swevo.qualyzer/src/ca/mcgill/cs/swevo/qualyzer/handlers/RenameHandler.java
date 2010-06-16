@@ -33,8 +33,8 @@ import ca.mcgill.cs.swevo.qualyzer.model.AudioFile;
 import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
+import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
-import ca.mcgill.cs.swevo.qualyzer.util.ResourcesUtil;
 
 /**
  * Qualyzer handler for rename (F2).

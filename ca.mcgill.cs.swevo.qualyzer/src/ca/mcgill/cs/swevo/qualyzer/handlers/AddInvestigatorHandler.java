@@ -24,7 +24,7 @@ import org.eclipse.ui.navigator.CommonNavigator;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
-import ca.mcgill.cs.swevo.qualyzer.util.ResourcesUtil;
+import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 import ca.mcgill.cs.swevo.qualyzer.wizards.AddInvestigatorWizard;
 
 /**

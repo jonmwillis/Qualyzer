@@ -11,7 +11,7 @@
 /**
  * 
  */
-package ca.mcgill.cs.swevo.qualyzer.util;
+package ca.mcgill.cs.swevo.qualyzer.ui;
 
 import java.io.File;
 

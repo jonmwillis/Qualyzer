@@ -35,7 +35,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
-import ca.mcgill.cs.swevo.qualyzer.util.ResourcesUtil;
+import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
  * Hander for the delete transcript command.

@@ -40,8 +40,8 @@ import ca.mcgill.cs.swevo.qualyzer.model.AudioFile;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
+import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 import ca.mcgill.cs.swevo.qualyzer.util.FileUtil;
-import ca.mcgill.cs.swevo.qualyzer.util.ResourcesUtil;
 
 /**
  * The only page in the new Transcript Wizard.

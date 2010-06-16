@@ -21,7 +21,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
-import ca.mcgill.cs.swevo.qualyzer.util.ResourcesUtil;
+import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
  * Handler for the opening of Transcripts.
