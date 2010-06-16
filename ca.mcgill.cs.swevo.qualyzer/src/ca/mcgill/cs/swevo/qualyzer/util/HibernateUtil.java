@@ -180,7 +180,7 @@ public final class HibernateUtil
 			quietClose(session);
 		}
 	}
-
+	
 	/**
 	 * 
 	 * Returns an int representing a count.

@@ -15,8 +15,10 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.tool.hbm2ddl.SchemaExport;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
+import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
 
 /**
  * A HibernateDBManager manages the connections with a single database.
@@ -45,6 +47,7 @@ public class HibernateDBManager
 							"hibernate.connection.password", password) //$NON-NLS-1$
 					.setProperty("hibernate.dialect", dialect) //$NON-NLS-1$
 					.setProperty("hibernate.connection.driver_class", driver); //$NON-NLS-1$
+//					.setProperty("hibernate.connection.pool_size","0");//$NON-NLS-1$
 			// .setProperty("hibernate.show_sql","true").setProperty("hibernate.format_sql",
 			// "true");
 
@@ -72,7 +75,7 @@ public class HibernateDBManager
 			throw new QualyzerException(ex);
 		}
 	}
-
+	
 	/**
 	 * @return
 	 */
@@ -97,6 +100,23 @@ public class HibernateDBManager
 		return fSessionFactory.openSession();
 	}
 
+	/**
+	 * Sends a shutdown request to the DB server.
+	 */
+	public void shutdownDBServer() 
+	{
+		Session session = null;
+		try
+		{
+			session = openSession();
+			session.createSQLQuery("SHUTDOWN IMMEDIATELY").executeUpdate();
+		}
+		finally
+		{
+			HibernateUtil.quietClose(session);
+		}
+	}
+	
 	/**
 	 * Closes the SessionFactory and releases all resources (db connections, cache, etc.). Does something.
 	 * 

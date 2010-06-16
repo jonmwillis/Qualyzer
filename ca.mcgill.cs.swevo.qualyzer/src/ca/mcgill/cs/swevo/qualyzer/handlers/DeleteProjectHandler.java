@@ -11,6 +11,7 @@
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.handlers;
 
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -65,7 +66,8 @@ public class DeleteProjectHandler extends AbstractHandler
 						
 						HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers()
 							.get(project.getName());
-						
+						QualyzerActivator.getDefault().getHibernateDBManagers().remove(project.getName());
+						manager.shutdownDBServer();
 						manager.close();
 						project.delete(true, true, new NullProgressMonitor());
 					}

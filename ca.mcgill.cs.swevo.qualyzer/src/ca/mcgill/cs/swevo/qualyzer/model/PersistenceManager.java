@@ -37,7 +37,8 @@ public final class PersistenceManager
 	public static final String QUALYZER_DB_NAME = "qualyzer_db"; //$NON-NLS-1$
 	public static final String QUALYZER_DB_FILE_NAME = "qualyzer_db.data"; //$NON-NLS-1$
 	public static final String DB_CONNECTION_STRING = "jdbc:hsqldb:file:%s"; //$NON-NLS-1$
-	public static final String DB_INIT_STRING = ";hsqldb.default_table_type=cached"; //$NON-NLS-1$
+//	public static final String DB_INIT_STRING = ";hsqldb.default_table_type=cached"; //$NON-NLS-1$
+	public static final String DB_INIT_STRING = ""; //$NON-NLS-1$
 	public static final String DB_USERNAME = "sa"; //$NON-NLS-1$
 	public static final String DB_DIALECT = "org.hibernate.dialect.HSQLDialect"; //$NON-NLS-1$
 	public static final String DB_DRIVER = "org.hsqldb.jdbcDriver"; //$NON-NLS-1$
@@ -98,7 +99,6 @@ public final class PersistenceManager
 		// Init DB
 		SchemaExport export = new SchemaExport(dbManager.getConfiguration());
 		export.execute(false, true, false, false);
-		dbManager.getSessionFactory().close();
 	}
 	
 	/**
