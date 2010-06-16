@@ -108,7 +108,7 @@ public class HibernateDBManager
 		try
 		{
 			session = openSession();
-			session.createSQLQuery("SHUTDOWN IMMEDIATELY").executeUpdate();
+			session.createSQLQuery("SHUTDOWN IMMEDIATELY").executeUpdate(); //$NON-NLS-1$
 		}
 		finally
 		{
