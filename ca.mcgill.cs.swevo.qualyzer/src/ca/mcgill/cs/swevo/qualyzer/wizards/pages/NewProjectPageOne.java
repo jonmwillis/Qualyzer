@@ -66,25 +66,28 @@ public class NewProjectPageOne extends WizardPage
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		fProjectName.setLayoutData(gd);
 	
-		label = new Label(fContainer, SWT.NULL);
+		Composite composite = createComposite();
+		
+		createSectionHeader(composite);
+		
+		label = new Label(composite, SWT.NULL);
 		label.setText(Messages.getString("wizards.pages.NewProjectPageOne.nickname")); //$NON-NLS-1$
 
-		fNickname = new Text(fContainer, SWT.BORDER | SWT.SINGLE);
+		fNickname = new Text(composite, SWT.BORDER | SWT.SINGLE);
 		fNickname.setText(System.getProperty("user.name")); //$NON-NLS-1$
 		
-		//Only allows the user to proceed if a name is entered
 		fNickname.addKeyListener(createKeyListener());
 		
-		label = new Label(fContainer, SWT.NULL);
+		label = new Label(composite, SWT.NULL);
 		label.setText(Messages.getString("wizards.pages.NewProjectPageOne.fullName")); //$NON-NLS-1$
 		
-		fFullname = new Text(fContainer, SWT.BORDER | SWT.SINGLE);
+		fFullname = new Text(composite, SWT.BORDER | SWT.SINGLE);
 		fFullname.setText(""); //$NON-NLS-1$
 		
-		label = new Label(fContainer, SWT.NULL);
+		label = new Label(composite, SWT.NULL);
 		label.setText(Messages.getString("wizards.pages.NewProjectPageOne.insitution")); //$NON-NLS-1$
 		
-		fInstitution = new Text(fContainer, SWT.BORDER | SWT.SINGLE);
+		fInstitution = new Text(composite, SWT.BORDER | SWT.SINGLE);
 		fInstitution.setText(""); //$NON-NLS-1$
 		
 		gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -95,6 +98,37 @@ public class NewProjectPageOne extends WizardPage
 		// Required to avoid an error in the system
 		setControl(fContainer);
 		setPageComplete(false);
+	}
+
+	/**
+	 * @param composite
+	 */
+	private void createSectionHeader(Composite composite)
+	{
+		Label label;
+		GridData gd;
+		label = new Label(composite, SWT.WRAP);
+		label.setText(Messages.getString("wizards.pages.NewProjectPageOne.info")); //$NON-NLS-1$
+		gd = new GridData(SWT.FILL, SWT.NULL, false, false);
+		gd.horizontalSpan = 2;
+		label.setLayoutData(gd);
+	}
+
+	/**
+	 * @return
+	 */
+	private Composite createComposite()
+	{
+		GridLayout layout;
+		GridData gd;
+		Composite composite = new Composite(fContainer, SWT.BORDER);
+		layout = new GridLayout();
+		layout.numColumns = 2;
+		gd = new GridData(SWT.FILL, SWT.NULL, true, false);
+		gd.horizontalSpan = 2;
+		composite.setLayout(layout);
+		composite.setLayoutData(gd);
+		return composite;
 	}
 
 	/**
