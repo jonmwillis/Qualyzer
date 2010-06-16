@@ -59,11 +59,6 @@ public class DeleteProjectHandler extends AbstractHandler
 					{
 						IProject project = (IProject) element;
 						
-						if(!project.isOpen())
-						{
-							project.open(new NullProgressMonitor());
-						}
-						
 						HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers()
 							.get(project.getName());
 						QualyzerActivator.getDefault().getHibernateDBManagers().remove(project.getName());
