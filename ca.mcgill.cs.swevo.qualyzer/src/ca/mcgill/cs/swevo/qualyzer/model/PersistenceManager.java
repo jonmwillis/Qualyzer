@@ -35,7 +35,7 @@ public final class PersistenceManager
 {
 	public static final String DB_FOLDER = ".db"; //$NON-NLS-1$
 	public static final String QUALYZER_DB_NAME = "qualyzer_db"; //$NON-NLS-1$
-	public static final String QUALYZER_DB_FILE_NAME = "qualyzer_db.data"; //$NON-NLS-1$
+	public static final String QUALYZER_DB_FILE_NAME = "qualyzer_db.log"; //$NON-NLS-1$
 	public static final String DB_CONNECTION_STRING = "jdbc:hsqldb:file:%s"; //$NON-NLS-1$
 //	public static final String DB_INIT_STRING = ";hsqldb.default_table_type=cached"; //$NON-NLS-1$
 	public static final String DB_INIT_STRING = ""; //$NON-NLS-1$
