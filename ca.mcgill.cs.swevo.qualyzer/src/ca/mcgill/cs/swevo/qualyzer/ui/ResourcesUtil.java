@@ -218,6 +218,6 @@ public final class ResourcesUtil
 			}
 		}
 		
-		return true;
+		return id.length() > 0;
 	}
 }
