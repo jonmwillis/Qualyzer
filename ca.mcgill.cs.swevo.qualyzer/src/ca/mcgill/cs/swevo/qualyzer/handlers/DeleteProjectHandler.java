@@ -23,6 +23,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
+import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
+import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
+
 /**
  * Handler for the Delete Project Command.
  *
@@ -60,6 +63,10 @@ public class DeleteProjectHandler extends AbstractHandler
 							project.open(new NullProgressMonitor());
 						}
 						
+						HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers()
+							.get(project.getName());
+						
+						manager.close();
 						project.delete(true, true, new NullProgressMonitor());
 					}
 					catch(CoreException e)
