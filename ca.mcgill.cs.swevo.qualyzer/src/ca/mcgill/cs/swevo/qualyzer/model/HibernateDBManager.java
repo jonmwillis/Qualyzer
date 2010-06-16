@@ -43,7 +43,7 @@ public class HibernateDBManager
 					"hibernate.connection.url", connectionString) //$NON-NLS-1$
 					.setProperty("hibernate.connection.username", userName).setProperty(//$NON-NLS-1$
 							"hibernate.connection.password", password) //$NON-NLS-1$
-							.setProperty("hibernate.dialect", dialect)  //$NON-NLS-1$
+					.setProperty("hibernate.dialect", dialect) //$NON-NLS-1$
 					.setProperty("hibernate.connection.driver_class", driver); //$NON-NLS-1$
 			// .setProperty("hibernate.show_sql","true").setProperty("hibernate.format_sql",
 			// "true");
@@ -61,7 +61,7 @@ public class HibernateDBManager
 			tempConfiguration = tempConfiguration.addAnnotatedClass(Transcript.class);
 			// Configure
 			tempConfiguration = tempConfiguration.configure();
-			
+
 			fConfiguration = tempConfiguration;
 
 			fSessionFactory = fConfiguration.buildSessionFactory();
@@ -72,7 +72,7 @@ public class HibernateDBManager
 			throw new QualyzerException(ex);
 		}
 	}
-	
+
 	/**
 	 * @return
 	 */
@@ -95,5 +95,14 @@ public class HibernateDBManager
 	public Session openSession()
 	{
 		return fSessionFactory.openSession();
+	}
+
+	/**
+	 * Closes the SessionFactory and releases all resources (db connections, cache, etc.). Does something.
+	 * 
+	 */
+	public void close()
+	{
+		fSessionFactory.close();
 	}
 }
