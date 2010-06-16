@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.Text;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
-import ca.mcgill.cs.swevo.qualyzer.util.ResourcesUtil;
+import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
  * The page of the Add Participant Wizard.

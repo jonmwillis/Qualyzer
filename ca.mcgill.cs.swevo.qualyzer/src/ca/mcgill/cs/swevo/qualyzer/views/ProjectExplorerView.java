@@ -19,7 +19,6 @@ import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.navigator.CommonViewer;
 import org.eclipse.ui.navigator.INavigatorViewerDescriptor;
 
-import ca.mcgill.cs.swevo.qualyzer.util.CommonViewerUtil;
 
 /**
  * @author Jonathan Faubert (jonfaub@gmail.com)

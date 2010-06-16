@@ -31,7 +31,7 @@ import org.eclipse.swt.widgets.Text;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
-import ca.mcgill.cs.swevo.qualyzer.util.ResourcesUtil;
+import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
  * @author Jonathan Faubert (jonfaub@gmail.com)

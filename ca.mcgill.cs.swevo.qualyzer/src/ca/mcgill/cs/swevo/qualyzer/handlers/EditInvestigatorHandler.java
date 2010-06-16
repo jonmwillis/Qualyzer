@@ -19,7 +19,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
-import ca.mcgill.cs.swevo.qualyzer.util.ResourcesUtil;
+import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
  * Opens the Investigator Editor for the selected Investigator.

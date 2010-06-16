@@ -35,7 +35,7 @@ import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
-import ca.mcgill.cs.swevo.qualyzer.util.ResourcesUtil;
+import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
  * The main page of the Investigator editor.
@@ -122,7 +122,8 @@ public class InvestigatorEditorPage extends FormPage
 				}
 				else if(!ResourcesUtil.verifyID(fNickname.getText()))
 				{
-					fForm.setMessage(Messages.getString("editors.pages.InvestigatorEditorPage.invalidName"), //$NON-NLS-1$
+					fForm.setMessage(Messages.getString(
+							"editors.pages.InvestigatorEditorPage.invalidName"), //$NON-NLS-1$
 							IMessageProvider.ERROR);
 					notDirty();
 				}
