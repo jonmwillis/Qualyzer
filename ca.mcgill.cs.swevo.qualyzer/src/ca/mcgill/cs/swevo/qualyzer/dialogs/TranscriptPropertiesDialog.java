@@ -52,7 +52,7 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 	/**
 	 * 
 	 */
-	private static final String SLASH = "/";
+	private static final String SLASH = "/"; //$NON-NLS-1$
 	/**
 	 * 
 	 */
