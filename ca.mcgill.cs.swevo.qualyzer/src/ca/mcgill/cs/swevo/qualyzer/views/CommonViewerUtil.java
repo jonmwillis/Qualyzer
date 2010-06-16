@@ -32,7 +32,7 @@ public final class CommonViewerUtil
 	 * @param prop The property you want to change.
 	 * @param val The value to change it to.
 	 */
-	public static void setProperty(NavigatorViewerDescriptor desc, String prop, String val)
+	protected static void setProperty(NavigatorViewerDescriptor desc, String prop, String val)
 	{
 		try
 		{
