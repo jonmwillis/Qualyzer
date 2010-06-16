@@ -35,6 +35,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
+import ca.mcgill.cs.swevo.qualyzer.util.ResourcesUtil;
 
 /**
  * Hander for the delete transcript command.
@@ -56,6 +57,7 @@ public class DeleteTranscriptHandler extends AbstractHandler
 			if(element instanceof Transcript)
 			{
 				Transcript transcript = (Transcript) element;
+				String project = transcript.getProject().getName();
 				
 				Shell shell = HandlerUtil.getActiveShell(event).getShell();
 				
@@ -72,6 +74,7 @@ public class DeleteTranscriptHandler extends AbstractHandler
 					CommonNavigator view;
 					view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
 					view.getCommonViewer().refresh();
+					ResourcesUtil.refreshParticipants(PersistenceManager.getInstance().getProject(project));
 				}
 			}
 		}
