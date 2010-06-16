@@ -20,6 +20,7 @@ import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
@@ -66,28 +67,28 @@ public class NewProjectPageOne extends WizardPage
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		fProjectName.setLayoutData(gd);
 	
-		Composite composite = createComposite();
+		Group group = createGroup();
 		
-		createSectionHeader(composite);
+		createSectionHeader(group);
 		
-		label = new Label(composite, SWT.NULL);
+		label = new Label(group, SWT.NULL);
 		label.setText(Messages.getString("wizards.pages.NewProjectPageOne.nickname")); //$NON-NLS-1$
 
-		fNickname = new Text(composite, SWT.BORDER | SWT.SINGLE);
+		fNickname = new Text(group, SWT.BORDER | SWT.SINGLE);
 		fNickname.setText(System.getProperty("user.name")); //$NON-NLS-1$
 		
 		fNickname.addKeyListener(createKeyListener());
 		
-		label = new Label(composite, SWT.NULL);
+		label = new Label(group, SWT.NULL);
 		label.setText(Messages.getString("wizards.pages.NewProjectPageOne.fullName")); //$NON-NLS-1$
 		
-		fFullname = new Text(composite, SWT.BORDER | SWT.SINGLE);
+		fFullname = new Text(group, SWT.BORDER | SWT.SINGLE);
 		fFullname.setText(""); //$NON-NLS-1$
 		
-		label = new Label(composite, SWT.NULL);
+		label = new Label(group, SWT.NULL);
 		label.setText(Messages.getString("wizards.pages.NewProjectPageOne.insitution")); //$NON-NLS-1$
 		
-		fInstitution = new Text(composite, SWT.BORDER | SWT.SINGLE);
+		fInstitution = new Text(group, SWT.BORDER | SWT.SINGLE);
 		fInstitution.setText(""); //$NON-NLS-1$
 		
 		gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -117,18 +118,19 @@ public class NewProjectPageOne extends WizardPage
 	/**
 	 * @return
 	 */
-	private Composite createComposite()
+	private Group createGroup()
 	{
 		GridLayout layout;
 		GridData gd;
-		Composite composite = new Composite(fContainer, SWT.BORDER);
+		Group group = new Group(fContainer, SWT.NULL);
+		group.setText(Messages.getString("wizards.pages.NewProjectPageOne.investigator")); //$NON-NLS-1$
 		layout = new GridLayout();
 		layout.numColumns = 2;
 		gd = new GridData(SWT.FILL, SWT.NULL, true, false);
 		gd.horizontalSpan = 2;
-		composite.setLayout(layout);
-		composite.setLayoutData(gd);
-		return composite;
+		group.setLayout(layout);
+		group.setLayoutData(gd);
+		return group;
 	}
 
 	/**

@@ -402,7 +402,7 @@ public class TranscriptWizardPage extends WizardPage
 	 */
 	public String getDate()
 	{
-		return (fDate.getMonth()+1)+"/"+ fDate.getDay() +"/"+ fDate.getYear();
+		return (fDate.getMonth()+1)+"/"+ fDate.getDay() +"/"+ fDate.getYear(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	
 	/**
