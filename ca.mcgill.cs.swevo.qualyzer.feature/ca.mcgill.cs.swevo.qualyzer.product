@@ -3,7 +3,6 @@
 
 <product name="Qualyzer" uid="ca.mcgill.cs.swevo.qualyzer.product" id="ca.mcgill.cs.swevo.qualyzer.product" application="ca.mcgill.cs.swevo.qualyzer.application" version="0.1.0" useFeatures="true" includeLaunchers="true">
 
-
    <configIni use="default">
    </configIni>
 
@@ -21,7 +20,6 @@
          <bmp/>
       </win>
    </launcher>
-
 
    <vm>
    </vm>
@@ -129,9 +127,9 @@ This Agreement is governed by the laws of the State of New York and the intellec
    </plugins>
 
    <features>
-      <feature id="ca.mcgill.cs.swevo.qualyzer.feature" version="1.0.0.qualifier"/>
-      <feature id="ca.mcgill.cs.swevo.qualyzer.rcp_feature" version="1.0.0.qualifier"/>
-      <feature id="ca.mcgill.cs.swevo.qualyzer.dependencies" version="1.0.0.qualifier"/>
+      <feature id="ca.mcgill.cs.swevo.qualyzer.dependencies" version="0.1.0.qualifier"/>
+      <feature id="ca.mcgill.cs.swevo.qualyzer.feature" version="0.1.0.qualifier"/>
+      <feature id="ca.mcgill.cs.swevo.qualyzer.rcp_feature" version="0.1.0.qualifier"/>
    </features>
 
    <configurations>
