@@ -3,7 +3,7 @@ Eclipse-RegisterBuddy: org.hibernate
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: ca.mcgill.cs.swevo.qualyzer; singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 0.1.0.qualifier
 Bundle-Activator: ca.mcgill.cs.swevo.qualyzer.QualyzerActivator
 Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.eclipse.ui,
