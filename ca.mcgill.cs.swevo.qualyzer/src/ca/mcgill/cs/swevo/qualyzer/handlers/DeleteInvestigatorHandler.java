@@ -67,9 +67,17 @@ public class DeleteInvestigatorHandler extends AbstractHandler
 				ArrayList<String> conflicts = checkForConflicts(investigator, project, manager.openSession());
 				
 				Shell shell = HandlerUtil.getActiveShell(event).getShell();
-				if(conflicts.size() > 0)
+				if(conflicts.size() > 0 || project.getInvestigators().size() == 1)
 				{
-					String errorMsg = printErrors(conflicts);
+					String errorMsg;
+					if(project.getInvestigators().size() == 1)
+					{
+						errorMsg = Messages.getString("handlers.DeleteInvestigatorHandler.oneRequired"); //$NON-NLS-1$
+					}
+					else
+					{
+						errorMsg = printErrors(conflicts);
+					}
 					MessageDialog.openError(shell, Messages.getString(
 							"handlers.DeleteInvestigatorHandler.cannotDelete"), errorMsg); //$NON-NLS-1$
 				}
@@ -82,7 +90,6 @@ public class DeleteInvestigatorHandler extends AbstractHandler
 					if(check)
 					{
 						PersistenceManager.getInstance().deleteInvestigator(investigator, manager);
-						
 						CommonNavigator view;
 						view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
 						view.getCommonViewer().refresh();
