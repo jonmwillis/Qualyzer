@@ -18,9 +18,11 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
@@ -67,6 +69,13 @@ public class RenameHandler extends AbstractHandler
 			dialog.create();
 			dialog.setCurrentName(((Transcript) element).getName());
 			
+			if(trancriptNoLongerExists((Transcript) element))
+			{
+				MessageDialog.openError(HandlerUtil.getActiveShell(event), "File Error", 
+						"The transcript file no longer exists or has been renamed.");
+				return null;
+			}
+			
 			if(dialog.open() == Window.OK)
 			{
 				if(element instanceof Transcript)
@@ -81,6 +90,20 @@ public class RenameHandler extends AbstractHandler
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * @param element
+	 * @return
+	 */
+	private boolean trancriptNoLongerExists(Transcript element)
+	{
+		String projectName = element.getProject().getName();
+		String projectPath = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName).toString();
+		
+		File file = new File(projectPath+TRANSCRIPT+element.getFileName());
+		
+		return !file.exists();
 	}
 
 	/**
@@ -116,6 +139,12 @@ public class RenameHandler extends AbstractHandler
 			if(audio != null)
 			{
 				origFile = new File(projectPath + audio.getRelativePath());
+				
+				if(!origFile.exists())
+				{
+					origFile = getNewAudioFile(projectPath);
+				}
+				
 				String audioExt = audio.getRelativePath().substring(audio.getRelativePath().lastIndexOf('.'));
 				newFile = new File(projectPath + AUDIO + name + audioExt);
 				
@@ -132,6 +161,27 @@ public class RenameHandler extends AbstractHandler
 		{
 			ResourcesUtil.openEditor(activePage, transcript);
 		}
+	}
+
+	/**
+	 * @param projectPath
+	 * @return
+	 */
+	private File getNewAudioFile(String projectPath)
+	{
+		File origFile;
+		MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
+				"File Error", "The associated audio file no longer exists. Please choose a new file.");
+		
+		FileDialog dialog = new FileDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
+		dialog.setFilterPath(projectPath+AUDIO);
+		dialog.setFilterExtensions(new String[]{"*.mp3;*.wav"}); //$NON-NLS-1$
+		dialog.setFilterNames(new String[]{Messages.getString(
+				"handlers.ImportAudioFileHandler.audioExt")}); //$NON-NLS-1$
+		
+		String fileName = dialog.open();
+		origFile = new File(fileName);
+		return origFile;
 	}
 
 }
