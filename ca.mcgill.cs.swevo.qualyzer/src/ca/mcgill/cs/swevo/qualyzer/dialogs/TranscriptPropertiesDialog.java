@@ -17,8 +17,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
@@ -356,7 +359,24 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 	protected void okPressed()
 	{
 		save();
-		super.okPressed();
+		
+		if(fAudioPath.startsWith(fProjectName+File.separator+"audio"+File.separator))
+		{
+			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(fProjectName);
+			
+			fAudioPath = project.getLocation() + fAudioPath.substring(fAudioPath.indexOf(File.separatorChar));
+		}
+
+		File file = new File(fAudioPath);
+		
+		if(fAudioPath.isEmpty() || file.exists())
+		{
+			super.okPressed();
+		}
+		else
+		{
+			MessageDialog.openError(getShell(), "File Error", "The specified audio file does not exist.");
+		}
 	}
 	
 	/**
@@ -371,6 +391,9 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 	private void save()
 	{
 		fDateS = (fDate.getMonth()+1) +SLASH+ fDate.getDay() +SLASH+ fDate.getYear();
+		
+		fParticipants = new ArrayList<Participant>();
+		
 		for(TableItem item : fTable.getItems())
 		{
 			for(Participant participant : fTranscript.getProject().getParticipants())
