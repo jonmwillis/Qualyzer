@@ -29,7 +29,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
-import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
  * @author Jonathan Faubert (jonfaub@gmail.com)
@@ -150,23 +149,13 @@ public class ImportTranscriptPage extends TranscriptWizardPage
 			{
 				if(!fAudioFileSelected && !fName.getText().isEmpty())
 				{
-					fAudioFile.setText(findAudioFile(fName.getText()));
+					String fileName = findAudioFile(fName.getText());
+					if(!fileName.isEmpty())
+					{
+						fAudioFile.setText(fileName);
+					}
 				}
 				commonListenerChecks();
-			}
-		};
-	}
-	
-	@Override
-	protected SelectionListener createSelectionListener()
-	{
-		return new SelectionListener(){
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e)	{}
-			@Override
-			public void widgetSelected(SelectionEvent e)
-			{
-				commonListenerChecks();			
 			}
 		};
 	}
@@ -189,34 +178,16 @@ public class ImportTranscriptPage extends TranscriptWizardPage
 		return fTranscriptFile.getText();
 	}
 
-	/**
-	 * 
-	 */
-	private void commonListenerChecks()
+	@Override
+	protected void commonListenerChecks()
 	{
 		if(fTranscriptFile.getText().isEmpty() || fileDoesNotExist())
 		{
 			setError(Messages.getString("wizards.pages.ImportTranscriptPage.chooseFile")); //$NON-NLS-1$
 		}
-		else if(fName.getText().isEmpty())
+		else 
 		{
-			setError(Messages.getString("wizards.pages.ImportTranscriptPage.enterName")); //$NON-NLS-1$
-		}
-		else if(!ResourcesUtil.verifyID(fName.getText()))
-		{
-			setError(Messages.getString("wizards.pages.ImportTranscriptPage.invalidName")); //$NON-NLS-1$
-		}
-		else if(transcriptExists())
-		{
-			setError(Messages.getString("wizards.pages.ImportTranscriptPage.nameInUse")); //$NON-NLS-1$
-		}
-		else if(fTable.getSelectionCount() > 0)
-		{
-			setError(null);
-		}
-		else
-		{
-			setError(Messages.getString("wizards.pages.ImportTranscriptPage.selectParticipant")); //$NON-NLS-1$
+			super.commonListenerChecks();
 		}
 	}
 

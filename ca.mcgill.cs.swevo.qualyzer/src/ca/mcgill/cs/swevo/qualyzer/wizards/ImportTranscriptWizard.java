@@ -19,6 +19,7 @@ import java.io.IOException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
@@ -72,6 +73,19 @@ public class ImportTranscriptWizard extends Wizard
 	public boolean performFinish()
 	{
 		fTranscript = fPage.getTranscript();
+		
+		if(fTranscript == null)
+		{
+			return false;
+		}
+		
+		File fileOrig = new File(fPage.getTranscriptFile());
+		if(!fileOrig.exists())
+		{
+			MessageDialog.openError(getShell(), "File Error", "Unable to copy the specified transcript file.");
+			return false;
+		}
+		
 		fProject.getTranscripts().add(fTranscript);
 		fTranscript.setProject(fProject);
 
@@ -80,7 +94,7 @@ public class ImportTranscriptWizard extends Wizard
 		String path = wProject.getLocation()+File.separator+"transcripts"+ //$NON-NLS-1$
 			File.separator+fTranscript.getFileName(); 
 		File file = new File(path);
-		File fileOrig = new File(fPage.getTranscriptFile());
+		
 		
 		try
 		{

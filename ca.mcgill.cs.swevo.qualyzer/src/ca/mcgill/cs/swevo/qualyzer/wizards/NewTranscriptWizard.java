@@ -61,6 +61,10 @@ public class NewTranscriptWizard extends Wizard
 	public boolean performFinish()
 	{
 		fTranscript = fPage.getTranscript();
+		if(fTranscript == null)
+		{
+			return false;
+		}
 		fProject.getTranscripts().add(fTranscript);
 		fTranscript.setProject(fProject);
 

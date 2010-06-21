@@ -20,8 +20,10 @@ import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionEvent;
@@ -148,13 +150,34 @@ public class TranscriptWizardPage extends WizardPage
 		Composite composite = createComposite();
 		label = createLabel(composite, 
 				Messages.getString("wizards.pages.TranscriptWizardPage.audioFile")); //$NON-NLS-1$
-		fAudioFile = createText(composite);
+		
+		fAudioFile = new Text(composite, SWT.BORDER);
+		fAudioFile.setText(""); //$NON-NLS-1$
+		GridData gd = new GridData(SWT.FILL, SWT.NULL, true, false);
+		fAudioFile.setLayoutData(gd);
+		fAudioFile.addKeyListener(createAudioKeyListener());
+		
 		Button button = new Button(composite, SWT.PUSH);
 		button.setText(Messages.getString("wizards.pages.TranscriptWizardPage.browse")); //$NON-NLS-1$
 		button.addSelectionListener(createButtonListener());
 		
 		setControl(fContainer);
 		setPageComplete(false);
+	}
+
+	/**
+	 * @return
+	 */
+	private KeyAdapter createAudioKeyListener()
+	{
+		return new KeyAdapter(){
+			
+			@Override
+			public void keyReleased(KeyEvent event)
+			{
+				commonListenerChecks();
+			}
+		};
 	}
 	
 	/**
@@ -247,6 +270,11 @@ public class TranscriptWizardPage extends WizardPage
 					if(!file.isEmpty())
 					{
 						fAudioFileSelected = true;
+						String errorMessage = getErrorMessage();
+						if(errorMessage != null && errorMessage.equals("Please enter a valid audio filename"))
+						{
+							setError(null);
+						}
 					}
 			}
 			
@@ -266,26 +294,7 @@ public class TranscriptWizardPage extends WizardPage
 			@Override
 			public void widgetSelected(SelectionEvent e)
 			{
-				if(transcriptExists())
-				{
-					setError(Messages.getString("wizards.pages.TranscriptWizardPage.nameInUse")); //$NON-NLS-1$
-				}
-				else if(fName.getText().isEmpty())
-				{
-					setError(Messages.getString("wizards.pages.TranscriptWizardPage.enterName")); //$NON-NLS-1$
-				}
-				else if(!ResourcesUtil.verifyID(fName.getText()))
-				{
-					setError(Messages.getString("wizards.pages.TranscriptWizardPage.invalidName")); //$NON-NLS-1$
-				}
-				else if(fTable.getSelectionCount() > 0)
-				{
-					setError(null);
-				}
-				else
-				{
-					setError(Messages.getString("wizards.pages.TranscriptWizardPage.selectOne")); //$NON-NLS-1$
-				}
+				commonListenerChecks();
 			}
 		};
 	}
@@ -326,28 +335,13 @@ public class TranscriptWizardPage extends WizardPage
 			{
 				if(!fAudioFileSelected && !fName.getText().isEmpty())
 				{
-					fAudioFile.setText(findAudioFile(fName.getText()));
+					String fileName = findAudioFile(fName.getText());
+					if(!fileName.isEmpty())
+					{
+						fAudioFile.setText(fileName);
+					}
 				}
-				if(transcriptExists())
-				{
-					setError(Messages.getString("wizards.pages.TranscriptWizardPage.nameInUse")); //$NON-NLS-1$
-				}
-				else if(fName.getText().isEmpty())
-				{
-					setError(Messages.getString("wizards.pages.TranscriptWizardPage.enterName")); //$NON-NLS-1$
-				}
-				else if(!ResourcesUtil.verifyID(fName.getText()))
-				{
-					setError(Messages.getString("wizards.pages.TranscriptWizardPage.invalidName")); //$NON-NLS-1$
-				}
-				else if(fTable.getSelectionCount() > 0)
-				{
-					setError(null);
-				}
-				else
-				{
-					setError(Messages.getString("wizards.pages.TranscriptWizardPage.selectOne")); //$NON-NLS-1$
-				}
+				commonListenerChecks();
 			}
 		};
 	}
@@ -460,11 +454,16 @@ public class TranscriptWizardPage extends WizardPage
 			AudioFile audioFile = new AudioFile();
 			String audioPath = fAudioFile.getText();
 			int i = audioPath.lastIndexOf('.');
+			
 			String relativePath = transcript.getName()+audioPath.substring(i);
 			
 			if(audioPath.indexOf(fWorkspacePath) == -1 || namesAreDifferent(transcript.getName(), audioPath))
 			{
-				copyAudioFile(audioPath, relativePath);
+				if(!copyAudioFile(audioPath, relativePath))
+				{
+					return null;
+				}
+
 			}
 			audioFile.setRelativePath(AUDIO_PATH+relativePath);
 			transcript.setAudioFile(audioFile);
@@ -489,18 +488,27 @@ public class TranscriptWizardPage extends WizardPage
 	 * @param audioPath
 	 * @param relativePath
 	 */
-	private void copyAudioFile(String audioPath, String relativePath)
+	private boolean copyAudioFile(String audioPath, String relativePath)
 	{
 		File file = new File(audioPath);
 		File fileCpy = new File(fWorkspacePath+AUDIO_PATH+relativePath);
 		
+		if(!file.exists())
+		{
+			MessageDialog.openError(getShell(), "Audio File Does Not Exist", 
+					"The audio file you selected does not exist or cannot be copied.");
+			return false;
+		}
+		
 		try
 		{
 			FileUtil.copyFile(file, fileCpy);
+			return true;
 		}
 		catch (IOException e)
 		{
 			e.printStackTrace();
+			return false;
 		}
 	}
 
@@ -509,6 +517,8 @@ public class TranscriptWizardPage extends WizardPage
 	 */
 	private void buildParticipants()
 	{
+		fParticipants = new ArrayList<Participant>();
+		
 		TableItem[] items = fTable.getSelection();
 		
 		for(Participant participant : fProject.getParticipants())
@@ -544,6 +554,41 @@ public class TranscriptWizardPage extends WizardPage
 		file = new File(path);
 		
 		return file.exists() ? path : ""; //$NON-NLS-1$
+	}
+
+	/**
+	 * 
+	 */
+	protected void commonListenerChecks()
+	{
+		if(transcriptExists())
+		{
+			setError(Messages.getString("wizards.pages.TranscriptWizardPage.nameInUse")); //$NON-NLS-1$
+		}
+		else if(fName.getText().isEmpty())
+		{
+			setError(Messages.getString("wizards.pages.TranscriptWizardPage.enterName")); //$NON-NLS-1$
+		}
+		else if(!ResourcesUtil.verifyID(fName.getText()))
+		{
+			setError(Messages.getString("wizards.pages.TranscriptWizardPage.invalidName")); //$NON-NLS-1$
+		}
+		else if(fTable.getSelectionCount() <= 0)
+		{
+			setError(Messages.getString("wizards.pages.TranscriptWizardPage.selectOne")); //$NON-NLS-1$
+		}
+		else
+		{
+			File file = new File(fAudioFile.getText());
+			if(!fAudioFile.getText().isEmpty() && !file.exists())
+			{
+				setError("Please enter a valid audio filename");
+			}
+			else
+			{
+				setError(null);
+			}
+		}
 	}
 
 }
