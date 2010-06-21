@@ -17,7 +17,10 @@ import java.io.File;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -145,6 +148,14 @@ public final class ResourcesUtil
 	{
 		IProject proj = ResourcesPlugin.getWorkspace().getRoot().getProject(transcript.getProject().getName());
 		IFile file = proj.getFile("transcripts" + File.separator + transcript.getFileName()); //$NON-NLS-1$
+		try
+		{
+			file.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
+		}
+		catch (CoreException e1)
+		{
+			e1.printStackTrace();
+		}
 		
 		if(!file.exists())
 		{

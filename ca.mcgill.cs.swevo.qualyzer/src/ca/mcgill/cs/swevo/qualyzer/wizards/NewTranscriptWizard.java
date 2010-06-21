@@ -65,9 +65,7 @@ public class NewTranscriptWizard extends Wizard
 		{
 			return false;
 		}
-		fProject.getTranscripts().add(fTranscript);
-		fTranscript.setProject(fProject);
-
+		
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		IProject wProject = root.getProject(fProject.getName());
 		String path = wProject.getLocation()+File.separator+
@@ -86,6 +84,9 @@ public class NewTranscriptWizard extends Wizard
 		{
 			e.printStackTrace();
 		}
+		
+		fProject.getTranscripts().add(fTranscript);
+		fTranscript.setProject(fProject);
 
 		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(fProject.getName());
 		HibernateUtil.quietSave(manager, fProject);
