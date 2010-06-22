@@ -24,7 +24,7 @@
          point="org.eclipse.ui.views">
       <view
             allowMultiple="false"
-            class="ca.mcgill.cs.swevo.qualyzer.views.ProjectExplorerView"
+            class="ca.mcgill.cs.swevo.qualyzer.projectExplorer.ProjectExplorerView"
             id="ca.mcgill.cs.swevo.qualyzer.projectexplorer"
             name="%view.name"
             restorable="true">
@@ -830,7 +830,7 @@
    <extension
          point="org.eclipse.ui.navigator.navigatorContent">
       <actionProvider
-            class="ca.mcgill.cs.swevo.qualyzer.views.ProjectExplorerActionProvider"
+            class="ca.mcgill.cs.swevo.qualyzer.projectExplorer.ProjectExplorerActionProvider"
             id="ca.mcgill.cs.swevo.qualyzer.actions.ProjectExplorerActionProvider">
          <enablement>
             <or>
