@@ -53,51 +53,63 @@ public class DeleteInvestigatorHandler extends AbstractHandler
 	{
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		ISelection selection = page.getSelection();
+		Shell shell = HandlerUtil.getActiveShell(event).getShell();
 		
 		if(selection != null && selection instanceof IStructuredSelection)
 		{
-			Object element = ((IStructuredSelection) selection).getFirstElement();
-			if(element instanceof Investigator)
+			for(Object element : ((IStructuredSelection) selection).toArray())
 			{
-				Investigator investigator = (Investigator) element;
-				Project project = investigator.getProject();
-				
-				HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers()
-					.get(project.getName());
-				ArrayList<String> conflicts = checkForConflicts(investigator, project, manager.openSession());
-				
-				Shell shell = HandlerUtil.getActiveShell(event).getShell();
-				if(conflicts.size() > 0 || project.getInvestigators().size() == 1)
+				if(element instanceof Investigator)
 				{
-					String errorMsg;
-					if(project.getInvestigators().size() == 1)
+					Investigator investigator = (Investigator) element;
+					Project project = investigator.getProject();
+					
+					HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers()
+						.get(project.getName());
+					ArrayList<String> conflicts = checkForConflicts(investigator, project, manager.openSession());
+					
+					if(conflicts.size() > 0 || project.getInvestigators().size() == 1)
 					{
-						errorMsg = Messages.getString("handlers.DeleteInvestigatorHandler.oneRequired"); //$NON-NLS-1$
+						String errorMsg = getErrorMessage(project, conflicts);
+						MessageDialog.openError(shell, Messages.getString(
+								"handlers.DeleteInvestigatorHandler.cannotDelete"), errorMsg); //$NON-NLS-1$
 					}
 					else
 					{
-						errorMsg = printErrors(conflicts);
-					}
-					MessageDialog.openError(shell, Messages.getString(
-							"handlers.DeleteInvestigatorHandler.cannotDelete"), errorMsg); //$NON-NLS-1$
-				}
-				else
-				{
-					boolean check = MessageDialog.openConfirm(shell, 
-							Messages.getString("handlers.DeleteInvestigatorHandler.deleteInvestigator"),  //$NON-NLS-1$
-							Messages.getString("handlers.DeleteInvestigatorHandler.confirm")); //$NON-NLS-1$
-					
-					if(check)
-					{
-						PersistenceManager.getInstance().deleteInvestigator(investigator, manager);
-						CommonNavigator view;
-						view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
-						view.getCommonViewer().refresh();
+						boolean check = MessageDialog.openConfirm(shell, Messages.getString(
+										"handlers.DeleteInvestigatorHandler.deleteInvestigator"),  //$NON-NLS-1$
+								Messages.getString("handlers.DeleteInvestigatorHandler.confirm")); //$NON-NLS-1$
+						if(check)
+						{
+							PersistenceManager.getInstance().deleteInvestigator(investigator, manager);
+							CommonNavigator view;
+							view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+							view.getCommonViewer().refresh();
+						}
 					}
 				}
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * @param project
+	 * @param conflicts
+	 * @return
+	 */
+	private String getErrorMessage(Project project, ArrayList<String> conflicts)
+	{
+		String errorMsg;
+		if(project.getInvestigators().size() == 1)
+		{
+			errorMsg = Messages.getString("handlers.DeleteInvestigatorHandler.oneRequired"); //$NON-NLS-1$
+		}
+		else
+		{
+			errorMsg = printErrors(conflicts);
+		}
+		return errorMsg;
 	}
 	
 	/**

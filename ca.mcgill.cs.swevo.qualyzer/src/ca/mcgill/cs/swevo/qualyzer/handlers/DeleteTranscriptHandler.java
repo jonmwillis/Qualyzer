@@ -50,31 +50,32 @@ public class DeleteTranscriptHandler extends AbstractHandler
 	{
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		ISelection selection = page.getSelection();
+		Shell shell = HandlerUtil.getActiveShell(event).getShell();
 		
 		if(selection != null && selection instanceof IStructuredSelection)
 		{
-			Object element = ((IStructuredSelection) selection).getFirstElement();
-			if(element instanceof Transcript)
+			for(Object element : ((IStructuredSelection) selection).toArray())
 			{
-				Transcript transcript = (Transcript) element;
-				String project = transcript.getProject().getName();
-				
-				Shell shell = HandlerUtil.getActiveShell(event).getShell();
-				
-				TranscriptDeleteDialog dialog = new TranscriptDeleteDialog(shell);
-				dialog.create();
-				
-				int check = dialog.open();
+				if(element instanceof Transcript)
+				{
+					Transcript transcript = (Transcript) element;
+					String project = transcript.getProject().getName();
 					
-				if(check == Window.OK)
-				{	
-					delete(transcript, dialog.getDeleteAudio(), dialog.getDeleteCodes(), 
-							dialog.getDeleteParticipants());
-										
-					CommonNavigator view;
-					view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
-					view.getCommonViewer().refresh();
-					ResourcesUtil.refreshParticipants(PersistenceManager.getInstance().getProject(project));
+					TranscriptDeleteDialog dialog = new TranscriptDeleteDialog(shell);
+					dialog.create();
+					
+					int check = dialog.open();
+						
+					if(check == Window.OK)
+					{	
+						delete(transcript, dialog.getDeleteAudio(), dialog.getDeleteCodes(), 
+								dialog.getDeleteParticipants());
+											
+						CommonNavigator view;
+						view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+						view.getCommonViewer().refresh();
+						ResourcesUtil.refreshParticipants(PersistenceManager.getInstance().getProject(project));
+					}
 				}
 			}
 		}
@@ -107,11 +108,17 @@ public class DeleteTranscriptHandler extends AbstractHandler
 		if(deleteAudio && transcript.getAudioFile() != null)
 		{
 			File file = new File(wProject.getLocation() + transcript.getAudioFile().getRelativePath());
-			file.delete();
+			if(!file.delete())
+			{
+				//TODO open warning dialog
+			}
 		}
 		
 		File file = new File(wProject.getLocation() + TRANSCRIPT + transcript.getFileName());
-		file.delete();
+		if(!file.delete())
+		{
+			//TODO open warning dialog
+		}
 		
 		PersistenceManager.getInstance().deleteTranscript(transcript, manager);
 		

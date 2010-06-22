@@ -38,37 +38,35 @@ public class DeleteProjectHandler extends AbstractHandler
 	public Object execute(ExecutionEvent event) throws ExecutionException
 	{
 		ISelection selection = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getSelection();
+		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		
 		if(selection != null && selection instanceof IStructuredSelection)
-		{
-			IStructuredSelection structSelection = (IStructuredSelection) selection;
-			
-			Object element = structSelection.getFirstElement();
-			
-			if(element instanceof IProject)
+		{			
+			for(Object element : ((IStructuredSelection) selection).toArray())
 			{
-				Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-				
-				boolean confirm = MessageDialog.openConfirm(shell, 
-						Messages.getString("handler.DeleteProjectHandler.deleteProject"),  //$NON-NLS-1$
-						Messages.getString("handler.DeleteProjectHandler.confirm")); //$NON-NLS-1$
-				
-				if(confirm)
-				{
-					try
+				if(element instanceof IProject)
+				{	
+					boolean confirm = MessageDialog.openConfirm(shell, 
+							Messages.getString("handler.DeleteProjectHandler.deleteProject"),  //$NON-NLS-1$
+							Messages.getString("handler.DeleteProjectHandler.confirm")); //$NON-NLS-1$
+					
+					if(confirm)
 					{
-						IProject project = (IProject) element;
-						
-						HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers()
-							.get(project.getName());
-						QualyzerActivator.getDefault().getHibernateDBManagers().remove(project.getName());
-						manager.shutdownDBServer();
-						manager.close();
-						project.delete(true, true, new NullProgressMonitor());
-					}
-					catch(CoreException e)
-					{
-						e.printStackTrace();
+						try
+						{
+							IProject project = (IProject) element;
+							
+							HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers()
+								.get(project.getName());
+							QualyzerActivator.getDefault().getHibernateDBManagers().remove(project.getName());
+							manager.shutdownDBServer();
+							manager.close();
+							project.delete(true, true, new NullProgressMonitor());
+						}
+						catch(CoreException e)
+						{
+							e.printStackTrace();
+						}
 					}
 				}
 			}

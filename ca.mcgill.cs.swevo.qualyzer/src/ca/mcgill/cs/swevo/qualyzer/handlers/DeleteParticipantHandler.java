@@ -45,39 +45,41 @@ public class DeleteParticipantHandler extends AbstractHandler
 	{
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		ISelection selection = page.getSelection();
+		Shell shell = HandlerUtil.getActiveShell(event).getShell();
 		
 		if(selection != null && selection instanceof IStructuredSelection)
 		{
-			Object element = ((IStructuredSelection) selection).getFirstElement();
-			if(element instanceof Participant)
-			{
-				Participant participant = (Participant) element;
-				Project project = participant.getProject();
-				
-				HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers()
-					.get(project.getName());
-				
-				ArrayList<Object> conflicts = checkForConflicts(participant, project, manager.openSession());
-				
-				Shell shell = HandlerUtil.getActiveShell(event).getShell();
-				if(conflicts.size() > 0)
+			for(Object element : ((IStructuredSelection) selection).toArray())
+			{				
+				if(element instanceof Participant)
 				{
-					String errorMsg = printErrors(conflicts);
-					MessageDialog.openError(shell, Messages.getString(
-							"handlers.DeleteParticipantHandler.cannotDelete"), errorMsg); //$NON-NLS-1$
-				}
-				else
-				{
-					boolean check = MessageDialog.openConfirm(shell, 
-							Messages.getString("handlers.DeleteParticipantHandler.deleteParticipant"),  //$NON-NLS-1$
-							Messages.getString("handlers.DeleteParticipantHandler.confirm")); //$NON-NLS-1$
+					Participant participant = (Participant) element;
+					Project project = participant.getProject();
 					
-					if(check)
+					HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers()
+						.get(project.getName());
+					
+					ArrayList<Object> conflicts = checkForConflicts(participant, project, manager.openSession());
+					
+					if(conflicts.size() > 0)
 					{
-						PersistenceManager.getInstance().deleteParticipant(participant, manager);
-						CommonNavigator view;
-						view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
-						view.getCommonViewer().refresh();
+						String errorMsg = printErrors(conflicts);
+						MessageDialog.openError(shell, Messages.getString(
+								"handlers.DeleteParticipantHandler.cannotDelete"), errorMsg); //$NON-NLS-1$
+					}
+					else
+					{
+						boolean check = MessageDialog.openConfirm(shell, Messages.getString(
+								"handlers.DeleteParticipantHandler.deleteParticipant"),  //$NON-NLS-1$
+								Messages.getString("handlers.DeleteParticipantHandler.confirm")); //$NON-NLS-1$
+						
+						if(check)
+						{
+							PersistenceManager.getInstance().deleteParticipant(participant, manager);
+							CommonNavigator view;
+							view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+							view.getCommonViewer().refresh();
+						}
 					}
 				}
 			}
