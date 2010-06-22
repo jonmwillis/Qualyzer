@@ -26,6 +26,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -55,13 +56,13 @@ public class TranscriptWizardPage extends WizardPage
 	/**
 	 * 
 	 */
-	private static final int COMPOSITE_COLS = 3;
+	private static final int COMPOSITE_COLS = 4;
 
 	private static final String AUDIO_PATH = File.separator+"audio"+File.separator; //$NON-NLS-1$
 	
 	protected Table fTable;
 	protected Text fName;
-	protected Text fAudioFile;
+	protected Label fAudioFile;
 	protected boolean fAudioFileSelected;
 	
 	private Composite fContainer;
@@ -151,9 +152,9 @@ public class TranscriptWizardPage extends WizardPage
 		label = createLabel(composite, 
 				Messages.getString("wizards.pages.TranscriptWizardPage.audioFile")); //$NON-NLS-1$
 		
-		fAudioFile = new Text(composite, SWT.BORDER);
+		fAudioFile = new Label(composite, SWT.BORDER);
 		fAudioFile.setText(""); //$NON-NLS-1$
-		GridData gd = new GridData(SWT.FILL, SWT.NULL, true, false);
+		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, false);
 		fAudioFile.setLayoutData(gd);
 		fAudioFile.addKeyListener(createAudioKeyListener());
 		
@@ -161,8 +162,28 @@ public class TranscriptWizardPage extends WizardPage
 		button.setText(Messages.getString("wizards.pages.TranscriptWizardPage.browse")); //$NON-NLS-1$
 		button.addSelectionListener(createButtonListener());
 		
+		button = new Button(composite, SWT.PUSH);
+		button.setText("Clear");
+		button.addSelectionListener(createClearListener());
+		
 		setControl(fContainer);
 		setPageComplete(false);
+	}
+
+	/**
+	 * @return
+	 */
+	private SelectionListener createClearListener()
+	{
+		return new SelectionAdapter(){
+			
+			@Override
+			public void widgetSelected(SelectionEvent event)
+			{
+				fAudioFile.setText("");
+				fAudioFileSelected = false;
+			}
+		};
 	}
 
 	/**

@@ -27,6 +27,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -59,7 +60,7 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 	/**
 	 * 
 	 */
-	private static final int COLS = 3;
+	private static final int COLS = 4;
 	private static final String TRANSCRIPT = File.separator+"transcripts"+File.separator; //$NON-NLS-1$
 	
 	private final String fProjectName;
@@ -135,12 +136,33 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 		}
 		fAudioLabel = new Label(composite, SWT.BORDER);
 		fAudioLabel.setText(fAudioPath);
-		fAudioLabel.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false)); //TODO why does this look weird?
+		fAudioLabel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		button = new Button(composite, SWT.PUSH);
 		button.setText(Messages.getString("dialogs.TranscriptPropertiesDialog.browse")); //$NON-NLS-1$
 		button.addSelectionListener(createSelectionAdapter());
+		
+		button = new Button(composite, SWT.PUSH);
+		button.setText("Clear");
+		button.addSelectionListener(createClearListener());
 				
 		return parent;
+	}
+
+	/**
+	 * @return
+	 */
+	private SelectionListener createClearListener()
+	{
+		return new SelectionAdapter()
+		{
+			@Override
+			public void widgetSelected(SelectionEvent event)
+			{
+				fAudioLabel.setText("");
+				fAudioPath = "";
+				setMessage(null);
+			}
+		};
 	}
 
 	/**
