@@ -58,7 +58,7 @@ public class AddInvestigatorWizard extends Wizard
 	{
 		try
 		{
-			ModelFacade.getInstance().createInvestigator(fPage.getInvestigatorNickname(), 
+			fInvestigator = ModelFacade.getInstance().createInvestigator(fPage.getInvestigatorNickname(), 
 					fPage.getInvestigatorFullname(), fPage.getInstitution(), fProject, true);
 		}
 		catch(QualyzerException e)

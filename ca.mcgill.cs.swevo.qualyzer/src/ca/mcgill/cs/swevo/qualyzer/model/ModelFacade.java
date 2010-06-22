@@ -207,7 +207,40 @@ public final class ModelFacade
 		dir = new File(path+File.separator+"memos"); //$NON-NLS-1$
 		return dir.mkdir();
 	}
-	
 
+	/**
+	 * @param participantId
+	 * @param fullname
+	 * @param fProject
+	 * @return
+	 */
+	public Participant createParticipant(String participantId, String fullName, Project project) 
+		throws QualyzerException
+	{
+		if(!validateParticipant(participantId, fullName))
+		{
+			throw new QualyzerException(); //TODO
+		}
+		
+		 Participant participant = new Participant();
+		 
+		 participant.setParticipantId(participantId);
+		 participant.setFullName(fullName);
+		 participant.setProject(project);
+	
+		 return participant;
+	}
+	
+	/**
+	 * Verifies that the participant info is valid.
+	 * @param participantId
+	 * @param fullName
+	 * @return
+	 */
+	public boolean validateParticipant(String participantId, String fullName)
+	{
+		return ResourcesUtil.verifyID(participantId);
+	}
+	
 	
 }
