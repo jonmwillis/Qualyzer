@@ -15,11 +15,10 @@ package ca.mcgill.cs.swevo.qualyzer.wizards;
 
 import org.eclipse.jface.wizard.Wizard;
 
-import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
-import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
+import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
+import ca.mcgill.cs.swevo.qualyzer.model.ModelFacade;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
-import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
 import ca.mcgill.cs.swevo.qualyzer.wizards.pages.AddParticipantPage;
 
 /**
@@ -56,13 +55,15 @@ public class AddParticipantWizard extends Wizard
 	@Override
 	public boolean performFinish()
 	{
-		fParticipant = fPage.getParticipant();
-		fProject.getParticipants().add(fParticipant);
-		fParticipant.setProject(fProject);
-		
-		HibernateDBManager manager;
-		manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(fProject.getName());
-		HibernateUtil.quietSave(manager, fProject);
+		try
+		{
+			fParticipant = ModelFacade.getInstance()
+				.createParticipant(fPage.getParticipantId(), fPage.getFullname(), fProject);
+		}
+		catch(QualyzerException e)
+		{
+			//TODO
+		}
 		
 		return true;
 	}
