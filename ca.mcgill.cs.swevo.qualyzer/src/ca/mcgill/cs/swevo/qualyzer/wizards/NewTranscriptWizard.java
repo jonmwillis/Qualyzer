@@ -13,19 +13,12 @@
  */
 package ca.mcgill.cs.swevo.qualyzer.wizards;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.wizard.Wizard;
 
-import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
-import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
+import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
+import ca.mcgill.cs.swevo.qualyzer.model.ModelFacade;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
-import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
 import ca.mcgill.cs.swevo.qualyzer.wizards.pages.TranscriptWizardPage;
 
 /**
@@ -59,40 +52,21 @@ public class NewTranscriptWizard extends Wizard
 	 */
 	@Override
 	public boolean performFinish()
-	{
-		fTranscript = fPage.getTranscript();
-		if(fTranscript == null)
-		{
-			return false;
-		}
-		
-		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		IProject wProject = root.getProject(fProject.getName());
-		String path = wProject.getLocation()+File.separator+
-			"transcripts"+File.separator+fTranscript.getFileName(); //$NON-NLS-1$
-		File file = new File(path);
-		
+	{	
 		try
 		{
-			if(!file.createNewFile())
-			{
-				fPage.setErrorMessage(Messages.getString("wizards.NewTranscriptWizard.alreadyExists")); //$NON-NLS-1$
-				return false;
-			}
+			fTranscript = ModelFacade.getInstance().createTranscript(fPage.getTranscriptName(), fPage.getDate(),
+					fPage.getAudioFile(), "", fPage.getParticipants(), fProject);
 		}
-		catch (IOException e)
+		catch(QualyzerException e)
 		{
-			e.printStackTrace();
+			//TODO
 		}
-		
-		fProject.getTranscripts().add(fTranscript);
-		fTranscript.setProject(fProject);
-
-		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(fProject.getName());
-		HibernateUtil.quietSave(manager, fProject);
 
 		return true;
 	}
+	
+	
 
 
 	/**

@@ -13,21 +13,12 @@
  */
 package ca.mcgill.cs.swevo.qualyzer.wizards;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
 
-import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
-import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
+import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
+import ca.mcgill.cs.swevo.qualyzer.model.ModelFacade;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
-import ca.mcgill.cs.swevo.qualyzer.util.FileUtil;
-import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
 import ca.mcgill.cs.swevo.qualyzer.wizards.pages.ImportTranscriptPage;
 
 /**
@@ -72,41 +63,15 @@ public class ImportTranscriptWizard extends Wizard
 	@Override
 	public boolean performFinish()
 	{
-		fTranscript = fPage.getTranscript();
-		
-		if(fTranscript == null)
-		{
-			return false;
-		}
-		
-		File fileOrig = new File(fPage.getTranscriptFile());
-		if(!fileOrig.exists())
-		{
-			MessageDialog.openError(getShell(), "File Error", "Unable to copy the specified transcript file.");
-			return false;
-		}
-		
-		fProject.getTranscripts().add(fTranscript);
-		fTranscript.setProject(fProject);
-
-		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		IProject wProject = root.getProject(fProject.getName());
-		String path = wProject.getLocation()+File.separator+"transcripts"+ //$NON-NLS-1$
-			File.separator+fTranscript.getFileName(); 
-		File file = new File(path);
-		
-		
 		try
 		{
-			FileUtil.copyFile(fileOrig, file);
+			fTranscript = ModelFacade.getInstance().createTranscript(fPage.getTranscriptName(), fPage.getDate(),
+				fPage.getAudioFile(), fPage.getTranscriptFile(), fPage.getParticipants(), fProject);
 		}
-		catch (IOException e)
+		catch(QualyzerException e)
 		{
-			e.printStackTrace();
+			//TODO
 		}
-
-		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(fProject.getName());
-		HibernateUtil.quietSave(manager, fProject);
 
 		return true;
 	}
