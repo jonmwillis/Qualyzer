@@ -14,6 +14,8 @@
 package ca.mcgill.cs.swevo.qualyzer.model;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -21,12 +23,11 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.ui.PlatformUI;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
+import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
+import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
-import ca.mcgill.cs.swevo.qualyzer.wizards.Messages;
 
 /**
  * @author Jonathan Faubert (jonfaub@gmail.com)
@@ -35,10 +36,12 @@ import ca.mcgill.cs.swevo.qualyzer.wizards.Messages;
 public final class ModelFacade
 {
 	private static ModelFacade gFacade = null;
+	
+	private HashMap<Project, ArrayList> fListeners;
 
 	private ModelFacade()
 	{
-		
+		fListeners = new HashMap<Project, ArrayList>();
 	}
 	
 	/**
@@ -60,10 +63,17 @@ public final class ModelFacade
 	 * @param name
 	 * @return
 	 */
-	public IProject createProject(String name, String nickname, String fullName, String institution)
+	public Project createProject(String name, String nickname, String fullName, String institution)
+		throws QualyzerException
 	{
+		if(!validateProject(name, nickname, fullName, institution))
+		{
+			throw new QualyzerException(); //TODO
+		}
+		
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		IProject wProject = root.getProject(name);
+		Project project;
 		
 		try
 		{
@@ -73,35 +83,84 @@ public final class ModelFacade
 			if(!makeSubFolders(wProject))
 			{
 				cleanUpFolders(wProject);
-				MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
-						Messages.getString("wizards.NewProjectWizard.failure"),  //$NON-NLS-1$
-						Messages.getString("wizards.NewProjectWizard.errorMessage")); //$NON-NLS-1$
+				throw new QualyzerException(); //TODO
 			}
 			
-			Project project = new Project();
+			project = new Project();
 			project.setName(name);
 			
-			Investigator investigator = new Investigator();
-			investigator.setNickName(nickname);
-			investigator.setFullName(fullName);
-			investigator.setInstitution(institution);
-			investigator.setProject(project);
-			
-			project.getInvestigators().add(investigator);
+			createInvestigator(nickname, fullName, institution, project, false);
 			
 			PersistenceManager.getInstance().initDB(wProject);
 			HibernateDBManager manager;
-			manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(wProject.getName());
+			manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(name);
 			HibernateUtil.quietSave(manager, project);
 			root.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
 		}
 		catch(CoreException e)
 		{
 			e.printStackTrace();
-			return null;
+			throw new QualyzerException(); //TODO
 		}
 		
-		return wProject;		
+		return project;		
+	}
+	
+	/**
+	 * Checks that a project's fields are all valid.
+	 * @param name
+	 * @param nickname
+	 * @param fullName
+	 * @param institution
+	 * @return
+	 */
+	public boolean validateProject(String name, String nickname, String fullName, String institution)
+	{
+		return ResourcesUtil.verifyID(name) && ResourcesUtil.verifyID(nickname);
+	}
+
+	/**
+	 * Create an investigator from the given information.
+	 * @param nickname
+	 * @param fullName
+	 * @param institution
+	 * @param project
+	 * @return
+	 */
+	public Investigator createInvestigator(String nickname, String fullName, String institution, 
+			Project project, boolean save) throws QualyzerException
+	{
+		if(!validateInvestigator(nickname, fullName, institution))
+		{
+			throw new QualyzerException();
+		}
+		
+		Investigator investigator = new Investigator();
+		investigator.setNickName(nickname);
+		investigator.setFullName(fullName);
+		investigator.setInstitution(institution);
+		investigator.setProject(project);
+		
+		project.getInvestigators().add(investigator);
+		
+		if(save)
+		{
+			HibernateDBManager manager;
+			manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(project.getName());
+			HibernateUtil.quietSave(manager, project);
+		}
+		return investigator;
+	}
+
+	/**
+	 * @param nickname
+	 * @param fullName
+	 * @param institution
+	 * @return
+	 */
+	public boolean validateInvestigator(String nickname, String fullName, String institution)
+	{
+		return ResourcesUtil.verifyID(nickname);
 	}
 
 	/**
@@ -148,5 +207,7 @@ public final class ModelFacade
 		dir = new File(path+File.separator+"memos"); //$NON-NLS-1$
 		return dir.mkdir();
 	}
+	
+
 	
 }

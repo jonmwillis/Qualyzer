@@ -50,7 +50,7 @@ public class NewProjectHandler extends AbstractHandler
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		CommonNavigator view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
 		
-		view.getCommonViewer().refresh(wizard.getProjectReference());
+		view.getCommonViewer().refresh();
 		view.getCommonViewer().expandToLevel(wizard.getProjectReference(), 2);
 		
 		return null;

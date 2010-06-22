@@ -11,7 +11,7 @@
 /**
  * 
  */
-package ca.mcgill.cs.swevo.qualyzer.views;
+package ca.mcgill.cs.swevo.qualyzer.projectExplorer;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.internal.navigator.extensions.NavigatorViewerDescriptor;

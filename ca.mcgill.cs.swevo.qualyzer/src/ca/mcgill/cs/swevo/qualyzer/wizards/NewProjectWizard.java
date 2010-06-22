@@ -11,9 +11,14 @@
 package ca.mcgill.cs.swevo.qualyzer.wizards;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.ui.PlatformUI;
 
+import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
 import ca.mcgill.cs.swevo.qualyzer.model.ModelFacade;
+import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.wizards.pages.NewProjectPageOne;
 
 /**
@@ -47,10 +52,22 @@ public class NewProjectWizard extends Wizard
 	@Override
 	public boolean performFinish()
 	{	
-		fProject = ModelFacade.getInstance().createProject(fOne.getProjectName(), fOne.getInvestigatorNickname(), 
-				fOne.getInvestigatorFullname(), fOne.getInstitution());
-		
-		return fProject != null;
+		Project project = null;
+		try
+		{
+			project = ModelFacade.getInstance().createProject(fOne.getProjectName(), 
+				fOne.getInvestigatorNickname(), fOne.getInvestigatorFullname(), fOne.getInstitution());
+			
+			fProject = ResourcesPlugin.getWorkspace().getRoot().getProject(project.getName());
+		}
+		catch(QualyzerException e) //TODO specific error handling
+		{
+			MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
+					Messages.getString("wizards.NewProjectWizard.failure"),  //$NON-NLS-1$
+					Messages.getString("wizards.NewProjectWizard.errorMessage")); //$NON-NLS-1$
+		}
+
+		return project != null;
 	}
 	
 	/**

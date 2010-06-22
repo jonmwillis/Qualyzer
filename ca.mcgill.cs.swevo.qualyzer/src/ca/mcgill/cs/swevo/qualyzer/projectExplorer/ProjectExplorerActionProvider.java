@@ -8,7 +8,7 @@
  * Contributors:
  *     McGill University - initial API and implementation
  *******************************************************************************/
-package ca.mcgill.cs.swevo.qualyzer.views;
+package ca.mcgill.cs.swevo.qualyzer.projectExplorer;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
