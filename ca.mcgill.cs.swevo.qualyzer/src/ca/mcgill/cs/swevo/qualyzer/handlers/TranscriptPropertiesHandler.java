@@ -93,15 +93,14 @@ public class TranscriptPropertiesHandler extends AbstractHandler
 	{
 		if(!oldAudio.equals(audioFile))
 		{
-			AudioFile aFile = new AudioFile();
-			String relativePath = File.separator+"audio"+File.separator; //$NON-NLS-1$
-			relativePath += transcript.getName() + audioFile.substring(audioFile.lastIndexOf('.'));
-			aFile.setRelativePath(relativePath);
-			transcript.setAudioFile(aFile);
-			
-			//check the paths to make sure they are valid
 			if(!audioFile.isEmpty())
 			{
+				AudioFile aFile = new AudioFile();
+				String relativePath = File.separator+"audio"+File.separator; //$NON-NLS-1$
+				relativePath += transcript.getName() + audioFile.substring(audioFile.lastIndexOf('.'));
+				aFile.setRelativePath(relativePath);
+				transcript.setAudioFile(aFile);
+						
 				String workspacePath = ResourcesPlugin.getWorkspace().getRoot().getLocation()+File.separator;
 				File input = new File(audioFile);
 				String dest = workspacePath + File.separator + transcript.getProject().getName();
@@ -115,6 +114,10 @@ public class TranscriptPropertiesHandler extends AbstractHandler
 				{
 					e.printStackTrace();
 				}
+			}
+			else
+			{
+				transcript.setAudioFile(null);
 			}
 		}
 	}
