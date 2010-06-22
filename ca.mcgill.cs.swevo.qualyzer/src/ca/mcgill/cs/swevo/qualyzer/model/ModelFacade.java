@@ -15,8 +15,6 @@ package ca.mcgill.cs.swevo.qualyzer.model;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
@@ -42,11 +40,11 @@ public final class ModelFacade
 
 	private static ModelFacade gFacade = null;
 	
-	private HashMap<Project, ArrayList> fListeners;
+	private ListenerManager fManager;
 
 	private ModelFacade()
 	{
-		fListeners = new HashMap<Project, ArrayList>();
+		fManager = new ListenerManager();
 	}
 	
 	/**
@@ -390,5 +388,12 @@ public final class ModelFacade
 		}
 	}
 	
-	
+	/**
+	 * Get the Listener Manager.
+	 * @return
+	 */
+	public ListenerManager getListenerManager()
+	{
+		return fManager;
+	}
 }
