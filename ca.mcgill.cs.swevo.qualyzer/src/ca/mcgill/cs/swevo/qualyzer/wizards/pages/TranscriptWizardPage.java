@@ -14,13 +14,11 @@
 package ca.mcgill.cs.swevo.qualyzer.wizards.pages;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
@@ -40,12 +38,10 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
-import ca.mcgill.cs.swevo.qualyzer.model.AudioFile;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
-import ca.mcgill.cs.swevo.qualyzer.util.FileUtil;
 
 /**
  * The only page in the new Transcript Wizard.
@@ -423,7 +419,7 @@ public class TranscriptWizardPage extends WizardPage
 	/**
 	 * @return The name field.
 	 */
-	public String getName()
+	public String getTranscriptName()
 	{
 		return fName.getText();
 	}
@@ -452,90 +448,10 @@ public class TranscriptWizardPage extends WizardPage
 	 */
 	public List<Participant> getParticipants()
 	{
+		buildParticipants();
 		return fParticipants;
 	}
-	
-	/**
-	 * 
-	 * @return The Transcript represented by the data entered in the wizard.
-	 */
-	public Transcript getTranscript()
-	{		
-		Transcript transcript = new Transcript();
-		
-		transcript.setName(fName.getText());
-		transcript.setFileName(fName.getText()+".txt"); //$NON-NLS-1$
-		transcript.setDate(getDate());
-		buildParticipants();
-		transcript.setParticipants(fParticipants);
-		
-		if(!fAudioFile.getText().isEmpty())
-		{
-			//if the audio file is not in the workspace then copy it there.
-			AudioFile audioFile = new AudioFile();
-			String audioPath = fAudioFile.getText();
-			int i = audioPath.lastIndexOf('.');
-			
-			String relativePath = transcript.getName()+audioPath.substring(i);
-			
-			if(audioPath.indexOf(fWorkspacePath) == -1 || namesAreDifferent(transcript.getName(), audioPath))
-			{
-				if(!copyAudioFile(audioPath, relativePath))
-				{
-					return null;
-				}
 
-			}
-			audioFile.setRelativePath(AUDIO_PATH+relativePath);
-			transcript.setAudioFile(audioFile);
-		}
-		
-		return transcript;
-	}
-
-	/**
-	 * @param name
-	 * @param audioPath
-	 * @return
-	 */
-	private boolean namesAreDifferent(String name, String audioPath)
-	{
-		int i = audioPath.lastIndexOf(File.separatorChar) + 1;
-		int j = audioPath.lastIndexOf('.');
-		return !name.equals(audioPath.substring(i, j));
-	}
-
-	/**
-	 * @param audioPath
-	 * @param relativePath
-	 */
-	private boolean copyAudioFile(String audioPath, String relativePath)
-	{
-		File file = new File(audioPath);
-		File fileCpy = new File(fWorkspacePath+AUDIO_PATH+relativePath);
-		
-		if(!file.exists())
-		{
-			MessageDialog.openError(getShell(), "Audio File Does Not Exist", 
-					"The audio file you selected does not exist or cannot be copied.");
-			return false;
-		}
-		
-		try
-		{
-			FileUtil.copyFile(file, fileCpy);
-			return true;
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-			return false;
-		}
-	}
-
-	/**
-	 * 
-	 */
 	private void buildParticipants()
 	{
 		fParticipants = new ArrayList<Participant>();

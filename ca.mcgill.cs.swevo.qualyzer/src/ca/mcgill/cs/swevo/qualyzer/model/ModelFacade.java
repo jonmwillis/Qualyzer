@@ -14,8 +14,10 @@
 package ca.mcgill.cs.swevo.qualyzer.model;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -27,6 +29,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
+import ca.mcgill.cs.swevo.qualyzer.util.FileUtil;
 import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
 
 /**
@@ -35,6 +38,8 @@ import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
  */
 public final class ModelFacade
 {
+	private static final String AUDIO_PATH = null;
+
 	private static ModelFacade gFacade = null;
 	
 	private HashMap<Project, ArrayList> fListeners;
@@ -222,13 +227,18 @@ public final class ModelFacade
 			throw new QualyzerException(); //TODO
 		}
 		
-		 Participant participant = new Participant();
+		Participant participant = new Participant();
 		 
-		 participant.setParticipantId(participantId);
-		 participant.setFullName(fullName);
-		 participant.setProject(project);
+		participant.setParticipantId(participantId);
+		participant.setFullName(fullName);
+		participant.setProject(project);
+		project.getParticipants().add(participant);
+		 
+		HibernateDBManager manager;
+		manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(project.getName());
+		HibernateUtil.quietSave(manager, project);
 	
-		 return participant;
+		return participant;
 	}
 	
 	/**
@@ -240,6 +250,144 @@ public final class ModelFacade
 	public boolean validateParticipant(String participantId, String fullName)
 	{
 		return ResourcesUtil.verifyID(participantId);
+	}
+	
+	/**
+	 * Create a transcript.
+	 * @param name
+	 * @param Date
+	 * @param participants
+	 * @param project
+	 * @return
+	 */
+	public Transcript createTranscript(String name, String date, String audioFilePath, String existingTranscript,
+			List<Participant> participants, Project project) throws QualyzerException
+	{
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		IProject wProject = root.getProject(project.getName());
+		
+		String workspacePath = wProject.getLocation().toString();
+		
+		Transcript transcript = new Transcript();
+		transcript.setName(name);
+		transcript.setFileName(name+".txt"); //$NON-NLS-1$
+		transcript.setDate(date);
+		transcript.setParticipants(participants);
+		
+		hookupAudioFile(audioFilePath, workspacePath, transcript);
+		
+		createTranscriptFile(existingTranscript, wProject, transcript);
+		
+		project.getTranscripts().add(transcript);
+		transcript.setProject(project);
+
+		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(project.getName());
+		HibernateUtil.quietSave(manager, project);
+		
+		return transcript;
+	}
+
+	/**
+	 * @param existingTranscript
+	 * @param wProject
+	 * @param transcript
+	 */
+	private void createTranscriptFile(String existingTranscript, IProject wProject, Transcript transcript)
+	{
+		String path = wProject.getLocation()+File.separator+
+			"transcripts"+File.separator+transcript.getFileName(); //$NON-NLS-1$
+		File file = new File(path);
+		
+		if(existingTranscript.isEmpty())
+		{
+			try
+			{
+				if(!file.createNewFile())
+				{
+					throw new QualyzerException();
+				}
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+				throw new QualyzerException();
+			}
+		}
+		else
+		{
+			File fileOrig = new File(existingTranscript);
+			if(file.exists())
+			{
+				throw new QualyzerException();
+			}
+			
+			try
+			{
+				FileUtil.copyFile(fileOrig, file);
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+				throw new QualyzerException();
+			}
+		}
+	}
+
+	/**
+	 * @param audioFilePath
+	 * @param workspacePath
+	 * @param transcript
+	 */
+	private void hookupAudioFile(String audioFilePath, String workspacePath, Transcript transcript)
+	{
+		if(!audioFilePath.isEmpty())
+		{
+			//if the audio file is not in the workspace then copy it there.
+			AudioFile audioFile = new AudioFile();
+			int i = audioFilePath.lastIndexOf('.');
+			
+			String relativePath = transcript.getName()+audioFilePath.substring(i);
+			
+			if(audioFilePath.indexOf(workspacePath) == -1 || namesAreDifferent(transcript.getName(), audioFilePath))
+			{
+				if(!copyAudioFile(audioFilePath, relativePath, workspacePath))
+				{
+					throw new QualyzerException();
+				}
+
+			}
+			audioFile.setRelativePath(AUDIO_PATH+relativePath);
+			transcript.setAudioFile(audioFile);
+		}
+	}
+	
+	private boolean namesAreDifferent(String name, String audioPath)
+	{
+		int i = audioPath.lastIndexOf(File.separatorChar) + 1;
+		int j = audioPath.lastIndexOf('.');
+		return !name.equals(audioPath.substring(i, j));
+	}
+	
+	private boolean copyAudioFile(String audioPath, String relativePath, String workspacePath)
+	{
+		File file = new File(audioPath);
+		File fileCpy = new File(workspacePath+AUDIO_PATH+relativePath);
+		
+		if(!file.exists())
+		{
+			throw new QualyzerException();
+		}
+		
+		try
+		{
+			FileUtil.copyFile(file, fileCpy);
+			return true;
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
 	}
 	
 	
