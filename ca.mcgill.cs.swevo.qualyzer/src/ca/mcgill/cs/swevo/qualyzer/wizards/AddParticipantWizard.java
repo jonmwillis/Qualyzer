@@ -62,7 +62,8 @@ public class AddParticipantWizard extends Wizard
 		}
 		catch(QualyzerException e)
 		{
-			//TODO
+			//TODO open error dialog
+			return false;
 		}
 		
 		return true;

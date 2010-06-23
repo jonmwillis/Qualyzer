@@ -13,6 +13,7 @@
  */
 package ca.mcgill.cs.swevo.qualyzer.wizards;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
@@ -60,7 +61,8 @@ public class NewTranscriptWizard extends Wizard
 		}
 		catch(QualyzerException e)
 		{
-			//TODO
+			MessageDialog.openError(getShell(), "Transcript Creation Error", e.getMessage());
+			return false;
 		}
 
 		return true;
