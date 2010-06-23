@@ -60,12 +60,18 @@ public class DeleteInvestigatorHandler extends AbstractHandler
 		{
 			List<String> conflicts = new ArrayList<String>();
 			List<Investigator> toDelete = new ArrayList<Investigator>();
+			List<Project> projects = new ArrayList<Project>();
+			
 			for(Object element : ((IStructuredSelection) selection).toArray())
 			{
 				if(element instanceof Investigator)
 				{
 					Investigator investigator = (Investigator) element;
 					Project project = investigator.getProject();
+					if(!projects.contains(project))
+					{
+						projects.add(project);
+					}
 					
 					HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers()
 						.get(project.getName());
@@ -74,9 +80,15 @@ public class DeleteInvestigatorHandler extends AbstractHandler
 				}
 			}
 			
-			//TODO deal with deleting last investigator
-			
-			if(conflicts.size() > 0)
+			if(projects.size() > 1)
+			{
+				MessageDialog.openError(shell, "Unable to Delete", "Unable to delete across multiple projects.");
+			}
+			else if(projects.get(0).getInvestigators().size() == toDelete.size())
+			{
+				MessageDialog.openError(shell, "Unable to Delete", "Cannot delete all the investigators in a project.");
+			}
+			else if(conflicts.size() > 0)
 			{
 				String errorMsg = printErrors(conflicts);
 				MessageDialog.openError(shell, Messages.getString(
