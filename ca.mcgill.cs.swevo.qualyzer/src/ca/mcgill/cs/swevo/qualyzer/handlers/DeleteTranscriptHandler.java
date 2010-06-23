@@ -12,12 +12,14 @@ package ca.mcgill.cs.swevo.qualyzer.handlers;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
@@ -54,32 +56,50 @@ public class DeleteTranscriptHandler extends AbstractHandler
 		
 		if(selection != null && selection instanceof IStructuredSelection)
 		{
+			List<Transcript> toDelete = new ArrayList<Transcript>();
+			
 			for(Object element : ((IStructuredSelection) selection).toArray())
 			{
 				if(element instanceof Transcript)
 				{
 					Transcript transcript = (Transcript) element;
-					String project = transcript.getProject().getName();
 					
-					TranscriptDeleteDialog dialog = new TranscriptDeleteDialog(shell);
-					dialog.create();
-					
-					int check = dialog.open();
-						
-					if(check == Window.OK)
-					{	
-						delete(transcript, dialog.getDeleteAudio(), dialog.getDeleteCodes(), 
-								dialog.getDeleteParticipants());
-											
-						CommonNavigator view;
-						view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
-						view.getCommonViewer().refresh();
-						ResourcesUtil.refreshParticipants(PersistenceManager.getInstance().getProject(project));
-					}
+					toDelete.add(transcript);	
 				}
 			}
+			
+			proceedWithDeletion(page, shell, toDelete);
 		}
 		return null;
+	}
+	
+	/**
+	 * @param page
+	 * @param shell
+	 * @param toDelete
+	 */
+	private void proceedWithDeletion(IWorkbenchPage page, Shell shell, List<Transcript> toDelete)
+	{	
+		TranscriptDeleteDialog dialog = new TranscriptDeleteDialog(shell);
+		dialog.create();
+		
+		int check = dialog.open();
+			
+		if(check == Window.OK)
+		{	
+			for(Transcript transcript : toDelete)
+			{
+				String project = transcript.getProject().getName();
+				delete(transcript, dialog.getDeleteAudio(), dialog.getDeleteCodes(), 
+						dialog.getDeleteParticipants(), shell);
+									
+				CommonNavigator view;
+				view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+				view.getCommonViewer().refresh();
+				ResourcesUtil.refreshParticipants(PersistenceManager.getInstance().getProject(project));
+			}
+		}
+		
 	}
 
 	/**
@@ -88,7 +108,8 @@ public class DeleteTranscriptHandler extends AbstractHandler
 	 * @param deleteCodes
 	 * @param deleteParticipants
 	 */
-	private void delete(Transcript transcript, boolean deleteAudio, boolean deleteCodes, boolean deleteParticipants)
+	private void delete(Transcript transcript, boolean deleteAudio, boolean deleteCodes, boolean deleteParticipants,
+			Shell shell)
 	{
 		Project project = transcript.getProject();
 		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(project.getName());
@@ -110,14 +131,15 @@ public class DeleteTranscriptHandler extends AbstractHandler
 			File file = new File(wProject.getLocation() + transcript.getAudioFile().getRelativePath());
 			if(!file.delete())
 			{
-				//TODO open warning dialog
+				MessageDialog.openWarning(shell, "File Access Error", "The audio file could not be deleted.");
+				
 			}
 		}
 		
 		File file = new File(wProject.getLocation() + TRANSCRIPT + transcript.getFileName());
 		if(!file.delete())
 		{
-			//TODO open warning dialog
+			MessageDialog.openWarning(shell, "File Access Error", "The transcript file could not be deleted.");
 		}
 		
 		PersistenceManager.getInstance().deleteTranscript(transcript, manager);

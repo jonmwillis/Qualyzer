@@ -149,7 +149,7 @@ public class DeleteParticipantHandler extends AbstractHandler
 					if(part.equals(participant))
 					{
 						conflicts.add(Messages.getString("handlers.DeleteParticipantHandler.participant") +  
-								participant.getParticipantId() +
+								participant.getParticipantId() + " " + 
 								Messages.getString("handlers.DeleteParticipantHandler.memo") +  
 								memo.getName());
 						break;
@@ -165,7 +165,7 @@ public class DeleteParticipantHandler extends AbstractHandler
 					if(part.equals(participant))
 					{
 						conflicts.add(Messages.getString("handlers.DeleteParticipantHandler.participant") +  
-								participant.getParticipantId() +
+								participant.getParticipantId() + " " +
 								Messages.getString("handlers.DeleteParticipantHandler.transcript") +  
 								transcript.getName());
 						break;

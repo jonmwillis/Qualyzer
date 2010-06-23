@@ -11,6 +11,7 @@
 package ca.mcgill.cs.swevo.qualyzer.handlers;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -57,6 +58,8 @@ public class DeleteInvestigatorHandler extends AbstractHandler
 		
 		if(selection != null && selection instanceof IStructuredSelection)
 		{
+			List<String> conflicts = new ArrayList<String>();
+			List<Investigator> toDelete = new ArrayList<Investigator>();
 			for(Object element : ((IStructuredSelection) selection).toArray())
 			{
 				if(element instanceof Investigator)
@@ -66,57 +69,66 @@ public class DeleteInvestigatorHandler extends AbstractHandler
 					
 					HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers()
 						.get(project.getName());
-					ArrayList<String> conflicts = checkForConflicts(investigator, project, manager.openSession());
-					
-					if(conflicts.size() > 0 || project.getInvestigators().size() == 1)
-					{
-						String errorMsg = getErrorMessage(project, conflicts);
-						MessageDialog.openError(shell, Messages.getString(
-								"handlers.DeleteInvestigatorHandler.cannotDelete"), errorMsg); //$NON-NLS-1$
-					}
-					else
-					{
-						boolean check = MessageDialog.openConfirm(shell, Messages.getString(
-										"handlers.DeleteInvestigatorHandler.deleteInvestigator"),  //$NON-NLS-1$
-								Messages.getString("handlers.DeleteInvestigatorHandler.confirm")); //$NON-NLS-1$
-						if(check)
-						{
-							PersistenceManager.getInstance().deleteInvestigator(investigator, manager);
-							CommonNavigator view;
-							view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
-							view.getCommonViewer().refresh();
-						}
-					}
+					conflicts.addAll(checkForConflicts(investigator, manager.openSession()));
+					toDelete.add(investigator);
 				}
+			}
+			
+			//TODO deal with deleting last investigator
+			
+			if(conflicts.size() > 0)
+			{
+				String errorMsg = printErrors(conflicts);
+				MessageDialog.openError(shell, Messages.getString(
+						"handlers.DeleteInvestigatorHandler.cannotDelete"), errorMsg); //$NON-NLS-1$
+			}
+			else
+			{
+				proceedWithDeletion(page, shell, toDelete);
 			}
 		}
 		return null;
 	}
 
 	/**
-	 * @param project
-	 * @param conflicts
-	 * @return
+	 * @param page
+	 * @param shell
+	 * @param toDelete
 	 */
-	private String getErrorMessage(Project project, ArrayList<String> conflicts)
+	private void proceedWithDeletion(IWorkbenchPage page, Shell shell, List<Investigator> toDelete)
 	{
-		String errorMsg;
-		if(project.getInvestigators().size() == 1)
+		String msg = "";
+		if(toDelete.size() == 1)
 		{
-			errorMsg = Messages.getString("handlers.DeleteInvestigatorHandler.oneRequired"); //$NON-NLS-1$
+			msg = Messages.getString("handlers.DeleteInvestigatorHandler.confirm");
 		}
 		else
 		{
-			errorMsg = printErrors(conflicts);
+			msg = "Are you sure you want to delete these investigators?";
 		}
-		return errorMsg;
+		
+		boolean check = MessageDialog.openConfirm(shell, Messages.getString(
+		"handlers.DeleteInvestigatorHandler.deleteInvestigator"), msg); //$NON-NLS-1$
+		
+		if(check)
+		{
+			for(Investigator investigator : toDelete)
+			{
+				HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers()
+					.get(investigator.getProject().getName());
+				PersistenceManager.getInstance().deleteInvestigator(investigator, manager);
+			}
+			CommonNavigator view;
+			view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+			view.getCommonViewer().refresh();
+		}	
 	}
 	
 	/**
 	 * @param conflicts
 	 * @return
 	 */
-	private String printErrors(ArrayList<String> conflicts)
+	private String printErrors(List<String> conflicts)
 	{
 		String output = Messages.getString("handlers.DeleteInvestigatorHandler.conflicts"); //$NON-NLS-1$
 		for(String str : conflicts)
@@ -133,9 +145,10 @@ public class DeleteInvestigatorHandler extends AbstractHandler
 	 * @param session
 	 * @return
 	 */
-	private ArrayList<String> checkForConflicts(Investigator investigator, Project project, Session session)
+	private ArrayList<String> checkForConflicts(Investigator investigator, Session session)
 	{
 		ArrayList<String> conflicts = new ArrayList<String>();
+		Project project = investigator.getProject();
 		
 		for(Memo memo : project.getMemos())
 		{
