@@ -53,12 +53,18 @@ public class DeleteParticipantHandler extends AbstractHandler
 		{
 			List<String> conflicts = new ArrayList<String>();
 			List<Participant> toDelete = new ArrayList<Participant>();
+			List<Project> projects = new ArrayList<Project>();
 			for(Object element : ((IStructuredSelection) selection).toArray())
 			{				
 				if(element instanceof Participant)
 				{
 					Participant participant = (Participant) element;
 					Project project = participant.getProject();
+					
+					if(!projects.contains(project))
+					{
+						projects.add(project);
+					}
 					
 					HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers()
 						.get(project.getName());
@@ -68,7 +74,12 @@ public class DeleteParticipantHandler extends AbstractHandler
 				}
 			}
 			
-			if(conflicts.size() > 0)
+			if(projects.size() > 1)
+			{
+				MessageDialog.openError(shell, "Unable to delete",
+						"Cannot delete participants across multiple projects.");
+			}
+			else if(conflicts.size() > 0)
 			{
 				String errorMsg = printErrors(conflicts);
 				MessageDialog.openError(shell, Messages.getString(

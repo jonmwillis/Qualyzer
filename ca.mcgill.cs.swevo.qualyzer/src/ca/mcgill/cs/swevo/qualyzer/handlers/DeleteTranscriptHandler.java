@@ -57,6 +57,7 @@ public class DeleteTranscriptHandler extends AbstractHandler
 		if(selection != null && selection instanceof IStructuredSelection)
 		{
 			List<Transcript> toDelete = new ArrayList<Transcript>();
+			List<Project> projects = new ArrayList<Project>();
 			
 			for(Object element : ((IStructuredSelection) selection).toArray())
 			{
@@ -64,11 +65,24 @@ public class DeleteTranscriptHandler extends AbstractHandler
 				{
 					Transcript transcript = (Transcript) element;
 					
+					if(!projects.contains(transcript.getProject()))
+					{
+						projects.add(transcript.getProject());
+					}
+					
 					toDelete.add(transcript);	
 				}
 			}
 			
-			proceedWithDeletion(page, shell, toDelete);
+			if(projects.size() >= 1)
+			{
+				MessageDialog.openError(shell, "Unable to Delete", 
+						"Unable to delete transcripts across multiple projects.");
+			}
+			else
+			{
+				proceedWithDeletion(page, shell, toDelete);
+			}
 		}
 		return null;
 	}
