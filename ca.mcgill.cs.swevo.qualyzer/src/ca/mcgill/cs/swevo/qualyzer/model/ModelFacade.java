@@ -18,15 +18,11 @@ import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
-import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 import ca.mcgill.cs.swevo.qualyzer.util.FileUtil;
 import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
 
@@ -73,58 +69,21 @@ public final class ModelFacade
 	 */
 	public Project createProject(String name, String nickname, String fullName, String institution)
 		throws QualyzerException
-	{
-		if(!validateProject(name, nickname, fullName, institution))
-		{
-			throw new QualyzerException(); //TODO
-		}
-		
-		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		IProject wProject = root.getProject(name);
+	{	
+		IProject wProject = FileUtil.makeProjectFileSystem(name);
 		Project project;
 		
-		try
-		{
-			wProject.create(new NullProgressMonitor());
-			wProject.open(new NullProgressMonitor());
-			
-			if(!makeSubFolders(wProject))
-			{
-				cleanUpFolders(wProject);
-				throw new QualyzerException("Unable to create the required file system.");
-			}
-			
-			project = new Project();
-			project.setName(name);
-			
-			createInvestigator(nickname, fullName, institution, project, false);
-			
-			PersistenceManager.getInstance().initDB(wProject);
-			HibernateDBManager manager;
-			manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(name);
-			HibernateUtil.quietSave(manager, project);
-			root.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
-		}
-		catch(CoreException e)
-		{
-			e.printStackTrace();
-			throw new QualyzerException("There was a problem creating the project", e);
-		}
+		project = new Project();
+		project.setName(name);
+		
+		createInvestigator(nickname, fullName, institution, project, false);
+		
+		PersistenceManager.getInstance().initDB(wProject);
+		HibernateDBManager manager;
+		manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(name);
+		HibernateUtil.quietSave(manager, project);
 		
 		return project;		
-	}
-	
-	/**
-	 * Checks that a project's fields are all valid.
-	 * @param name
-	 * @param nickname
-	 * @param fullName
-	 * @param institution
-	 * @return
-	 */
-	public boolean validateProject(String name, String nickname, String fullName, String institution)
-	{
-		return ResourcesUtil.verifyID(name) && ResourcesUtil.verifyID(nickname);
 	}
 
 	/**
@@ -156,51 +115,6 @@ public final class ModelFacade
 	}
 
 	/**
-	 * @param wProject
-	 */
-	private void cleanUpFolders(IProject wProject)
-	{
-		String path = wProject.getLocation().toOSString();
-		File dir = new File(path+File.separator+"audio"); //$NON-NLS-1$
-		if(!dir.exists())
-		{
-			dir.delete();
-		}
-		dir = new File(path+File.separator+TRANSCRIPTS);
-		if(!dir.exists())
-		{
-			dir.delete();
-		}
-		dir = new File(path+File.separator+"memos"); //$NON-NLS-1$
-		if(!dir.exists())
-		{
-			dir.delete();
-		}
-		
-	}
-
-	/**
-	 * @param wProject
-	 * @return
-	 */
-	private boolean makeSubFolders(IProject wProject)
-	{
-		String path = wProject.getLocation().toOSString();
-		File dir = new File(path+File.separator+"audio"); //$NON-NLS-1$
-		if(!dir.mkdir())
-		{
-			return false;
-		}
-		dir = new File(path+File.separator+TRANSCRIPTS); 
-		if(!dir.mkdir())
-		{
-			return false;
-		}
-		dir = new File(path+File.separator+"memos"); //$NON-NLS-1$
-		return dir.mkdir();
-	}
-
-	/**
 	 * @param participantId
 	 * @param fullname
 	 * @param fProject
@@ -208,12 +122,7 @@ public final class ModelFacade
 	 */
 	public Participant createParticipant(String participantId, String fullName, Project project) 
 		throws QualyzerException
-	{
-		if(!validateParticipant(participantId, fullName))
-		{
-			throw new QualyzerException(); //TODO
-		}
-		
+	{	
 		Participant participant = new Participant();
 		 
 		participant.setParticipantId(participantId);
@@ -226,17 +135,6 @@ public final class ModelFacade
 		HibernateUtil.quietSave(manager, project);
 	
 		return participant;
-	}
-	
-	/**
-	 * Verifies that the participant info is valid.
-	 * @param participantId
-	 * @param fullName
-	 * @return
-	 */
-	public boolean validateParticipant(String participantId, String fullName)
-	{
-		return ResourcesUtil.verifyID(participantId);
 	}
 	
 	/**
@@ -291,7 +189,7 @@ public final class ModelFacade
 				if(!file.createNewFile())
 				{
 					throw new QualyzerException(
-							"Unable to create the transcript file. One probably already exists with that name.");
+							"Unable to create the transcript file. One may already exist with that name.");
 				}
 			}
 			catch (IOException e)
