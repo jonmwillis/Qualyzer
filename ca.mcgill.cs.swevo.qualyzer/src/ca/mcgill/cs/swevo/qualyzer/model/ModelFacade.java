@@ -36,6 +36,11 @@ import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
  */
 public final class ModelFacade
 {
+	/**
+	 * 
+	 */
+	private static final String TRANSCRIPTS = "transcripts";
+
 	private static final String AUDIO_PATH = null;
 
 	private static ModelFacade gFacade = null;
@@ -86,7 +91,7 @@ public final class ModelFacade
 			if(!makeSubFolders(wProject))
 			{
 				cleanUpFolders(wProject);
-				throw new QualyzerException(); //TODO
+				throw new QualyzerException("Unable to create the required file system.");
 			}
 			
 			project = new Project();
@@ -103,7 +108,7 @@ public final class ModelFacade
 		catch(CoreException e)
 		{
 			e.printStackTrace();
-			throw new QualyzerException(); //TODO
+			throw new QualyzerException("There was a problem creating the project", e);
 		}
 		
 		return project;		
@@ -132,12 +137,7 @@ public final class ModelFacade
 	 */
 	public Investigator createInvestigator(String nickname, String fullName, String institution, 
 			Project project, boolean save) throws QualyzerException
-	{
-		if(!validateInvestigator(nickname, fullName, institution))
-		{
-			throw new QualyzerException();
-		}
-		
+	{	
 		Investigator investigator = new Investigator();
 		investigator.setNickName(nickname);
 		investigator.setFullName(fullName);
@@ -156,17 +156,6 @@ public final class ModelFacade
 	}
 
 	/**
-	 * @param nickname
-	 * @param fullName
-	 * @param institution
-	 * @return
-	 */
-	public boolean validateInvestigator(String nickname, String fullName, String institution)
-	{
-		return ResourcesUtil.verifyID(nickname);
-	}
-
-	/**
 	 * @param wProject
 	 */
 	private void cleanUpFolders(IProject wProject)
@@ -177,7 +166,7 @@ public final class ModelFacade
 		{
 			dir.delete();
 		}
-		dir = new File(path+File.separator+"transcripts"); //$NON-NLS-1$
+		dir = new File(path+File.separator+TRANSCRIPTS);
 		if(!dir.exists())
 		{
 			dir.delete();
@@ -202,7 +191,7 @@ public final class ModelFacade
 		{
 			return false;
 		}
-		dir = new File(path+File.separator+"transcripts"); //$NON-NLS-1$
+		dir = new File(path+File.separator+TRANSCRIPTS); 
 		if(!dir.mkdir())
 		{
 			return false;
@@ -292,8 +281,7 @@ public final class ModelFacade
 	 */
 	private void createTranscriptFile(String existingTranscript, IProject wProject, Transcript transcript)
 	{
-		String path = wProject.getLocation()+File.separator+
-			"transcripts"+File.separator+transcript.getFileName(); //$NON-NLS-1$
+		String path = wProject.getLocation()+File.separator+TRANSCRIPTS+File.separator+transcript.getFileName();
 		File file = new File(path);
 		
 		if(existingTranscript.isEmpty())
@@ -302,13 +290,14 @@ public final class ModelFacade
 			{
 				if(!file.createNewFile())
 				{
-					throw new QualyzerException();
+					throw new QualyzerException(
+							"Unable to create the transcript file. One probably already exists with that name.");
 				}
 			}
 			catch (IOException e)
 			{
 				e.printStackTrace();
-				throw new QualyzerException();
+				throw new QualyzerException("There was an error creating the transcript file", e);
 			}
 		}
 		else
@@ -316,7 +305,13 @@ public final class ModelFacade
 			File fileOrig = new File(existingTranscript);
 			if(file.exists())
 			{
-				throw new QualyzerException();
+				throw new QualyzerException("A transcript already exists with the requested name");
+			}
+			
+			if(!fileOrig.exists())
+			{
+				throw new QualyzerException(
+						"The requested transcript cannot be found. It may have been deleted or renamed.");
 			}
 			
 			try
@@ -326,7 +321,7 @@ public final class ModelFacade
 			catch (IOException e)
 			{
 				e.printStackTrace();
-				throw new QualyzerException();
+				throw new QualyzerException("There was a problem copying the transcript file", e);
 			}
 		}
 	}
@@ -350,7 +345,7 @@ public final class ModelFacade
 			{
 				if(!copyAudioFile(audioFilePath, relativePath, workspacePath))
 				{
-					throw new QualyzerException();
+					throw new QualyzerException("Failed to copy the audio file");
 				}
 
 			}
@@ -373,7 +368,7 @@ public final class ModelFacade
 		
 		if(!file.exists())
 		{
-			throw new QualyzerException();
+			throw new QualyzerException("The audio file you wish to copy cannot be found.");
 		}
 		
 		try

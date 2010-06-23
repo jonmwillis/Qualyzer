@@ -65,6 +65,7 @@ public class NewProjectWizard extends Wizard
 			MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
 					Messages.getString("wizards.NewProjectWizard.failure"),  //$NON-NLS-1$
 					Messages.getString("wizards.NewProjectWizard.errorMessage")); //$NON-NLS-1$
+			return false;
 		}
 
 		return project != null;
