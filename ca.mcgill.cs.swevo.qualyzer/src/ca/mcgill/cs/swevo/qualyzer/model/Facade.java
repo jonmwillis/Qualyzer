@@ -267,6 +267,44 @@ public final class Facade
 	}
 	
 	/**
+	 * Try to delete the investigator.
+	 * @param investigator
+	 */
+	public void deleteInvestigator(Investigator investigator)
+	{
+		Object project = null;
+		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers()
+			.get(investigator.getProject().getName());
+		Session session = null;
+		Transaction t = null;
+		try
+		{
+			session = manager.openSession();
+			t = session.beginTransaction();
+			
+			project = session.get(Project.class, investigator.getProject().getPersistenceId());
+			Object inv = session.get(Investigator.class, investigator.getPersistenceId());
+			
+			((Project) project).getInvestigators().remove(inv);
+			
+			session.delete(inv);
+			session.flush();
+			t.commit();
+			fManager.notifyInvestigatorListeners(ChangeType.DELETE, investigator, this);
+		}
+		catch(HibernateException e)
+		{
+			HibernateUtil.quietRollback(t);
+			throw new QualyzerException("Could not delete investigator.", e);
+		}
+		finally
+		{
+			HibernateUtil.quietClose(session);
+			HibernateUtil.quietSave(manager, project);
+		}
+	}
+	
+	/**
 	 * Get the Listener Manager.
 	 * @return
 	 */

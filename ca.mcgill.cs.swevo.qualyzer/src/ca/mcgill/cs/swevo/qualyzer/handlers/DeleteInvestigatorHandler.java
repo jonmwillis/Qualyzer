@@ -20,6 +20,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -29,11 +30,11 @@ import org.hibernate.Session;
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.model.Annotation;
 import ca.mcgill.cs.swevo.qualyzer.model.CodeEntry;
+import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Fragment;
 import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
 import ca.mcgill.cs.swevo.qualyzer.model.Memo;
-import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 
@@ -126,9 +127,16 @@ public class DeleteInvestigatorHandler extends AbstractHandler
 		{
 			for(Investigator investigator : toDelete)
 			{
-				HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers()
-					.get(investigator.getProject().getName());
-				PersistenceManager.getInstance().deleteInvestigator(investigator, manager);
+				IEditorReference[] editors = page.getEditorReferences();
+				for(IEditorReference editor : editors)
+				{
+					if(editor.getName().equals(investigator.getNickName()))
+					{
+						page.closeEditor(editor.getEditor(true), true);
+					}
+				}
+				
+				Facade.getInstance().deleteInvestigator(investigator);
 			}
 			CommonNavigator view;
 			view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
