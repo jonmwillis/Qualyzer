@@ -282,6 +282,9 @@ public final class Facade
 			session = manager.openSession();
 			t = session.beginTransaction();
 			
+			/*The following is ALL required in order to delete the object from the database.
+			 * Don't ask me why, I don't really understand it myself -JF.
+			 */
 			project = session.get(Project.class, investigator.getProject().getPersistenceId());
 			Object inv = session.get(Investigator.class, investigator.getPersistenceId());
 			
@@ -320,6 +323,9 @@ public final class Facade
 			session = manager.openSession();
 			t = session.beginTransaction();
 			
+			/*The following is ALL required in order to delete the object from the database.
+			 * Don't ask me why, I don't really understand it myself -JF.
+			 */
 			project = session.get(Project.class, transcript.getProject().getPersistenceId());
 			Object trans = session.get(Transcript.class, transcript.getPersistenceId());
 			
@@ -328,6 +334,7 @@ public final class Facade
 			session.delete(trans);
 			session.flush();
 			t.commit();
+			fManager.notifyTranscriptListeners(ChangeType.DELETE, transcript, this);
 		}
 		catch(HibernateException e)
 		{
@@ -339,6 +346,22 @@ public final class Facade
 			HibernateUtil.quietClose(session);
 			HibernateUtil.quietSave(manager, project);
 		}
+	}
+	
+	/**
+	 * Force a Transcript to load all its fields.
+	 * @param transcript
+	 * @return
+	 */
+	public Transcript forceTranscriptLoad(Transcript transcript)
+	{
+		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers()
+			.get(transcript.getProject().getName());
+		Session s = manager.openSession();
+		
+		Object object = s.get(Transcript.class, transcript.getPersistenceId());
+		
+		return (Transcript) object;
 	}
 	
 	/**

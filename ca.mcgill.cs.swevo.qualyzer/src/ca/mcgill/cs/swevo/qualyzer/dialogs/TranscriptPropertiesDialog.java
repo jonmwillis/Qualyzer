@@ -43,6 +43,7 @@ import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.hibernate.Session;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
+import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
@@ -281,17 +282,13 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 	 */
 	private void buildParticipants()
 	{
-		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(fProjectName);
-		Session s = manager.openSession();
-		Object o = s.get(Transcript.class, fTranscript.getPersistenceId());
+		Transcript transcript = Facade.getInstance().forceTranscriptLoad(fTranscript);
 		
-		for(Participant p : ((Transcript) o).getParticipants())
+		for(Participant p : transcript.getParticipants())
 		{
 			TableItem item = new TableItem(fTable, SWT.NULL);
 			item.setText(p.getParticipantId());
-		}
-		
-		s.close();
+		}		
 	}
 
 	/**

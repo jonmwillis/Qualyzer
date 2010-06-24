@@ -28,12 +28,10 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.navigator.CommonNavigator;
-import org.hibernate.Session;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.dialogs.TranscriptDeleteDialog;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
-import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
@@ -128,12 +126,11 @@ public class DeleteTranscriptHandler extends AbstractHandler
 	{
 		Project project = transcript.getProject();
 		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(project.getName());
-		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(project.getName());
 		ArrayList<Participant> participants = null;
 		
 		if(deleteParticipants)
 		{
-			participants = deleteParticipants(transcript, project, manager);
+			participants = deleteParticipants(transcript, project);
 		}
 		
 		if(deleteCodes)
@@ -178,23 +175,21 @@ public class DeleteTranscriptHandler extends AbstractHandler
 	 * @param project
 	 * @param manager 
 	 */
-	private ArrayList<Participant> deleteParticipants(Transcript transcript, Project project, 
-			HibernateDBManager manager)
+	private ArrayList<Participant> deleteParticipants(Transcript transcript, Project project)
 	{
-		Session session = manager.openSession();
 		ArrayList<Participant> toDelete = new ArrayList<Participant>();
 				
-		Object lTranscript = session.get(Transcript.class, transcript.getPersistenceId());
-		for(Participant participant : ((Transcript) lTranscript).getParticipants())
+		Transcript lTranscript = Facade.getInstance().forceTranscriptLoad(transcript);
+		for(Participant participant : lTranscript.getParticipants())
 		{
 			boolean found = false;
 			for(Transcript otherTranscript : project.getTranscripts())
 			{
 				if(!otherTranscript.equals(transcript))
 				{
-					Object lOtherTranscript = session.get(Transcript.class, otherTranscript.getPersistenceId());
+					Transcript lOtherTranscript = Facade.getInstance().forceTranscriptLoad(otherTranscript);
 					
-					for(Participant otherParticipant : ((Transcript) lOtherTranscript).getParticipants())
+					for(Participant otherParticipant : lOtherTranscript.getParticipants())
 					{
 						if(otherParticipant.equals(participant))
 						{
@@ -209,9 +204,7 @@ public class DeleteTranscriptHandler extends AbstractHandler
 				toDelete.add(participant);
 			}
 		}
-		
-		session.close();
-		
+				
 		return toDelete;
 	}
 

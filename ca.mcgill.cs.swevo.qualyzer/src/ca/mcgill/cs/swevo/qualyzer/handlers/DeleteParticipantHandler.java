@@ -179,8 +179,8 @@ public class DeleteParticipantHandler extends AbstractHandler
 		
 			for(Transcript transcript : project.getTranscripts())
 			{
-				Object lTranscript = session.get(Transcript.class, transcript.getPersistenceId());
-				for(Participant part : ((Transcript) lTranscript).getParticipants())
+				Transcript lTranscript = Facade.getInstance().forceTranscriptLoad(transcript);
+				for(Participant part : lTranscript.getParticipants())
 				{
 					if(part.equals(participant))
 					{
