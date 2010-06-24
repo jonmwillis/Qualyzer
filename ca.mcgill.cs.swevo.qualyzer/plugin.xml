@@ -130,39 +130,14 @@
             name="%command.name.newProject">
       </command>
       <command
-            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.OpenTranscriptHandler"
-            id="ca.mcgill.cs.swevo.qualyzer.commands.openTranscript"
-            name="%command.name.openTranscript">
-      </command>
-      <command
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.AddParticipantHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.addParticipant"
             name="%command.name.addParticipant">
       </command>
       <command
-            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.EditParticipantHandler"
-            id="ca.mcgill.cs.swevo.qualyzer.commands.editParticipant"
-            name="%command.name.editParticipant">
-      </command>
-      <command
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.AddInvestigatorHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.addInvestigator"
             name="%command.name.addInvestigator">
-      </command>
-      <command
-            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.EditInvestigatorHandler"
-            id="ca.mcgill.cs.swevo.qualyzer.commands.editInvestigator"
-            name="%command.name.editInvestigator">
-      </command>
-      <command
-            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.EditCodeHandler"
-            id="ca.mcgill.cs.swevo.qualyzer.commands.editCode"
-            name="%command.name.editCode">
-      </command>
-      <command
-            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.OpenMemoHandler"
-            id="ca.mcgill.cs.swevo.qualyzer.commands.openMemo"
-            name="%command.name.openMemo">
       </command>
       <command
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.NewTranscriptHandler"
