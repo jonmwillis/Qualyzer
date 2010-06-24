@@ -157,7 +157,10 @@ public class DeleteTranscriptHandler extends AbstractHandler
 			MessageDialog.openWarning(shell, "File Access Error", "The transcript file could not be deleted.");
 		}
 		
-		PersistenceManager.getInstance().deleteTranscript(transcript, manager);
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		ResourcesUtil.closeEditor(page, transcript.getFileName());
+		
+		Facade.getInstance().deleteTranscript(transcript);
 		
 		//TODO delete annotations?
 		
