@@ -21,6 +21,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -28,10 +29,11 @@ import org.eclipse.ui.navigator.CommonNavigator;
 import org.hibernate.Session;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
+import ca.mcgill.cs.swevo.qualyzer.editors.ParticipantFormEditor;
+import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Memo;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
-import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 
@@ -112,11 +114,18 @@ public class DeleteParticipantHandler extends AbstractHandler
 		if(check)
 		{
 			for(Participant participant : toDelete)
-			{
-				// MR we can just store the managers in a hashtable in the loop above if this is slow
-				HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers()
-				.get(participant.getProject().getName()); 
-				PersistenceManager.getInstance().deleteParticipant(participant, manager);
+			{	
+				IEditorReference[] editors = page.getEditorReferences();
+				for(IEditorReference editor : editors)
+				{
+					if(editor.getEditor(true) instanceof ParticipantFormEditor && 
+							editor.getName().equals(participant.getParticipantId()))
+					{
+						page.closeEditor(editor.getEditor(true), true);
+					}
+				}
+				
+				Facade.getInstance().deleteParticipant(participant);	
 			}
 			CommonNavigator view;
 			view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);

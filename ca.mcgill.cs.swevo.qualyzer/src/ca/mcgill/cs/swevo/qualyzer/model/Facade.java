@@ -17,9 +17,16 @@ import java.io.File;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
+import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
 import ca.mcgill.cs.swevo.qualyzer.util.FileUtil;
 import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
 
@@ -73,6 +80,8 @@ public final class Facade
 		manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(name);
 		HibernateUtil.quietSave(manager, project);
 		
+		fManager.notifyProjectListeners(ChangeType.ADD, project, this);
+		
 		return project;		
 	}
 
@@ -101,6 +110,9 @@ public final class Facade
 			manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(project.getName());
 			HibernateUtil.quietSave(manager, project);
 		}
+		
+		fManager.notifyInvestigatorListeners(ChangeType.ADD, investigator, this);
+		
 		return investigator;
 	}
 
@@ -124,6 +136,8 @@ public final class Facade
 		manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(project.getName());
 		HibernateUtil.quietSave(manager, project);
 	
+		fManager.notifyParticipantListeners(ChangeType.ADD, participant, this);
+		
 		return participant;
 	}
 	
@@ -158,6 +172,8 @@ public final class Facade
 		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(project.getName());
 		HibernateUtil.quietSave(manager, project);
 		
+		fManager.notifyTranscriptListeners(ChangeType.ADD, transcript, this);
+		
 		return transcript;
 	}
 	
@@ -180,7 +196,75 @@ public final class Facade
 		return audioFile;
 	}
 	
+	/**
+	 * Try to delete a project.
+	 * @param project
+	 */
+	public void deleteProject(Project project)
+	{
+		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(project.getName());
+		
+		try
+		{	
+			HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers()
+				.get(project.getName());
+			
+			QualyzerActivator.getDefault().getHibernateDBManagers().remove(project.getName());
+			manager.shutdownDBServer();
+			manager.close();
+			
+			wProject.delete(true, true, new NullProgressMonitor());
+		}
+		catch(CoreException e)
+		{
+			throw new QualyzerException("Unable to delete the project", e);
+		}
+		
+		fManager.notifyProjectListeners(ChangeType.DELETE, project, this);
+	}
 	
+	/**
+	 * Try to delete a participant.
+	 * @param participant
+	 */
+	public void deleteParticipant(Participant participant)
+	{
+		Object project = null;
+		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers()
+			.get(participant.getProject().getName());
+		Session session = null;
+		Transaction t = null;
+		
+		try
+		{
+			session = manager.openSession();
+			t = session.beginTransaction();
+			
+			/*The following is ALL required in order to delete the object from the database.
+			 * Don't ask me why, I don't really understand it myself -JF.
+			 */
+			project = session.get(Project.class, participant.getProject().getPersistenceId());
+			Object part = session.get(Participant.class, participant.getPersistenceId());
+			
+			((Project) project).getParticipants().remove(part);
+			
+			session.delete(part);
+			session.flush();
+			t.commit();
+			
+			fManager.notifyParticipantListeners(ChangeType.DELETE, participant, this);
+		}
+		catch(HibernateException e)
+		{
+			HibernateUtil.quietRollback(t);
+			throw new QualyzerException("Error while trying to delete the participant from the database.", e);
+		}
+		finally
+		{
+			HibernateUtil.quietClose(session);
+			HibernateUtil.quietSave(manager, project);
+		}
+	}
 	
 	/**
 	 * Get the Listener Manager.
