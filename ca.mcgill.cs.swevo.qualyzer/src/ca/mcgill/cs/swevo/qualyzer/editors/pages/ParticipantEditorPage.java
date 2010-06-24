@@ -35,10 +35,8 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
-import org.hibernate.Session;
 
-import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
-import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
+import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
@@ -240,15 +238,11 @@ public class ParticipantEditorPage extends FormPage
 	 * 
 	 */
 	private void buildInterviews(FormToolkit toolkit, Composite sectionClient)
-	{
-		String projectName = fParticipant.getProject().getName();
-		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(projectName);
-		Session session = manager.openSession();
-		
+	{		
 		for(Transcript transcript : fParticipant.getProject().getTranscripts())		
 		{
-			Object object = session.get(Transcript.class, transcript.getPersistenceId());
-			if(((Transcript) object).getParticipants().contains(fParticipant))
+			Transcript loadedTranscript = Facade.getInstance().forceTranscriptLoad(transcript);
+			if(loadedTranscript.getParticipants().contains(fParticipant))
 			{
 				GridData gd = new GridData(SWT.FILL, SWT.NULL, true, false);
 				Hyperlink link = toolkit.createHyperlink(sectionClient, transcript.getName(), SWT.WRAP);
@@ -256,8 +250,6 @@ public class ParticipantEditorPage extends FormPage
 				link.setLayoutData(gd);
 			}
 		}
-		
-		session.close();
 	}
 
 	/**
