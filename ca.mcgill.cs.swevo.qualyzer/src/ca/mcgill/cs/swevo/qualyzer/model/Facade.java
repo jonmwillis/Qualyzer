@@ -305,6 +305,43 @@ public final class Facade
 	}
 	
 	/**
+	 * Try to delete the transcript.
+	 * @param transcript
+	 */
+	public void deleteTranscript(Transcript transcript)
+	{
+		Object project = null;
+		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers()
+			.get(transcript.getProject().getName());
+		Session session = null;
+		Transaction t = null;
+		try
+		{
+			session = manager.openSession();
+			t = session.beginTransaction();
+			
+			project = session.get(Project.class, transcript.getProject().getPersistenceId());
+			Object trans = session.get(Transcript.class, transcript.getPersistenceId());
+			
+			((Project) project).getTranscripts().remove(trans);
+			
+			session.delete(trans);
+			session.flush();
+			t.commit();
+		}
+		catch(HibernateException e)
+		{
+			HibernateUtil.quietRollback(t);
+			throw new QualyzerException("Unable to delete transcript.", e);
+		}
+		finally
+		{
+			HibernateUtil.quietClose(session);
+			HibernateUtil.quietSave(manager, project);
+		}
+	}
+	
+	/**
 	 * Get the Listener Manager.
 	 * @return
 	 */

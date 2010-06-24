@@ -240,4 +240,21 @@ public final class ResourcesUtil
 		
 		return id.length() > 0;
 	}
+	
+	/**
+	 * Closes the editor with the given name if it's open.
+	 * @param page
+	 * @param editorName
+	 */
+	public static void closeEditor(IWorkbenchPage page, String editorName)
+	{
+		IEditorReference[] editors = page.getEditorReferences();
+		for(IEditorReference editor : editors)
+		{
+			if(editor.getName().equals(editorName))
+			{
+				page.closeEditor(editor.getEditor(true), true);
+			}
+		}		
+	}
 }
