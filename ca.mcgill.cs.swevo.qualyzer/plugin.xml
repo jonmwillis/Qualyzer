@@ -219,6 +219,11 @@
             id="ca.mcgill.cs.swevo.qualyzer.commands.deleteProject"
             name="%command.name.deleteProject">
       </command>
+      <command
+            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.OpenAllHandler"
+            id="ca.mcgill.cs.swevo.qualyzer.commands.openAll"
+            name="Open All">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -394,83 +399,48 @@
       <menuContribution
             locationURI="popup:ca.mcgill.cs.swevo.qualyzer.projectexplorer#PopupMenu?after=group.open">
          <command
-               commandId="ca.mcgill.cs.swevo.qualyzer.commands.openTranscript"
+               commandId="ca.mcgill.cs.swevo.qualyzer.commands.openAll"
                label="%command.label.open"
-               style="push"
-               tooltip="%command.tooltip.openTranscript">
+               style="push">
             <visibleWhen
                   checkEnabled="false">
-               <iterate
-                     ifEmpty="false"
-                     operator="or">
-                  <instanceof
-                        value="ca.mcgill.cs.swevo.qualyzer.model.Transcript">
-                  </instanceof>
-               </iterate>
-            </visibleWhen>
-         </command>
-         <command
-               commandId="ca.mcgill.cs.swevo.qualyzer.commands.editParticipant"
-               label="%command.label.open"
-               style="push"
-               tooltip="%command.tooltip.editParticipant">
-            <visibleWhen
-                  checkEnabled="false">
-               <iterate
-                     ifEmpty="false"
-                     operator="or">
-                  <instanceof
-                        value="ca.mcgill.cs.swevo.qualyzer.model.Participant">
-                  </instanceof>
-               </iterate>
-            </visibleWhen>
-         </command>
-         <command
-               commandId="ca.mcgill.cs.swevo.qualyzer.commands.editInvestigator"
-               label="%command.label.open"
-               style="push"
-               tooltip="%command.tooltip.editInvestigator">
-            <visibleWhen
-                  checkEnabled="false">
-               <iterate
-                     ifEmpty="false"
-                     operator="or">
-                  <instanceof
-                        value="ca.mcgill.cs.swevo.qualyzer.model.Investigator">
-                  </instanceof>
-               </iterate>
-            </visibleWhen>
-         </command>
-         <command
-               commandId="ca.mcgill.cs.swevo.qualyzer.commands.openMemo"
-               label="%command.label.open"
-               style="push"
-               tooltip="%command.tooltip.openMemo">
-            <visibleWhen
-                  checkEnabled="false">
-               <iterate
-                     ifEmpty="false"
-                     operator="or">
-                  <instanceof
-                        value="ca.mcgill.cs.swevo.qualyzer.model.Memo">
-                  </instanceof>
-               </iterate>
-            </visibleWhen>
-         </command>
-         <command
-               commandId="ca.mcgill.cs.swevo.qualyzer.commands.editCode"
-               label="%command.label.open"
-               style="push"
-               tooltip="%command.tooltip.editCode">
-            <visibleWhen
-                  checkEnabled="false">
-               <iterate
-                     ifEmpty="false"
-                     operator="or">
-                  <instanceof
-                        value="ca.mcgill.cs.swevo.qualyzer.model.Code">
-                  </instanceof>
-               </iterate>
+               <or>
+                  <iterate
+                        ifEmpty="false"
+                        operator="or">
+                     <instanceof
+                           value="ca.mcgill.cs.swevo.qualyzer.model.Investigator">
+                     </instanceof>
+                  </iterate>
+                  <iterate
+                        ifEmpty="false"
+                        operator="or">
+                     <instanceof
+                           value="ca.mcgill.cs.swevo.qualyzer.model.Participant">
+                     </instanceof>
+                  </iterate>
+                  <iterate
+                        ifEmpty="false"
+                        operator="or">
+                     <instanceof
+                           value="ca.mcgill.cs.swevo.qualyzer.model.Transcript">
+                     </instanceof>
+                  </iterate>
+                  <iterate
+                        ifEmpty="false"
+                        operator="or">
+                     <instanceof
+                           value="ca.mcgill.cs.swevo.qualyzer.model.Memo">
+                     </instanceof>
+                  </iterate>
+                  <iterate
+                        ifEmpty="false"
+                        operator="or">
+                     <instanceof
+                           value="ca.mcgill.cs.swevo.qualyzer.model.Code">
+                     </instanceof>
+                  </iterate>
+               </or>
             </visibleWhen>
          </command>
       </menuContribution>
@@ -485,7 +455,7 @@
                   checkEnabled="false">
                <iterate
                      ifEmpty="false"
-                     operator="or">
+                     operator="and">
                   <instanceof
                         value="ca.mcgill.cs.swevo.qualyzer.model.Transcript">
                   </instanceof>
@@ -606,7 +576,7 @@
                      checkEnabled="false">
                   <iterate
                         ifEmpty="false"
-                        operator="or">
+                        operator="and">
                      <instanceof
                            value="ca.mcgill.cs.swevo.qualyzer.model.Transcript">
                      </instanceof>
@@ -675,7 +645,7 @@
                   checkEnabled="false">
                <iterate
                      ifEmpty="false"
-                     operator="or">
+                     operator="and">
                   <instanceof
                         value="ca.mcgill.cs.swevo.qualyzer.model.Transcript">
                   </instanceof>

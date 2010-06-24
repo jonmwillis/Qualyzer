@@ -6,7 +6,6 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Barthelemy Dagenais (bart@cs.mcgill.ca)
  *     Jonathan Faubert
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.handlers;
@@ -17,39 +16,49 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
+import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
+import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
- * Handler for the opening of Transcripts.
- * 
+ * The handler for the open all command.
+ *
  */
-public class OpenTranscriptHandler extends AbstractHandler
+public class OpenAllHandler extends AbstractHandler
 {
 
-	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
 	{
-		// Get the view
-		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		IWorkbenchPage page = window.getActivePage();
-
-		// Get the selection
+	
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		ISelection selection = page.getSelection();
-		if (selection != null && selection instanceof IStructuredSelection)
+		
+		if(selection != null && selection instanceof IStructuredSelection)
 		{
-			Object obj = ((IStructuredSelection) selection).getFirstElement();
-			// If we had a selection lets open the editor
-			if (obj != null && obj instanceof Transcript)
+			IStructuredSelection structSelection = (IStructuredSelection) selection;
+			
+			for(Object element : structSelection.toArray())
 			{
-				Transcript trans = (Transcript) obj;
-				ResourcesUtil.openEditor(page, trans);
+				if(element instanceof Participant)
+				{
+					ResourcesUtil.openEditor(page, (Participant) element);
+				}
+				else if(element instanceof Investigator)
+				{
+					ResourcesUtil.openEditor(page, (Investigator) element);
+				}
+				else if(element instanceof Transcript)
+				{
+					ResourcesUtil.openEditor(page, (Transcript) element);
+				}
+				//TODO code/memo
 			}
 		}
+		
 		return null;
 	}
 
