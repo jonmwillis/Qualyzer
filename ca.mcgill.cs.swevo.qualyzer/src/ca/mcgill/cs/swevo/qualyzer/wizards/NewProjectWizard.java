@@ -14,7 +14,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.ui.PlatformUI;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
@@ -60,11 +59,9 @@ public class NewProjectWizard extends Wizard
 			
 			fProject = ResourcesPlugin.getWorkspace().getRoot().getProject(project.getName());
 		}
-		catch(QualyzerException e) //TODO specific error handling
+		catch(QualyzerException e) 
 		{
-			MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
-					Messages.getString("wizards.NewProjectWizard.failure"),  //$NON-NLS-1$
-					Messages.getString("wizards.NewProjectWizard.errorMessage")); //$NON-NLS-1$
+			MessageDialog.openError(getShell(), "Project Error", e.getMessage());
 			return false;
 		}
 

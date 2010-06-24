@@ -32,6 +32,7 @@ import org.hibernate.Session;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.dialogs.TranscriptDeleteDialog;
+import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
@@ -74,7 +75,7 @@ public class DeleteTranscriptHandler extends AbstractHandler
 				}
 			}
 			
-			if(projects.size() >= 1)
+			if(projects.size() > 1)
 			{
 				MessageDialog.openError(shell, "Unable to Delete", 
 						"Unable to delete transcripts across multiple projects.");
@@ -164,7 +165,7 @@ public class DeleteTranscriptHandler extends AbstractHandler
 		{
 			for(Participant p : participants)
 			{
-				PersistenceManager.getInstance().deleteParticipant(p, manager);
+				Facade.getInstance().deleteParticipant(p);
 			}
 		}
 	}

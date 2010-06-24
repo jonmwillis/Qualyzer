@@ -16,16 +16,15 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
-import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
-import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
+import ca.mcgill.cs.swevo.qualyzer.model.Facade;
+import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
+import ca.mcgill.cs.swevo.qualyzer.model.Project;
 
 /**
  * Handler for the Delete Project Command.
@@ -52,21 +51,8 @@ public class DeleteProjectHandler extends AbstractHandler
 					
 					if(confirm)
 					{
-						try
-						{
-							IProject project = (IProject) element;
-							
-							HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers()
-								.get(project.getName());
-							QualyzerActivator.getDefault().getHibernateDBManagers().remove(project.getName());
-							manager.shutdownDBServer();
-							manager.close();
-							project.delete(true, true, new NullProgressMonitor());
-						}
-						catch(CoreException e)
-						{
-							e.printStackTrace();
-						}
+						Project project = PersistenceManager.getInstance().getProject(((IProject) element).getName());
+						Facade.getInstance().deleteProject(project);
 					}
 				}
 			}

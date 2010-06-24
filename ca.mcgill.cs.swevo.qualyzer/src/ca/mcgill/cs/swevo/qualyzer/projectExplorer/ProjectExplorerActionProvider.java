@@ -32,6 +32,10 @@ import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
  */
 public class ProjectExplorerActionProvider extends CommonActionProvider
 {
+	/**
+	 * 
+	 */
+	private static final String OPEN_ALL_COMMAND_ID = "ca.mcgill.cs.swevo.qualyzer.commands.openAll";
 	private IAction fDoubleClickAction;
 
 	/**
@@ -82,15 +86,15 @@ public class ProjectExplorerActionProvider extends CommonActionProvider
 		String commandId = ""; //$NON-NLS-1$
 		if(element instanceof Participant)
 		{
-			commandId = "ca.mcgill.cs.swevo.qualyzer.commands.editParticipant"; //$NON-NLS-1$
+			commandId = OPEN_ALL_COMMAND_ID; //$NON-NLS-1$
 		}
 		else if(element instanceof Investigator)
 		{
-			commandId = "ca.mcgill.cs.swevo.qualyzer.commands.editInvestigator"; //$NON-NLS-1$
+			commandId = OPEN_ALL_COMMAND_ID; //$NON-NLS-1$
 		}
 		else if(element instanceof Transcript)
 		{
-			commandId = "ca.mcgill.cs.swevo.qualyzer.commands.openTranscript"; //$NON-NLS-1$
+			commandId = OPEN_ALL_COMMAND_ID; //$NON-NLS-1$
 		}
 		return commandId;
 	}

@@ -191,53 +191,6 @@ public final class PersistenceManager
 	}
 	
 	/**
-	 * Try to delete a participant.
-	 * @param participant
-	 * @param manager
-	 */
-	public void deleteParticipant(Participant participant, HibernateDBManager manager)
-	{
-		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		IEditorReference[] editors = page.getEditorReferences();
-		for(IEditorReference editor : editors)
-		{
-			if(editor.getName().equals(participant.getParticipantId()))
-			{
-				page.closeEditor(editor.getEditor(true), true);
-			}
-		}
-		
-		Object project = null;
-		Session session = null;
-		Transaction t = null;
-		try
-		{
-			session = manager.openSession();
-			t = session.beginTransaction();
-			
-			project = session.get(Project.class, participant.getProject().getPersistenceId());
-			Object part = session.get(Participant.class, participant.getPersistenceId());
-			
-			((Project) project).getParticipants().remove(part);
-			
-			session.delete(part);
-			session.flush();
-			t.commit();
-		}
-		catch(HibernateException e)
-		{
-			System.out.println("Exception while deleting participant"); //$NON-NLS-1$
-			e.printStackTrace();
-			HibernateUtil.quietRollback(t);
-		}
-		finally
-		{
-			HibernateUtil.quietClose(session);
-			HibernateUtil.quietSave(manager, project);
-		}
-	}
-	
-	/**
 	 * Try to delete an investigator.
 	 * @param participant
 	 * @param manager

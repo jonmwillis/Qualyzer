@@ -13,6 +13,7 @@
  */
 package ca.mcgill.cs.swevo.qualyzer.wizards;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
@@ -62,7 +63,7 @@ public class AddParticipantWizard extends Wizard
 		}
 		catch(QualyzerException e)
 		{
-			//TODO open error dialog
+			MessageDialog.openError(getShell(), "Participant Error", e.getMessage());
 			return false;
 		}
 		
