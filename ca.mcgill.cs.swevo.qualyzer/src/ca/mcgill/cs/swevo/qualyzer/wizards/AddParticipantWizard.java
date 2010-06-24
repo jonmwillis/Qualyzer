@@ -16,7 +16,7 @@ package ca.mcgill.cs.swevo.qualyzer.wizards;
 import org.eclipse.jface.wizard.Wizard;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
-import ca.mcgill.cs.swevo.qualyzer.model.ModelFacade;
+import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.wizards.pages.AddParticipantPage;
@@ -57,7 +57,7 @@ public class AddParticipantWizard extends Wizard
 	{
 		try
 		{
-			fParticipant = ModelFacade.getInstance()
+			fParticipant = Facade.getInstance()
 				.createParticipant(fPage.getParticipantId(), fPage.getFullname(), fProject);
 		}
 		catch(QualyzerException e)

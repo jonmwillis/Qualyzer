@@ -17,7 +17,7 @@ import org.eclipse.jface.wizard.Wizard;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
-import ca.mcgill.cs.swevo.qualyzer.model.ModelFacade;
+import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.wizards.pages.AddInvestigatorPage;
 
@@ -58,7 +58,7 @@ public class AddInvestigatorWizard extends Wizard
 	{
 		try
 		{
-			fInvestigator = ModelFacade.getInstance().createInvestigator(fPage.getInvestigatorNickname(), 
+			fInvestigator = Facade.getInstance().createInvestigator(fPage.getInvestigatorNickname(), 
 					fPage.getInvestigatorFullname(), fPage.getInstitution(), fProject, true);
 		}
 		catch(QualyzerException e)

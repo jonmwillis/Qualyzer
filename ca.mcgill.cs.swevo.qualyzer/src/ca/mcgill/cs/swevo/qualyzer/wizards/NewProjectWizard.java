@@ -17,7 +17,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.PlatformUI;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
-import ca.mcgill.cs.swevo.qualyzer.model.ModelFacade;
+import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.wizards.pages.NewProjectPageOne;
 
@@ -55,7 +55,7 @@ public class NewProjectWizard extends Wizard
 		Project project = null;
 		try
 		{
-			project = ModelFacade.getInstance().createProject(fOne.getProjectName(), 
+			project = Facade.getInstance().createProject(fOne.getProjectName(), 
 				fOne.getInvestigatorNickname(), fOne.getInvestigatorFullname(), fOne.getInstitution());
 			
 			fProject = ResourcesPlugin.getWorkspace().getRoot().getProject(project.getName());

@@ -48,7 +48,7 @@ public class ListenerManager
 	 * @param project
 	 * @param facade
 	 */
-	public void notifyProjectListeners(ChangeType cType, Project project, ModelFacade facade)
+	public void notifyProjectListeners(ChangeType cType, Project project, Facade facade)
 	{
 		for(ProjectListener listener : fProjectListeners.get(project))
 		{
@@ -62,7 +62,7 @@ public class ListenerManager
 	 * @param project
 	 * @param facade
 	 */
-	public void notifyCodeListeners(ChangeType cType, Code code, ModelFacade facade)
+	public void notifyCodeListeners(ChangeType cType, Code code, Facade facade)
 	{
 		for(CodeListener listener : fCodeListeners.get(code.getProject()))
 		{
@@ -76,7 +76,7 @@ public class ListenerManager
 	 * @param investigator
 	 * @param facade
 	 */
-	public void notifyInvestigatorListeners(ChangeType cType, Investigator investigator, ModelFacade facade)
+	public void notifyInvestigatorListeners(ChangeType cType, Investigator investigator, Facade facade)
 	{
 		for(InvestigatorListener listener : fInvestigatorListeners.get(investigator.getProject()))
 		{
@@ -90,7 +90,7 @@ public class ListenerManager
 	 * @param participant
 	 * @param facade
 	 */
-	public void notifyParticipantListeners(ChangeType cType, Participant participant, ModelFacade facade)
+	public void notifyParticipantListeners(ChangeType cType, Participant participant, Facade facade)
 	{
 		for(ParticipantListener listener : fParticipantListeners.get(participant.getProject()))
 		{
@@ -104,7 +104,7 @@ public class ListenerManager
 	 * @param transcript
 	 * @param facade
 	 */
-	public void notifyTranscriptListeners(ChangeType cType, Transcript transcript, ModelFacade facade)
+	public void notifyTranscriptListeners(ChangeType cType, Transcript transcript, Facade facade)
 	{
 		for(TranscriptListener listener : fTranscriptListeners.get(transcript.getProject()))
 		{
