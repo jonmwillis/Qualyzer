@@ -17,9 +17,10 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
-import ca.mcgill.cs.swevo.qualyzer.model.ModelFacade;
+import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
+import ca.mcgill.cs.swevo.qualyzer.util.FileUtil;
 import ca.mcgill.cs.swevo.qualyzer.wizards.pages.ImportTranscriptPage;
 
 /**
@@ -66,8 +67,10 @@ public class ImportTranscriptWizard extends Wizard
 	{
 		try
 		{
-			fTranscript = ModelFacade.getInstance().createTranscript(fPage.getTranscriptName(), fPage.getDate(),
-				fPage.getAudioFile(), fPage.getTranscriptFile(), fPage.getParticipants(), fProject);
+			fTranscript = Facade.getInstance().createTranscript(fPage.getTranscriptName(), fPage.getDate(),
+				fPage.getAudioFile(), fPage.getParticipants(), fProject);
+			
+			FileUtil.setupTranscriptFiles(fTranscript, fPage.getAudioFile(), fPage.getTranscriptFile());
 		}
 		catch(QualyzerException e)
 		{

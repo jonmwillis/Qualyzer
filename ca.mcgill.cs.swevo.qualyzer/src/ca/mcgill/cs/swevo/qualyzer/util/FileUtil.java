@@ -26,6 +26,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
+import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 
 /**
  * @author Jonathan Faubert (jonfaub@gmail.com)
@@ -33,6 +34,12 @@ import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
  */
 public final class FileUtil
 {
+	/**
+	 * 
+	 */
+	private static final String TRANSCRIPTS = "transcripts";
+	private static final String AUDIO = "audio";
+
 	private FileUtil(){}
 
 	/**
@@ -107,12 +114,12 @@ public final class FileUtil
 	private static void cleanUpFolders(IProject wProject)
 	{
 		String path = wProject.getLocation().toOSString();
-		File dir = new File(path+File.separator+"audio"); //$NON-NLS-1$
+		File dir = new File(path+File.separator+AUDIO);
 		if(!dir.exists())
 		{
 			dir.delete();
 		}
-		dir = new File(path+File.separator+"transcripts");
+		dir = new File(path+File.separator+TRANSCRIPTS);
 		if(!dir.exists())
 		{
 			dir.delete();
@@ -127,17 +134,132 @@ public final class FileUtil
 	private static boolean makeSubFolders(IProject wProject)
 	{
 		String path = wProject.getLocation().toOSString();
-		File dir = new File(path+File.separator+"audio"); //$NON-NLS-1$
+		File dir = new File(path+File.separator+AUDIO);
 		if(!dir.mkdir())
 		{
 			return false;
 		}
-		dir = new File(path+File.separator+"transcripts"); 
+		dir = new File(path+File.separator+TRANSCRIPTS); 
 		if(!dir.mkdir())
 		{
 			return false;
 		}
 		dir = new File(path+File.separator+"memos"); //$NON-NLS-1$
 		return dir.mkdir();
+	}
+	
+	/**
+	 * Creates a new empty transcript file or copies an existing one and copies the audio file.
+	 * @param transcript
+	 * @param audioFilePath
+	 * @param existingTranscript
+	 */
+	public static void setupTranscriptFiles(Transcript transcript, String audioFilePath, String existingTranscript)
+	{
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		IProject wProject = root.getProject(transcript.getProject().getName());
+		
+		String workspacePath = wProject.getLocation().toString();
+		hookupAudioFile(audioFilePath, workspacePath, transcript);
+		
+		createTranscriptFile(existingTranscript, transcript);
+	}
+	
+	private static void hookupAudioFile(String audioFilePath, String workspacePath, Transcript transcript)
+	{
+		if(!audioFilePath.isEmpty())
+		{
+			//if the audio file is not in the workspace then copy it there.
+			int i = audioFilePath.lastIndexOf('.');
+			
+			String relativePath = transcript.getName()+audioFilePath.substring(i);
+			
+			if(audioFilePath.indexOf(workspacePath) == -1 || namesAreDifferent(transcript.getName(), audioFilePath))
+			{
+				if(!copyAudioFile(audioFilePath, relativePath, workspacePath))
+				{
+					throw new QualyzerException("Failed to copy the audio file");
+				}
+
+			}
+		}
+	}
+	
+	private static boolean namesAreDifferent(String name, String audioPath)
+	{
+		int i = audioPath.lastIndexOf(File.separatorChar) + 1;
+		int j = audioPath.lastIndexOf('.');
+		return !name.equals(audioPath.substring(i, j));
+	}
+	
+	private static boolean copyAudioFile(String audioPath, String relativePath, String workspacePath)
+	{
+		File file = new File(audioPath);
+		File fileCpy = new File(workspacePath+File.separator+AUDIO+File.separator+relativePath);
+		
+		if(!file.exists())
+		{
+			throw new QualyzerException("The audio file you wish to copy cannot be found.");
+		}
+		
+		try
+		{
+			FileUtil.copyFile(file, fileCpy);
+			return true;
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	private static void createTranscriptFile(String existingTranscript, Transcript transcript)
+	{
+		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(transcript.getProject().getName());
+		
+		String path = wProject.getLocation()+File.separator+TRANSCRIPTS+File.separator+transcript.getFileName();
+		File file = new File(path);
+		
+		if(existingTranscript.isEmpty())
+		{
+			try
+			{
+				if(!file.createNewFile())
+				{
+					throw new QualyzerException(
+							"Unable to create the transcript file. One may already exist with that name.");
+				}
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+				throw new QualyzerException("There was an error creating the transcript file", e);
+			}
+		}
+		else
+		{
+			File fileOrig = new File(existingTranscript);
+			if(file.exists())
+			{
+				throw new QualyzerException("A transcript already exists with the requested name");
+			}
+			
+			if(!fileOrig.exists())
+			{
+				throw new QualyzerException(
+						"The requested transcript cannot be found. It may have been deleted or renamed.");
+			}
+			
+			try
+			{
+				FileUtil.copyFile(fileOrig, file);
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+				throw new QualyzerException("There was a problem copying the transcript file", e);
+			}
+		}
 	}
 }

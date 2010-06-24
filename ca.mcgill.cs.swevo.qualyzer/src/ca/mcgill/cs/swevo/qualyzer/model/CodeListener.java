@@ -28,5 +28,5 @@ public interface CodeListener
 	 * @param code
 	 * @param facade
 	 */
-	void codeChanged(ChangeType cType, Code code, ModelFacade facade);
+	void codeChanged(ChangeType cType, Code code, Facade facade);
 }

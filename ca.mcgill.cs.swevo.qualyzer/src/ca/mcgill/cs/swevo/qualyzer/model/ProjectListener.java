@@ -28,5 +28,5 @@ public interface ProjectListener
 	 * @param project
 	 * @param facade
 	 */
-	void projectChanged(ChangeType cType, Project project, ModelFacade facade);
+	void projectChanged(ChangeType cType, Project project, Facade facade);
 }

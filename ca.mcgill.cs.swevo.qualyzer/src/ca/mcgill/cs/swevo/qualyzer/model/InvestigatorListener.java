@@ -28,5 +28,5 @@ public interface InvestigatorListener
 	 * @param investigator
 	 * @param facade
 	 */
-	void investigatorChanged(ChangeType cType, Investigator investigator, ModelFacade facade);
+	void investigatorChanged(ChangeType cType, Investigator investigator, Facade facade);
 }
