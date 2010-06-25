@@ -55,6 +55,7 @@ public class NewTranscriptHandler extends AbstractHandler
 				ResourcesUtil.refreshParticipants(wizard.getTranscript().getProject());
 				
 				ResourcesUtil.openEditor(page, wizard.getTranscript());
+				view.getCommonViewer().refresh();
 			}
 		}
 
