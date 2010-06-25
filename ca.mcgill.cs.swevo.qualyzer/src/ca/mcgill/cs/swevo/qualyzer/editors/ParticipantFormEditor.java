@@ -21,9 +21,8 @@ import org.eclipse.ui.navigator.CommonNavigator;
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.ParticipantEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.editors.pages.ParticipantEditorPage;
-import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
+import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
-import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
 
 /**
  * A form editor for Participant objects.
@@ -65,9 +64,7 @@ public class ParticipantFormEditor extends FormEditor
 		//fParticipant.setContactInfo(fPage.getContactInfo());
 		//fParticipant.setNotes(fPage.getNotes());
 		
-		HibernateDBManager manager;
-		manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(fParticipant.getProject().getName());
-		HibernateUtil.quietSave(manager, fParticipant);
+		Facade.getInstance().saveParticipant(fParticipant);
 		
 		CommonNavigator view;
 		view = (CommonNavigator) getSite().getPage().findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);

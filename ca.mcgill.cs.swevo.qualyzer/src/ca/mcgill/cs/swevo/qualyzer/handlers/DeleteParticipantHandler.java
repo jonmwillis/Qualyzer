@@ -26,12 +26,10 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.navigator.CommonNavigator;
-import org.hibernate.Session;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.editors.ParticipantFormEditor;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
-import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Memo;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
@@ -68,10 +66,7 @@ public class DeleteParticipantHandler extends AbstractHandler
 						projects.add(project);
 					}
 					
-					HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers()
-						.get(project.getName());
-					
-					conflicts.addAll(checkForConflicts(participant, project, manager));
+					conflicts.addAll(checkForConflicts(participant, project));
 					toDelete.add(participant);
 				}
 			}
@@ -155,48 +150,41 @@ public class DeleteParticipantHandler extends AbstractHandler
 	 * @param session
 	 * @return A list of strings describing the conflict.
 	 */
-	private ArrayList<String> checkForConflicts(Participant participant, Project project, HibernateDBManager manager)
+	private ArrayList<String> checkForConflicts(Participant participant, Project project)
 	{
-		Session session = manager.openSession();
 		ArrayList<String> conflicts = new ArrayList<String>();
-		try
+		for(Memo memo : project.getMemos())
 		{
-			for(Memo memo : project.getMemos())
+			Memo lMemo = Facade.getInstance().forceMemoLoad(memo);
+			for(Participant part : ((Memo) lMemo).getParticipants())
 			{
-				Object lMemo = session.get(Memo.class, memo.getPersistenceId());
-				for(Participant part : ((Memo) lMemo).getParticipants())
+				if(part.equals(participant))
 				{
-					if(part.equals(participant))
-					{
-						conflicts.add(Messages.getString("handlers.DeleteParticipantHandler.participant") +  
-								participant.getParticipantId() + " " + 
-								Messages.getString("handlers.DeleteParticipantHandler.memo") +  
-								memo.getName());
-						break;
-					}
-				}
-			}
-		
-			for(Transcript transcript : project.getTranscripts())
-			{
-				Transcript lTranscript = Facade.getInstance().forceTranscriptLoad(transcript);
-				for(Participant part : lTranscript.getParticipants())
-				{
-					if(part.equals(participant))
-					{
-						conflicts.add(Messages.getString("handlers.DeleteParticipantHandler.participant") +  
-								participant.getParticipantId() + " " +
-								Messages.getString("handlers.DeleteParticipantHandler.transcript") +  
-								transcript.getName());
-						break;
-					}
+					conflicts.add(Messages.getString("handlers.DeleteParticipantHandler.participant") +  
+							participant.getParticipantId() + " " + 
+							Messages.getString("handlers.DeleteParticipantHandler.memo") +  
+							memo.getName());
+					break;
 				}
 			}
 		}
-		finally
+	
+		for(Transcript transcript : project.getTranscripts())
 		{
-			session.close();
+			Transcript lTranscript = Facade.getInstance().forceTranscriptLoad(transcript);
+			for(Participant part : lTranscript.getParticipants())
+			{
+				if(part.equals(participant))
+				{
+					conflicts.add(Messages.getString("handlers.DeleteParticipantHandler.participant") +  
+							participant.getParticipantId() + " " +
+							Messages.getString("handlers.DeleteParticipantHandler.transcript") +  
+							transcript.getName());
+					break;
+				}
+			}
 		}
+
 		return conflicts;
 	}
 

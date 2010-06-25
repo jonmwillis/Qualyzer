@@ -38,11 +38,11 @@ public final class Facade
 {
 	private static Facade gFacade = null;
 	
-	private ListenerManager fManager;
+	private ListenerManager fListenerManager;
 
 	private Facade()
 	{
-		fManager = new ListenerManager();
+		fListenerManager = new ListenerManager();
 	}
 	
 	/**
@@ -80,7 +80,7 @@ public final class Facade
 		manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(name);
 		HibernateUtil.quietSave(manager, project);
 		
-		fManager.notifyProjectListeners(ChangeType.ADD, project, this);
+		fListenerManager.notifyProjectListeners(ChangeType.ADD, project, this);
 		
 		return project;		
 	}
@@ -111,7 +111,7 @@ public final class Facade
 			HibernateUtil.quietSave(manager, project);
 		}
 		
-		fManager.notifyInvestigatorListeners(ChangeType.ADD, investigator, this);
+		fListenerManager.notifyInvestigatorListeners(ChangeType.ADD, investigator, this);
 		
 		return investigator;
 	}
@@ -136,7 +136,7 @@ public final class Facade
 		manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(project.getName());
 		HibernateUtil.quietSave(manager, project);
 	
-		fManager.notifyParticipantListeners(ChangeType.ADD, participant, this);
+		fListenerManager.notifyParticipantListeners(ChangeType.ADD, participant, this);
 		
 		return participant;
 	}
@@ -172,7 +172,7 @@ public final class Facade
 		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(project.getName());
 		HibernateUtil.quietSave(manager, project);
 		
-		fManager.notifyTranscriptListeners(ChangeType.ADD, transcript, this);
+		fListenerManager.notifyTranscriptListeners(ChangeType.ADD, transcript, this);
 		
 		return transcript;
 	}
@@ -220,7 +220,7 @@ public final class Facade
 			throw new QualyzerException("Unable to delete the project", e);
 		}
 		
-		fManager.notifyProjectListeners(ChangeType.DELETE, project, this);
+		fListenerManager.notifyProjectListeners(ChangeType.DELETE, project, this);
 	}
 	
 	/**
@@ -252,7 +252,7 @@ public final class Facade
 			session.flush();
 			t.commit();
 			
-			fManager.notifyParticipantListeners(ChangeType.DELETE, participant, this);
+			fListenerManager.notifyParticipantListeners(ChangeType.DELETE, participant, this);
 		}
 		catch(HibernateException e)
 		{
@@ -293,7 +293,7 @@ public final class Facade
 			session.delete(inv);
 			session.flush();
 			t.commit();
-			fManager.notifyInvestigatorListeners(ChangeType.DELETE, investigator, this);
+			fListenerManager.notifyInvestigatorListeners(ChangeType.DELETE, investigator, this);
 		}
 		catch(HibernateException e)
 		{
@@ -334,7 +334,7 @@ public final class Facade
 			session.delete(trans);
 			session.flush();
 			t.commit();
-			fManager.notifyTranscriptListeners(ChangeType.DELETE, transcript, this);
+			fListenerManager.notifyTranscriptListeners(ChangeType.DELETE, transcript, this);
 		}
 		catch(HibernateException e)
 		{
@@ -390,6 +390,58 @@ public final class Facade
 	 */
 	public ListenerManager getListenerManager()
 	{
-		return fManager;
+		return fListenerManager;
+	}
+	
+	/**
+	 * Save a code.
+	 * @param code
+	 */
+	public void saveCode(Code code)
+	{
+		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers()
+			.get(code.getProject().getName());
+		HibernateUtil.quietSave(manager, code);
+		
+		fListenerManager.notifyCodeListeners(ChangeType.MODIFY, code, this);
+	}
+	
+	/**
+	 * Save an investigator.
+	 * @param investigator
+	 */
+	public void saveInvestigator(Investigator investigator)
+	{
+		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers()
+			.get(investigator.getProject().getName());
+		HibernateUtil.quietSave(manager, investigator);
+		
+		fListenerManager.notifyInvestigatorListeners(ChangeType.MODIFY, investigator, this);
+	}
+	
+	/**
+	 * Save a Participant.
+	 * @param participant
+	 */
+	public void saveParticipant(Participant participant)
+	{
+		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers()
+			.get(participant.getProject().getName());
+		HibernateUtil.quietSave(manager, participant);
+		
+		fListenerManager.notifyParticipantListeners(ChangeType.MODIFY, participant, this);
+	}
+	
+	/**
+	 * Save a Transcript.
+	 * @param transcript
+	 */
+	public void saveTranscript(Transcript transcript)
+	{
+		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers()
+			.get(transcript.getProject().getName());
+		HibernateUtil.quietSave(manager, transcript);
+		
+		fListenerManager.notifyTranscriptListeners(ChangeType.MODIFY, transcript, this);
 	}
 }

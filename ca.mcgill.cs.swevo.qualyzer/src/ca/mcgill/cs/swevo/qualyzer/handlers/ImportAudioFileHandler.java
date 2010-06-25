@@ -24,12 +24,10 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.model.AudioFile;
-import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
+import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 import ca.mcgill.cs.swevo.qualyzer.util.FileUtil;
-import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
 
 /**
  * 
@@ -68,9 +66,7 @@ public class ImportAudioFileHandler extends AbstractHandler
 					audioFile.setRelativePath(AUDIO + ((Transcript) element).getName() + ext);
 					((Transcript) element).setAudioFile(audioFile);
 					
-					HibernateDBManager manager;
-					manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(projectName);
-					HibernateUtil.quietSave(manager, (Transcript) element);
+					Facade.getInstance().saveTranscript((Transcript) element);
 				}
 			}
 		}
