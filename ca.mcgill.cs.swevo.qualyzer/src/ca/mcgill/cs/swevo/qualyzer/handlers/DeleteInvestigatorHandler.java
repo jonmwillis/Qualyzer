@@ -25,14 +25,12 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.navigator.CommonNavigator;
-import org.hibernate.Session;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.model.Annotation;
 import ca.mcgill.cs.swevo.qualyzer.model.CodeEntry;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Fragment;
-import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
 import ca.mcgill.cs.swevo.qualyzer.model.Memo;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
@@ -74,9 +72,7 @@ public class DeleteInvestigatorHandler extends AbstractHandler
 						projects.add(project);
 					}
 					
-					HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers()
-						.get(project.getName());
-					conflicts.addAll(checkForConflicts(investigator, manager.openSession()));
+					conflicts.addAll(checkForConflicts(investigator));
 					toDelete.add(investigator);
 				}
 			}
@@ -165,7 +161,7 @@ public class DeleteInvestigatorHandler extends AbstractHandler
 	 * @param session
 	 * @return
 	 */
-	private ArrayList<String> checkForConflicts(Investigator investigator, Session session)
+	private ArrayList<String> checkForConflicts(Investigator investigator)
 	{
 		ArrayList<String> conflicts = new ArrayList<String>();
 		Project project = investigator.getProject();
@@ -179,7 +175,7 @@ public class DeleteInvestigatorHandler extends AbstractHandler
 			}
 			else
 			{
-				Object lMemo = session.get(Memo.class, memo.getPersistenceId());
+				Memo lMemo = Facade.getInstance().forceMemoLoad(memo);
 				int numAnnotations = 0;
 				int numCodeEntries = 0;
 				for(Fragment fragment : ((Memo) lMemo).getFragments())
@@ -197,7 +193,7 @@ public class DeleteInvestigatorHandler extends AbstractHandler
 		
 		for(Transcript transcript : project.getTranscripts())
 		{
-			Object lTranscript = session.get(Transcript.class, transcript.getPersistenceId());
+			Transcript lTranscript = Facade.getInstance().forceTranscriptLoad(transcript);
 			int numAnnotations = 0;
 			int numCodeEntries = 0;
 			for(Fragment fragment : ((Transcript) lTranscript).getFragments())
@@ -212,7 +208,6 @@ public class DeleteInvestigatorHandler extends AbstractHandler
 			}
 		}
 		
-		session.close();
 		return conflicts;
 	}
 
