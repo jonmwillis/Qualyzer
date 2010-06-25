@@ -23,14 +23,12 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.dialogs.TranscriptPropertiesDialog;
 import ca.mcgill.cs.swevo.qualyzer.model.AudioFile;
-import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
+import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 import ca.mcgill.cs.swevo.qualyzer.util.FileUtil;
-import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
 
 /**
  * 
@@ -73,9 +71,7 @@ public class TranscriptPropertiesHandler extends AbstractHandler
 				transcript.setDate(newDate);
 				transcript.setParticipants(dialog.getParticipants());
 								
-				HibernateDBManager manager;
-				manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(projectName);
-				HibernateUtil.quietSave(manager, transcript);
+				Facade.getInstance().saveTranscript(transcript);
 				
 				ResourcesUtil.refreshParticipants(transcript.getProject());
 			}

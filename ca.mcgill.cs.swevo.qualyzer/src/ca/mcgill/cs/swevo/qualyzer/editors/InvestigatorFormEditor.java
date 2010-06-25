@@ -19,9 +19,8 @@ import org.eclipse.ui.navigator.CommonNavigator;
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.InvestigatorEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.editors.pages.InvestigatorEditorPage;
-import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
+import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
-import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
 
 /**
  * An editor for Investigator Objects.
@@ -56,9 +55,7 @@ public class InvestigatorFormEditor extends FormEditor
 		fInvestigator.setNickName(fPage.getNickname());
 		fInvestigator.setInstitution(fPage.getInstitution());
 		
-		HibernateDBManager manager;
-		manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(fInvestigator.getProject().getName());
-		HibernateUtil.quietSave(manager, fInvestigator);
+		Facade.getInstance().saveInvestigator(fInvestigator);
 		
 		CommonNavigator view;
 		view = (CommonNavigator) getSite().getPage().findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
