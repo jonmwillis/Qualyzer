@@ -360,10 +360,24 @@ public final class Facade
 		Session s = manager.openSession();
 		
 		Object object = s.get(Transcript.class, transcript.getPersistenceId());
+		Transcript toReturn = (Transcript) object;
+		
+		/*
+		 * This forces the lists to be initialised - JF.
+		 */
+		for(@SuppressWarnings("unused") Participant p : toReturn.getParticipants())
+		{
+			
+		}
+		
+		for(@SuppressWarnings("unused") Fragment f : toReturn.getFragments())
+		{
+			
+		}
 		
 		HibernateUtil.quietClose(s);
 		
-		return (Transcript) object;
+		return toReturn;
 	}
 	
 	/**
@@ -378,10 +392,23 @@ public final class Facade
 		Session s = manager.openSession();
 		
 		Object object = s.get(Memo.class, memo.getPersistenceId());
+		Memo toReturn = (Memo) object;
+		
+		/*
+		 * Force the lists to initialise.
+		 */
+		for(@SuppressWarnings("unused") Fragment f : memo.getFragments())
+		{
+			
+		}
+		for(@SuppressWarnings("unused") Participant p : memo.getParticipants())
+		{
+			
+		}
 		
 		HibernateUtil.quietClose(s);
 		
-		return (Memo) object;
+		return toReturn;
 	}
 	
 	/**
