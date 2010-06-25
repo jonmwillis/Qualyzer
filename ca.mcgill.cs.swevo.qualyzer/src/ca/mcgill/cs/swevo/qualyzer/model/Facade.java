@@ -361,7 +361,27 @@ public final class Facade
 		
 		Object object = s.get(Transcript.class, transcript.getPersistenceId());
 		
+		HibernateUtil.quietClose(s);
+		
 		return (Transcript) object;
+	}
+	
+	/**
+	 * Force a Memo to load all of its fields.
+	 * @param memo
+	 * @return
+	 */
+	public Memo forceMemoLoad(Memo memo)
+	{
+		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers()
+			.get(memo.getProject().getName());
+		Session s = manager.openSession();
+		
+		Object object = s.get(Memo.class, memo.getPersistenceId());
+		
+		HibernateUtil.quietClose(s);
+		
+		return (Memo) object;
 	}
 	
 	/**
