@@ -28,6 +28,8 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.navigator.CommonNavigator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.dialogs.TranscriptDeleteDialog;
@@ -46,6 +48,8 @@ public class DeleteTranscriptHandler extends AbstractHandler
 {
 	private static final String TRANSCRIPT = File.separator + "transcripts" + File.separator; //$NON-NLS-1$
 
+	private final Logger fLogger = LoggerFactory.getLogger(DeleteTranscriptHandler.class);
+	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
 	{
@@ -75,8 +79,10 @@ public class DeleteTranscriptHandler extends AbstractHandler
 			
 			if(projects.size() > 1)
 			{
+				String warningMessage = "Unable to delete transcripts across multiple projects.";
+				fLogger.warn(warningMessage);
 				MessageDialog.openError(shell, "Unable to Delete", 
-						"Unable to delete transcripts across multiple projects.");
+						warningMessage);
 			}
 			else
 			{
@@ -143,7 +149,9 @@ public class DeleteTranscriptHandler extends AbstractHandler
 			File file = new File(wProject.getLocation() + transcript.getAudioFile().getRelativePath());
 			if(!file.delete())
 			{
-				MessageDialog.openWarning(shell, "File Access Error", "The audio file could not be deleted.");
+				String warningMessage = "The audio file could not be deleted.";
+				fLogger.warn(warningMessage);
+				MessageDialog.openWarning(shell, "File Access Error", warningMessage);
 				
 			}
 		}
@@ -151,6 +159,8 @@ public class DeleteTranscriptHandler extends AbstractHandler
 		File file = new File(wProject.getLocation() + TRANSCRIPT + transcript.getFileName());
 		if(!file.delete())
 		{
+			String warningMessage = "The transcript file could not be deleted.";
+			fLogger.warn(warningMessage);
 			MessageDialog.openWarning(shell, "File Access Error", "The transcript file could not be deleted.");
 		}
 		

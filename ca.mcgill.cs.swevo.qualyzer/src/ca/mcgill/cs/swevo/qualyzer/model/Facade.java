@@ -23,6 +23,8 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
@@ -40,6 +42,8 @@ public final class Facade
 	
 	private ListenerManager fListenerManager;
 
+	private final Logger fLogger = LoggerFactory.getLogger(Facade.class);
+	
 	private Facade()
 	{
 		fListenerManager = new ListenerManager();
@@ -217,7 +221,9 @@ public final class Facade
 		}
 		catch(CoreException e)
 		{
-			throw new QualyzerException("Unable to delete the project", e);
+			String errorMessage = "Unable to delete the project";
+			fLogger.error(errorMessage, e);
+			throw new QualyzerException(errorMessage, e);
 		}
 		
 		fListenerManager.notifyProjectListeners(ChangeType.DELETE, project, this);
@@ -257,7 +263,9 @@ public final class Facade
 		catch(HibernateException e)
 		{
 			HibernateUtil.quietRollback(t);
-			throw new QualyzerException("Error while trying to delete the participant from the database.", e);
+			String errorMessage = "Error while trying to delete the participant from the database.";
+			fLogger.error(errorMessage, e);
+			throw new QualyzerException(errorMessage, e);
 		}
 		finally
 		{
@@ -298,7 +306,9 @@ public final class Facade
 		catch(HibernateException e)
 		{
 			HibernateUtil.quietRollback(t);
-			throw new QualyzerException("Could not delete investigator.", e);
+			String errorMessage = "Could not delete investigator.";
+			fLogger.error(errorMessage, e);
+			throw new QualyzerException(errorMessage, e);
 		}
 		finally
 		{
@@ -339,7 +349,9 @@ public final class Facade
 		catch(HibernateException e)
 		{
 			HibernateUtil.quietRollback(t);
-			throw new QualyzerException("Unable to delete transcript.", e);
+			String errorMessage = "Unable to delete transcript.";
+			fLogger.error(errorMessage, e);
+			throw new QualyzerException(errorMessage, e);
 		}
 		finally
 		{
