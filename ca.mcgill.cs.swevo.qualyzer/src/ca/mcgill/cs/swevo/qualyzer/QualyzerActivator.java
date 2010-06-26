@@ -19,6 +19,8 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
 import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
@@ -41,6 +43,8 @@ public class QualyzerActivator extends AbstractUIPlugin
 
 	// Indexed by Project Name
 	private Map<String, HibernateDBManager> fHibernateManagers = new HashMap<String, HibernateDBManager>();
+	
+	private final Logger fLogger = LoggerFactory.getLogger(QualyzerActivator.class);
 
 	/**
 	 * The constructor.
@@ -66,6 +70,8 @@ public class QualyzerActivator extends AbstractUIPlugin
 		{
 			PersistenceManager.getInstance().refreshManager(project);
 		}
+		
+		fLogger.info("Qualyzer Started");
 	}
 
 	/*
@@ -78,6 +84,7 @@ public class QualyzerActivator extends AbstractUIPlugin
 	{
 		gPlugin = null;
 		super.stop(context);
+		fLogger.info("Qualyzer Stopped");
 	}
 
 	/**
