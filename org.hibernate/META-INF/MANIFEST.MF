@@ -14,9 +14,7 @@ Bundle-ClassPath: lib/antlr-2.7.6.jar,
  lib/hibernate-jpa-2.0-api-1.0.0.Final.jar,
  lib/hibernate3.jar,
  lib/javassist-3.9.0.GA.jar,
- lib/jta-1.1.jar,
- lib/slf4j-api-1.5.8.jar,
- lib/slf4j-jdk14-1.5.8.jar
+ lib/jta-1.1.jar
 Export-Package: antlr,
  antlr.ASdebug,
  antlr.actions.cpp,
@@ -269,8 +267,5 @@ Export-Package: antlr,
  org.hibernate.tuple.entity,
  org.hibernate.type,
  org.hibernate.usertype,
- org.hibernate.util,
- org.slf4j,
- org.slf4j.helpers,
- org.slf4j.impl,
- org.slf4j.spi
+ org.hibernate.util
+Require-Bundle: ca.mcgill.cs.swevo.qualyzer.logging;bundle-version="0.2.0"
