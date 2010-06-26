@@ -37,8 +37,8 @@ public final class FileUtil
 	/**
 	 * 
 	 */
-	private static final String TRANSCRIPTS = "transcripts";
-	private static final String AUDIO = "audio";
+	public static final String TRANSCRIPTS = "transcripts";
+	public static final String AUDIO = "audio";
 
 	private FileUtil(){}
 

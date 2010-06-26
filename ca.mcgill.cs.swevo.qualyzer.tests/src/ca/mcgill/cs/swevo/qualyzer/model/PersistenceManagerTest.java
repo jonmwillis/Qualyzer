@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Name - Initial Contribution
+ *     McGill University - initial API and implementation
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.model;
 
@@ -42,12 +42,20 @@ public class PersistenceManagerTest
 
 	public static final String TEST_PROJECT_NAME = "TEST_QUAL_STUDY";
 
+	private static final String A_CODE = "a";
+
+	private static final String B_CODE = "b";
+	
 	private QualyzerActivator fActivator;
 
 	private PersistenceManager fManager;
 
 	private IProject fProject;
 
+	/**
+	 * Creates a project.
+	 * 
+	 */
 	@Before
 	public void setUp()
 	{
@@ -68,6 +76,10 @@ public class PersistenceManagerTest
 		fActivator = QualyzerActivator.getDefault();
 	}
 
+	/**
+	 * Deletes the project.
+	 * 
+	 */
 	@After
 	public void tearDown()
 	{
@@ -81,6 +93,10 @@ public class PersistenceManagerTest
 		}
 	}
 
+	/**
+	 * Verifies that the .db folder is created correctly.
+	 * 
+	 */
 	@Test
 	public void testDBInit()
 	{
@@ -89,6 +105,10 @@ public class PersistenceManagerTest
 		assertTrue(path.toFile().exists());
 	}
 
+	/**
+	 * Tests getProject.
+	 * 
+	 */
 	@Test
 	public void testGetProject()
 	{
@@ -118,38 +138,41 @@ public class PersistenceManagerTest
 		HibernateUtil.quietSave(dbManager, projectDB);
 
 		Code code1 = new Code();
-		code1.setCodeName("b");
+		code1.setCodeName(B_CODE);
 		CollectionUtil.insertSorted(projectDB.getCodes(), code1);
 		HibernateUtil.quietSave(dbManager, projectDB);
 
 		Code code2 = new Code();
-		code2.setCodeName("a");
+		code2.setCodeName(A_CODE);
 		CollectionUtil.insertSorted(projectDB.getCodes(), code2);
 		HibernateUtil.quietSave(dbManager, projectDB);
 
 		Code tempCode = projectDB.getCodes().get(0);
-		assertEquals("a", tempCode.getCodeName());
+		assertEquals(A_CODE, tempCode.getCodeName());
 
 		projectDB = fManager.getProject(TEST_PROJECT_NAME);
 		tempCode = projectDB.getCodes().get(0);
-		assertEquals("a", tempCode.getCodeName());
+		assertEquals(A_CODE, tempCode.getCodeName());
 	}
-
-	
 
 	private Project createProject()
 	{
 		Project projectDB = new Project();
 		projectDB.setName(TEST_PROJECT_NAME);
 		Code code = new Code();
-		code.setCodeName("b");
+		code.setCodeName(B_CODE);
 		projectDB.getCodes().add(code);
 		code = new Code();
-		code.setCodeName("a");
+		code.setCodeName(A_CODE);
 		projectDB.getCodes().add(code);
 		return projectDB;
 	}
-	
+
+	/**
+	 * Tests that the bidirectional relationship (e.g., from Project to codes and from a code to a project) is correctly
+	 * persisted.
+	 * 
+	 */
 	@Test
 	public void testHibernateBidirectional()
 	{
@@ -157,7 +180,7 @@ public class PersistenceManagerTest
 		HibernateDBManager dbManager = fActivator.getHibernateDBManagers().get(TEST_PROJECT_NAME);
 		Project projectDB = createProject();
 		HibernateUtil.quietSave(dbManager, projectDB);
-		
+
 		projectDB = fManager.getProject(TEST_PROJECT_NAME);
 		assertNotNull(projectDB.getCodes().get(0).getProject());
 	}
@@ -212,6 +235,9 @@ public class PersistenceManagerTest
 		}
 	}
 
+	/**
+	 * Verifies that the fetching strategies (eager v.s. lazy) are correctly implemented.
+	 */
 	@Test
 	public void testHibernateFetchStrategies()
 	{
