@@ -161,7 +161,7 @@ public class DeleteTranscriptHandler extends AbstractHandler
 		{
 			String warningMessage = "The transcript file could not be deleted.";
 			fLogger.warn(warningMessage);
-			MessageDialog.openWarning(shell, "File Access Error", "The transcript file could not be deleted.");
+			MessageDialog.openWarning(shell, "File Access Error", warningMessage);
 		}
 		
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
