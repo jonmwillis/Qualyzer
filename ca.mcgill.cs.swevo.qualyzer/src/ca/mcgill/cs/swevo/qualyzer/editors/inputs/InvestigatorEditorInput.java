@@ -13,6 +13,8 @@
  */
 package ca.mcgill.cs.swevo.qualyzer.editors.inputs;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
@@ -25,6 +27,9 @@ import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
  */
 public class InvestigatorEditorInput implements IEditorInput
 {
+	private static final int NUM1 = 2405;
+	private static final int NUM2 = 20525;
+	
 	private Investigator fInvestigator;
 	
 	/**
@@ -105,7 +110,7 @@ public class InvestigatorEditorInput implements IEditorInput
 	@Override
 	public int hashCode()
 	{
-		return fInvestigator.hashCode();
+		return new HashCodeBuilder(NUM1, NUM2).append(fInvestigator).toHashCode();
 	}
 	
 	@Override
@@ -115,11 +120,15 @@ public class InvestigatorEditorInput implements IEditorInput
 		{
 			return false;
 		}
-		if(obj.getClass().equals(getClass()))
+		else if(obj == this)
 		{
-			return fInvestigator.equals(((InvestigatorEditorInput)obj).getInvestigator());
+			return true;
 		}
-		
+		else if(obj.getClass().equals(getClass()))
+		{
+			InvestigatorEditorInput rhs = (InvestigatorEditorInput) obj;
+			return new EqualsBuilder().append(fInvestigator, rhs.fInvestigator).isEquals();
+		}
 		return false;
 	}
 	

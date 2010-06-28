@@ -17,6 +17,8 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.navigator.CommonNavigator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.ParticipantEditorInput;
@@ -30,7 +32,8 @@ import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 public class ParticipantFormEditor extends FormEditor
 {
 	public static final String ID = "ca.mcgill.cs.swevo.qualyzer.editors.ParticipantFormEditor"; //$NON-NLS-1$
-	
+	private static Logger gLogger = LoggerFactory.getLogger(ParticipantFormEditor.class);
+
 	private Participant fParticipant;
 	private ParticipantEditorPage fPage;
 
@@ -50,7 +53,7 @@ public class ParticipantFormEditor extends FormEditor
 			}
 			catch(PartInitException e)
 			{
-				e.printStackTrace();
+				gLogger.error("Could not open Participant editor", e);
 			}
 		}
 	}

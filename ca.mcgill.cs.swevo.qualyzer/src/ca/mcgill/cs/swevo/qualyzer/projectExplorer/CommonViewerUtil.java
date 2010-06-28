@@ -16,6 +16,8 @@ import java.lang.reflect.Field;
 import java.util.Properties;
 
 import org.eclipse.ui.internal.navigator.extensions.NavigatorViewerDescriptor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Jonathan Faubert (jonfaub@gmail.com)
@@ -24,6 +26,12 @@ import org.eclipse.ui.internal.navigator.extensions.NavigatorViewerDescriptor;
 @SuppressWarnings("restriction")
 public final class CommonViewerUtil
 {
+	/**
+	 * 
+	 */
+	private static final String ERROR_MSG = "Error hidding buttons in Project Explorer";
+	private static Logger gLogger = LoggerFactory.getLogger(CommonViewerUtil.class);
+	
 	private CommonViewerUtil(){};
 	
 	/**
@@ -52,15 +60,15 @@ public final class CommonViewerUtil
 		}
 		catch (SecurityException e)
 		{
-			e.printStackTrace();
+			gLogger.error(ERROR_MSG, e);
 		}
 		catch (IllegalArgumentException e)
 		{
-			e.printStackTrace();
+			gLogger.error(ERROR_MSG, e);
 		}
 		catch (IllegalAccessException e)
 		{
-			e.printStackTrace();
+			gLogger.error(ERROR_MSG, e);
 		}
 	}
 }

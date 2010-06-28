@@ -15,6 +15,8 @@ import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.navigator.CommonNavigator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.InvestigatorEditorInput;
@@ -28,7 +30,8 @@ import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
 public class InvestigatorFormEditor extends FormEditor
 {
 	public static final String ID = "ca.mcgill.cs.swevo.qualyzer.editors.investigatorFormEditor"; //$NON-NLS-1$
-
+	private static Logger gLogger = LoggerFactory.getLogger(InvestigatorFormEditor.class);
+	
 	private InvestigatorEditorPage fPage;
 	private Investigator fInvestigator;
 
@@ -44,7 +47,7 @@ public class InvestigatorFormEditor extends FormEditor
 		}
 		catch (PartInitException e)
 		{
-			e.printStackTrace();
+			gLogger.error("Could not open Investigator editor.", e);
 		}
 	}
 
