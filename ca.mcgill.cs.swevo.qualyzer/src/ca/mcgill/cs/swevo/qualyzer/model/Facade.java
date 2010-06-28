@@ -162,7 +162,7 @@ public final class Facade
 		transcript.setDate(date);
 		transcript.setParticipants(participants);
 		
-		String fileExt = "";
+		String fileExt = ""; //$NON-NLS-1$
 		if(!audioFilePath.isEmpty())
 		{
 			fileExt = audioFilePath.substring(audioFilePath.lastIndexOf('.'));
@@ -195,7 +195,7 @@ public final class Facade
 		}
 		
 		AudioFile audioFile = new AudioFile();
-		audioFile.setRelativePath(File.separator+"audio"+File.separator+transcriptName+fileExt);
+		audioFile.setRelativePath(File.separator+"audio"+File.separator+transcriptName+fileExt); //$NON-NLS-1$
 		
 		return audioFile;
 	}
@@ -221,7 +221,7 @@ public final class Facade
 		}
 		catch(CoreException e)
 		{
-			String errorMessage = "Unable to delete the project";
+			String errorMessage = Messages.getString("model.Facade.cannotDelete"); //$NON-NLS-1$
 			fLogger.error(errorMessage, e);
 			throw new QualyzerException(errorMessage, e);
 		}
@@ -263,7 +263,7 @@ public final class Facade
 		catch(HibernateException e)
 		{
 			HibernateUtil.quietRollback(t);
-			String errorMessage = "Error while trying to delete the participant from the database.";
+			String errorMessage = Messages.getString("model.Facade.participantDeleteFailed"); //$NON-NLS-1$
 			fLogger.error(errorMessage, e);
 			throw new QualyzerException(errorMessage, e);
 		}
@@ -306,7 +306,7 @@ public final class Facade
 		catch(HibernateException e)
 		{
 			HibernateUtil.quietRollback(t);
-			String errorMessage = "Could not delete investigator.";
+			String errorMessage = Messages.getString("model.Facade.invesDeleteFailed"); //$NON-NLS-1$
 			fLogger.error(errorMessage, e);
 			throw new QualyzerException(errorMessage, e);
 		}
@@ -349,7 +349,7 @@ public final class Facade
 		catch(HibernateException e)
 		{
 			HibernateUtil.quietRollback(t);
-			String errorMessage = "Unable to delete transcript.";
+			String errorMessage = Messages.getString("model.Facade.transDeleteFailed"); //$NON-NLS-1$
 			fLogger.error(errorMessage, e);
 			throw new QualyzerException(errorMessage, e);
 		}

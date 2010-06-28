@@ -61,7 +61,8 @@ public class NewProjectWizard extends Wizard
 		}
 		catch(QualyzerException e) 
 		{
-			MessageDialog.openError(getShell(), "Project Error", e.getMessage());
+			MessageDialog.openError(getShell(), Messages.getString(
+					"wizard.NewProjectWizard.projectError"), e.getMessage()); //$NON-NLS-1$
 			return false;
 		}
 

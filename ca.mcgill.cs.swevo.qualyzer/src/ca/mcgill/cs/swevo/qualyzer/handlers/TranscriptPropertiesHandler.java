@@ -61,7 +61,7 @@ public class TranscriptPropertiesHandler extends AbstractHandler
 				if(transcript.getAudioFile() != null)
 				{
 					String projectPath = ResourcesPlugin.getWorkspace().getRoot()
-						.getProject(projectName).getLocation() + "";
+						.getProject(projectName).getLocation() + ""; //$NON-NLS-1$
 					
 					oldAudio = projectPath + transcript.getAudioFile().getRelativePath();
 				}

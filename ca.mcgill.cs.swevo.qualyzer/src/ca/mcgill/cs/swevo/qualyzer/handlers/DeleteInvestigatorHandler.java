@@ -60,7 +60,6 @@ public class DeleteInvestigatorHandler extends AbstractHandler
 			List<String> conflicts = new ArrayList<String>();
 			List<Investigator> toDelete = new ArrayList<Investigator>();
 			List<Project> projects = new ArrayList<Project>();
-			
 			for(Object element : ((IStructuredSelection) selection).toArray())
 			{
 				if(element instanceof Investigator)
@@ -71,7 +70,6 @@ public class DeleteInvestigatorHandler extends AbstractHandler
 					{
 						projects.add(project);
 					}
-					
 					conflicts.addAll(checkForConflicts(investigator));
 					toDelete.add(investigator);
 				}
@@ -79,11 +77,15 @@ public class DeleteInvestigatorHandler extends AbstractHandler
 			
 			if(projects.size() > 1)
 			{
-				MessageDialog.openError(shell, "Unable to Delete", "Unable to delete across multiple projects.");
+				MessageDialog.openError(shell, 
+						Messages.getString("handlers.DeleteInvestigatorHandler.deleteFailed"), //$NON-NLS-1$
+						Messages.getString("handlers.DeleteInvestigatorHandler.multipleProjects")); //$NON-NLS-1$ 
 			}
 			else if(projects.get(0).getInvestigators().size() == toDelete.size())
 			{
-				MessageDialog.openError(shell, "Unable to Delete", "Cannot delete all the investigators in a project.");
+				MessageDialog.openError(shell, 
+						Messages.getString("handlers.DeleteInvestigatorHandler.deleteFailed"), //$NON-NLS-1$
+						Messages.getString("handlers.DeleteInvestigatorHandler.tooManyInves")); //$NON-NLS-1$ 
 			}
 			else if(conflicts.size() > 0)
 			{
@@ -106,14 +108,14 @@ public class DeleteInvestigatorHandler extends AbstractHandler
 	 */
 	private void proceedWithDeletion(IWorkbenchPage page, Shell shell, List<Investigator> toDelete)
 	{
-		String msg = "";
+		String msg = ""; //$NON-NLS-1$
 		if(toDelete.size() == 1)
 		{
-			msg = Messages.getString("handlers.DeleteInvestigatorHandler.confirm");
+			msg = Messages.getString("handlers.DeleteInvestigatorHandler.confirm"); //$NON-NLS-1$
 		}
 		else
 		{
-			msg = "Are you sure you want to delete these investigators?";
+			msg = Messages.getString("handlers.DeleteInvestigatorHandler.confirm"); //$NON-NLS-1$
 		}
 		
 		boolean check = MessageDialog.openConfirm(shell, Messages.getString(

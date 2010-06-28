@@ -35,7 +35,7 @@ public class ProjectExplorerActionProvider extends CommonActionProvider
 	/**
 	 * 
 	 */
-	private static final String OPEN_ALL_COMMAND_ID = "ca.mcgill.cs.swevo.qualyzer.commands.openAll";
+	private static final String OPEN_ALL_COMMAND_ID = "ca.mcgill.cs.swevo.qualyzer.commands.openAll"; //$NON-NLS-1$
 	private IAction fDoubleClickAction;
 
 	/**

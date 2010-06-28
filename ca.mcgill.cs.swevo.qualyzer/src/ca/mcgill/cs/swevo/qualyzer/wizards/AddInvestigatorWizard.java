@@ -64,7 +64,8 @@ public class AddInvestigatorWizard extends Wizard
 		}
 		catch(QualyzerException e)
 		{
-			MessageDialog.openError(getShell(), "Investigator Error", e.getMessage());
+			MessageDialog.openError(getShell(), Messages.getString(
+					"wizards.AddInvestigatorWizard.investigatorError"), e.getMessage()); //$NON-NLS-1$
 			return false;
 		}
 		return true;

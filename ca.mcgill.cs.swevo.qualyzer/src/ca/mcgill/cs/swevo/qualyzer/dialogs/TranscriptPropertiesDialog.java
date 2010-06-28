@@ -140,7 +140,7 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 		button.addSelectionListener(createSelectionAdapter());
 		
 		button = new Button(composite, SWT.PUSH);
-		button.setText("Clear");
+		button.setText(Messages.getString("dialogs.TranscriptPropertiesDialog.clear")); //$NON-NLS-1$
 		button.addSelectionListener(createClearListener());
 				
 		return parent;
@@ -156,8 +156,8 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 			@Override
 			public void widgetSelected(SelectionEvent event)
 			{
-				fAudioLabel.setText("");
-				fAudioPath = "";
+				fAudioLabel.setText(""); //$NON-NLS-1$
+				fAudioPath = ""; //$NON-NLS-1$
 				setMessage(null);
 			}
 		};
@@ -376,7 +376,7 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 	{
 		save();
 		
-		if(fAudioPath.startsWith(fProjectName+File.separator+"audio"+File.separator))
+		if(fAudioPath.startsWith(fProjectName+File.separator+"audio"+File.separator)) //$NON-NLS-1$
 		{
 			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(fProjectName);
 			
@@ -391,7 +391,9 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 		}
 		else
 		{
-			MessageDialog.openError(getShell(), "File Error", "The specified audio file does not exist.");
+			MessageDialog.openError(getShell(), 
+					Messages.getString("dialogs.TranscriptPropertiesDialog.fileError"),  //$NON-NLS-1$
+					Messages.getString("dialogs.TranscriptPropertiesDialog.doesNotExist")); //$NON-NLS-1$
 		}
 	}
 	

@@ -160,7 +160,8 @@ public final class ResourcesUtil
 		if(!file.exists())
 		{
 			MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					"File Error", "The transcript file cannot be found. It has likely been deleted or renamed.");
+					Messages.getString("ui.ResourcesUtil.fileError"), //$NON-NLS-1$
+					Messages.getString("ui.ResourcesUtil.transcriptMissing")); //$NON-NLS-1$ 
 			return;
 		}
 		

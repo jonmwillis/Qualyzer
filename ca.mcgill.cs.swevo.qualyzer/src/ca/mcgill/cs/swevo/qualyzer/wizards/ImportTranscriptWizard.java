@@ -74,7 +74,8 @@ public class ImportTranscriptWizard extends Wizard
 		}
 		catch(QualyzerException e)
 		{
-			MessageDialog.openError(getShell(), "Transcript Error", e.getMessage());
+			MessageDialog.openError(getShell(), Messages.getString(
+					"wizards.ImportTranscriptWizard.transcriptError"), e.getMessage()); //$NON-NLS-1$
 			return false;
 		}
 

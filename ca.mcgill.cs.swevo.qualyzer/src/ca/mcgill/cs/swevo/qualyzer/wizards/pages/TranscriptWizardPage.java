@@ -159,7 +159,7 @@ public class TranscriptWizardPage extends WizardPage
 		button.addSelectionListener(createButtonListener());
 		
 		button = new Button(composite, SWT.PUSH);
-		button.setText("Clear");
+		button.setText(Messages.getString("wizards.pages.TranscriptWizardPage.clear")); //$NON-NLS-1$
 		button.addSelectionListener(createClearListener());
 		
 		setControl(fContainer);
@@ -176,7 +176,7 @@ public class TranscriptWizardPage extends WizardPage
 			@Override
 			public void widgetSelected(SelectionEvent event)
 			{
-				fAudioFile.setText("");
+				fAudioFile.setText(""); //$NON-NLS-1$
 				fAudioFileSelected = false;
 			}
 		};
@@ -288,7 +288,8 @@ public class TranscriptWizardPage extends WizardPage
 					{
 						fAudioFileSelected = true;
 						String errorMessage = getErrorMessage();
-						if(errorMessage != null && errorMessage.equals("Please enter a valid audio filename"))
+						if(errorMessage != null && errorMessage.equals(
+								Messages.getString("wizards.pages.TranscriptWizardPage.enterAudioName"))) //$NON-NLS-1$
 						{
 							setError(null);
 						}
@@ -519,7 +520,7 @@ public class TranscriptWizardPage extends WizardPage
 			File file = new File(fAudioFile.getText());
 			if(!fAudioFile.getText().isEmpty() && !file.exists())
 			{
-				setError("Please enter a valid audio filename");
+				setError(Messages.getString("wizards.pages.TranscriptWizardPage.enterAudioName")); //$NON-NLS-1$
 			}
 			else
 			{
