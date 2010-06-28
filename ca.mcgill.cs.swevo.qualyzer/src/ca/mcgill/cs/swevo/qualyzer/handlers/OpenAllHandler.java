@@ -21,6 +21,7 @@ import org.eclipse.ui.PlatformUI;
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
+import ca.mcgill.cs.swevo.qualyzer.providers.WrapperCode;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
@@ -54,6 +55,10 @@ public class OpenAllHandler extends AbstractHandler
 				else if(element instanceof Transcript)
 				{
 					ResourcesUtil.openEditor(page, (Transcript) element);
+				}
+				else if(element instanceof WrapperCode)
+				{
+					ResourcesUtil.openEditor(page, (WrapperCode) element);
 				}
 				//TODO code/memo
 			}

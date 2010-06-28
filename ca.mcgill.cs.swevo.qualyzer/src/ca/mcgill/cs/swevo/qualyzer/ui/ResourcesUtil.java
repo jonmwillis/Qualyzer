@@ -31,9 +31,11 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ca.mcgill.cs.swevo.qualyzer.editors.CodeEditor;
 import ca.mcgill.cs.swevo.qualyzer.editors.InvestigatorFormEditor;
 import ca.mcgill.cs.swevo.qualyzer.editors.ParticipantFormEditor;
 import ca.mcgill.cs.swevo.qualyzer.editors.TranscriptEditor;
+import ca.mcgill.cs.swevo.qualyzer.editors.inputs.CodeEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.InvestigatorEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.ParticipantEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.model.Code;
@@ -44,6 +46,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 import ca.mcgill.cs.swevo.qualyzer.providers.ProjectWrapper;
+import ca.mcgill.cs.swevo.qualyzer.providers.WrapperCode;
 
 /**
  * Contains methods for the opening of editors and retrieving the Project
@@ -264,5 +267,23 @@ public final class ResourcesUtil
 				page.closeEditor(editor.getEditor(true), true);
 			}
 		}		
+	}
+
+	/**
+	 * Open a code editor.
+	 * @param page
+	 * @param project
+	 */
+	public static void openEditor(IWorkbenchPage page, WrapperCode wrapperCode)
+	{
+		CodeEditorInput input = new CodeEditorInput(wrapperCode.getProject());
+		try
+		{
+			page.openEditor(input, CodeEditor.ID);
+		}
+		catch(PartInitException e)
+		{
+			gLogger.error("Failed to open code editor.", e);
+		}
 	}
 }
