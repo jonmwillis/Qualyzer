@@ -20,6 +20,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -374,18 +375,9 @@ public final class Facade
 		Object object = s.get(Transcript.class, transcript.getPersistenceId());
 		Transcript toReturn = (Transcript) object;
 		
-		/*
-		 * This forces the lists to be initialised - JF.
-		 */
-		for(@SuppressWarnings("unused") Participant p : toReturn.getParticipants())
-		{
-			
-		}
+		Hibernate.initialize(toReturn.getParticipants());
 		
-		for(@SuppressWarnings("unused") Fragment f : toReturn.getFragments())
-		{
-			
-		}
+		Hibernate.initialize(toReturn.getFragments());
 		
 		HibernateUtil.quietClose(s);
 		
@@ -406,17 +398,9 @@ public final class Facade
 		Object object = s.get(Memo.class, memo.getPersistenceId());
 		Memo toReturn = (Memo) object;
 		
-		/*
-		 * Force the lists to initialise.
-		 */
-		for(@SuppressWarnings("unused") Fragment f : memo.getFragments())
-		{
-			
-		}
-		for(@SuppressWarnings("unused") Participant p : memo.getParticipants())
-		{
-			
-		}
+		Hibernate.initialize(toReturn.getParticipants());
+		
+		Hibernate.initialize(toReturn.getFragments());
 		
 		HibernateUtil.quietClose(s);
 		
