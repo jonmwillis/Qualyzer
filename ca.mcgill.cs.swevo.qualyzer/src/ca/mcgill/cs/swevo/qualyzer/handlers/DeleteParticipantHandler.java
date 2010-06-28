@@ -73,8 +73,9 @@ public class DeleteParticipantHandler extends AbstractHandler
 			
 			if(projects.size() > 1)
 			{
-				MessageDialog.openError(shell, "Unable to delete",
-						"Cannot delete participants across multiple projects.");
+				MessageDialog.openError(shell, 
+						Messages.getString("handlers.DeleteParticipantHandler.deleteFailed"), //$NON-NLS-1$
+						Messages.getString("handlers.DeleteParticipantHandler.multipleProjects")); //$NON-NLS-1$
 			}
 			else if(conflicts.size() > 0)
 			{
@@ -92,14 +93,14 @@ public class DeleteParticipantHandler extends AbstractHandler
 
 	private void proceedWithDeletion(IWorkbenchPage page, Shell shell, List<Participant> toDelete) 
 	{
-		String message = "";
+		String message = ""; //$NON-NLS-1$
 		if(toDelete.size() == 1)
 		{
-			message = Messages.getString("handlers.DeleteParticipantHandler.confirm");
+			message = Messages.getString("handlers.DeleteParticipantHandler.confirm"); //$NON-NLS-1$
 		}
 		else
 		{
-			message = Messages.getString("handlers.DeleteParticipantHandler.confirmMany");
+			message = Messages.getString("handlers.DeleteParticipantHandler.confirmMany"); //$NON-NLS-1$
 		}
 		
 		boolean check = MessageDialog.openConfirm(shell, Messages.getString(
@@ -136,7 +137,7 @@ public class DeleteParticipantHandler extends AbstractHandler
 		String output = Messages.getString("handlers.DeleteParticipantHandler.conflicts"); //$NON-NLS-1$
 		for(Object conflict : conflicts)
 		{
-			output += "\n" + conflict; 
+			output += "\n" + conflict;  //$NON-NLS-1$
 		}
 		
 		return output;
@@ -160,9 +161,9 @@ public class DeleteParticipantHandler extends AbstractHandler
 			{
 				if(part.equals(participant))
 				{
-					conflicts.add(Messages.getString("handlers.DeleteParticipantHandler.participant") +  
-							participant.getParticipantId() + " " + 
-							Messages.getString("handlers.DeleteParticipantHandler.memo") +  
+					conflicts.add(Messages.getString("handlers.DeleteParticipantHandler.participant") +   //$NON-NLS-1$
+							participant.getParticipantId() + " " +  //$NON-NLS-1$
+							Messages.getString("handlers.DeleteParticipantHandler.memo") +   //$NON-NLS-1$
 							memo.getName());
 					break;
 				}
@@ -176,9 +177,9 @@ public class DeleteParticipantHandler extends AbstractHandler
 			{
 				if(part.equals(participant))
 				{
-					conflicts.add(Messages.getString("handlers.DeleteParticipantHandler.participant") +  
-							participant.getParticipantId() + " " +
-							Messages.getString("handlers.DeleteParticipantHandler.transcript") +  
+					conflicts.add(Messages.getString("handlers.DeleteParticipantHandler.participant") +   //$NON-NLS-1$
+							participant.getParticipantId() + " " + //$NON-NLS-1$
+							Messages.getString("handlers.DeleteParticipantHandler.transcript") +   //$NON-NLS-1$
 							transcript.getName());
 					break;
 				}

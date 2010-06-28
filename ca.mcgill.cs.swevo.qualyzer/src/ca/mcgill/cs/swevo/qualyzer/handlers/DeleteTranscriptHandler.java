@@ -79,10 +79,11 @@ public class DeleteTranscriptHandler extends AbstractHandler
 			
 			if(projects.size() > 1)
 			{
-				String warningMessage = "Unable to delete transcripts across multiple projects.";
+				String warningMessage = Messages.getString(
+						"handlers.DeleteTranscriptHandler.multipleProjects"); //$NON-NLS-1$
 				fLogger.warn(warningMessage);
-				MessageDialog.openError(shell, "Unable to Delete", 
-						warningMessage);
+				MessageDialog.openError(shell, Messages.getString(
+						"handlers.DeleteTranscriptHandler.deleteFailed"), warningMessage); //$NON-NLS-1$
 			}
 			else
 			{
@@ -149,28 +150,28 @@ public class DeleteTranscriptHandler extends AbstractHandler
 			File file = new File(wProject.getLocation() + transcript.getAudioFile().getRelativePath());
 			if(!file.delete())
 			{
-				String warningMessage = "The audio file could not be deleted.";
+				String warningMessage = Messages.getString(
+						"handlers.DeleteTranscriptHandler.audioDeleteFailed"); //$NON-NLS-1$
 				fLogger.warn(warningMessage);
-				MessageDialog.openWarning(shell, "File Access Error", warningMessage);
-				
+				MessageDialog.openWarning(shell, Messages.getString(
+						"handlers.DeleteTranscriptHandler.fileAccess"), warningMessage); //$NON-NLS-1$
 			}
 		}
 		
 		File file = new File(wProject.getLocation() + TRANSCRIPT + transcript.getFileName());
 		if(!file.delete())
 		{
-			String warningMessage = "The transcript file could not be deleted.";
+			String warningMessage = Messages.getString(
+					"handlers.DeleteTranscriptHandler.transcriptDeleteFailed"); //$NON-NLS-1$
 			fLogger.warn(warningMessage);
-			MessageDialog.openWarning(shell, "File Access Error", warningMessage);
+			MessageDialog.openWarning(shell, Messages.getString(
+					"handlers.DeleteTranscriptHandler.fileAccess"), warningMessage); //$NON-NLS-1$
 		}
 		
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		ResourcesUtil.closeEditor(page, transcript.getFileName());
-		
 		Facade.getInstance().deleteTranscript(transcript);
-		
 		//TODO delete annotations?
-		
 		if(participants != null)
 		{
 			for(Participant p : participants)

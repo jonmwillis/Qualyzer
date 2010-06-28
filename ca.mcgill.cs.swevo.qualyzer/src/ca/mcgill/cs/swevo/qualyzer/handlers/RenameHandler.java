@@ -70,8 +70,9 @@ public class RenameHandler extends AbstractHandler
 			
 			if(trancriptNoLongerExists((Transcript) element))
 			{
-				MessageDialog.openError(HandlerUtil.getActiveShell(event), "File Error", 
-						"The transcript file no longer exists or has been renamed.");
+				MessageDialog.openError(HandlerUtil.getActiveShell(event), 
+						Messages.getString("handlers.RenameHandler.fileError"),  //$NON-NLS-1$
+						Messages.getString("handlers.RenameHandler.transcriptRenamed")); //$NON-NLS-1$
 				return null;
 			}
 			
@@ -168,7 +169,8 @@ public class RenameHandler extends AbstractHandler
 	{
 		File origFile;
 		MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
-				"File Error", "The associated audio file no longer exists. Please choose a new file.");
+				Messages.getString("handlers.RenameHandler.fileError"), //$NON-NLS-1$
+				Messages.getString("handlers.RenameHandler.audioFileGone")); //$NON-NLS-1$ 
 		
 		FileDialog dialog = new FileDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
 		dialog.setFilterPath(projectPath+AUDIO);

@@ -60,11 +60,12 @@ public class NewTranscriptWizard extends Wizard
 			fTranscript = Facade.getInstance().createTranscript(fPage.getTranscriptName(), fPage.getDate(),
 					fPage.getAudioFile(), fPage.getParticipants(), fProject);
 			
-			FileUtil.setupTranscriptFiles(fTranscript, fPage.getAudioFile(), "");
+			FileUtil.setupTranscriptFiles(fTranscript, fPage.getAudioFile(), ""); //$NON-NLS-1$
 		}
 		catch(QualyzerException e)
 		{
-			MessageDialog.openError(getShell(), "Transcript Creation Error", e.getMessage());
+			MessageDialog.openError(getShell(), Messages.getString(
+					"wizards.NewTranscriptWizard.transcriptCreateError"), e.getMessage()); //$NON-NLS-1$
 			return false;
 		}
 

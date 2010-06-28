@@ -63,7 +63,8 @@ public class AddParticipantWizard extends Wizard
 		}
 		catch(QualyzerException e)
 		{
-			MessageDialog.openError(getShell(), "Participant Error", e.getMessage());
+			MessageDialog.openError(getShell(), Messages.getString(
+					"wizards.AddParticipantWizard.participantError"), e.getMessage()); //$NON-NLS-1$
 			return false;
 		}
 		

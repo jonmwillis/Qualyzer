@@ -37,8 +37,8 @@ public final class FileUtil
 	/**
 	 * 
 	 */
-	public static final String TRANSCRIPTS = "transcripts";
-	public static final String AUDIO = "audio";
+	public static final String TRANSCRIPTS = "transcripts"; //$NON-NLS-1$
+	public static final String AUDIO = "audio"; //$NON-NLS-1$
 
 	private FileUtil(){}
 
@@ -99,13 +99,13 @@ public final class FileUtil
 			if(!makeSubFolders(wProject))
 			{
 				cleanUpFolders(wProject);
-				throw new QualyzerException("Unable to create the required file system.");
+				throw new QualyzerException(Messages.getString("util.FileUtil.fileSystemFailed")); //$NON-NLS-1$
 			}
 		}
 		catch(CoreException e)
 		{
 			e.printStackTrace();
-			throw new QualyzerException("There was a problem creating the project", e);
+			throw new QualyzerException(Messages.getString("util.FileUtil.projectProblem"), e); //$NON-NLS-1$
 		}
 		
 		return wProject;
@@ -178,7 +178,7 @@ public final class FileUtil
 			{
 				if(!copyAudioFile(audioFilePath, relativePath, workspacePath))
 				{
-					throw new QualyzerException("Failed to copy the audio file");
+					throw new QualyzerException(Messages.getString("util.FileUtil.audioCopyFailed")); //$NON-NLS-1$
 				}
 
 			}
@@ -199,7 +199,7 @@ public final class FileUtil
 		
 		if(!file.exists())
 		{
-			throw new QualyzerException("The audio file you wish to copy cannot be found.");
+			throw new QualyzerException(Messages.getString("util.FileUtil.audioMissing")); //$NON-NLS-1$
 		}
 		
 		try
@@ -228,13 +228,13 @@ public final class FileUtil
 				if(!file.createNewFile())
 				{
 					throw new QualyzerException(
-							"Unable to create the transcript file. One may already exist with that name.");
+							Messages.getString("util.FileUtil.transcriptCreateFailed")); //$NON-NLS-1$
 				}
 			}
 			catch (IOException e)
 			{
 				e.printStackTrace();
-				throw new QualyzerException("There was an error creating the transcript file", e);
+				throw new QualyzerException(Messages.getString("util.FileUtil.errorCreateTranscript"), e); //$NON-NLS-1$
 			}
 		}
 		else
@@ -242,13 +242,13 @@ public final class FileUtil
 			File fileOrig = new File(existingTranscript);
 			if(file.exists())
 			{
-				throw new QualyzerException("A transcript already exists with the requested name");
+				throw new QualyzerException(Messages.getString("util.FileUtil.transcriptAlreadyExists")); //$NON-NLS-1$
 			}
 			
 			if(!fileOrig.exists())
 			{
 				throw new QualyzerException(
-						"The requested transcript cannot be found. It may have been deleted or renamed.");
+						Messages.getString("util.FileUtil.transcriptMissing")); //$NON-NLS-1$
 			}
 			
 			try
@@ -258,7 +258,7 @@ public final class FileUtil
 			catch (IOException e)
 			{
 				e.printStackTrace();
-				throw new QualyzerException("There was a problem copying the transcript file", e);
+				throw new QualyzerException(Messages.getString("util.FileUtil.TranscriptCopyError"), e); //$NON-NLS-1$
 			}
 		}
 	}
