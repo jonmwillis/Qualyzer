@@ -199,6 +199,11 @@
             id="ca.mcgill.cs.swevo.qualyzer.commands.openAll"
             name="Open All">
       </command>
+      <command
+            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.NewCodeHandler"
+            id="ca.mcgill.cs.swevo.qualyzer.commands.newCode"
+            name="New Code">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -345,6 +350,35 @@
                   label="%command.label.transcript"
                   style="push"
                   tooltip="%command.tooltip.createTranscript">
+               <visibleWhen
+                     checkEnabled="false">
+                  <iterate
+                        ifEmpty="false"
+                        operator="and">
+                     <or>
+                        <and>
+                           <instanceof
+                                 value="org.eclipse.core.resources.IProject">
+                           </instanceof>
+                           <test
+                                 property="org.eclipse.core.resources.open"
+                                 value="open">
+                           </test>
+                        </and>
+                        <not>
+                           <instanceof
+                                 value="org.eclipse.core.resources.IProject">
+                           </instanceof>
+                        </not>
+                     </or>
+                  </iterate>
+               </visibleWhen>
+            </command>
+            <command
+                  commandId="ca.mcgill.cs.swevo.qualyzer.commands.newCode"
+                  label="Code"
+                  style="push"
+                  tooltip="Create a New Code">
                <visibleWhen
                      checkEnabled="false">
                   <iterate
