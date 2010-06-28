@@ -28,6 +28,8 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ca.mcgill.cs.swevo.qualyzer.editors.InvestigatorFormEditor;
 import ca.mcgill.cs.swevo.qualyzer.editors.ParticipantFormEditor;
@@ -50,6 +52,11 @@ import ca.mcgill.cs.swevo.qualyzer.providers.ProjectWrapper;
  */
 public final class ResourcesUtil
 {
+	/**
+	 * 
+	 */
+	private static final String ERROR_MSG = "Could not open editor";
+	private static Logger gLogger = LoggerFactory.getLogger(ResourcesUtil.class);
 
 	private ResourcesUtil(){}
 	
@@ -67,7 +74,7 @@ public final class ResourcesUtil
 		}
 		catch (PartInitException e)
 		{
-			e.printStackTrace();
+			gLogger.error(ERROR_MSG, e);
 		}
 	}
 	
@@ -85,7 +92,7 @@ public final class ResourcesUtil
 		}
 		catch (PartInitException e)
 		{
-			e.printStackTrace();
+			gLogger.error(ERROR_MSG, e);
 		}
 	}
 	
@@ -152,9 +159,9 @@ public final class ResourcesUtil
 		{
 			file.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
 		}
-		catch (CoreException e1)
+		catch (CoreException e)
 		{
-			e1.printStackTrace();
+			gLogger.error(ERROR_MSG, e);
 		}
 		
 		if(!file.exists())
@@ -172,7 +179,7 @@ public final class ResourcesUtil
 		}
 		catch (PartInitException e)
 		{
-			e.printStackTrace();
+			gLogger.error(ERROR_MSG, e);
 		}
 	}
 

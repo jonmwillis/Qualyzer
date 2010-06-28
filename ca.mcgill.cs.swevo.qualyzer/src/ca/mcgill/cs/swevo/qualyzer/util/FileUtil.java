@@ -24,6 +24,8 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
@@ -34,11 +36,10 @@ import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
  */
 public final class FileUtil
 {
-	/**
-	 * 
-	 */
+	
 	public static final String TRANSCRIPTS = "transcripts"; //$NON-NLS-1$
 	public static final String AUDIO = "audio"; //$NON-NLS-1$
+	private static Logger gLogger = LoggerFactory.getLogger(FileUtil.class);
 
 	private FileUtil(){}
 
@@ -66,7 +67,7 @@ public final class FileUtil
 		}
 		catch(IOException e)
 		{
-			e.printStackTrace();
+			gLogger.error("Could not copy file.", e);
 		}
 		finally
 		{
@@ -104,7 +105,6 @@ public final class FileUtil
 		}
 		catch(CoreException e)
 		{
-			e.printStackTrace();
 			throw new QualyzerException(Messages.getString("util.FileUtil.projectProblem"), e); //$NON-NLS-1$
 		}
 		
@@ -209,7 +209,7 @@ public final class FileUtil
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			gLogger.error("Audio File copy failed", e);
 			return false;
 		}
 	}
@@ -233,7 +233,7 @@ public final class FileUtil
 			}
 			catch (IOException e)
 			{
-				e.printStackTrace();
+				gLogger.error("Failed to create new File", e);
 				throw new QualyzerException(Messages.getString("util.FileUtil.errorCreateTranscript"), e); //$NON-NLS-1$
 			}
 		}
@@ -257,7 +257,6 @@ public final class FileUtil
 			}
 			catch (IOException e)
 			{
-				e.printStackTrace();
 				throw new QualyzerException(Messages.getString("util.FileUtil.TranscriptCopyError"), e); //$NON-NLS-1$
 			}
 		}

@@ -20,6 +20,8 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.navigator.CommonActionProvider;
 import org.eclipse.ui.navigator.ICommonActionConstants;
 import org.eclipse.ui.navigator.ICommonActionExtensionSite;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
@@ -36,6 +38,8 @@ public class ProjectExplorerActionProvider extends CommonActionProvider
 	 * 
 	 */
 	private static final String OPEN_ALL_COMMAND_ID = "ca.mcgill.cs.swevo.qualyzer.commands.openAll"; //$NON-NLS-1$
+	private static Logger gLogger = LoggerFactory.getLogger(ProjectExplorerActionProvider.class);
+	
 	private IAction fDoubleClickAction;
 
 	/**
@@ -70,7 +74,7 @@ public class ProjectExplorerActionProvider extends CommonActionProvider
 					// CSOFF:
 					catch (Exception e)
 					{
-						e.printStackTrace();
+						gLogger.error("Problem executing double click", e);
 					}//CSON:
 				}
 			}

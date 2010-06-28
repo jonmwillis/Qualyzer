@@ -23,6 +23,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ca.mcgill.cs.swevo.qualyzer.model.AudioFile;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
@@ -36,6 +38,7 @@ import ca.mcgill.cs.swevo.qualyzer.util.FileUtil;
  */
 public class ImportAudioFileHandler extends AbstractHandler
 {
+	private static Logger gLogger = LoggerFactory.getLogger(ImportAudioFileHandler.class);
 
 	/**
 	 * 
@@ -106,7 +109,7 @@ public class ImportAudioFileHandler extends AbstractHandler
 			}
 			catch (IOException e)
 			{
-				e.printStackTrace();
+				gLogger.error("Audio File copy failed", e);
 			}
 		}
 	}

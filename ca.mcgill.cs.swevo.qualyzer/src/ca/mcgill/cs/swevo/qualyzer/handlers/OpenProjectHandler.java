@@ -21,6 +21,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonNavigator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 
@@ -30,6 +32,7 @@ import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
  */
 public class OpenProjectHandler extends AbstractHandler
 {
+	private static Logger gLogger = LoggerFactory.getLogger(OpenProjectHandler.class);
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
@@ -48,7 +51,7 @@ public class OpenProjectHandler extends AbstractHandler
 				}
 				catch (CoreException e)
 				{
-					e.printStackTrace();
+					gLogger.error("Failed to open project", e);
 				}
 				
 				CommonNavigator view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
