@@ -91,6 +91,30 @@ public final class Facade
 	}
 
 	/**
+	 * Create a new code.
+	 * @param codeName
+	 * @param codeDescription
+	 * @param project
+	 * @return
+	 */
+	public Code createCode(String codeName, String codeDescription, Project project)
+	{
+		Code code = new Code();
+		code.setCodeName(codeName);
+		code.setDescription(codeDescription);
+		code.setProject(project);
+		project.getCodes().add(code);
+		
+		HibernateDBManager manager;
+		manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(project.getName());
+		HibernateUtil.quietSave(manager, project);
+		
+		fListenerManager.notifyCodeListeners(ChangeType.ADD, code, this);
+		
+		return code;
+	}
+	
+	/**
 	 * Create an investigator from the given information.
 	 * @param nickname
 	 * @param fullName
