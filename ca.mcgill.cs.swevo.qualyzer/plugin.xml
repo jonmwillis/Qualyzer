@@ -415,6 +415,13 @@
                            value="ca.mcgill.cs.swevo.qualyzer.model.Code">
                      </instanceof>
                   </iterate>
+                  <iterate
+                        ifEmpty="false"
+                        operator="or">
+                     <instanceof
+                           value="ca.mcgill.cs.swevo.qualyzer.providers.WrapperCode">
+                     </instanceof>
+                  </iterate>
                </or>
             </visibleWhen>
          </command>
@@ -755,6 +762,12 @@
             icon="icons/people.png"
             id="ca.mcgill.cs.swevo.qualyzer.editors.investigatorFormEditor"
             name="%editor.name.investigator">
+      </editor>
+      <editor
+            class="ca.mcgill.cs.swevo.qualyzer.editors.CodeEditor"
+            default="false"
+            id="ca.mcgill.cs.swevo.qualyzer.editors.codeEditor"
+            name="Code Editor">
       </editor>
    </extension>
    <extension
