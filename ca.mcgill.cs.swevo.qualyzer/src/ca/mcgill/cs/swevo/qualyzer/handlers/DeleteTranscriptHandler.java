@@ -35,7 +35,6 @@ import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.dialogs.TranscriptDeleteDialog;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
-import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
@@ -109,14 +108,12 @@ public class DeleteTranscriptHandler extends AbstractHandler
 		{	
 			for(Transcript transcript : toDelete)
 			{
-				String project = transcript.getProject().getName();
 				delete(transcript, dialog.getDeleteAudio(), dialog.getDeleteCodes(), 
 						dialog.getDeleteParticipants(), shell);
 									
 				CommonNavigator view;
 				view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
 				view.getCommonViewer().refresh();
-				ResourcesUtil.refreshParticipants(PersistenceManager.getInstance().getProject(project));
 			}
 		}
 		

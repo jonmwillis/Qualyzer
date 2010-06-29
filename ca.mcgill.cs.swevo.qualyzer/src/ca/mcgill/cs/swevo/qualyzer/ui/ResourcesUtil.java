@@ -22,7 +22,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -183,44 +182,6 @@ public final class ResourcesUtil
 		catch (PartInitException e)
 		{
 			gLogger.error(ERROR_MSG, e);
-		}
-	}
-
-	/**
-	 * Will refresh the transcript lists of all the participant editors attached to this transcript.
-	 * @param transcript
-	 */
-	public static void refreshParticipants(Project project)
-	{
-		IWorkbenchPage[] pages = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPages();
-
-		for(IWorkbenchPage page : pages)
-		{
-			for(IEditorReference editor : page.getEditorReferences())
-			{
-				IEditorPart editorPart = editor.getEditor(true);
-				if(editorPart instanceof ParticipantFormEditor)
-				{
-					Participant part = ((ParticipantEditorInput) editorPart.getEditorInput()).getParticipant();
-					Participant refreshedPart = null;
-					
-					for(Participant participant : project.getParticipants())
-					{
-						if(participant.equals(part))
-						{
-							refreshedPart = participant;
-							break;
-						}
-					}
-					
-					page.closeEditor(editorPart, true);
-					
-					if(refreshedPart != null)
-					{
-						openEditor(page, refreshedPart);
-					}
-				}
-			}
 		}
 	}
 	

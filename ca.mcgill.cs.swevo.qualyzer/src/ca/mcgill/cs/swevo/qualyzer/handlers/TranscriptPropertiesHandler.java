@@ -27,7 +27,6 @@ import ca.mcgill.cs.swevo.qualyzer.dialogs.TranscriptPropertiesDialog;
 import ca.mcgill.cs.swevo.qualyzer.model.AudioFile;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
-import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 import ca.mcgill.cs.swevo.qualyzer.util.FileUtil;
 
 /**
@@ -71,9 +70,7 @@ public class TranscriptPropertiesHandler extends AbstractHandler
 				transcript.setDate(newDate);
 				transcript.setParticipants(dialog.getParticipants());
 								
-				Facade.getInstance().saveTranscript(transcript);
-				
-				ResourcesUtil.refreshParticipants(transcript.getProject());
+				Facade.getInstance().saveTranscript(transcript);				
 			}
 		}
 		
