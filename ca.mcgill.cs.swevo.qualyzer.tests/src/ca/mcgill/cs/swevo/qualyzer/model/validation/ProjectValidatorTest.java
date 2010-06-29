@@ -15,12 +15,10 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.junit.Before;
 import org.junit.Test;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
-import ca.mcgill.cs.swevo.qualyzer.wizards.pages.Messages;
 
 public class ProjectValidatorTest
 {
