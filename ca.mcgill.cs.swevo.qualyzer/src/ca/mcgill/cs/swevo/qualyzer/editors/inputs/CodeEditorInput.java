@@ -13,6 +13,8 @@
  */
 package ca.mcgill.cs.swevo.qualyzer.editors.inputs;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
@@ -24,7 +26,9 @@ import ca.mcgill.cs.swevo.qualyzer.model.Project;
  */
 public class CodeEditorInput implements IEditorInput
 {
-
+	private static final int NUM1 = 10095;
+	private static final int NUM2 = 11361;
+	
 	private Project fProject;
 	
 	/**
@@ -70,7 +74,7 @@ public class CodeEditorInput implements IEditorInput
 	@Override
 	public String getName()
 	{
-		return fProject.getName();
+		return "editor.code."+fProject.getName();
 	}
 
 	/* (non-Javadoc)
@@ -101,6 +105,38 @@ public class CodeEditorInput implements IEditorInput
 	{
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode()
+	{
+		return new HashCodeBuilder(NUM1, NUM2).append(fProject).toHashCode();
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj)
+	{
+		if(obj == null)
+		{
+			return false;
+		}
+		else if(obj == this)
+		{
+			return true;
+		}
+		else if(obj.getClass().equals(getClass()))
+		{
+			CodeEditorInput input = (CodeEditorInput) obj;
+			return new EqualsBuilder().append(fProject, input.fProject).isEquals();
+		}
+		
+		return false;
 	}
 
 }

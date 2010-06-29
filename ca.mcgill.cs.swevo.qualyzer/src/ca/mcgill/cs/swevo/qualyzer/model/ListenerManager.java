@@ -48,27 +48,27 @@ public class ListenerManager
 	
 	/**
 	 * Notify the registered ProjectListeners that the given Project has changed.
+	 * Note that this method takes a single project, not an array.
 	 * @param cType
 	 * @param project
 	 * @param facade
 	 */
-	public void notifyProjectListeners(ChangeType cType, Project[] projects, Facade facade)
+	public void notifyProjectListeners(ChangeType cType, Project project, Facade facade)
 	{
-		if(projects.length > 0)
+
+		ArrayList<ProjectListener> list = fProjectListeners.get(project);
+		if(list != null)
 		{
-			ArrayList<ProjectListener> list = fProjectListeners.get(projects[0]);
-			if(list != null)
+			for(ProjectListener listener : list)
 			{
-				for(ProjectListener listener : list)
-				{
-					listener.projectChanged(cType, projects, facade);
-				}
+				listener.projectChanged(cType, project, facade);
 			}
 		}
 	}
 	
 	/**
-	 * Notify all the CodeListeners that a Code has changed.
+	 * Notify all the CodeListeners that some Codes have changed.
+	 * Assumes that all the codes belong to the same project.
 	 * @param cType
 	 * @param project
 	 * @param facade
@@ -89,7 +89,8 @@ public class ListenerManager
 	}
 	
 	/**
-	 * Notify the InvestigatorListeners that an Investigator has changed.
+	 * Notify the InvestigatorListeners that some Investigators have changed.
+	 * Assumes that all the Investigators belong to the same project.
 	 * @param cType
 	 * @param investigator
 	 * @param facade
@@ -110,7 +111,8 @@ public class ListenerManager
 	}
 	
 	/**
-	 * Notify the ParticipantListeners that a Participant has changed.
+	 * Notify the ParticipantListeners that some Participants have changed.
+	 * Assumes that all the Participants belong to the same projects.
 	 * @param cType
 	 * @param participant
 	 * @param facade
@@ -131,7 +133,8 @@ public class ListenerManager
 	}
 	
 	/**
-	 * Notify the TranscriptListeners that a Transcript has changed.
+	 * Notify the TranscriptListeners that some Transcripts have changed.
+	 * Assumes that all the Transcripts belong to the same project.
 	 * @param cType
 	 * @param transcript
 	 * @param facade
