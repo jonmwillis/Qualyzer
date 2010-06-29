@@ -59,13 +59,6 @@ public class CodeEditorPage extends FormPage
 		fProject = project;
 		fCodes = new ArrayList<Code>();
 		
-		Code aCode = new Code();
-		aCode.setCodeName("Code Name");
-		aCode.setDescription("Code Description\n\n\n\nReally long.");
-		aCode.setProject(fProject);
-		
-		fProject.getCodes().add(aCode);
-		
 		for(Code code : fProject.getCodes())
 		{
 			fCodes.add(code);

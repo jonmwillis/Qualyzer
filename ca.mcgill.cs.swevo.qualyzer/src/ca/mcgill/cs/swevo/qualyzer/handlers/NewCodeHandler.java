@@ -13,6 +13,20 @@ package ca.mcgill.cs.swevo.qualyzer.handlers;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.window.Window;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.HandlerUtil;
+import org.eclipse.ui.navigator.CommonNavigator;
+
+import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
+import ca.mcgill.cs.swevo.qualyzer.dialogs.NewCodeDialog;
+import ca.mcgill.cs.swevo.qualyzer.model.Facade;
+import ca.mcgill.cs.swevo.qualyzer.model.Project;
+import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
  * Handler for the new code command.
@@ -25,7 +39,29 @@ public class NewCodeHandler extends AbstractHandler
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
 	{
-		// TODO Auto-generated method stub
+		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		ISelection selection = activePage.getSelection();
+		
+		if(selection != null && selection instanceof IStructuredSelection)
+		{
+			IStructuredSelection strucSelection = (IStructuredSelection) selection;
+			Object element = strucSelection.getFirstElement();
+			
+			Project project = ResourcesUtil.getProject(element);
+			
+			Shell shell = HandlerUtil.getActiveShell(event);
+			
+			NewCodeDialog dialog = new NewCodeDialog(shell, project);
+			dialog.create();
+			if(dialog.open() == Window.OK)
+			{
+				Facade.getInstance().createCode(dialog.getName(), dialog.getDescription(), project);
+				CommonNavigator viewer = (CommonNavigator) activePage.findView(
+						QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+				viewer.getCommonViewer().refresh();
+			}
+		}
+		
 		return null;
 	}
 
