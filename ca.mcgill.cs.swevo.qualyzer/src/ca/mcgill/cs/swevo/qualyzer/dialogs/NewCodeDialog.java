@@ -57,8 +57,8 @@ public class NewCodeDialog extends TitleAreaDialog
 	public void create()
 	{
 		super.create();
-		setTitle("New Code");
-		setMessage("Enter a code name.");
+		setTitle(Messages.getString("dialogs.NewCodeDialog.newCode")); //$NON-NLS-1$
+		setMessage(Messages.getString("dialogs.NewCodeDialog.enterName")); //$NON-NLS-1$
 		
 		getButton(IDialogConstants.OK_ID).setEnabled(false);
 	}
@@ -76,16 +76,16 @@ public class NewCodeDialog extends TitleAreaDialog
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
 		Label label = new Label(composite, SWT.NULL);
-		label.setText("Name:");
+		label.setText(Messages.getString("dialogs.NewCodeDialog.name")); //$NON-NLS-1$
 		fNameText = new Text(composite, SWT.BORDER);
-		fNameText.setText("");
+		fNameText.setText(""); //$NON-NLS-1$
 		fNameText.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 		fNameText.addKeyListener(createKeyAdapter());
 		
 		label = new Label(composite, SWT.NULL);
-		label.setText("Description:");
+		label.setText(Messages.getString("dialogs.NewCodeDialog.description")); //$NON-NLS-1$
 		fDescriptionText = new Text(composite, SWT.BORDER);
-		fDescriptionText.setText("");
+		fDescriptionText.setText(""); //$NON-NLS-1$
 		fDescriptionText.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 	
 		return parent;
@@ -112,12 +112,12 @@ public class NewCodeDialog extends TitleAreaDialog
 				else if(!ResourcesUtil.verifyID(fNameText.getText()))
 				{
 					getButton(IDialogConstants.OK_ID).setEnabled(false);
-					setErrorMessage("Code name is invalid. Use letters, numbers, '-' and '_'.");
+					setErrorMessage(Messages.getString("dialogs.NewCodeDialog.nameInvalid")); //$NON-NLS-1$
 				}
 				else if(nameInUse())
 				{
 					getButton(IDialogConstants.OK_ID).setEnabled(false);
-					setErrorMessage("That name has already been taken.");
+					setErrorMessage(Messages.getString("dialogs.NewCodeDialog.nameTaken")); //$NON-NLS-1$
 				}
 				else
 				{

@@ -30,7 +30,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Project;
  */
 public class CodeEditor extends FormEditor
 {
-	public static final String ID = "ca.mcgill.cs.swevo.qualyzer.editors.codeEditor";
+	public static final String ID = "ca.mcgill.cs.swevo.qualyzer.editors.codeEditor"; //$NON-NLS-1$
 
 	private static Logger gLogger = LoggerFactory.getLogger(CodeEditor.class);
 	
@@ -51,7 +51,7 @@ public class CodeEditor extends FormEditor
 			}
 			catch (PartInitException e)
 			{
-				gLogger.error("Failed to open code editor", e);
+				gLogger.error("Failed to open code editor", e); //$NON-NLS-1$
 			}
 		}
 	}

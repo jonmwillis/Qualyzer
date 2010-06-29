@@ -47,7 +47,7 @@ public class InvestigatorFormEditor extends FormEditor
 		}
 		catch (PartInitException e)
 		{
-			gLogger.error("Could not open Investigator editor.", e);
+			gLogger.error("Could not open Investigator editor.", e); //$NON-NLS-1$
 		}
 	}
 

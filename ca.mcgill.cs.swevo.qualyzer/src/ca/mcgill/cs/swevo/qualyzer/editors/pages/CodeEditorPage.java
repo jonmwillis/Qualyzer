@@ -74,7 +74,8 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	 */
 	public CodeEditorPage(FormEditor editor, Project project)
 	{
-		super(editor, "Code Editor", "Code Editor");
+		super(editor, Messages.getString("editors.pages.CodeEditorPage.codeEditor"), //$NON-NLS-1$
+				Messages.getString("editors.pages.CodeEditorPage.codeEditor")); //$NON-NLS-1$ 
 		fProject = project;
 		fCodes = new ArrayList<Code>();
 		
@@ -102,7 +103,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		fForm = managedForm.getForm();
 		FormToolkit toolkit = managedForm.getToolkit();
 		Composite body = fForm.getBody();
-		fForm.setText("Codes");
+		fForm.setText(Messages.getString("editors.pages.CodeEditorPage.codes")); //$NON-NLS-1$
 		
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 2;
@@ -119,14 +120,14 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		composite.setLayout(layout);
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
-		toolkit.createLabel(composite, "Name:");
-		fName = toolkit.createText(composite, "");
+		toolkit.createLabel(composite, Messages.getString("editors.pages.CodeEditorPage.name")); //$NON-NLS-1$
+		fName = toolkit.createText(composite, ""); //$NON-NLS-1$
 		fName.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 		fName.addKeyListener(createKeyAdapter());
 		fName.addKeyListener(createValidator());
 		
-		toolkit.createLabel(composite, "Description:");
-		fDescription = toolkit.createText(composite, "", SWT.MULTI);
+		toolkit.createLabel(composite, Messages.getString("editors.pages.CodeEditorPage.description")); //$NON-NLS-1$
+		fDescription = toolkit.createText(composite, "", SWT.MULTI); //$NON-NLS-1$
 		fDescription.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		fDescription.addKeyListener(createKeyAdapter());
 		
@@ -159,7 +160,8 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 						fIsDirty = false;
 						getEditor().editorDirtyStateChanged();
 					}
-					fForm.setMessage("Name cannot be empty", IMessageProvider.ERROR);
+					fForm.setMessage(Messages.getString(
+							"editors.pages.CodeEditorPage.nameEmpty"), IMessageProvider.ERROR); //$NON-NLS-1$
 				}
 				else if(!ResourcesUtil.verifyID(fName.getText()))
 				{
@@ -168,7 +170,8 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 						fIsDirty = false;
 						getEditor().editorDirtyStateChanged();
 					}
-					fForm.setMessage("Name can only contain letters, numbers, - and _", IMessageProvider.ERROR);
+					fForm.setMessage(Messages.getString(
+							"editors.pages.CodeEditorPage.nameInvalid"), IMessageProvider.ERROR); //$NON-NLS-1$
 				}
 				else if(nameInUse())
 				{
@@ -177,7 +180,8 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 						fIsDirty = false;
 						getEditor().editorDirtyStateChanged();
 					}
-					fForm.setMessage("That name is already taken", IMessageProvider.ERROR);
+					fForm.setMessage(Messages.getString(
+							"editors.pages.CodeEditorPage.nameTaken"), IMessageProvider.ERROR); //$NON-NLS-1$
 				}
 				else
 				{
@@ -211,7 +215,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	{
 		Menu menu = new Menu(fTable);
 		MenuItem item = new MenuItem(menu, SWT.PUSH);
-		item.setText("New Code");
+		item.setText(Messages.getString("editors.pages.CodeEditorPage.newCode")); //$NON-NLS-1$
 		item.addSelectionListener(new SelectionAdapter(){
 			/* (non-Javadoc)
 			 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)

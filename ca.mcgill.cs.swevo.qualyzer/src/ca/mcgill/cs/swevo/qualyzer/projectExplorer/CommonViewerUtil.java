@@ -29,7 +29,7 @@ public final class CommonViewerUtil
 	/**
 	 * 
 	 */
-	private static final String ERROR_MSG = "Error hidding buttons in Project Explorer";
+	private static final String ERROR_MSG = "Error hidding buttons in Project Explorer"; //$NON-NLS-1$
 	private static Logger gLogger = LoggerFactory.getLogger(CommonViewerUtil.class);
 	
 	private CommonViewerUtil(){};

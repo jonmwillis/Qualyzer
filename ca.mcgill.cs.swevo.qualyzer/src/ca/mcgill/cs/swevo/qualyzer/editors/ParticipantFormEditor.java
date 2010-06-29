@@ -53,7 +53,7 @@ public class ParticipantFormEditor extends FormEditor
 			}
 			catch(PartInitException e)
 			{
-				gLogger.error("Could not open Participant editor", e);
+				gLogger.error("Could not open Participant editor", e); //$NON-NLS-1$
 			}
 		}
 	}
