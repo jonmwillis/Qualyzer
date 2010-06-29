@@ -88,7 +88,6 @@ public class ProjectExplorerActionProvider extends CommonActionProvider
 	 */
 	private String getCommandId(Object element)
 	{
-		System.out.println(element.getClass().getName());
 		String commandId = ""; //$NON-NLS-1$
 		if(element instanceof Participant)
 		{
