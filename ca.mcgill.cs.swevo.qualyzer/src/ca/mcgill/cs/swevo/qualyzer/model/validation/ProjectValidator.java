@@ -15,7 +15,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
-import ca.mcgill.cs.swevo.qualyzer.wizards.pages.Messages;
 
 /**
  * Validates the business rules when a new project is created.
@@ -70,7 +69,8 @@ public class ProjectValidator implements IValidator
 			}
 			else if(!ResourcesUtil.verifyID(fInvestigator))
 			{
-				fMessage = Messages.getString("model.validation.ProjectValidator.invalidInvestigatorName"); //$NON-NLS-1$
+				fMessage = 
+					Messages.getString("model.validation.ProjectValidator.invalidInvestigatorName"); //$NON-NLS-1$
 				lReturn = false;
 			}
 		}
