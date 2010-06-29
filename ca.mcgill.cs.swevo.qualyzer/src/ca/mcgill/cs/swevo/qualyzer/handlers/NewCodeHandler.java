@@ -19,7 +19,6 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.navigator.CommonNavigator;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
@@ -49,7 +48,8 @@ public class NewCodeHandler extends AbstractHandler
 			
 			Project project = ResourcesUtil.getProject(element);
 			
-			Shell shell = HandlerUtil.getActiveShell(event);
+			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+				.getActivePage().getActivePart().getSite().getShell();
 			
 			NewCodeDialog dialog = new NewCodeDialog(shell, project);
 			dialog.create();

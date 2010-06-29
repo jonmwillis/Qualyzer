@@ -85,7 +85,7 @@ public final class Facade
 		manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(name);
 		HibernateUtil.quietSave(manager, project);
 		
-		fListenerManager.notifyProjectListeners(ChangeType.ADD, new Project[]{project}, this);
+		fListenerManager.notifyProjectListeners(ChangeType.ADD, project, this);
 		
 		return project;		
 	}
@@ -251,7 +251,7 @@ public final class Facade
 			throw new QualyzerException(errorMessage, e);
 		}
 		
-		fListenerManager.notifyProjectListeners(ChangeType.DELETE, new Project[]{project}, this);
+		fListenerManager.notifyProjectListeners(ChangeType.DELETE, project, this);
 	}
 	
 	/**

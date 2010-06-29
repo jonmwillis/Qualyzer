@@ -15,6 +15,8 @@ package ca.mcgill.cs.swevo.qualyzer.editors.pages;
 
 import java.util.ArrayList;
 
+import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -23,22 +25,32 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 
+import ca.mcgill.cs.swevo.qualyzer.dialogs.NewCodeDialog;
 import ca.mcgill.cs.swevo.qualyzer.model.Code;
+import ca.mcgill.cs.swevo.qualyzer.model.CodeListener;
+import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
+import ca.mcgill.cs.swevo.qualyzer.model.ProjectListener;
+import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
+import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
  *
  */
-public class CodeEditorPage extends FormPage
+public class CodeEditorPage extends FormPage implements CodeListener, ProjectListener
 {
 	
 	private Project fProject;
@@ -53,6 +65,8 @@ public class CodeEditorPage extends FormPage
 	private Text fDescription;
 
 	private boolean fIsDirty;
+
+	private ScrolledForm fForm;
 
 	/**
 	 * Constructor.
@@ -73,10 +87,10 @@ public class CodeEditorPage extends FormPage
 		fCurrentSelection = -1;
 		
 		fModified = new Code[fCodes.size()];
-		for(int i = 0; i < fModified.length; i++)
-		{
-			fModified[i] = null;
-		}
+		clearModified();
+		
+		Facade.getInstance().getListenerManager().registerCodeListener(fProject, this);
+		Facade.getInstance().getListenerManager().registerProjectListener(fProject, this);
 	}
 	
 	/* (non-Javadoc)
@@ -85,13 +99,14 @@ public class CodeEditorPage extends FormPage
 	@Override
 	protected void createFormContent(IManagedForm managedForm)
 	{
-		ScrolledForm form = managedForm.getForm();
+		fForm = managedForm.getForm();
 		FormToolkit toolkit = managedForm.getToolkit();
-		Composite body = form.getBody();
-		form.setText("Codes");
+		Composite body = fForm.getBody();
+		fForm.setText("Codes");
 		
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 2;
+		layout.makeColumnsEqualWidth = true;
 		body.setLayout(layout);
 		
 		fTable = toolkit.createTable(body, SWT.BORDER | SWT.SINGLE);
@@ -108,6 +123,7 @@ public class CodeEditorPage extends FormPage
 		fName = toolkit.createText(composite, "");
 		fName.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 		fName.addKeyListener(createKeyAdapter());
+		fName.addKeyListener(createValidator());
 		
 		toolkit.createLabel(composite, "Description:");
 		fDescription = toolkit.createText(composite, "", SWT.MULTI);
@@ -119,7 +135,101 @@ public class CodeEditorPage extends FormPage
 		
 		buildFormTable();
 		fTable.addSelectionListener(createTableSelectionListener());
+		createTableContextMenu();
+		
 		fCurrentSelection = fTable.getSelectionIndex();
+	}
+
+	/**
+	 * @return
+	 */
+	private KeyAdapter createValidator()
+	{
+		return new KeyAdapter(){
+			/* (non-Javadoc)
+			 * @see org.eclipse.swt.events.KeyAdapter#keyReleased(org.eclipse.swt.events.KeyEvent)
+			 */
+			@Override
+			public void keyReleased(KeyEvent e)
+			{
+				if(fName.getText().isEmpty())
+				{
+					if(fIsDirty)
+					{
+						fIsDirty = false;
+						getEditor().editorDirtyStateChanged();
+					}
+					fForm.setMessage("Name cannot be empty", IMessageProvider.ERROR);
+				}
+				else if(!ResourcesUtil.verifyID(fName.getText()))
+				{
+					if(fIsDirty)
+					{
+						fIsDirty = false;
+						getEditor().editorDirtyStateChanged();
+					}
+					fForm.setMessage("Name can only contain letters, numbers, - and _", IMessageProvider.ERROR);
+				}
+				else if(nameInUse())
+				{
+					if(fIsDirty)
+					{
+						fIsDirty = false;
+						getEditor().editorDirtyStateChanged();
+					}
+					fForm.setMessage("That name is already taken", IMessageProvider.ERROR);
+				}
+				else
+				{
+					fForm.setMessage(null, IMessageProvider.NONE);
+				}
+			}
+		};
+	}
+
+	/**
+	 * @return
+	 */
+	protected boolean nameInUse()
+	{
+		for(Code code : fProject.getCodes())
+		{
+			if(code.getCodeName().equals(fName.getText()) && 
+					!fName.getText().equals(fCodes.get(fCurrentSelection).getCodeName()))
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
+	/**
+	 * 
+	 */
+	private void createTableContextMenu()
+	{
+		Menu menu = new Menu(fTable);
+		MenuItem item = new MenuItem(menu, SWT.PUSH);
+		item.setText("New Code");
+		item.addSelectionListener(new SelectionAdapter(){
+			/* (non-Javadoc)
+			 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+			 */
+			@Override
+			public void widgetSelected(SelectionEvent e)
+			{
+				NewCodeDialog dialog = new NewCodeDialog(getEditor().getSite().getShell(), fProject);
+				dialog.create();
+				if(dialog.open() == Window.OK)
+				{
+					Facade.getInstance().createCode(dialog.getName(), dialog.getDescription(), fProject);
+					fTable.setSelection(fCurrentSelection);
+				}
+			}
+		}); 
+		
+		fTable.setMenu(menu);
 	}
 
 	/**
@@ -154,10 +264,7 @@ public class CodeEditorPage extends FormPage
 	public void notDirty()
 	{
 		fIsDirty = false;
-		for(int i = 0; i < fModified.length; i++)
-		{
-			fModified[i] = null;
-		}
+		clearModified();
 		getEditor().editorDirtyStateChanged();
 	}
 	
@@ -173,9 +280,15 @@ public class CodeEditorPage extends FormPage
 			{
 				int index = fTable.getSelectionIndex();
 				
+				if(fForm.getMessageType() == IMessageProvider.ERROR)
+				{
+					fTable.setSelection(fCurrentSelection);
+					return;
+				}
+				
 				if(index != fCurrentSelection)
 				{
-					if(fCurrentSelection != -1)
+					if(fCurrentSelection != -1 && index != -1)
 					{
 						Code old = fCodes.get(fCurrentSelection);
 						if(!old.getCodeName().equals(fName.getText()) || 
@@ -184,6 +297,7 @@ public class CodeEditorPage extends FormPage
 							fModified[fCurrentSelection] = old;
 							old.setCodeName(fName.getText());
 							old.setDescription(fDescription.getText());
+							fTable.getItem(fCurrentSelection).setText(fName.getText());
 						}
 					}
 					fCurrentSelection = index;
@@ -240,5 +354,75 @@ public class CodeEditorPage extends FormPage
 			}
 		}
 		return codes.toArray(new Code[]{});
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.model.CodeListener#codeChanged(
+	 * ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType, ca.mcgill.cs.swevo.qualyzer.model.Code[], 
+	 * ca.mcgill.cs.swevo.qualyzer.model.Facade)
+	 */
+	@Override
+	public void codeChanged(ChangeType cType, Code[] codes, Facade facade)
+	{
+		if(cType == ChangeType.ADD || cType == ChangeType.DELETE)
+		{
+			fProject = codes[0].getProject();
+			fTable.removeAll();
+			fCodes.clear();
+			for(Code code : fProject.getCodes())
+			{
+				fCodes.add(code);
+			}
+			clearModified();
+			
+			buildFormTable();
+		}
+		else if(cType == ChangeType.MODIFY)
+		{
+			for(Code code : codes)
+			{
+				int index = fCodes.indexOf(code);
+				fTable.getItem(index).setText(code.getCodeName());
+			}
+		}
+	}
+
+	/**
+	 * 
+	 */
+	private void clearModified()
+	{
+		for(int i = 0; i < fModified.length; i++)
+		{
+			fModified[i] = null;
+		}
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.model.ProjectListener#projectChanged(
+	 * ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType, ca.mcgill.cs.swevo.qualyzer.model.Project[], 
+	 * ca.mcgill.cs.swevo.qualyzer.model.Facade)
+	 */
+	@Override
+	public void projectChanged(ChangeType cType, Project project, Facade facade)
+	{
+		if(cType == ChangeType.DELETE)
+		{
+			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+			ResourcesUtil.closeEditor(page, getEditor().getEditorInput().getName());
+		}
+		
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.forms.editor.FormPage#dispose()
+	 */
+	@Override
+	public void dispose()
+	{
+		Facade.getInstance().getListenerManager().unregisterCodeListener(fProject, this);
+		Facade.getInstance().getListenerManager().unregisterProjectListener(fProject, this);
+		super.dispose();
 	}
 }
