@@ -16,6 +16,8 @@ package ca.mcgill.cs.swevo.qualyzer.editors.pages;
 import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -42,12 +44,15 @@ public class CodeEditorPage extends FormPage
 	private Project fProject;
 	
 	private ArrayList<Code> fCodes;
+	private Code[] fModified;
 
 	private Table fTable;
 
 	private int fCurrentSelection;
 	private Text fName;
 	private Text fDescription;
+
+	private boolean fIsDirty;
 
 	/**
 	 * Constructor.
@@ -64,7 +69,14 @@ public class CodeEditorPage extends FormPage
 			fCodes.add(code);
 		}
 		
+		fIsDirty = false;
 		fCurrentSelection = -1;
+		
+		fModified = new Code[fCodes.size()];
+		for(int i = 0; i < fModified.length; i++)
+		{
+			fModified[i] = null;
+		}
 	}
 	
 	/* (non-Javadoc)
@@ -95,18 +107,60 @@ public class CodeEditorPage extends FormPage
 		toolkit.createLabel(composite, "Name:");
 		fName = toolkit.createText(composite, "");
 		fName.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
+		fName.addKeyListener(createKeyAdapter());
 		
 		toolkit.createLabel(composite, "Description:");
 		fDescription = toolkit.createText(composite, "", SWT.MULTI);
 		fDescription.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		fDescription.addKeyListener(createKeyAdapter());
 		
 		toolkit.paintBordersFor(composite);
 		toolkit.paintBordersFor(body);
 		
 		buildFormTable();
 		fTable.addSelectionListener(createTableSelectionListener());
+		fCurrentSelection = fTable.getSelectionIndex();
 	}
 
+	/**
+	 * @return
+	 */
+	private KeyAdapter createKeyAdapter()
+	{
+		return new KeyAdapter(){
+			/* (non-Javadoc)
+			 * @see org.eclipse.swt.events.KeyAdapter#keyReleased(org.eclipse.swt.events.KeyEvent)
+			 */
+			@Override
+			public void keyReleased(KeyEvent e)
+			{
+				if(!fIsDirty)
+				{
+					Code code = fCodes.get(fCurrentSelection);
+					if(!fName.getText().equals(code.getCodeName()) || 
+							!fDescription.getText().equals(code.getDescription()))
+					{
+						fIsDirty = true;
+						getEditor().editorDirtyStateChanged();
+					}
+				}
+			}
+		};
+	}
+
+	/**
+	 * Toggle the dirty state to clean.
+	 */
+	public void notDirty()
+	{
+		fIsDirty = false;
+		for(int i = 0; i < fModified.length; i++)
+		{
+			fModified[i] = null;
+		}
+		getEditor().editorDirtyStateChanged();
+	}
+	
 	/**
 	 * @return
 	 */
@@ -121,7 +175,17 @@ public class CodeEditorPage extends FormPage
 				
 				if(index != fCurrentSelection)
 				{
-					//TODO save old selection
+					if(fCurrentSelection != -1)
+					{
+						Code old = fCodes.get(fCurrentSelection);
+						if(!old.getCodeName().equals(fName.getText()) || 
+								!old.getDescription().equals(fDescription.getText()))
+						{
+							fModified[fCurrentSelection] = old;
+							old.setCodeName(fName.getText());
+							old.setDescription(fDescription.getText());
+						}
+					}
 					fCurrentSelection = index;
 					Code code = fCodes.get(fCurrentSelection);
 					fName.setText(code.getCodeName());
@@ -142,5 +206,39 @@ public class CodeEditorPage extends FormPage
 			item.setText(code.getCodeName());
 		}
 		
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.forms.editor.FormPage#isDirty()
+	 */
+	@Override
+	public boolean isDirty()
+	{
+		return fIsDirty;
+	}
+	
+	/**
+	 * Get the list of Codes that have been modified.
+	 * @return
+	 */
+	public Code[] getModifiedCodes()
+	{
+		Code current = fCodes.get(fCurrentSelection);
+		if(!current.getCodeName().equals(fName.getText()) || !current.getDescription().equals(fDescription.getText()))
+		{
+			current.setCodeName(fName.getText());
+			current.setDescription(fDescription.getText());
+			fModified[fCurrentSelection] = current;
+		}
+		
+		ArrayList<Code> codes = new ArrayList<Code>();
+		for(Code code : fModified)
+		{
+			if(code != null)
+			{
+				codes.add(code);
+			}
+		}
+		return codes.toArray(new Code[]{});
 	}
 }

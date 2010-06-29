@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Barthelemy Dagenais (bart@cs.mcgill.ca)
+ *     Jonathan Faubert
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.projectExplorer;
 
@@ -30,8 +31,6 @@ import ca.mcgill.cs.swevo.qualyzer.providers.WrapperCode;
 
 /**
  * 
- * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
- * @author Jonathan Faubert (jonfaub@gmail.com)
  */
 public class ProjectExplorerActionProvider extends CommonActionProvider
 {

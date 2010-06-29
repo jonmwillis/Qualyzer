@@ -835,6 +835,9 @@
                <adapt
                      type="ca.mcgill.cs.swevo.qualyzer.model.Transcript">
                </adapt>
+               <instanceof
+                     value="ca.mcgill.cs.swevo.qualyzer.providers.WrapperCode">
+               </instanceof>
             </or>
          </enablement>
       </actionProvider>
