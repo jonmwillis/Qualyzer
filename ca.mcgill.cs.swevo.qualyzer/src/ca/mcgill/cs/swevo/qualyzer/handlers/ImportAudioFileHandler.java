@@ -109,7 +109,7 @@ public class ImportAudioFileHandler extends AbstractHandler
 			}
 			catch (IOException e)
 			{
-				gLogger.error("Audio File copy failed", e);
+				gLogger.error("Audio File copy failed", e); //$NON-NLS-1$
 			}
 		}
 	}

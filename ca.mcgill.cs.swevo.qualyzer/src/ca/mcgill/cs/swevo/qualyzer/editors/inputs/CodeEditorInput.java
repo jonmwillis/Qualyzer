@@ -74,7 +74,7 @@ public class CodeEditorInput implements IEditorInput
 	@Override
 	public String getName()
 	{
-		return "editor.code."+fProject.getName();
+		return "editor.code."+fProject.getName(); //$NON-NLS-1$
 	}
 
 	/* (non-Javadoc)

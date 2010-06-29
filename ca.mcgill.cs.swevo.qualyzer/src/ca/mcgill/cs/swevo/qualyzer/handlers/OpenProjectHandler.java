@@ -51,7 +51,7 @@ public class OpenProjectHandler extends AbstractHandler
 				}
 				catch (CoreException e)
 				{
-					gLogger.error("Failed to open project", e);
+					gLogger.error("Failed to open project", e); //$NON-NLS-1$
 				}
 				
 				CommonNavigator view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);

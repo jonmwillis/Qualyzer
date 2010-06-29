@@ -71,7 +71,7 @@ public class QualyzerActivator extends AbstractUIPlugin
 			PersistenceManager.getInstance().refreshManager(project);
 		}
 		
-		fLogger.info("Qualyzer Started");
+		fLogger.info("Qualyzer Started"); //$NON-NLS-1$
 	}
 
 	/*
@@ -84,7 +84,7 @@ public class QualyzerActivator extends AbstractUIPlugin
 	{
 		gPlugin = null;
 		super.stop(context);
-		fLogger.info("Qualyzer Stopped");
+		fLogger.info("Qualyzer Stopped"); //$NON-NLS-1$
 	}
 
 	/**

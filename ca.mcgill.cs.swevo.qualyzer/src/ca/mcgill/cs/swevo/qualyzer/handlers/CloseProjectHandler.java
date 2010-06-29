@@ -52,7 +52,7 @@ public class CloseProjectHandler extends AbstractHandler
 				}
 				catch (CoreException e)
 				{
-					gLogger.error("Failed to close Project", e);
+					gLogger.error("Failed to close Project", e); //$NON-NLS-1$
 				}
 			}
 			

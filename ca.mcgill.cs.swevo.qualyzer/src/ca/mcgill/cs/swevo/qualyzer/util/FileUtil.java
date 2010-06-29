@@ -67,7 +67,7 @@ public final class FileUtil
 		}
 		catch(IOException e)
 		{
-			gLogger.error("Could not copy file.", e);
+			gLogger.error("Could not copy file.", e); //$NON-NLS-1$
 		}
 		finally
 		{
@@ -209,7 +209,7 @@ public final class FileUtil
 		}
 		catch (IOException e)
 		{
-			gLogger.error("Audio File copy failed", e);
+			gLogger.error("Audio File copy failed", e); //$NON-NLS-1$
 			return false;
 		}
 	}
@@ -233,7 +233,7 @@ public final class FileUtil
 			}
 			catch (IOException e)
 			{
-				gLogger.error("Failed to create new File", e);
+				gLogger.error("Failed to create new File", e); //$NON-NLS-1$
 				throw new QualyzerException(Messages.getString("util.FileUtil.errorCreateTranscript"), e); //$NON-NLS-1$
 			}
 		}

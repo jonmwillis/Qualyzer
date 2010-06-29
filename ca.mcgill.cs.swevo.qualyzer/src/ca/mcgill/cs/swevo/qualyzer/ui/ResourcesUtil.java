@@ -58,7 +58,7 @@ public final class ResourcesUtil
 	/**
 	 * 
 	 */
-	private static final String ERROR_MSG = "Could not open editor";
+	private static final String ERROR_MSG = "Could not open editor"; //$NON-NLS-1$
 	private static Logger gLogger = LoggerFactory.getLogger(ResourcesUtil.class);
 
 	private ResourcesUtil(){}
@@ -283,7 +283,7 @@ public final class ResourcesUtil
 		}
 		catch(PartInitException e)
 		{
-			gLogger.error("Failed to open code editor.", e);
+			gLogger.error("Failed to open code editor.", e); //$NON-NLS-1$
 		}
 	}
 }

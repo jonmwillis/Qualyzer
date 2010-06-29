@@ -74,7 +74,7 @@ public class ProjectExplorerActionProvider extends CommonActionProvider
 					// CSOFF:
 					catch (Exception e)
 					{
-						gLogger.error("Problem executing double click", e);
+						gLogger.error("Problem executing double click", e); //$NON-NLS-1$
 					}//CSON:
 				}
 			}
