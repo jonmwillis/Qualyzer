@@ -69,7 +69,7 @@ public class NavigatorContentProvider extends WorkbenchContentProvider
 			
 			return new Object[]{participant, investigator, transcript, memo, code };
 		}
-		else if(element instanceof ProjectWrapper)
+		else if(element instanceof ProjectWrapper && !(element instanceof WrapperCode))
 		{
 			ProjectWrapper wrapper = (ProjectWrapper) element;
 			Object[] toReturn = null;
@@ -108,7 +108,7 @@ public class NavigatorContentProvider extends WorkbenchContentProvider
 		{
 			return ((IProject) element).isOpen();
 		}
-		else if(element instanceof ProjectWrapper)
+		else if(element instanceof ProjectWrapper && !(element instanceof WrapperCode))
 		{
 			return projectHasElements((ProjectWrapper) element);
 		}

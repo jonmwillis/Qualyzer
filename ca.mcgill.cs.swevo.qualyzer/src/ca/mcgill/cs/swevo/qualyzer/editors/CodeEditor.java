@@ -20,6 +20,8 @@ import org.slf4j.LoggerFactory;
 
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.CodeEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.editors.pages.CodeEditorPage;
+import ca.mcgill.cs.swevo.qualyzer.model.Code;
+import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 
 /**
@@ -57,21 +59,20 @@ public class CodeEditor extends FormEditor
 	@Override
 	public void doSave(IProgressMonitor monitor)
 	{
-		// TODO Auto-generated method stub
-
+		Code[] codes = fPage.getModifiedCodes();
+		Facade.getInstance().saveCodes(codes);
+		fPage.notDirty();
 	}
 
 	@Override
 	public void doSaveAs()
 	{
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public boolean isSaveAsAllowed()
 	{
-		// TODO Auto-generated method stub
 		return false;
 	}
 	
