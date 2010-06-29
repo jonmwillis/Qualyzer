@@ -51,9 +51,7 @@ public class NewTranscriptHandler extends AbstractHandler
 			{
 				CommonNavigator view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
 				view.getCommonViewer().refresh();
-				
-				ResourcesUtil.refreshParticipants(wizard.getTranscript().getProject());
-				
+								
 				ResourcesUtil.openEditor(page, wizard.getTranscript());
 				view.getCommonViewer().refresh();
 			}

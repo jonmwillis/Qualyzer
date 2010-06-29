@@ -19,6 +19,7 @@ import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
@@ -63,6 +64,9 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 	private Text fContactInfo;
 	private Text fNotes;
 	private boolean fIsDirty;
+	private FormToolkit fToolkit;
+	private Composite fSectionClient;
+	private ScrolledForm fForm;
 
 	/**
 	 * Construct a new participant page, the only one for the editor.
@@ -82,21 +86,21 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 	@Override
 	public void createFormContent(IManagedForm managedForm)
 	{
-		final ScrolledForm form = managedForm.getForm();
-		FormToolkit toolkit = managedForm.getToolkit();
-		Composite body = form.getBody();
-		form.setText(LABEL_PARTICIPANT);
+		fForm = managedForm.getForm();
+		fToolkit = managedForm.getToolkit();
+		Composite body = fForm.getBody();
+		fForm.setText(LABEL_PARTICIPANT);
 		
 		TableWrapLayout layout = new TableWrapLayout();
 		layout.numColumns = 2;
 		body.setLayout(layout);
 		
-		toolkit.createLabel(body, LABEL_PARTICIPANT_ID);
-		fID = createText(toolkit, fParticipant.getParticipantId(), body);
-		fID.addKeyListener(createKeyAdapter(form));
+		fToolkit.createLabel(body, LABEL_PARTICIPANT_ID);
+		fID = createText(fParticipant.getParticipantId(), body);
+		fID.addKeyListener(createKeyAdapter());
 		
-		toolkit.createLabel(body, LABEL_PARTICIPANT_NAME);
-		fFullname = createText(toolkit, fParticipant.getFullName(), body);
+		fToolkit.createLabel(body, LABEL_PARTICIPANT_NAME);
+		fFullname = createText(fParticipant.getFullName(), body);
 		
 		// MPR: removed to simplify the UI for 0.1
 //		toolkit.createLabel(body, "Contact Info:");
@@ -106,20 +110,19 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 //		createNotesArea(toolkit, body);
 		
 		//TODO add +/- buttons
-		buildTranscriptSection(form, toolkit, body);
+		buildTranscriptSection(body);
 		
 		//buildCodesSection(form, toolkit, body);
 		
-		toolkit.paintBordersFor(body);
+		fToolkit.paintBordersFor(body);
 	}
 
 	/**
 	 * @return
 	 */
-	private KeyAdapter createKeyAdapter(final ScrolledForm form)
+	private KeyAdapter createKeyAdapter()
 	{
 		return new KeyAdapter(){
-			private ScrolledForm fForm = form;
 			
 			@Override
 			public void keyReleased(KeyEvent event)
@@ -205,22 +208,22 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 	 * @param toolkit
 	 * @param body
 	 */
-	private void buildTranscriptSection(final ScrolledForm form, FormToolkit toolkit, Composite body)
+	private void buildTranscriptSection(Composite body)
 	{
 		TableWrapData td;
-		Section section = toolkit.createSection(body, Section.EXPANDED | Section.TITLE_BAR | Section.TWISTIE);
+		Section section = fToolkit.createSection(body, Section.EXPANDED | Section.TITLE_BAR | Section.TWISTIE);
 		td = new TableWrapData(TableWrapData.FILL_GRAB);
 		td.colspan = 2;
 		section.setLayoutData(td);
-		section.addExpansionListener(createExpansionListener(form));
+		section.addExpansionListener(createExpansionListener(fForm));
 		section.setText(Messages.getString("editors.pages.ParticipantEditorPage.transcripts")); //$NON-NLS-1$
-		Composite sectionClient = toolkit.createComposite(section);
+		fSectionClient = fToolkit.createComposite(section);
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 1;
-		sectionClient.setLayout(gridLayout);
-		buildInterviews(toolkit, sectionClient);
-		sectionClient.setLayoutData(td);
-		section.setClient(sectionClient);
+		fSectionClient.setLayout(gridLayout);
+		buildInterviews();
+		fSectionClient.setLayoutData(td);
+		section.setClient(fSectionClient);
 	}
 
 	/**
@@ -244,19 +247,26 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 	 * @param sectionClient 
 	 * 
 	 */
-	private void buildInterviews(FormToolkit toolkit, Composite sectionClient)
-	{		
+	private void buildInterviews()
+	{
+		for(Control control : fSectionClient.getChildren())
+		{
+			control.dispose();
+		}
+		
 		for(Transcript transcript : fParticipant.getProject().getTranscripts())		
 		{
 			Transcript loadedTranscript = Facade.getInstance().forceTranscriptLoad(transcript);
 			if(loadedTranscript.getParticipants().contains(fParticipant))
 			{
 				GridData gd = new GridData(SWT.FILL, SWT.NULL, true, false);
-				Hyperlink link = toolkit.createHyperlink(sectionClient, transcript.getName(), SWT.WRAP);
+				Hyperlink link = fToolkit.createHyperlink(fSectionClient, transcript.getName(), SWT.WRAP);
 				link.addHyperlinkListener(createHyperlinkListener(transcript));
 				link.setLayoutData(gd);
 			}
 		}
+		
+		fForm.reflow(true);
 	}
 
 	/**
@@ -308,9 +318,9 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 		};
 	}
 	
-	private Text createText(FormToolkit toolkit, String data, Composite parent)
+	private Text createText(String data, Composite parent)
 	{
-		Text text = toolkit.createText(parent, data);
+		Text text = fToolkit.createText(parent, data);
 		TableWrapData tableData = new TableWrapData(TableWrapData.FILL_GRAB);
 		text.setLayoutData(tableData);
 		text.addKeyListener(createKeyListener());
@@ -422,8 +432,8 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 	@Override
 	public void transcriptChanged(ChangeType cType, Transcript[] transcripts, Facade facade)
 	{
-		// TODO Auto-generated method stub
-		
+		fParticipant.setProject(transcripts[0].getProject());
+		buildInterviews();
 	}
 	
 	/* (non-Javadoc)
