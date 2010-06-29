@@ -28,5 +28,5 @@ public interface TranscriptListener
 	 * @param transcript
 	 * @param facade
 	 */
-	void transcriptChanged(ChangeType cType, Transcript transcript, Facade facade);
+	void transcriptChanged(ChangeType cType, Transcript[] transcripts, Facade facade);
 }

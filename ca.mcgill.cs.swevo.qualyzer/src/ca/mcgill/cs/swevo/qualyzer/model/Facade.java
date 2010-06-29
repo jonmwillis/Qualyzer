@@ -85,7 +85,7 @@ public final class Facade
 		manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(name);
 		HibernateUtil.quietSave(manager, project);
 		
-		fListenerManager.notifyProjectListeners(ChangeType.ADD, project, this);
+		fListenerManager.notifyProjectListeners(ChangeType.ADD, new Project[]{project}, this);
 		
 		return project;		
 	}
@@ -109,7 +109,7 @@ public final class Facade
 		manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(project.getName());
 		HibernateUtil.quietSave(manager, project);
 		
-		fListenerManager.notifyCodeListeners(ChangeType.ADD, code, this);
+		fListenerManager.notifyCodeListeners(ChangeType.ADD, new Code[]{code}, this);
 		
 		return code;
 	}
@@ -140,7 +140,7 @@ public final class Facade
 			HibernateUtil.quietSave(manager, project);
 		}
 		
-		fListenerManager.notifyInvestigatorListeners(ChangeType.ADD, investigator, this);
+		fListenerManager.notifyInvestigatorListeners(ChangeType.ADD, new Investigator[]{investigator}, this);
 		
 		return investigator;
 	}
@@ -165,7 +165,7 @@ public final class Facade
 		manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(project.getName());
 		HibernateUtil.quietSave(manager, project);
 	
-		fListenerManager.notifyParticipantListeners(ChangeType.ADD, participant, this);
+		fListenerManager.notifyParticipantListeners(ChangeType.ADD, new Participant[]{participant}, this);
 		
 		return participant;
 	}
@@ -201,7 +201,7 @@ public final class Facade
 		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(project.getName());
 		HibernateUtil.quietSave(manager, project);
 		
-		fListenerManager.notifyTranscriptListeners(ChangeType.ADD, transcript, this);
+		fListenerManager.notifyTranscriptListeners(ChangeType.ADD, new Transcript[]{transcript}, this);
 		
 		return transcript;
 	}
@@ -251,7 +251,7 @@ public final class Facade
 			throw new QualyzerException(errorMessage, e);
 		}
 		
-		fListenerManager.notifyProjectListeners(ChangeType.DELETE, project, this);
+		fListenerManager.notifyProjectListeners(ChangeType.DELETE, new Project[]{project}, this);
 	}
 	
 	/**
@@ -283,7 +283,7 @@ public final class Facade
 			session.flush();
 			t.commit();
 			
-			fListenerManager.notifyParticipantListeners(ChangeType.DELETE, participant, this);
+			fListenerManager.notifyParticipantListeners(ChangeType.DELETE, new Participant[]{participant}, this);
 		}
 		catch(HibernateException e)
 		{
@@ -326,7 +326,7 @@ public final class Facade
 			session.delete(inv);
 			session.flush();
 			t.commit();
-			fListenerManager.notifyInvestigatorListeners(ChangeType.DELETE, investigator, this);
+			fListenerManager.notifyInvestigatorListeners(ChangeType.DELETE, new Investigator[]{investigator}, this);
 		}
 		catch(HibernateException e)
 		{
@@ -369,7 +369,7 @@ public final class Facade
 			session.delete(trans);
 			session.flush();
 			t.commit();
-			fListenerManager.notifyTranscriptListeners(ChangeType.DELETE, transcript, this);
+			fListenerManager.notifyTranscriptListeners(ChangeType.DELETE, new Transcript[]{transcript}, this);
 		}
 		catch(HibernateException e)
 		{
@@ -450,7 +450,7 @@ public final class Facade
 			.get(code.getProject().getName());
 		HibernateUtil.quietSave(manager, code);
 		
-		fListenerManager.notifyCodeListeners(ChangeType.MODIFY, code, this);
+		fListenerManager.notifyCodeListeners(ChangeType.MODIFY, new Code[]{code}, this);
 	}
 	
 	/**
@@ -463,7 +463,7 @@ public final class Facade
 			.get(investigator.getProject().getName());
 		HibernateUtil.quietSave(manager, investigator);
 		
-		fListenerManager.notifyInvestigatorListeners(ChangeType.MODIFY, investigator, this);
+		fListenerManager.notifyInvestigatorListeners(ChangeType.MODIFY, new Investigator[]{investigator}, this);
 	}
 	
 	/**
@@ -476,7 +476,7 @@ public final class Facade
 			.get(participant.getProject().getName());
 		HibernateUtil.quietSave(manager, participant);
 		
-		fListenerManager.notifyParticipantListeners(ChangeType.MODIFY, participant, this);
+		fListenerManager.notifyParticipantListeners(ChangeType.MODIFY, new Participant[]{participant}, this);
 	}
 	
 	/**
@@ -489,6 +489,22 @@ public final class Facade
 			.get(transcript.getProject().getName());
 		HibernateUtil.quietSave(manager, transcript);
 		
-		fListenerManager.notifyTranscriptListeners(ChangeType.MODIFY, transcript, this);
+		fListenerManager.notifyTranscriptListeners(ChangeType.MODIFY, new Transcript[]{transcript}, this);
+	}
+
+	/**
+	 * @param modifiedCodes
+	 */
+	public void saveCodes(Code[] modifiedCodes)
+	{
+		if(modifiedCodes.length > 0)
+		{
+			HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers()
+				.get(modifiedCodes[0].getProject().getName());
+			HibernateUtil.quietSave(manager, modifiedCodes);
+		
+			fListenerManager.notifyCodeListeners(ChangeType.MODIFY, modifiedCodes, this);
+		}
+		
 	}
 }

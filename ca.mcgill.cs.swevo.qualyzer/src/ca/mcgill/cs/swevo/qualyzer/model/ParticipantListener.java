@@ -28,5 +28,5 @@ public interface ParticipantListener
 	 * @param participant
 	 * @param facade
 	 */
-	void participantChanged(ChangeType cType, Participant participant, Facade facade);
+	void participantChanged(ChangeType cType, Participant[] participants, Facade facade);
 }

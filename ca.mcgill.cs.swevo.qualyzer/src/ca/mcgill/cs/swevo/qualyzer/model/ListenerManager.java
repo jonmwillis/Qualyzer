@@ -52,14 +52,17 @@ public class ListenerManager
 	 * @param project
 	 * @param facade
 	 */
-	public void notifyProjectListeners(ChangeType cType, Project project, Facade facade)
+	public void notifyProjectListeners(ChangeType cType, Project[] projects, Facade facade)
 	{
-		ArrayList<ProjectListener> list = fProjectListeners.get(project);
-		if(list != null)
+		if(projects.length > 0)
 		{
-			for(ProjectListener listener : list)
+			ArrayList<ProjectListener> list = fProjectListeners.get(projects[0]);
+			if(list != null)
 			{
-				listener.projectChanged(cType, project, facade);
+				for(ProjectListener listener : list)
+				{
+					listener.projectChanged(cType, projects, facade);
+				}
 			}
 		}
 	}
@@ -70,14 +73,17 @@ public class ListenerManager
 	 * @param project
 	 * @param facade
 	 */
-	public void notifyCodeListeners(ChangeType cType, Code code, Facade facade)
+	public void notifyCodeListeners(ChangeType cType, Code[] codes, Facade facade)
 	{
-		ArrayList<CodeListener> list = fCodeListeners.get(code.getProject());
-		if(list != null)
+		if(codes.length > 0)
 		{
-			for(CodeListener listener : list)
+			ArrayList<CodeListener> list = fCodeListeners.get(codes[0].getProject());
+			if(list != null)
 			{
-				listener.codeChanged(cType, code, facade);
+				for(CodeListener listener : list)
+				{
+					listener.codeChanged(cType, codes, facade);
+				}
 			}
 		}
 	}
@@ -88,14 +94,17 @@ public class ListenerManager
 	 * @param investigator
 	 * @param facade
 	 */
-	public void notifyInvestigatorListeners(ChangeType cType, Investigator investigator, Facade facade)
+	public void notifyInvestigatorListeners(ChangeType cType, Investigator[] investigators, Facade facade)
 	{
-		ArrayList<InvestigatorListener> list = fInvestigatorListeners.get(investigator.getProject());
-		if(list != null)
+		if(investigators.length > 0)
 		{
-			for(InvestigatorListener listener : list)
+			ArrayList<InvestigatorListener> list = fInvestigatorListeners.get(investigators[0].getProject());
+			if(list != null)
 			{
-				listener.investigatorChanged(cType, investigator, facade);
+				for(InvestigatorListener listener : list)
+				{
+					listener.investigatorChanged(cType, investigators, facade);
+				}
 			}
 		}
 	}
@@ -106,14 +115,17 @@ public class ListenerManager
 	 * @param participant
 	 * @param facade
 	 */
-	public void notifyParticipantListeners(ChangeType cType, Participant participant, Facade facade)
+	public void notifyParticipantListeners(ChangeType cType, Participant[] participants, Facade facade)
 	{
-		ArrayList<ParticipantListener> list = fParticipantListeners.get(participant.getProject());
-		if(list != null)
+		if(participants.length > 0)
 		{
-			for(ParticipantListener listener : list)
+			ArrayList<ParticipantListener> list = fParticipantListeners.get(participants[0].getProject());
+			if(list != null)
 			{
-				listener.participantChanged(cType, participant, facade);
+				for(ParticipantListener listener : list)
+				{
+					listener.participantChanged(cType, participants, facade);
+				}
 			}
 		}
 	}
@@ -124,14 +136,17 @@ public class ListenerManager
 	 * @param transcript
 	 * @param facade
 	 */
-	public void notifyTranscriptListeners(ChangeType cType, Transcript transcript, Facade facade)
+	public void notifyTranscriptListeners(ChangeType cType, Transcript[] transcripts, Facade facade)
 	{
-		ArrayList<TranscriptListener> list = fTranscriptListeners.get(transcript.getProject());
-		if(list != null)
+		if(transcripts.length > 0)
 		{
-			for(TranscriptListener listener : list)
+			ArrayList<TranscriptListener> list = fTranscriptListeners.get(transcripts[0].getProject());
+			if(list != null)
 			{
-				listener.transcriptChanged(cType, transcript, facade);
+				for(TranscriptListener listener : list)
+				{
+					listener.transcriptChanged(cType, transcripts, facade);
+				}
 			}
 		}
 	}
