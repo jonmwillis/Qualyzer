@@ -38,13 +38,17 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
+import ca.mcgill.cs.swevo.qualyzer.model.Project;
+import ca.mcgill.cs.swevo.qualyzer.model.ProjectListener;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
+import ca.mcgill.cs.swevo.qualyzer.model.TranscriptListener;
+import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
  * The form used to edit participant data.
  */
-public class ParticipantEditorPage extends FormPage
+public class ParticipantEditorPage extends FormPage implements ProjectListener, TranscriptListener
 {
 	private static final String LABEL_PARTICIPANT_NAME = Messages.getString(
 			"editors.pages.ParticipantEditorPage.participantName"); //$NON-NLS-1$
@@ -70,6 +74,9 @@ public class ParticipantEditorPage extends FormPage
 		super(editor, LABEL_PARTICIPANT, LABEL_PARTICIPANT);
 		fParticipant = participant;
 		fIsDirty = false;
+		
+		Facade.getInstance().getListenerManager().registerProjectListener(participant.getProject(), this);
+		Facade.getInstance().getListenerManager().registerTranscriptListener(participant.getProject(), this);
 	}
 	
 	@Override
@@ -389,5 +396,44 @@ public class ParticipantEditorPage extends FormPage
 	{
 		fIsDirty = false;
 		getEditor().editorDirtyStateChanged();
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.model.ProjectListener#projectChanged(
+	 * ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType, ca.mcgill.cs.swevo.qualyzer.model.Project, 
+	 * ca.mcgill.cs.swevo.qualyzer.model.Facade)
+	 */
+	@Override
+	public void projectChanged(ChangeType cType, Project project, Facade facade)
+	{
+		if(ChangeType.DELETE == cType)
+		{
+			IWorkbenchPage page = getEditor().getEditorSite().getPage();
+			ResourcesUtil.closeEditor(page, getEditor().getEditorInput().getName());
+		}
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.model.TranscriptListener#transcriptChanged(
+	 * ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType, ca.mcgill.cs.swevo.qualyzer.model.Transcript[], 
+	 * ca.mcgill.cs.swevo.qualyzer.model.Facade)
+	 */
+	@Override
+	public void transcriptChanged(ChangeType cType, Transcript[] transcripts, Facade facade)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.forms.editor.FormPage#dispose()
+	 */
+	@Override
+	public void dispose()
+	{
+		Facade.getInstance().getListenerManager().unregisterProjectListener(fParticipant.getProject(), this);
+		Facade.getInstance().getListenerManager().unregisterTranscriptListener(fParticipant.getProject(), this);
+		super.dispose();
 	}
 }

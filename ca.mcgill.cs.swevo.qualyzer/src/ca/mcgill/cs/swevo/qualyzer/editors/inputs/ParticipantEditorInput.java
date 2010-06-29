@@ -56,7 +56,7 @@ public class ParticipantEditorInput implements IEditorInput
 	@Override
 	public String getName()
 	{
-		return fParticipant.getParticipantId();
+		return "editor.participant."+fParticipant.getParticipantId();
 	}
 
 	@Override
