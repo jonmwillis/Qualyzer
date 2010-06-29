@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+import ca.mcgill.cs.swevo.qualyzer.model.validation.ProjectValidator;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
@@ -33,7 +34,6 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
  */
 public class NewProjectPageOne extends WizardPage
 {
-
 	private Composite fContainer;
 	private Text fProjectName;
 	private Text fNickname;
@@ -145,32 +145,15 @@ public class NewProjectPageOne extends WizardPage
 			@Override
 			public void keyReleased(KeyEvent e) 
 			{
-				IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-				
-				if(fProjectName.getText().isEmpty())
+				ProjectValidator lValidator = new ProjectValidator(fProjectName.getText(), 
+						fNickname.getText(), ResourcesPlugin.getWorkspace().getRoot());
+				if(lValidator.isValid())
 				{
-					setError(Messages.getString("wizards.pages.NewProjectPageOne.enterName")); //$NON-NLS-1$
-				}
-				else if(!ResourcesUtil.verifyID(fProjectName.getText()))
-				{
-					setError(Messages.getString("wizards.pages.NewProjectPageOne.invalidName")); //$NON-NLS-1$
+					setError(null);
 				}
 				else
 				{
-					IProject wProject = root.getProject(fProjectName.getText());
-					
-					if(wProject.exists())
-					{
-						setError(Messages.getString("wizards.pages.NewProjectPageOne.alreadyExists")); //$NON-NLS-1$
-					}
-					else if(fNickname.getText().isEmpty())
-					{
-						setError(Messages.getString("wizards.pages.NewProjectPageOne.enterNickname")); //$NON-NLS-1$
-					}
-					else
-					{
-						setError(null);
-					}
+					setError(lValidator.getErrorMessage());
 				}
 			}
 		};
