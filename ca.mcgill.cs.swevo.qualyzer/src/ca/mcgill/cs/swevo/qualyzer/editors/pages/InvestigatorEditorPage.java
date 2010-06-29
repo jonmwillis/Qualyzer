@@ -23,6 +23,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.FormPage;
@@ -34,7 +35,11 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
+import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
+import ca.mcgill.cs.swevo.qualyzer.model.Project;
+import ca.mcgill.cs.swevo.qualyzer.model.ProjectListener;
+import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
@@ -42,7 +47,7 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
  * @author Jonathan Faubert (jonfaub@gmail.com)
  *
  */
-public class InvestigatorEditorPage extends FormPage
+public class InvestigatorEditorPage extends FormPage implements ProjectListener
 {
 	/**
 	 * 
@@ -64,6 +69,8 @@ public class InvestigatorEditorPage extends FormPage
 		super(editor, INVESTIGATOR, INVESTIGATOR);
 		fInvestigator = investigator;
 		fIsDirty = false;
+		
+		Facade.getInstance().getListenerManager().registerProjectListener(fInvestigator.getProject(), this);
 	}
 
 	@Override
@@ -348,5 +355,20 @@ public class InvestigatorEditorPage extends FormPage
 	{
 		fIsDirty = false;
 		getEditor().editorDirtyStateChanged();
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.model.ProjectListener#projectChanged(
+	 * ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType, 
+	 * ca.mcgill.cs.swevo.qualyzer.model.Project, ca.mcgill.cs.swevo.qualyzer.model.Facade)
+	 */
+	@Override
+	public void projectChanged(ChangeType cType, Project project, Facade facade)
+	{
+		if(cType == ChangeType.DELETE)
+		{
+			IWorkbenchPage page = getEditor().getSite().getPage();
+			ResourcesUtil.closeEditor(page, getEditor().getEditorInput().getName());
+		}
 	}
 }

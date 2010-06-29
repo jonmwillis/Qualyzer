@@ -31,7 +31,6 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.FormPage;
@@ -413,7 +412,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	{
 		if(cType == ChangeType.DELETE)
 		{
-			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+			IWorkbenchPage page = getEditor().getSite().getPage();
 			ResourcesUtil.closeEditor(page, getEditor().getEditorInput().getName());
 		}
 		
