@@ -14,7 +14,6 @@ package ca.mcgill.cs.swevo.qualyzer.model.validation;
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
-import ca.mcgill.cs.swevo.qualyzer.wizards.pages.Messages;
 
 /**
  * Validates the business rules when a new investigator is creates:
