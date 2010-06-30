@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Jonathan Faubert
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.wizards.pages;
 
@@ -25,9 +25,7 @@ import org.eclipse.swt.widgets.Text;
 import ca.mcgill.cs.swevo.qualyzer.model.validation.ProjectValidator;
 
 /**
- * The first page of the New Project Wizard.
- * @author Jonathan Faubert
- *
+ * Wizard page for creating a new project.
  */
 public class NewProjectPageOne extends WizardPage
 {

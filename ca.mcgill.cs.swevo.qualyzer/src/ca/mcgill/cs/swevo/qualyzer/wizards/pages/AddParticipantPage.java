@@ -29,7 +29,6 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
  * The page of the Add Participant Wizard.
- *
  */
 public class AddParticipantPage extends WizardPage
 {
