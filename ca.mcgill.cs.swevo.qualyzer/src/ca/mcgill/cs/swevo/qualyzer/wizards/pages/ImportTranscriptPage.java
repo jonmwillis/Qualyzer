@@ -6,11 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Jonathan Faubert (jonfaub@gmail.com)
  *******************************************************************************/
-/**
- * 
- */
 package ca.mcgill.cs.swevo.qualyzer.wizards.pages;
 
 import java.io.File;
@@ -31,8 +28,7 @@ import org.eclipse.swt.widgets.Text;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 
 /**
- * @author Jonathan Faubert (jonfaub@gmail.com)
- *
+ * Wizard page to import a transcript.
  */
 public class ImportTranscriptPage extends TranscriptWizardPage
 {

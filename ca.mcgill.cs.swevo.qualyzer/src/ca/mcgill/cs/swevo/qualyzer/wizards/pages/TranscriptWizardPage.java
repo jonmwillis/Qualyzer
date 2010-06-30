@@ -45,7 +45,6 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
  * The only page in the new Transcript Wizard.
- *
  */
 public class TranscriptWizardPage extends WizardPage
 {
