@@ -27,7 +27,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.validation.ProjectValidator;
 /**
  * Wizard page for creating a new project.
  */
-public class NewProjectPageOne extends WizardPage
+public class NewProjectPage extends WizardPage
 {
 	private Composite fContainer;
 	private Text fProjectName;
@@ -38,11 +38,11 @@ public class NewProjectPageOne extends WizardPage
 	/**
 	 * Constructor.
 	 */
-	public NewProjectPageOne()
+	public NewProjectPage()
 	{
-		super(Messages.getString("wizards.pages.NewProjectPageOne.newProject")); //$NON-NLS-1$
-		setTitle(Messages.getString("wizards.pages.NewProjectPageOne.newProject")); //$NON-NLS-1$
-		setDescription(Messages.getString("wizards.pages.NewProjectPageOne.enterName")); //$NON-NLS-1$
+		super(Messages.getString("wizards.pages.NewProjectPage.newProject")); //$NON-NLS-1$
+		setTitle(Messages.getString("wizards.pages.NewProjectPage.newProject")); //$NON-NLS-1$
+		setDescription(Messages.getString("wizards.pages.NewProjectPage.enterName")); //$NON-NLS-1$
 	}
 	
 	@Override
@@ -54,7 +54,7 @@ public class NewProjectPageOne extends WizardPage
 		fContainer.setLayout(layout);
 		
 		Label label = new Label(fContainer, SWT.NULL);
-		label.setText(Messages.getString("wizards.pages.NewProjectPageOne.projectName")); //$NON-NLS-1$
+		label.setText(Messages.getString("wizards.pages.NewProjectPage.projectName")); //$NON-NLS-1$
 		fProjectName = new Text(fContainer, SWT.BORDER);
 		fProjectName.setText(""); //$NON-NLS-1$
 		fProjectName.addKeyListener(createKeyListener());
@@ -67,7 +67,7 @@ public class NewProjectPageOne extends WizardPage
 		createSectionHeader(group);
 		
 		label = new Label(group, SWT.NULL);
-		label.setText(Messages.getString("wizards.pages.NewProjectPageOne.nickname")); //$NON-NLS-1$
+		label.setText(Messages.getString("wizards.pages.NewProjectPage.nickname")); //$NON-NLS-1$
 
 		fNickname = new Text(group, SWT.BORDER | SWT.SINGLE);
 		fNickname.setText(System.getProperty("user.name")); //$NON-NLS-1$
@@ -75,13 +75,13 @@ public class NewProjectPageOne extends WizardPage
 		fNickname.addKeyListener(createKeyListener());
 		
 		label = new Label(group, SWT.NULL);
-		label.setText(Messages.getString("wizards.pages.NewProjectPageOne.fullName")); //$NON-NLS-1$
+		label.setText(Messages.getString("wizards.pages.NewProjectPage.fullName")); //$NON-NLS-1$
 		
 		fFullname = new Text(group, SWT.BORDER | SWT.SINGLE);
 		fFullname.setText(""); //$NON-NLS-1$
 		
 		label = new Label(group, SWT.NULL);
-		label.setText(Messages.getString("wizards.pages.NewProjectPageOne.insitution")); //$NON-NLS-1$
+		label.setText(Messages.getString("wizards.pages.NewProjectPage.insitution")); //$NON-NLS-1$
 		
 		fInstitution = new Text(group, SWT.BORDER | SWT.SINGLE);
 		fInstitution.setText(""); //$NON-NLS-1$
@@ -104,7 +104,7 @@ public class NewProjectPageOne extends WizardPage
 		Label label;
 		GridData gd;
 		label = new Label(composite, SWT.WRAP);
-		label.setText(Messages.getString("wizards.pages.NewProjectPageOne.info")); //$NON-NLS-1$
+		label.setText(Messages.getString("wizards.pages.NewProjectPage.info")); //$NON-NLS-1$
 		gd = new GridData(SWT.FILL, SWT.NULL, false, false);
 		gd.horizontalSpan = 2;
 		label.setLayoutData(gd);
@@ -118,7 +118,7 @@ public class NewProjectPageOne extends WizardPage
 		GridLayout layout;
 		GridData gd;
 		Group group = new Group(fContainer, SWT.NULL);
-		group.setText(Messages.getString("wizards.pages.NewProjectPageOne.investigator")); //$NON-NLS-1$
+		group.setText(Messages.getString("wizards.pages.NewProjectPage.investigator")); //$NON-NLS-1$
 		layout = new GridLayout();
 		layout.numColumns = 2;
 		gd = new GridData(SWT.FILL, SWT.NULL, true, false);

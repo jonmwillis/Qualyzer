@@ -18,7 +18,7 @@ import org.eclipse.jface.wizard.Wizard;
 import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
-import ca.mcgill.cs.swevo.qualyzer.wizards.pages.NewProjectPageOne;
+import ca.mcgill.cs.swevo.qualyzer.wizards.pages.NewProjectPage;
 
 /**
  * The wizard that controls the creation of a new project.
@@ -28,7 +28,7 @@ import ca.mcgill.cs.swevo.qualyzer.wizards.pages.NewProjectPageOne;
 public class NewProjectWizard extends Wizard 
 {
 
-	private NewProjectPageOne fOne;
+	private NewProjectPage fOne;
 	private IProject fProject;
 	
 	/**
@@ -43,7 +43,7 @@ public class NewProjectWizard extends Wizard
 	@Override
 	public void addPages()
 	{
-		fOne = new NewProjectPageOne();
+		fOne = new NewProjectPage();
 		
 		addPage(fOne);
 	}
