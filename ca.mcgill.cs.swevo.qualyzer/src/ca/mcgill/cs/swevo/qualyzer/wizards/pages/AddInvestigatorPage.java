@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.Text;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
-import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
+import ca.mcgill.cs.swevo.qualyzer.model.validation.InvestigatorValidator;
 
 /**
  * @author Jonathan Faubert (jonfaub@gmail.com)
@@ -129,27 +129,16 @@ public class AddInvestigatorPage extends WizardPage
 			@Override
 			public void keyReleased(KeyEvent e)
 			{
-				if(fNickname.getText().isEmpty())
-				{
-					setPageComplete(false);
-					setErrorMessage(Messages.getString(
-							"wizards.pages.AddInvestigatorPage.enterNickname")); //$NON-NLS-1$
-				}
-				else if(!ResourcesUtil.verifyID(fNickname.getText()))
-				{
-					setPageComplete(false);
-					setErrorMessage(Messages.getString("wizards.pages.AddInvestigatorPage.invalidName")); //$NON-NLS-1$
-				}
-				else if(!idInUse())
+				InvestigatorValidator lValidator = new InvestigatorValidator(fNickname.getText(), fProject);
+				if(lValidator.isValid())
 				{
 					setPageComplete(true);
 					setErrorMessage(null);
 				}
 				else
 				{
-					setErrorMessage(Messages.getString(
-							"wizards.pages.AddInvestigatorPage.nicknameTaken")); //$NON-NLS-1$
 					setPageComplete(false);
+					setErrorMessage(lValidator.getErrorMessage());
 				}
 			}
 		};
