@@ -45,17 +45,17 @@ public class ParticipantValidator extends AbstractValidator
 		if(fName.length() == 0)
 		{
 			lReturn = false;
-			fMessage = Messages.getString("model.validation.ParticipantValidator.emptyParticipantID"); 
+			fMessage = Messages.getString("model.validation.ParticipantValidator.emptyParticipantID");  //$NON-NLS-1$
 		}
 		else if(!ResourcesUtil.verifyID(fName))
 		{
 			lReturn = false;
-			fMessage = Messages.getString("model.validation.ParticipantValidator.invalidParticipantName"); 
+			fMessage = Messages.getString("model.validation.ParticipantValidator.invalidParticipantName");  //$NON-NLS-1$
 		}
 		else if(idInUse())
 		{
 			lReturn = false;
-			fMessage = Messages.getString("model.validation.ParticipantValidator.IDTaken"); 
+			fMessage = Messages.getString("model.validation.ParticipantValidator.IDTaken");  //$NON-NLS-1$
 		}
 		
 		return lReturn;
