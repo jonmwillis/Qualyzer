@@ -19,18 +19,16 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 /**
  * Validates the business rules when a new project is created.
  */
-public class ProjectValidator implements IValidator
+public class ProjectValidator extends AbstractValidator
 {
 	private final String fName;
 	private final String fInvestigator;
 	private final IWorkspaceRoot fRoot;
-	private String fMessage;
-	
 	/**
 	 * Constructs a new ProjectValidator.
 	 * @param pName The name chosen for the new project.
 	 * @param pInvestigator The nickname chosen for the default investigator
-	 * @param pRoot The root of the workshpace.
+	 * @param pRoot The root of the workspace.
 	 */
 	public ProjectValidator(String pName, String pInvestigator, IWorkspaceRoot pRoot)
 	{
@@ -76,12 +74,4 @@ public class ProjectValidator implements IValidator
 		}
 		return lReturn;
 	}
-
-	@Override
-	public String getErrorMessage() 
-	{
-		return fMessage;
-	}
-
-	
 }
