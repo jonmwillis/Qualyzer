@@ -12,6 +12,7 @@ package ca.mcgill.cs.swevo.qualyzer.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertArrayEquals;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,7 +89,8 @@ public class FacadeTest
 		assertEquals(1, PersistenceManager.getInstance().getProject(TEST_PROJECT_NAME).getParticipants().size());
 		// Test event
 		assertEquals(ChangeType.ADD, event.getChangeType());
-		assertEquals(participant, event.getObject());
+		assertArrayEquals(new Participant[]{participant}, (Object[]) event.getObject());
+		
 	}
 
 	/**
@@ -106,7 +108,8 @@ public class FacadeTest
 		assertEquals(2, PersistenceManager.getInstance().getProject(TEST_PROJECT_NAME).getInvestigators().size());
 		// Test event
 		assertEquals(ChangeType.ADD, event.getChangeType());
-		assertEquals(investigator, event.getObject());
+		assertArrayEquals(new Investigator[]{investigator}, (Object[]) event.getObject());
+		
 	}
 
 	/**
@@ -130,7 +133,7 @@ public class FacadeTest
 		assertEquals(1, PersistenceManager.getInstance().getProject(TEST_PROJECT_NAME).getTranscripts().size());
 		// Test event
 		assertEquals(ChangeType.ADD, event.getChangeType());
-		assertEquals(transcript, event.getObject());
+		assertArrayEquals(new Transcript[]{transcript}, (Object[]) event.getObject());
 	}
 
 }
