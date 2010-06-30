@@ -44,17 +44,17 @@ public class InvestigatorValidator extends AbstractValidator
 		if(fName.length() == 0)
 		{
 			lReturn = false;
-			fMessage = Messages.getString("model.validation.InvestigatorValidator.emptyInvestigatorID"); 
+			fMessage = Messages.getString("model.validation.InvestigatorValidator.emptyInvestigatorID");  //$NON-NLS-1$
 		}
 		else if(!ResourcesUtil.verifyID(fName))
 		{
 			lReturn = false;
-			fMessage = Messages.getString("model.validation.InvestigatorValidator.invalidInvestigatorName"); 
+			fMessage = Messages.getString("model.validation.InvestigatorValidator.invalidInvestigatorName");  //$NON-NLS-1$
 		}
 		else if(idInUse())
 		{
 			lReturn = false;
-			fMessage = Messages.getString("model.validation.InvestigatorValidator.nicknameTaken"); 
+			fMessage = Messages.getString("model.validation.InvestigatorValidator.nicknameTaken");  //$NON-NLS-1$
 		}
 		
 		return lReturn;

@@ -56,7 +56,7 @@ public class ParticipantEditorInput implements IEditorInput
 	@Override
 	public String getName()
 	{
-		return "editor.participant."+fParticipant.getParticipantId();
+		return "editor.participant."+fParticipant.getParticipantId(); //$NON-NLS-1$
 	}
 
 	@Override
