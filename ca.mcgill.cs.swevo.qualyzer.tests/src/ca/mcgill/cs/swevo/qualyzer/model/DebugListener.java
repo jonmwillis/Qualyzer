@@ -35,15 +35,15 @@ public class DebugListener implements CodeListener, InvestigatorListener, Partic
 	}
 
 	@Override
-	public void investigatorChanged(ChangeType cType, Investigator investigator, Facade facade)
+	public void investigatorChanged(ChangeType cType, Investigator[] investigators, Facade facade)
 	{
-		fEvents.add(new ListenerEvent(cType, investigator));
+		fEvents.add(new ListenerEvent(cType, investigators));
 	}
 
 	@Override
-	public void participantChanged(ChangeType cType, Participant participant, Facade facade)
+	public void participantChanged(ChangeType cType, Participant[] participants, Facade facade)
 	{
-		fEvents.add(new ListenerEvent(cType, participant));
+		fEvents.add(new ListenerEvent(cType, participants));
 	}
 
 	@Override
@@ -53,15 +53,15 @@ public class DebugListener implements CodeListener, InvestigatorListener, Partic
 	}
 
 	@Override
-	public void codeChanged(ChangeType cType, Code code, Facade facade)
+	public void codeChanged(ChangeType cType, Code[] codes, Facade facade)
 	{
-		fEvents.add(new ListenerEvent(cType, code));
+		fEvents.add(new ListenerEvent(cType, codes));
 	}
 
 	@Override
-	public void transcriptChanged(ChangeType cType, Transcript transcript, Facade facade)
+	public void transcriptChanged(ChangeType cType, Transcript[] transcripts, Facade facade)
 	{
-		fEvents.add(new ListenerEvent(cType, transcript));
+		fEvents.add(new ListenerEvent(cType, transcripts));
 	}
 
 }

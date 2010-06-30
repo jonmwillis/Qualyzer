@@ -117,7 +117,7 @@ public class ResourcesUtilTest
 		boolean found = false;
 		for(IEditorReference editor : page.getEditorReferences())
 		{
-			if(editor.getName().equals(i.getNickName()))
+			if(editor.getName().equals("editor.investigator."+i.getNickName()))
 			{
 				found = true;
 				break;
@@ -146,7 +146,7 @@ public class ResourcesUtilTest
 		boolean found = false;
 		for(IEditorReference editor : page.getEditorReferences())
 		{
-			if(editor.getName().equals(p.getParticipantId()))
+			if(editor.getName().equals("editor.participant."+p.getParticipantId()))
 			{
 				found = true;
 				break;
