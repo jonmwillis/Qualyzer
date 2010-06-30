@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.Text;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
-import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
+import ca.mcgill.cs.swevo.qualyzer.model.validation.ParticipantValidator;
 
 /**
  * The page of the Add Participant Wizard.
@@ -102,42 +102,21 @@ public class AddParticipantPage extends WizardPage
 			@Override
 			public void keyReleased(KeyEvent e)
 			{
-				if(fIdText.getText().isEmpty())
-				{
-					setErrorMessage(Messages.getString("wizards.pages.AddParticipantPage.enterId")); //$NON-NLS-1$
-					setPageComplete(false);
-				}
-				else if(!ResourcesUtil.verifyID(fIdText.getText()))
-				{
-					setPageComplete(false);
-					setErrorMessage(Messages.getString("wizards.pages.AddParticipantPage.invalidID")); //$NON-NLS-1$
-				}
-				else if(idExists())
-				{
-					setErrorMessage(Messages.getString("wizards.pages.AddParticipantPage.idInUse")); //$NON-NLS-1$
-					setPageComplete(false);
-				}
-				else
+				ParticipantValidator lValidator = new ParticipantValidator(fIdText.getText(), fProject);
+				if(lValidator.isValid())
 				{
 					setPageComplete(true);
 					setErrorMessage(null);
+				}
+				else
+				{
+					setPageComplete(false);
+					setErrorMessage(lValidator.getErrorMessage());
 				}
 			}
 		};
 	}
 	
-	private boolean idExists()
-	{
-		for(Participant part : fProject.getParticipants())
-		{
-			if(part.getParticipantId().equals(fIdText.getText()))
-			{
-				return true;
-			}
-		}
-		return false;
-	}
-
 	private void setGridData()
 	{
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
