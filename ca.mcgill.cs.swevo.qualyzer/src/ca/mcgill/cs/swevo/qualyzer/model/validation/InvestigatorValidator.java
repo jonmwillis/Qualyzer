@@ -21,12 +21,10 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
  * - Nick Name not already in use
  * - Nick Name in alphanumerical+ format.
  */
-public class InvestigatorValidator implements IValidator
+public class InvestigatorValidator extends AbstractValidator
 {
 	private final String fName;
 	private final Project fProject;
-	private String fMessage;
-	
 	/**
 	 * Constructs a new InvestigatorValidator.
 	 * @param pName The ID chosen for the new investigator.
@@ -73,12 +71,4 @@ public class InvestigatorValidator implements IValidator
 		}
 		return false;
 	}
-
-	@Override
-	public String getErrorMessage() 
-	{
-		return fMessage;
-	}
-
-	
 }
