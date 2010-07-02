@@ -188,7 +188,7 @@ public class TranscriptWizardPage extends WizardPage
 			@Override
 			public void keyReleased(KeyEvent event)
 			{
-				commonListenerChecks();
+				validate();
 			}
 		};
 	}
@@ -308,7 +308,7 @@ public class TranscriptWizardPage extends WizardPage
 			@Override
 			public void widgetSelected(SelectionEvent e)
 			{
-				commonListenerChecks();
+				validate();
 			}
 		};
 	}
@@ -355,7 +355,7 @@ public class TranscriptWizardPage extends WizardPage
 						fAudioFile.setText(fileName);
 					}
 				}
-				commonListenerChecks();
+				validate();
 			}
 		};
 	}
@@ -478,7 +478,7 @@ public class TranscriptWizardPage extends WizardPage
 	/**
 	 * 
 	 */
-	protected void commonListenerChecks()
+	protected void validate()
 	{
 		TranscriptValidator lValidator = new TranscriptValidator(fName.getText(), fProject, 
 				fTable.getSelectionCount(), fAudioFile.getText());
