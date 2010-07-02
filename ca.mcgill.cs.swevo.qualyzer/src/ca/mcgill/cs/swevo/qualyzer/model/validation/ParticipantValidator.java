@@ -50,7 +50,8 @@ public class ParticipantValidator extends AbstractValidator
 		else if(!ResourcesUtil.verifyID(fName))
 		{
 			lReturn = false;
-			fMessage = Messages.getString("model.validation.ParticipantValidator.invalidParticipantName");  //$NON-NLS-1$
+			fMessage = Messages.getString(
+					"model.validation.ParticipantValidator.invalidParticipantName");  //$NON-NLS-1$
 		}
 		else if(idInUse())
 		{
