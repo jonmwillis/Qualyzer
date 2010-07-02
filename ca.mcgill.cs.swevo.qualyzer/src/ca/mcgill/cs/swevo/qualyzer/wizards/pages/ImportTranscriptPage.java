@@ -26,13 +26,13 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
+import ca.mcgill.cs.swevo.qualyzer.model.validation.ImportTranscriptValidator;
 
 /**
  * Wizard page to import a transcript.
  */
 public class ImportTranscriptPage extends TranscriptWizardPage
 {
-	
 	/**
 	 * 
 	 */
@@ -40,8 +40,8 @@ public class ImportTranscriptPage extends TranscriptWizardPage
 	private Text fTranscriptFile;
 	
 	/**
-	 * 
-	 * @param project
+	 * Creates the new import transcript page.
+	 * @param project The project in which to import a transcript.
 	 */
 	public ImportTranscriptPage(Project project)
 	{
@@ -49,9 +49,6 @@ public class ImportTranscriptPage extends TranscriptWizardPage
 		setDescription(Messages.getString("wizards.pages.ImportTranscriptPage.enterInfo")); //$NON-NLS-1$
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-	 */
 	@Override
 	public void createControl(Composite parent)
 	{	
@@ -87,12 +84,8 @@ public class ImportTranscriptPage extends TranscriptWizardPage
 		button.setText(Messages.getString("wizards.pages.ImportTranscriptPage.browse")); //$NON-NLS-1$
 		
 		super.createControl(parent, container);
-
 	}
 
-	/**
-	 * @return
-	 */
 	private SelectionListener createNewSelectionListener()
 	{
 		return new SelectionListener(){
@@ -116,14 +109,11 @@ public class ImportTranscriptPage extends TranscriptWizardPage
 					fillOutForm();
 				}
 				
-				commonListenerChecks();
+				validate();
 			}
 		};
 	}
 	
-	/**
-	 * 
-	 */
 	private void fillOutForm()
 	{
 		int begin = fTranscriptFile.getText().lastIndexOf(File.separatorChar) + 1;
@@ -151,7 +141,7 @@ public class ImportTranscriptPage extends TranscriptWizardPage
 						fAudioFile.setText(fileName);
 					}
 				}
-				commonListenerChecks();
+				validate();
 			}
 		};
 	}
@@ -175,15 +165,16 @@ public class ImportTranscriptPage extends TranscriptWizardPage
 	}
 
 	@Override
-	protected void commonListenerChecks()
+	protected void validate()
 	{
-		if(fTranscriptFile.getText().isEmpty() || fileDoesNotExist())
+		ImportTranscriptValidator lValidator = new ImportTranscriptValidator(fTranscriptFile.getText());
+		if(!lValidator.isValid())
 		{
-			setError(Messages.getString("wizards.pages.ImportTranscriptPage.chooseFile")); //$NON-NLS-1$
+			setError(lValidator.getErrorMessage());
 		}
 		else 
 		{
-			super.commonListenerChecks();
+			super.validate();
 		}
 	}
 
