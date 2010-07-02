@@ -16,7 +16,6 @@ import java.io.File;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
-import ca.mcgill.cs.swevo.qualyzer.wizards.pages.Messages;
 
 /**
  * Validates the business rules when a new transcript is created:
@@ -54,18 +53,22 @@ public class TranscriptValidator extends AbstractValidator
 		if(transcriptExists())
 		{
 			fMessage = Messages.getString("model.validation.TranscriptValidator.nameInUse"); //$NON-NLS-1$
+			lReturn = false;
 		}
 		else if(fName.length() == 0)
 		{
 			fMessage = Messages.getString("model.validation.TranscriptValidator.enterName"); //$NON-NLS-1$
+			lReturn = false;
 		}
 		else if(!ResourcesUtil.verifyID(fName))
 		{
 			fMessage = Messages.getString("model.validation.TranscriptValidator.invalidName"); //$NON-NLS-1$
+			lReturn = false;
 		}
 		else if(fNumberOfParticipants <= 0)
 		{
 			fMessage = Messages.getString("model.validation.TranscriptValidator.selectOne"); //$NON-NLS-1$
+			lReturn = false;
 		}
 		else
 		{
@@ -73,6 +76,7 @@ public class TranscriptValidator extends AbstractValidator
 			if((fAudioFileName.length() != 0) && !file.exists())
 			{
 				fMessage = Messages.getString("model.validation.TranscriptValidator.enterAudioName"); //$NON-NLS-1$
+				lReturn = false;
 			}
 		}
 	
