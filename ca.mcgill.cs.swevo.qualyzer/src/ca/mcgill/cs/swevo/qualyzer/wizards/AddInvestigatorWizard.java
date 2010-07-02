@@ -6,11 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Jonathan Faubert (jonfaub@gmail.com)
  *******************************************************************************/
-/**
- * 
- */
 package ca.mcgill.cs.swevo.qualyzer.wizards;
 
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -24,8 +21,6 @@ import ca.mcgill.cs.swevo.qualyzer.wizards.pages.AddInvestigatorPage;
 
 /**
  * The wizard which controls the adding of a new Investigator to the project.
- * @author Jonathan Faubert (jonfaub@gmail.com)
- *
  */
 public class AddInvestigatorWizard extends Wizard
 {

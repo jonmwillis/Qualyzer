@@ -6,11 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Jonathan Faubert (jonfaub@gmail.com)
  *******************************************************************************/
-/**
- * 
- */
 package ca.mcgill.cs.swevo.qualyzer.wizards;
 
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -24,8 +21,7 @@ import ca.mcgill.cs.swevo.qualyzer.util.FileUtil;
 import ca.mcgill.cs.swevo.qualyzer.wizards.pages.TranscriptWizardPage;
 
 /**
- * @author Jonathan Faubert (jonfaub@gmail.com)
- *
+ * Wizard for creating a new transcript.
  */
 public class NewTranscriptWizard extends Wizard
 {
