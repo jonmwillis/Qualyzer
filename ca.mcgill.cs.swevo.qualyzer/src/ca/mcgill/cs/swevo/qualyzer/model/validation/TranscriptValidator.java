@@ -50,12 +50,7 @@ public class TranscriptValidator extends AbstractValidator
 	{
 		boolean lReturn = true;
 		
-		if(transcriptExists())
-		{
-			fMessage = Messages.getString("model.validation.TranscriptValidator.nameInUse"); //$NON-NLS-1$
-			lReturn = false;
-		}
-		else if(fName.length() == 0)
+		if(fName.length() == 0)
 		{
 			fMessage = Messages.getString("model.validation.TranscriptValidator.enterName"); //$NON-NLS-1$
 			lReturn = false;
@@ -63,6 +58,11 @@ public class TranscriptValidator extends AbstractValidator
 		else if(!ResourcesUtil.verifyID(fName))
 		{
 			fMessage = Messages.getString("model.validation.TranscriptValidator.invalidName"); //$NON-NLS-1$
+			lReturn = false;
+		}
+		else if(transcriptExists())
+		{
+			fMessage = Messages.getString("model.validation.TranscriptValidator.nameInUse"); //$NON-NLS-1$
 			lReturn = false;
 		}
 		else if(fNumberOfParticipants <= 0)
