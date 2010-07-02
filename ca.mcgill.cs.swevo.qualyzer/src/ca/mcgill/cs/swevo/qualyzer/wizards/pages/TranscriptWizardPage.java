@@ -7,10 +7,8 @@
  *
  * Contributors:
  *     Jonathan Faubert
+ *     Martin Robillard
  *******************************************************************************/
-/**
- * 
- */
 package ca.mcgill.cs.swevo.qualyzer.wizards.pages;
 
 import java.io.File;
@@ -40,8 +38,7 @@ import org.eclipse.swt.widgets.Text;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
-import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
-import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
+import ca.mcgill.cs.swevo.qualyzer.model.validation.TranscriptValidator;
 
 /**
  * The only page in the new Transcript Wizard.
@@ -381,21 +378,6 @@ public class TranscriptWizardPage extends WizardPage
 	}
 
 	/**
-	 * @return
-	 */
-	protected boolean transcriptExists()
-	{
-		for(Transcript transcript : fProject.getTranscripts())
-		{
-			if(transcript.getName().equals(fName.getText()))
-			{
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
 	 * 
 	 */
 	private void populateTable()
@@ -498,33 +480,16 @@ public class TranscriptWizardPage extends WizardPage
 	 */
 	protected void commonListenerChecks()
 	{
-		if(transcriptExists())
+		TranscriptValidator lValidator = new TranscriptValidator(fName.getText(), fProject, 
+				fTable.getSelectionCount(), fAudioFile.getText());
+		
+		if(!lValidator.isValid())
 		{
-			setError(Messages.getString("wizards.pages.TranscriptWizardPage.nameInUse")); //$NON-NLS-1$
-		}
-		else if(fName.getText().isEmpty())
-		{
-			setError(Messages.getString("wizards.pages.TranscriptWizardPage.enterName")); //$NON-NLS-1$
-		}
-		else if(!ResourcesUtil.verifyID(fName.getText()))
-		{
-			setError(Messages.getString("wizards.pages.TranscriptWizardPage.invalidName")); //$NON-NLS-1$
-		}
-		else if(fTable.getSelectionCount() <= 0)
-		{
-			setError(Messages.getString("wizards.pages.TranscriptWizardPage.selectOne")); //$NON-NLS-1$
+			setError(lValidator.getErrorMessage());
 		}
 		else
 		{
-			File file = new File(fAudioFile.getText());
-			if(!fAudioFile.getText().isEmpty() && !file.exists())
-			{
-				setError(Messages.getString("wizards.pages.TranscriptWizardPage.enterAudioName")); //$NON-NLS-1$
-			}
-			else
-			{
-				setError(null);
-			}
+			setError(null);
 		}
 	}
 
