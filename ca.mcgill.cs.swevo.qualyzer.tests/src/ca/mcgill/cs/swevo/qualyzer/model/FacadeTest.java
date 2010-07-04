@@ -10,13 +10,16 @@
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,7 +27,6 @@ import org.junit.Test;
 import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
 
 /**
- * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
  * 
  */
 public class FacadeTest
@@ -134,6 +136,29 @@ public class FacadeTest
 		// Test event
 		assertEquals(ChangeType.ADD, event.getChangeType());
 		assertArrayEquals(new Transcript[]{transcript}, (Object[]) event.getObject());
+	}
+	
+	/**
+	 * 
+	 * Ensures that the project and the files are deleted.
+	 *
+	 */
+	@Test
+	public void testDeleteProject()
+	{
+		Project tempProject = fFacade.createProject("projectb", TEST_INVESTIGATOR_NAME, TEST_INVESTIGATOR_NAME, "");
+		DebugListener tempListener = new DebugListener();
+		fFacade.getListenerManager().registerProjectListener(tempProject, tempListener);
+		fFacade.deleteProject(tempProject);
+		
+		ListenerEvent event = tempListener.getEvents().get(0);
+		assertEquals(ChangeType.DELETE, event.getChangeType());
+		assertNotNull(event.getObject());
+		
+		IProject iProject = ResourcesPlugin.getWorkspace().getRoot().getProject("projectb");
+		assertFalse(iProject.exists());
+		
+		// Test event
 	}
 
 }
