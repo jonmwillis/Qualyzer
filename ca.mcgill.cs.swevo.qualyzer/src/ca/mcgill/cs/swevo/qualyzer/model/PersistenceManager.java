@@ -35,13 +35,14 @@ public final class PersistenceManager
 {
 	public static final String DB_FOLDER = ".db"; //$NON-NLS-1$
 	public static final String QUALYZER_DB_NAME = "qualyzer_db"; //$NON-NLS-1$
-	public static final String QUALYZER_DB_FILE_NAME = "qualyzer_db.log"; //$NON-NLS-1$
-	public static final String DB_CONNECTION_STRING = "jdbc:hsqldb:file:%s"; //$NON-NLS-1$
-//	public static final String DB_INIT_STRING = ";hsqldb.default_table_type=cached"; //$NON-NLS-1$
+	public static final String QUALYZER_DB_FILE_NAME = "qualyzer_db.h2.db"; //$NON-NLS-1$
+	public static final String DB_CONNECTION_STRING = "jdbc:h2:%s"; //$NON-NLS-1$
+	// Could also be ;CACHE_SIZE=131072 (in KB) for H2
+	//	public static final String DB_INIT_STRING = ";hsqldb.default_table_type=cached"; //$NON-NLS-1$
 	public static final String DB_INIT_STRING = ""; //$NON-NLS-1$
 	public static final String DB_USERNAME = "sa"; //$NON-NLS-1$
-	public static final String DB_DIALECT = "org.hibernate.dialect.HSQLDialect"; //$NON-NLS-1$
-	public static final String DB_DRIVER = "org.hsqldb.jdbcDriver"; //$NON-NLS-1$
+	public static final String DB_DIALECT = "org.hibernate.dialect.H2Dialect"; //$NON-NLS-1$
+	public static final String DB_DRIVER = "org.h2.Driver"; //$NON-NLS-1$
 
 	private static final PersistenceManager INSTANCE = new PersistenceManager();
 

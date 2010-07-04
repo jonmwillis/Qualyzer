@@ -20,6 +20,7 @@ Require-Bundle: org.eclipse.ui,
  org.hsqldb;bundle-version="2.0.0",
  org.eclipse.ui.forms;bundle-version="3.4.1",
  org.apache.commons.lang;bundle-version="2.3.0",
- ca.mcgill.cs.swevo.qualyzer.logging;bundle-version="0.2.0"
+ ca.mcgill.cs.swevo.qualyzer.logging;bundle-version="0.2.0",
+ com.h2database;bundle-version="1.2.138"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
