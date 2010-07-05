@@ -6,11 +6,9 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Jonathan Faubert
  *******************************************************************************/
-/**
- * 
- */
+
 package ca.mcgill.cs.swevo.qualyzer.editors.inputs;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -22,7 +20,6 @@ import org.eclipse.ui.IPersistableElement;
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
 
 /**
- * @author Jonathan Faubert (jonfaub@gmail.com)
  *
  */
 public class InvestigatorEditorInput implements IEditorInput
