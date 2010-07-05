@@ -754,6 +754,14 @@
             id="ca.mcgill.cs.swevo.qualyzer.editors.codeEditor"
             name="Code Editor">
       </editor>
+      <editor
+            class="ca.mcgill.cs.swevo.qualyzer.editors.RTFEditor"
+            default="false"
+            extensions="rtf, txt"
+            icon="icons/file_obj.gif"
+            id="ca.mcgill.cs.swevo.qualyzer.editors.RTFEditor"
+            name="RTF Editor">
+      </editor>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
@@ -857,6 +865,75 @@
             activityId="ca.mcgill.cs.swevo.qualyzer.activity.hide"
             pattern="org\.eclipse\.compare/.*">
       </activityPatternBinding>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors.annotationTypes">
+      <type
+            markerType="org.eclipse.core.resources.textmarker"
+            name="RTFEditor.annotation.bold">
+      </type>
+      <type
+            markerType="org.eclipse.core.resources.textmarker"
+            name="RTFEditor.annotation.underline">
+      </type>
+      <type
+            markerType="org.eclipse.core.resources.textmarker"
+            name="RTFEditor.annotation.italic">
+      </type>
+      <type
+            markerType="org.eclipse.core.resources.textmarker"
+            name="RTFEditor.annotation.boldItalic">
+      </type>
+      <type
+            markerType="org.eclipse.core.resources.textmarker"
+            name="RTFEditor.annotation.boldUnderline">
+      </type>
+      <type
+            markerType="org.eclipse.core.resources.textmarker"
+            name="RTFEditor.annotation.italicUnderline">
+      </type>
+      <type
+            markerType="org.eclipse.core.resources.textmarker"
+            name="RTFEditor.annotation.boldItalicUnderline">
+      </type>
+      <type
+            markerType="org.eclipse.core.resources.textmarker"
+            name="RTFEditor.annotation.fragment">
+      </type>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors.markerAnnotationSpecification">
+      <specification
+            annotationType="RTFEditor.annotation.underline"
+            colorPreferenceKey="black"
+            colorPreferenceValue="0,0,0"
+            highlightPreferenceValue="false"
+            includeOnPreferencePage="false"
+            label="Underline"
+            overviewRulerPreferenceKey="overview.false"
+            overviewRulerPreferenceValue="false"
+            textPreferenceKey="text.underline"
+            textPreferenceValue="true"
+            textStylePreferenceKey="style.underline"
+            textStylePreferenceValue="UNDERLINE"
+            verticalRulerPreferenceKey="vertical.false"
+            verticalRulerPreferenceValue="false">
+      </specification>
+      <specification
+            annotationType="RTFEditor.annotation.fragment"
+            colorPreferenceKey="color.grey"
+            colorPreferenceValue="128,128,128"
+            highlightPreferenceKey="highlight.true"
+            highlightPreferenceValue="true"
+            includeOnPreferencePage="false"
+            label="Text Fragment"
+            overviewRulerPreferenceKey="overview.show"
+            overviewRulerPreferenceValue="true"
+            textPreferenceKey="text.key"
+            textPreferenceValue="true"
+            verticalRulerPreferenceKey="vertical.show"
+            verticalRulerPreferenceValue="true">
+      </specification>
    </extension>
 
 </plugin>
