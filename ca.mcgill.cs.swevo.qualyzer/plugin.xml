@@ -847,5 +847,16 @@
          </view>
       </perspectiveExtension>
    </extension>
+   <extension
+         point="org.eclipse.ui.activities">
+      <activity
+            id="ca.mcgill.cs.swevo.qualyzer.activity.hide"
+            name="Hide Menu Items">
+      </activity>
+      <activityPatternBinding
+            activityId="ca.mcgill.cs.swevo.qualyzer.activity.hide"
+            pattern="org\.eclipse\.compare/.*">
+      </activityPatternBinding>
+   </extension>
 
 </plugin>
