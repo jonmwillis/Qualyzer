@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Jonathan Faubert
  *******************************************************************************/
 /**
  * 
@@ -44,7 +44,6 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
  * The main page of the Investigator editor.
- * @author Jonathan Faubert (jonfaub@gmail.com)
  *
  */
 public class InvestigatorEditorPage extends FormPage implements ProjectListener
