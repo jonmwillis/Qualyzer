@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
 import ca.mcgill.cs.swevo.qualyzer.editors.CodeEditor;
 import ca.mcgill.cs.swevo.qualyzer.editors.InvestigatorFormEditor;
 import ca.mcgill.cs.swevo.qualyzer.editors.ParticipantFormEditor;
+import ca.mcgill.cs.swevo.qualyzer.editors.RTFEditor;
 import ca.mcgill.cs.swevo.qualyzer.editors.TranscriptEditor;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.CodeEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.InvestigatorEditorInput;
@@ -173,11 +174,19 @@ public final class ResourcesUtil
 					Messages.getString("ui.ResourcesUtil.transcriptMissing")); //$NON-NLS-1$ 
 			return;
 		}
+		String ext = file.getFileExtension();
 		
 		FileEditorInput editorInput = new FileEditorInput(file);
 		try
 		{
-			page.openEditor(editorInput, TranscriptEditor.ID);
+			if(ext.equals("txt"))
+			{
+				page.openEditor(editorInput, TranscriptEditor.ID);
+			}
+			else if(ext.equals("rtf"))
+			{
+				page.openEditor(editorInput, RTFEditor.ID);
+			}
 		}
 		catch (PartInitException e)
 		{

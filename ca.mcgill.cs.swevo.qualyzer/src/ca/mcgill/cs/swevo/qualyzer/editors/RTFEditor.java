@@ -36,6 +36,7 @@ import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
  */
 public class RTFEditor extends ColorerEditor
 {
+	public static final String ID = "ca.mcgill.cs.swevo.qualyzer.editors.RTFEditor";
 
 	private static final char UNDERLINE_CHAR = (char) 21;
 	private static final char ITALIC_CHAR = (char) 9;

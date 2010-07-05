@@ -16,6 +16,7 @@ package ca.mcgill.cs.swevo.qualyzer.util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 
@@ -217,7 +218,6 @@ public final class FileUtil
 	private static void createTranscriptFile(String existingTranscript, Transcript transcript)
 	{
 		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(transcript.getProject().getName());
-		
 		String path = wProject.getLocation()+File.separator+TRANSCRIPTS+File.separator+transcript.getFileName();
 		File file = new File(path);
 		
@@ -227,8 +227,14 @@ public final class FileUtil
 			{
 				if(!file.createNewFile())
 				{
-					throw new QualyzerException(
-							Messages.getString("util.FileUtil.transcriptCreateFailed")); //$NON-NLS-1$
+					throw new QualyzerException(Messages.getString(
+							"util.FileUtil.transcriptCreateFailed")); //$NON-NLS-1$
+				}
+				else
+				{
+					FileWriter writer = new FileWriter(file);
+					writer.write("{\\rtf1\\ansi\\deff0\n\n\n}\n\0");
+					writer.close();
 				}
 			}
 			catch (IOException e)
@@ -247,8 +253,7 @@ public final class FileUtil
 			
 			if(!fileOrig.exists())
 			{
-				throw new QualyzerException(
-						Messages.getString("util.FileUtil.transcriptMissing")); //$NON-NLS-1$
+				throw new QualyzerException(Messages.getString("util.FileUtil.transcriptMissing")); //$NON-NLS-1$
 			}
 			
 			try

@@ -183,7 +183,7 @@ public final class Facade
 	{
 		Transcript transcript = new Transcript();
 		transcript.setName(name);
-		transcript.setFileName(name+".txt"); //$NON-NLS-1$
+		transcript.setFileName(name+".rtf"); //$NON-NLS-1$
 		transcript.setDate(date);
 		transcript.setParticipants(participants);
 		
