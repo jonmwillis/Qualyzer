@@ -395,6 +395,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	 */
 	private void clearModified()
 	{
+		fModified = new Code[fCodes.size()];
 		for(int i = 0; i < fModified.length; i++)
 		{
 			fModified[i] = null;
