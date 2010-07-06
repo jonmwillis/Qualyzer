@@ -29,7 +29,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
- *
+ * Dialog for adding a new code.
  */
 public class NewCodeDialog extends TitleAreaDialog
 {
@@ -50,9 +50,6 @@ public class NewCodeDialog extends TitleAreaDialog
 		fProject = project;
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.dialogs.Dialog#create()
-	 */
 	@Override
 	public void create()
 	{
@@ -63,9 +60,6 @@ public class NewCodeDialog extends TitleAreaDialog
 		getButton(IDialogConstants.OK_ID).setEnabled(false);
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.dialogs.TitleAreaDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
-	 */
 	@Override
 	protected Control createDialogArea(Composite parent)
 	{
@@ -98,9 +92,6 @@ public class NewCodeDialog extends TitleAreaDialog
 	{
 		return new KeyAdapter(){
 			
-			/* (non-Javadoc)
-			 * @see org.eclipse.swt.events.KeyAdapter#keyReleased(org.eclipse.swt.events.KeyEvent)
-			 */
 			@Override
 			public void keyReleased(KeyEvent e)
 			{
@@ -144,9 +135,6 @@ public class NewCodeDialog extends TitleAreaDialog
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.dialogs.Dialog#okPressed()
-	 */
 	@Override
 	protected void okPressed()
 	{

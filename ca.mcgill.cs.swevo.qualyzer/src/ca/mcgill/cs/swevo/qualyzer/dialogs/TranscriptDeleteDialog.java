@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- *
+ * Dialog for deleting transcripts.
  */
 public class TranscriptDeleteDialog extends TitleAreaDialog
 {
