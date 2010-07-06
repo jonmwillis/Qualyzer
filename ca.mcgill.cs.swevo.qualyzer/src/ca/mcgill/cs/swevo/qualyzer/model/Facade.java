@@ -226,6 +226,27 @@ public final class Facade
 	}
 	
 	/**
+	 * Create a new Fragment. Must be called with a properly loaded Transcript.
+	 * @param transcript
+	 * @param offset
+	 * @param length
+	 * @return
+	 */
+	public Fragment createFragment(Transcript transcript, int offset, int length)
+	{
+		Fragment fragment = new Fragment();
+		
+		fragment.setOffset(offset);
+		fragment.setLength(length);
+		
+		transcript.getFragments().add(fragment);
+		
+		fListenerManager.notifyTranscriptListeners(ChangeType.MODIFY, new Transcript[]{transcript}, this);
+		
+		return fragment;
+	}
+	
+	/**
 	 * Try to delete a project.
 	 * @param project
 	 */
