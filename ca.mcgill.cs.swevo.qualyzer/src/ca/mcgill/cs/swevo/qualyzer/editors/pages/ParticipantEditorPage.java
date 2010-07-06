@@ -37,6 +37,7 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
+import ca.mcgill.cs.swevo.qualyzer.editors.inputs.ParticipantEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
@@ -432,8 +433,23 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 	@Override
 	public void transcriptChanged(ChangeType cType, Transcript[] transcripts, Facade facade)
 	{
-		fParticipant.setProject(transcripts[0].getProject());
-		buildInterviews();
+		if(ChangeType.DELETE == cType)
+		{
+			
+		}
+		else
+		{
+			for(Participant participant : transcripts[0].getProject().getParticipants())
+			{
+				if(fParticipant.equals(participant))
+				{
+					setInput(new ParticipantEditorInput(participant));
+				}
+			}
+			buildInterviews();
+		}
+		
+		
 	}
 	
 	/* (non-Javadoc)

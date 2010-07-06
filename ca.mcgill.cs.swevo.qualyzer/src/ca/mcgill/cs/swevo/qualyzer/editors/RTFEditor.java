@@ -34,7 +34,6 @@ import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.RTFEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
-import ca.mcgill.cs.swevo.qualyzer.model.Fragment;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.ProjectListener;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
@@ -101,12 +100,11 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 				Point selection = viewer.getSelectedRange();
 				Position position = new Position(selection.x, selection.y);
 				
-				Fragment fragment = new Fragment();
-				fragment.setOffset(position.offset);
-				fragment.setLength(position.length);
 				Transcript transcript = ((RTFEditorInput) getEditorInput()).getTranscript();
-				transcript.getFragments().add(fragment);
+				Facade.getInstance().createFragment(transcript, position.offset, position.length);
 		
+				
+				
 				viewer.markFragment(position);
 				setDirty();
 			}

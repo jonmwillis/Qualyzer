@@ -438,6 +438,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	 * @param model
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	private String buildRTFString(String contents, IAnnotationModel model)
 	{
 		String output = "{\\rtf1\\ansi\\deff0\n";

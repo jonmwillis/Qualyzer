@@ -727,14 +727,6 @@
    <extension
          point="org.eclipse.ui.editors">
       <editor
-            class="ca.mcgill.cs.swevo.qualyzer.editors.TranscriptEditor"
-            contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
-            extensions="txt"
-            icon="icons/file_obj.gif"
-            id="ca.mcgill.cs.swevo.qualyzer.editors.TranscriptEditor"
-            name="%editor.name.transcript">
-      </editor>
-      <editor
             class="ca.mcgill.cs.swevo.qualyzer.editors.ParticipantFormEditor"
             default="false"
             icon="icons/people.png"
