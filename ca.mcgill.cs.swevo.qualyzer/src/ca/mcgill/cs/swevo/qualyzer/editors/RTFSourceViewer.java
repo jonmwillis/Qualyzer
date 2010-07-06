@@ -233,6 +233,7 @@ public class RTFSourceViewer extends ProjectionViewer
 	 * @param current
 	 * @param currentPos
 	 */
+	@SuppressWarnings("unchecked")
 	private void findOverlaps(Position position, IAnnotationModel model, ArrayList<Annotation> current,
 			ArrayList<Position> currentPos)
 	{
