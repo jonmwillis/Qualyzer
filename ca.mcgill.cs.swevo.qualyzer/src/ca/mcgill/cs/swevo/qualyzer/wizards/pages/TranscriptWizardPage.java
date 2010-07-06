@@ -208,10 +208,9 @@ public class TranscriptWizardPage extends WizardPage
 	 * @param parent
 	 * @param container
 	 */
-	protected void createControl(Composite parent, Composite container)
+	protected void setContainer(Composite container)
 	{
 		fContainer = container;
-		createControl(parent);
 	}
 
 	/**
