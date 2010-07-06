@@ -36,6 +36,9 @@ public class AboutQualyzerHandler extends AbstractHandler
 			Messages.getString("handlers.AboutQualyzerHandler.copyright3") + //$NON-NLS-1$
 			Messages.getString("handlers.AboutQualyzerHandler.copyright4") + //$NON-NLS-1$
 			Messages.getString("handlers.AboutQualyzerHandler.copyright5") + //$NON-NLS-1$
+			Messages.getString("handlers.AboutQualyzerHandler.copyright5a") + //$NON-NLS-1$
+			Messages.getString("handlers.AboutQualyzerHandler.copyright5b") + //$NON-NLS-1$
+			Messages.getString("handlers.AboutQualyzerHandler.copyright5c") + //$NON-NLS-1$
 			Messages.getString("handlers.AboutQualyzerHandler.copyright6") + //$NON-NLS-1$
 			//Messages.getString("handlers.AboutQualyzerHandler.copyright7") + //$NON-NLS-1$
 			Messages.getString("handlers.AboutQualyzerHandler.copyright8"); //$NON-NLS-1$
