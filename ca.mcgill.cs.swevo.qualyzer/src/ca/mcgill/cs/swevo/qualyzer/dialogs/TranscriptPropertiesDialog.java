@@ -46,8 +46,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 
 /**
- * 
- *
+ * Dialog for editing the properties of a transcript.
  */
 public class TranscriptPropertiesDialog extends TitleAreaDialog
 {
