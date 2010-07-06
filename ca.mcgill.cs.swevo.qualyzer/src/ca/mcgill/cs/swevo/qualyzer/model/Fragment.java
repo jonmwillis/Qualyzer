@@ -32,6 +32,8 @@ import org.hibernate.annotations.Type;
 @GenericGenerator(name = "uuid-gen", strategy = "uuid")
 public class Fragment
 {
+	private int fOffset;
+	private int fLength;
 	private List<Annotation> fAnnotations = new ArrayList<Annotation>();
 	private List<CodeEntry> fCodeEntries = new ArrayList<CodeEntry>();
 	private Long fPersistenceId;
@@ -88,6 +90,42 @@ public class Fragment
 	public void setPersistenceId(Long persistenceId)
 	{
 		this.fPersistenceId = persistenceId;
+	}
+	
+	/**
+	 * 
+	 * @param position
+	 */
+	public void setOffset(int offset)
+	{
+		fOffset = offset;
+	}
+	
+	/**
+	 * 
+	 * @param length
+	 */
+	public void setLength(int length)
+	{
+		fLength = length;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public int getOffset()
+	{
+		return fOffset;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public int getLength()
+	{
+		return fLength;
 	}
 
 }
