@@ -27,14 +27,25 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
+
+import ca.mcgill.cs.swevo.qualyzer.editors.inputs.RTFEditorInput;
+import ca.mcgill.cs.swevo.qualyzer.model.Facade;
+import ca.mcgill.cs.swevo.qualyzer.model.Fragment;
+import ca.mcgill.cs.swevo.qualyzer.model.Project;
+import ca.mcgill.cs.swevo.qualyzer.model.ProjectListener;
+import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
+import ca.mcgill.cs.swevo.qualyzer.model.TranscriptListener;
+import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
+import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
  * A Rich Text Editor for Transcripts.
  *
  */
-public class RTFEditor extends ColorerEditor
+public class RTFEditor extends ColorerEditor implements TranscriptListener, ProjectListener
 {
 	public static final String ID = "ca.mcgill.cs.swevo.qualyzer.editors.RTFEditor";
 
@@ -48,6 +59,7 @@ public class RTFEditor extends ColorerEditor
 	private Action fMarkTextAction;
 	
 	private boolean fIsDirty;
+	private Transcript fTranscript;
 	
 	/**
 	 * Constructor.
@@ -60,9 +72,9 @@ public class RTFEditor extends ColorerEditor
 		
 		fIsDirty = false;
 		
-		initialiaseBoldAction();
+		initialiseBoldAction();
 		
-		initaliaseItalicAction();
+		initialiseItalicAction();
 		
 		initialiseUnderlineAction();
 		
@@ -85,6 +97,12 @@ public class RTFEditor extends ColorerEditor
 				Point selection = viewer.getSelectedRange();
 				Position position = new Position(selection.x, selection.y);
 				
+				Fragment fragment = new Fragment();
+				fragment.setOffset(position.offset);
+				fragment.setLength(position.length);
+				Transcript transcript = ((RTFEditorInput) getEditorInput()).getTranscript();
+				transcript.getFragments().add(fragment);
+		
 				viewer.markFragment(position);
 				setDirty();
 			}
@@ -120,7 +138,7 @@ public class RTFEditor extends ColorerEditor
 	/**
 	 * 
 	 */
-	private void initaliaseItalicAction()
+	private void initialiseItalicAction()
 	{
 		fItalicAction = new Action(){
 			/* (non-Javadoc)
@@ -144,7 +162,7 @@ public class RTFEditor extends ColorerEditor
 	/**
 	 * 
 	 */
-	private void initialiaseBoldAction()
+	private void initialiseBoldAction()
 	{
 		fBoldAction = new Action(){
 			
@@ -220,7 +238,6 @@ public class RTFEditor extends ColorerEditor
 	{
 		super.initializeEditor();
 		setSourceViewerConfiguration(new RTFSourceViewerConfiguration());
-		
 	}
 	
 	/* (non-Javadoc)
@@ -258,7 +275,7 @@ public class RTFEditor extends ColorerEditor
 	@Override
 	protected void rulerContextMenuAboutToShow(IMenuManager menu)
 	{
-		// super.rulerContextMenuAboutToShow(menu);
+		//super.rulerContextMenuAboutToShow(menu);
 		//This removes the ruler context menu.
 		//Do we want to add any of our own actions here?
 	}
@@ -276,6 +293,11 @@ public class RTFEditor extends ColorerEditor
 		super.createPartControl(parent);
 		
 		ColorerPlugin.getDefault().setPropertyWordWrap(getTextColorer().getFileType(), 1);
+		
+		fTranscript = ((RTFEditorInput) getEditorInput()).getTranscript();
+
+		Facade.getInstance().getListenerManager().registerProjectListener(fTranscript.getProject(), this);
+		Facade.getInstance().getListenerManager().registerTranscriptListener(fTranscript.getProject(), this);
 	}
 	
 	/* (non-Javadoc)
@@ -329,6 +351,8 @@ public class RTFEditor extends ColorerEditor
 	@Override
 	public void doSave(IProgressMonitor progressMonitor)
 	{
+		Transcript transcript = ((RTFEditorInput) getEditorInput()).getTranscript();
+		Facade.getInstance().saveTranscript(transcript);
 		super.doSave(progressMonitor);
 		fIsDirty = false;
 	}
@@ -349,6 +373,55 @@ public class RTFEditor extends ColorerEditor
 	public boolean isDirty()
 	{
 		return super.isDirty() || fIsDirty;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.model.TranscriptListener#transcriptChanged(
+	 * ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType, ca.mcgill.cs.swevo.qualyzer.model.Transcript[],
+	 *  ca.mcgill.cs.swevo.qualyzer.model.Facade)
+	 */
+	@Override
+	public void transcriptChanged(ChangeType cType, Transcript[] transcripts, Facade facade)
+	{
+		if(cType == ChangeType.DELETE)
+		{
+			for(Transcript transcript : transcripts)
+			{
+				if(transcript.equals(fTranscript))
+				{
+					IWorkbenchPage page = getSite().getPage();
+					ResourcesUtil.closeEditor(page, fTranscript.getFileName());
+				}
+			}
+		}
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.model.ProjectListener#projectChanged(
+	 * ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType, ca.mcgill.cs.swevo.qualyzer.model.Project, 
+	 * ca.mcgill.cs.swevo.qualyzer.model.Facade)
+	 */
+	@Override
+	public void projectChanged(ChangeType cType, Project project, Facade facade)
+	{
+		if(ChangeType.DELETE == cType)
+		{
+			IWorkbenchPage page = getSite().getPage();
+			ResourcesUtil.closeEditor(page, getEditorInput().getName());
+		}
+		
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.colorer.eclipse.editors.ColorerEditor#dispose()
+	 */
+	@Override
+	public void dispose()
+	{
+		Facade.getInstance().getListenerManager().unregisterProjectListener(fTranscript.getProject(), this);
+		Facade.getInstance().getListenerManager().unregisterTranscriptListener(fTranscript.getProject(), this);
+		super.dispose();
 	}
 	
 }

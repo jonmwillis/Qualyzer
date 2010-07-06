@@ -60,7 +60,7 @@ public class OpenAllHandler extends AbstractHandler
 				{
 					ResourcesUtil.openEditor(page, (WrapperCode) element);
 				}
-				//TODO code/memo
+				//TODO memo
 			}
 		}
 		

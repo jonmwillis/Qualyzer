@@ -30,6 +30,12 @@ import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.ui.editors.text.FileDocumentProvider;
 import org.eclipse.ui.part.FileEditorInput;
 
+import ca.mcgill.cs.swevo.qualyzer.editors.inputs.RTFEditorInput;
+import ca.mcgill.cs.swevo.qualyzer.model.CodeEntry;
+import ca.mcgill.cs.swevo.qualyzer.model.Facade;
+import ca.mcgill.cs.swevo.qualyzer.model.Fragment;
+import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
+
 /**
  * The DocumentProvider for our editor.
  *
@@ -47,7 +53,17 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	@Override
 	protected IDocument createDocument(Object element) throws CoreException
 	{
-		return super.createDocument(element);
+		RTFDocument doc = (RTFDocument) super.createDocument(element);
+		
+		Transcript transcript = ((RTFEditorInput) element).getTranscript();
+		
+		for(Fragment fragment : transcript.getFragments())
+		{
+			Position position = new Position(fragment.getOffset(), fragment.getLength());
+			doc.addAnnotation(position, new Annotation(RTFConstants.FRAGMENT_TYPE, true, ""));
+		}
+		
+		return doc;
 	}
 	
 	/* (non-Javadoc)

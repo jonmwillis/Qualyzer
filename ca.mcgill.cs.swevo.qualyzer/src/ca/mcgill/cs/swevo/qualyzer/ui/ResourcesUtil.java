@@ -26,7 +26,6 @@ import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.part.FileEditorInput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,11 +33,12 @@ import ca.mcgill.cs.swevo.qualyzer.editors.CodeEditor;
 import ca.mcgill.cs.swevo.qualyzer.editors.InvestigatorFormEditor;
 import ca.mcgill.cs.swevo.qualyzer.editors.ParticipantFormEditor;
 import ca.mcgill.cs.swevo.qualyzer.editors.RTFEditor;
-import ca.mcgill.cs.swevo.qualyzer.editors.TranscriptEditor;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.CodeEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.InvestigatorEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.ParticipantEditorInput;
+import ca.mcgill.cs.swevo.qualyzer.editors.inputs.RTFEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.model.Code;
+import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
 import ca.mcgill.cs.swevo.qualyzer.model.Memo;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
@@ -176,15 +176,12 @@ public final class ResourcesUtil
 		}
 		String ext = file.getFileExtension();
 		
-		FileEditorInput editorInput = new FileEditorInput(file);
 		try
 		{
-			if(ext.equals("txt"))
+			if(ext.equals("rtf") || ext.equals("txt"))
 			{
-				page.openEditor(editorInput, TranscriptEditor.ID);
-			}
-			else if(ext.equals("rtf"))
-			{
+				Transcript lTranscript = Facade.getInstance().forceTranscriptLoad(transcript);
+				RTFEditorInput editorInput = new RTFEditorInput(file, lTranscript);
 				page.openEditor(editorInput, RTFEditor.ID);
 			}
 		}
