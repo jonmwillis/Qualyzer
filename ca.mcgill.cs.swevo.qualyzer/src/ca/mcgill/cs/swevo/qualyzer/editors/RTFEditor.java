@@ -28,6 +28,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 
@@ -79,6 +80,9 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 		initialiseUnderlineAction();
 		
 		initialiseMarkAction();
+		
+		getPreferenceStore().setValue(AbstractDecoratedTextEditorPreferenceConstants.QUICK_DIFF_ALWAYS_ON, false);
+		
 	}
 
 	/**
