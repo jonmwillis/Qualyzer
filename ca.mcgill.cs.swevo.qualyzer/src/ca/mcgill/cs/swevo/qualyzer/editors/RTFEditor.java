@@ -52,6 +52,7 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 	private static final char UNDERLINE_CHAR = (char) 21;
 	private static final char ITALIC_CHAR = (char) 9;
 	private static final char BOLD_CHAR = (char) 2;
+	private static final char FRAGMENT_CHAR = (char) 11;
 	
 	private Action fBoldAction;
 	private Action fItalicAction;
@@ -261,13 +262,13 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 		setAction(RTFConstants.BOLD_ACTION_ID, fBoldAction);
 		setAction(RTFConstants.UNDERLINE_ACTION_ID, fUnderlineAction);
 		setAction(RTFConstants.ITALIC_ACTION_ID, fItalicAction);
-		setAction(RTFConstants.FRAGMENT_TYPE, fMarkTextAction);
+		setAction(RTFConstants.FRAGMENT_ACTION_ID, fMarkTextAction);
 		
-		//I have no idea why I have to use these numbers for the characters.
-		//But they are the only things that work. - JF
+		removeActionActivationCode(ITextEditorActionConstants.FIND);
 		setActionActivationCode(RTFConstants.BOLD_ACTION_ID, BOLD_CHAR, 'b', SWT.CONTROL);
 		setActionActivationCode(RTFConstants.ITALIC_ACTION_ID, ITALIC_CHAR, 'i', SWT.CONTROL);
 		setActionActivationCode(RTFConstants.UNDERLINE_ACTION_ID, UNDERLINE_CHAR, 'u', SWT.CONTROL);
+		setActionActivationCode(RTFConstants.FRAGMENT_ACTION_ID, FRAGMENT_CHAR, 'k', SWT.CONTROL);
 	}
 	
 	/* (non-Javadoc)

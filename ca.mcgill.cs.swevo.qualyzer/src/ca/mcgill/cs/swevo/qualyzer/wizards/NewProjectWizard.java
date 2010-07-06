@@ -14,6 +14,11 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.ProgressBar;
+import org.eclipse.swt.widgets.Shell;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
@@ -50,10 +55,24 @@ public class NewProjectWizard extends Wizard
 	public boolean performFinish()
 	{	
 		Project project = null;
+		
+		Shell shell = new Shell(getShell(), SWT.TITLE | SWT.BORDER);
+		shell.setLayout(new GridLayout(1, true));
+		shell.setText("Project Creation Status");
+		shell.setBounds(0, 0, 260, 50);
+		ProgressBar bar = new ProgressBar(shell, SWT.HORIZONTAL);
+		bar.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
+		bar.setMinimum(0);
+		bar.setMaximum(5);
+		bar.setSelection(0);
+		shell.open();
+		
+		bar.setSelection(1);
 		try
 		{
 			project = Facade.getInstance().createProject(fOne.getProjectName(), 
 				fOne.getInvestigatorNickname(), fOne.getInvestigatorFullname(), fOne.getInstitution());
+			bar.setSelection(3);
 			
 			fProject = ResourcesPlugin.getWorkspace().getRoot().getProject(project.getName());
 		}
@@ -64,6 +83,7 @@ public class NewProjectWizard extends Wizard
 			return false;
 		}
 
+		bar.setSelection(5);
 		return project != null;
 	}
 	
@@ -75,5 +95,4 @@ public class NewProjectWizard extends Wizard
 	{
 		return fProject;
 	}
-
 }
