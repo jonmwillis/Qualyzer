@@ -31,6 +31,7 @@ public final class RTFConstants
 	public static final String BOLD_ACTION_ID = "action.bold";
 	public static final String ITALIC_ACTION_ID = "action.italic";
 	public static final String UNDERLINE_ACTION_ID = "action.underline";
+	public static final String FRAGMENT_ACTION_ID = "action.markFragment";
 	
 	private RTFConstants(){}
 }

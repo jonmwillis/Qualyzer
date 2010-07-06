@@ -40,6 +40,7 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.ParticipantEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
+import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.ProjectListener;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
@@ -433,22 +434,28 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 	@Override
 	public void transcriptChanged(ChangeType cType, Transcript[] transcripts, Facade facade)
 	{
+		Project project;
 		if(ChangeType.DELETE == cType)
 		{
-			
+			project = PersistenceManager.getInstance().getProject(fParticipant.getProject().getName());
 		}
 		else
 		{
-			for(Participant participant : transcripts[0].getProject().getParticipants())
-			{
-				if(fParticipant.equals(participant))
-				{
-					setInput(new ParticipantEditorInput(participant));
-				}
-			}
-			buildInterviews();
+			project = transcripts[0].getProject();
 		}
 		
+		for(Participant participant : project.getParticipants())
+		{
+			if(fParticipant.equals(participant))
+			{
+				setInput(new ParticipantEditorInput(participant));
+				break;
+			}
+		}
+		
+		fParticipant = ((ParticipantEditorInput) getEditorInput()).getParticipant();
+		
+		buildInterviews();
 		
 	}
 	

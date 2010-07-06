@@ -14,12 +14,9 @@
 package ca.mcgill.cs.swevo.qualyzer.editors.pages;
 
 import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -27,11 +24,8 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.FormPage;
-import org.eclipse.ui.forms.events.ExpansionAdapter;
-import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
-import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
@@ -98,11 +92,12 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener
 				Messages.getString("editors.pages.InvestigatorEditorPage.institution")); //$NON-NLS-1$
 		fInstitution = createText(toolkit, fInvestigator.getInstitution(), body);
 		
-		createInterviewSection(form, toolkit, body);
-		
-		createCodedSection(form, toolkit, body);
-		
-		createMemoSection(form, toolkit, body);
+		//Removing placeholders until they are used - JF
+//		createInterviewSection(form, toolkit, body);
+//		
+//		createCodedSection(form, toolkit, body);
+//		
+//		createMemoSection(form, toolkit, body);
 	
 		toolkit.paintBordersFor(body);
 	}
@@ -163,108 +158,114 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener
 		return false;
 	}
 
-	/**
-	 * @param form
-	 * @param toolkit
-	 * @param body
-	 */
-	private void createMemoSection(final ScrolledForm form, FormToolkit toolkit, Composite body)
-	{
-		TableWrapData td;
-		Label label;
-		Section section;
-		Composite sectionClient;
-		GridLayout grid;
-		GridData gd;
-		section = toolkit.createSection(body, Section.EXPANDED | Section.TITLE_BAR | Section.TWISTIE);
-		td = new TableWrapData(TableWrapData.FILL_GRAB);
-		td.colspan = 2;
-		section.setLayoutData(td);
-		section.setText(Messages.getString("editors.pages.InvestigatorEditorPage.memos")); //$NON-NLS-1$
-		section.addExpansionListener(createExpansionListener(form));
-		sectionClient = toolkit.createComposite(section);
-		grid = new GridLayout();
-		grid.numColumns = 1;
-		sectionClient.setLayout(grid);
-		//TODO generate the memo data
-		//TODO make clickable
-		gd = new GridData(SWT.FILL, SWT.NULL, true, false);
-		label = toolkit.createLabel(sectionClient, "Example Memo"); //$NON-NLS-1$
-		label.setLayoutData(gd);
-		section.setClient(sectionClient);
-	}
+	//Removing for 0.2 as they are not yet used. - JF
+//	/**
+//	 * @param form
+//	 * @param toolkit
+//	 * @param body
+//	 */
+//	private void createMemoSection(final ScrolledForm form, FormToolkit toolkit, Composite body)
+//	{
+//		TableWrapData td;
+//		Label label;
+//		Section section;
+//		Composite sectionClient;
+//		GridLayout grid;
+//		GridData gd;
+//		section = toolkit.createSection(body, Section.EXPANDED | Section.TITLE_BAR | Section.TWISTIE);
+//		td = new TableWrapData(TableWrapData.FILL_GRAB);
+//		td.colspan = 2;
+//		section.setLayoutData(td);
+//		section.setText(Messages.getString("editors.pages.InvestigatorEditorPage.memos")); //$NON-NLS-1$
+//		section.addExpansionListener(createExpansionListener(form));
+//		sectionClient = toolkit.createComposite(section);
+//		grid = new GridLayout();
+//		grid.numColumns = 1;
+//		sectionClient.setLayout(grid);
+//		//TODO generate the memo data
+//		//TODO make clickable
+//		gd = new GridData(SWT.FILL, SWT.NULL, true, false);
+//		label = toolkit.createLabel(sectionClient, "Example Memo"); //$NON-NLS-1$
+//		label.setLayoutData(gd);
+//		section.setClient(sectionClient);
+//	}
 
-	/**
-	 * @param form
-	 * @param toolkit
-	 * @param body
-	 */
-	private void createCodedSection(final ScrolledForm form, FormToolkit toolkit, Composite body)
-	{
-		TableWrapData td;
-		Label label;
-		Section section;
-		Composite sectionClient;
-		GridLayout grid;
-		GridData gd;
-		section = toolkit.createSection(body, Section.EXPANDED | Section.TITLE_BAR | Section.TWISTIE);
-		td = new TableWrapData(TableWrapData.FILL_GRAB);
-		td.colspan = 2;
-		section.setLayoutData(td);
-		section.setText(Messages.getString("editors.pages.InvestigatorEditorPage.codedTranscripts")); //$NON-NLS-1$
-		section.addExpansionListener(createExpansionListener(form));
-		sectionClient = toolkit.createComposite(section);
-		grid = new GridLayout();
-		grid.numColumns = 1;
-		sectionClient.setLayout(grid);
-		//TODO generate the interview data
-		//TODO make clickable
-		gd = new GridData(SWT.FILL, SWT.NULL, true, false);
-		label = toolkit.createLabel(sectionClient, "Example Interview"); //$NON-NLS-1$
-		label.setLayoutData(gd);
-		section.setClient(sectionClient);
-	}
+	
+	//Removing for 0.2 as they are not yet used - JF
+//	/**
+//	 * @param form
+//	 * @param toolkit
+//	 * @param body
+//	 */
+//	private void createCodedSection(final ScrolledForm form, FormToolkit toolkit, Composite body)
+//	{
+//		TableWrapData td;
+//		Label label;
+//		Section section;
+//		Composite sectionClient;
+//		GridLayout grid;
+//		GridData gd;
+//		section = toolkit.createSection(body, Section.EXPANDED | Section.TITLE_BAR | Section.TWISTIE);
+//		td = new TableWrapData(TableWrapData.FILL_GRAB);
+//		td.colspan = 2;
+//		section.setLayoutData(td);
+//		section.setText(Messages.getString("editors.pages.InvestigatorEditorPage.codedTranscripts")); //$NON-NLS-1$
+//		section.addExpansionListener(createExpansionListener(form));
+//		sectionClient = toolkit.createComposite(section);
+//		grid = new GridLayout();
+//		grid.numColumns = 1;
+//		sectionClient.setLayout(grid);
+//		//TODO generate the interview data
+//		//TODO make clickable
+//		gd = new GridData(SWT.FILL, SWT.NULL, true, false);
+//		label = toolkit.createLabel(sectionClient, "Example Interview"); //$NON-NLS-1$
+//		label.setLayoutData(gd);
+//		section.setClient(sectionClient);
+//	}
 
-	/**
-	 * @param form
-	 * @param toolkit
-	 * @param body
-	 */
-	private void createInterviewSection(final ScrolledForm form, FormToolkit toolkit, Composite body)
-	{
-		TableWrapData td;
-		Label label;
-		Section section = toolkit.createSection(body, Section.EXPANDED | Section.TITLE_BAR | Section.TWISTIE);
-		td = new TableWrapData(TableWrapData.FILL_GRAB);
-		td.colspan = 2;
-		section.setLayoutData(td);
-		section.setText(Messages.getString("editors.pages.InvestigatorEditorPage.transcriptsConducted")); //$NON-NLS-1$
-		section.addExpansionListener(createExpansionListener(form));
-		Composite sectionClient = toolkit.createComposite(section);
-		GridLayout grid = new GridLayout();
-		grid.numColumns = 1;
-		sectionClient.setLayout(grid);
-		//TODO generate the interview data
-		//TODO make clickable
-		GridData gd = new GridData(SWT.FILL, SWT.NULL, true, false);
-		label = toolkit.createLabel(sectionClient, "Example Interview"); //$NON-NLS-1$
-		label.setLayoutData(gd);
-		section.setClient(sectionClient);
-	}
+	
+	//Removing for 0.2 as NYI - JF
+//	/**
+//	 * @param form
+//	 * @param toolkit
+//	 * @param body
+//	 */
+//	private void createInterviewSection(final ScrolledForm form, FormToolkit toolkit, Composite body)
+//	{
+//		TableWrapData td;
+//		Label label;
+//		Section section = toolkit.createSection(body, Section.EXPANDED | Section.TITLE_BAR | Section.TWISTIE);
+//		td = new TableWrapData(TableWrapData.FILL_GRAB);
+//		td.colspan = 2;
+//		section.setLayoutData(td);
+//		section.setText(Messages.getString("editors.pages.InvestigatorEditorPage.transcriptsConducted")); //$NON-NLS-1$
+//		section.addExpansionListener(createExpansionListener(form));
+//		Composite sectionClient = toolkit.createComposite(section);
+//		GridLayout grid = new GridLayout();
+//		grid.numColumns = 1;
+//		sectionClient.setLayout(grid);
+//		//TODO generate the interview data
+//		//TODO make clickable
+//		GridData gd = new GridData(SWT.FILL, SWT.NULL, true, false);
+//		label = toolkit.createLabel(sectionClient, "Example Interview"); //$NON-NLS-1$
+//		label.setLayoutData(gd);
+//		section.setClient(sectionClient);
+//	}
 
-	/**
-	 * @param form
-	 * @return
-	 */
-	private ExpansionAdapter createExpansionListener(final ScrolledForm form)
-	{
-		return new ExpansionAdapter(){
-			public void expansionStateChanged(ExpansionEvent e)
-			{
-				form.reflow(true);
-			}
-		};
-	}
+	//Not yet used - JF
+//	/**
+//	 * @param form
+//	 * @return
+//	 */
+//	private ExpansionAdapter createExpansionListener(final ScrolledForm form)
+//	{
+//		return new ExpansionAdapter(){
+//			public void expansionStateChanged(ExpansionEvent e)
+//			{
+//				form.reflow(true);
+//			}
+//		};
+//	}
 	
 	private Text createText(FormToolkit toolkit, String data, Composite parent)
 	{
