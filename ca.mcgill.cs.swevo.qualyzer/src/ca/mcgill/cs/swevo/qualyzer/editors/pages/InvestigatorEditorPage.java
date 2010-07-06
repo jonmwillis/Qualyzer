@@ -370,4 +370,14 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener
 			ResourcesUtil.closeEditor(page, getEditor().getEditorInput().getName());
 		}
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.forms.editor.FormPage#dispose()
+	 */
+	@Override
+	public void dispose()
+	{
+		Facade.getInstance().getListenerManager().unregisterProjectListener(fInvestigator.getProject(), this);
+		super.dispose();
+	}
 }
