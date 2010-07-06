@@ -6,11 +6,9 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Jonathan Faubert (jonfaub@gmail.com)
+ *     Martin Robillard
  *******************************************************************************/
-/**
- * 
- */
 package ca.mcgill.cs.swevo.qualyzer.dialogs;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -30,12 +28,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
-import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
-import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
+import ca.mcgill.cs.swevo.qualyzer.model.validation.RenameTranscriptValidator;
 
 /**
- * @author Jonathan Faubert (jonfaub@gmail.com)
- *
+ * Dialog to rename transcripts. 
  */
 public class RenameDialog extends TitleAreaDialog
 {
@@ -136,19 +132,12 @@ public class RenameDialog extends TitleAreaDialog
 			@Override
 			public void keyReleased(KeyEvent e)
 			{
-				if(fNewName.getText().isEmpty())
+				RenameTranscriptValidator lValidator = 
+					new RenameTranscriptValidator(fNewName.getText(), fOldName, fProject);
+				
+				if(!lValidator.isValid())
 				{
-					setErrorMessage(null);
-					getButton(IDialogConstants.OK_ID).setEnabled(false);
-				}
-				else if(!ResourcesUtil.verifyID(fNewName.getText()))
-				{
-					setErrorMessage(Messages.getString("dialogs.RenameDialog.invalidID")); //$NON-NLS-1$
-					getButton(IDialogConstants.OK_ID).setEnabled(false);
-				}
-				else if(transcriptExists())
-				{
-					setErrorMessage(Messages.getString("dialogs.RenameDialog.nameInUse")); //$NON-NLS-1$
+					setErrorMessage(lValidator.getErrorMessage());
 					getButton(IDialogConstants.OK_ID).setEnabled(false);
 				}
 				else
@@ -160,21 +149,6 @@ public class RenameDialog extends TitleAreaDialog
 			}
 			
 		};
-	}
-
-	/**
-	 * @return
-	 */
-	private boolean transcriptExists()
-	{
-		for(Transcript transcript : fProject.getTranscripts())
-		{
-			if(!fOldName.equals(fNewName.getText()) && transcript.getName().equals(fNewName.getText()))
-			{
-				return true;
-			}
-		}
-		return false;
 	}
 	
 	/**
