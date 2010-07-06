@@ -69,23 +69,29 @@ public final class Facade
 	 * @param name
 	 * @return
 	 */
-	public Project createProject(String name, String nickname, String fullName, String institution)
-		throws QualyzerException
+	public Project createProject(String name, String nickname, String fullName, String institution, 
+			ProjectCreationProgressListener listener) throws QualyzerException
 	{	
 		IProject wProject = FileUtil.makeProjectFileSystem(name);
+		listener.statusUpdate();
+		
 		Project project;
 		
 		project = new Project();
 		project.setName(name);
+		listener.statusUpdate();
 		
 		createInvestigator(nickname, fullName, institution, project, false);
+		listener.statusUpdate();
 		
 		PersistenceManager.getInstance().initDB(wProject);
 		HibernateDBManager manager;
 		manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(name);
 		HibernateUtil.quietSave(manager, project);
+		listener.statusUpdate();
 		
 		fListenerManager.notifyProjectListeners(ChangeType.ADD, project, this);
+		listener.statusUpdate();
 		
 		return project;		
 	}

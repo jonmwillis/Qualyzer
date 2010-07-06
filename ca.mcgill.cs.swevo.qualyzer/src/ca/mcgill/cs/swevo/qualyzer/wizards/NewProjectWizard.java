@@ -23,16 +23,18 @@ import org.eclipse.swt.widgets.Shell;
 import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
+import ca.mcgill.cs.swevo.qualyzer.model.ProjectCreationProgressListener;
 import ca.mcgill.cs.swevo.qualyzer.wizards.pages.NewProjectPage;
 
 /**
  * The wizard that controls the creation of a new project.
  */
-public class NewProjectWizard extends Wizard 
+public class NewProjectWizard extends Wizard implements ProjectCreationProgressListener
 {
 
 	private NewProjectPage fOne;
 	private IProject fProject;
+	private ProgressBar fProgressBar;
 	
 	/**
 	 * Constructor.
@@ -60,19 +62,17 @@ public class NewProjectWizard extends Wizard
 		shell.setLayout(new GridLayout(1, true));
 		shell.setText("Project Creation Status");
 		shell.setBounds(0, 0, 260, 50);
-		ProgressBar bar = new ProgressBar(shell, SWT.HORIZONTAL);
-		bar.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
-		bar.setMinimum(0);
-		bar.setMaximum(5);
-		bar.setSelection(0);
+		fProgressBar = new ProgressBar(shell, SWT.HORIZONTAL);
+		fProgressBar.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
+		fProgressBar.setMinimum(0);
+		fProgressBar.setMaximum(5);
+		fProgressBar.setSelection(0);
 		shell.open();
-		
-		bar.setSelection(1);
+
 		try
 		{
 			project = Facade.getInstance().createProject(fOne.getProjectName(), 
-				fOne.getInvestigatorNickname(), fOne.getInvestigatorFullname(), fOne.getInstitution());
-			bar.setSelection(3);
+				fOne.getInvestigatorNickname(), fOne.getInvestigatorFullname(), fOne.getInstitution(), this);
 			
 			fProject = ResourcesPlugin.getWorkspace().getRoot().getProject(project.getName());
 		}
@@ -83,7 +83,6 @@ public class NewProjectWizard extends Wizard
 			return false;
 		}
 
-		bar.setSelection(5);
 		return project != null;
 	}
 	
@@ -94,5 +93,14 @@ public class NewProjectWizard extends Wizard
 	public IProject getProjectReference()
 	{
 		return fProject;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.model.ProjectCreationProgressListener#statusUpdate()
+	 */
+	@Override
+	public void statusUpdate()
+	{
+		fProgressBar.setSelection(fProgressBar.getSelection() + 1);
 	}
 }
