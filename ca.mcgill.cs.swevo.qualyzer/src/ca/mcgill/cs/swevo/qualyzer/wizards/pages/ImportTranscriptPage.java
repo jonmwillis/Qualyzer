@@ -52,11 +52,6 @@ public class ImportTranscriptPage extends TranscriptWizardPage
 	@Override
 	public void createControl(Composite parent)
 	{	
-		if(getfContainer() != null) //TODO hack : I want it to say at the parent when 
-		{								//I call createControl(parent, composite)
-			super.createControl(parent);
-			return;
-		}
 		Composite container = new Composite(parent, SWT.NULL);
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 2;
@@ -83,7 +78,8 @@ public class ImportTranscriptPage extends TranscriptWizardPage
 		button.addSelectionListener(createNewSelectionListener());
 		button.setText(Messages.getString("wizards.pages.ImportTranscriptPage.browse")); //$NON-NLS-1$
 		
-		super.createControl(parent, container);
+		setContainer(container);
+		super.createControl(parent);
 	}
 
 	private SelectionListener createNewSelectionListener()
@@ -97,7 +93,7 @@ public class ImportTranscriptPage extends TranscriptWizardPage
 			public void widgetSelected(SelectionEvent e)
 			{
 				FileDialog dialog = new FileDialog(getShell());
-				dialog.setFilterExtensions(new String[]{"*.txt"}); //$NON-NLS-1$
+				dialog.setFilterExtensions(new String[]{"*.rtf"}); //$NON-NLS-1$
 				dialog.setFilterNames(new String[]{Messages.getString(
 						"wizards.pages.ImportTranscriptPage.textExt")}); //$NON-NLS-1$
 				
