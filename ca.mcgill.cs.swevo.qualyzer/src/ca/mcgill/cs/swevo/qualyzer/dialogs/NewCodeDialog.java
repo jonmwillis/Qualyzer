@@ -24,9 +24,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import ca.mcgill.cs.swevo.qualyzer.model.Code;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
-import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
+import ca.mcgill.cs.swevo.qualyzer.model.validation.CodeValidator;
 
 /**
  * Dialog for adding a new code.
@@ -95,20 +94,12 @@ public class NewCodeDialog extends TitleAreaDialog
 			@Override
 			public void keyReleased(KeyEvent e)
 			{
-				if(fNameText.getText().isEmpty())
+				CodeValidator lValidator = new CodeValidator(fNameText.getText(), fProject);
+				
+				if(!lValidator.isValid())
 				{
 					getButton(IDialogConstants.OK_ID).setEnabled(false);
-					setErrorMessage(null);
-				}
-				else if(!ResourcesUtil.verifyID(fNameText.getText()))
-				{
-					getButton(IDialogConstants.OK_ID).setEnabled(false);
-					setErrorMessage(Messages.getString("dialogs.NewCodeDialog.nameInvalid")); //$NON-NLS-1$
-				}
-				else if(nameInUse())
-				{
-					getButton(IDialogConstants.OK_ID).setEnabled(false);
-					setErrorMessage(Messages.getString("dialogs.NewCodeDialog.nameTaken")); //$NON-NLS-1$
+					setErrorMessage(lValidator.getErrorMessage());
 				}
 				else
 				{
@@ -119,22 +110,6 @@ public class NewCodeDialog extends TitleAreaDialog
 		};
 	}
 	
-	/**
-	 * @return
-	 */
-	protected boolean nameInUse()
-	{
-		for(Code code : fProject.getCodes())
-		{
-			if(code.getCodeName().equals(fNameText.getText()))
-			{
-				return true;
-			}
-		}
-		
-		return false;
-	}
-
 	@Override
 	protected void okPressed()
 	{
