@@ -53,10 +53,11 @@ public class NewTranscriptWizard extends Wizard
 	{	
 		try
 		{
+			FileUtil.setupTranscriptFiles(fPage.getTranscriptName(), fProject.getName(), fPage.getAudioFile(), 
+					""); //$NON-NLS-1$
+			
 			fTranscript = Facade.getInstance().createTranscript(fPage.getTranscriptName(), fPage.getDate(),
 					fPage.getAudioFile(), fPage.getParticipants(), fProject);
-			
-			FileUtil.setupTranscriptFiles(fTranscript, fPage.getAudioFile(), ""); //$NON-NLS-1$
 		}
 		catch(QualyzerException e)
 		{
