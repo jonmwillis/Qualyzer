@@ -376,6 +376,7 @@
             </command>
             <command
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.newCode"
+                  icon="icons/code_obj.png"
                   label="Code"
                   style="push"
                   tooltip="Create a New Code">
@@ -743,6 +744,7 @@
       <editor
             class="ca.mcgill.cs.swevo.qualyzer.editors.CodeEditor"
             default="false"
+            icon="icons/code_obj.png"
             id="ca.mcgill.cs.swevo.qualyzer.editors.codeEditor"
             name="Code Editor">
       </editor>
