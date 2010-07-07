@@ -28,7 +28,8 @@ public class AboutQualyzerHandler extends AbstractHandler
 	private static final String RELEASE = Messages.getString("handlers.AboutQualyzerHandler.releaseTag") + //$NON-NLS-1$
 		" " + RELEASE_NUMBER + "\n\n"; //$NON-NLS-1$ //$NON-NLS-2$
 	
-	private static final String MCGILL = Messages.getString("handlers.AboutQualyzerHandler.mcGillTag") + "\n\n";
+	private static final String MCGILL = Messages.getString("handlers.AboutQualyzerHandler.mcGillTag")+ //$NON-NLS-1$
+		"\n\n"; //$NON-NLS-1$ 
 	
 	private static final String DESCRIPTION = 
 		Messages.getString("handlers.AboutQualyzerHandler.description1") + //$NON-NLS-1$

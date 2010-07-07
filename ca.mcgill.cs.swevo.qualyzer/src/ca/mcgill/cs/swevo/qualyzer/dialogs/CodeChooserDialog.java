@@ -68,8 +68,8 @@ public class CodeChooserDialog extends TitleAreaDialog
 	public void create()
 	{
 		super.create();
-		setTitle("Add Code");
-		setMessage("Enter the name of the code you want to associate with the selected text");
+		setTitle(Messages.getString("dialogs.CodeChooserDialog.add")); //$NON-NLS-1$
+		setMessage(Messages.getString("dialogs.CodeChooserDialog.enterName")); //$NON-NLS-1$
 		
 		getButton(IDialogConstants.OK_ID).setEnabled(false);
 	}
@@ -84,17 +84,17 @@ public class CodeChooserDialog extends TitleAreaDialog
 		parent.setLayout(layout);
 		
 		Label label = new Label(parent, SWT.NULL);
-		label.setText("Code");
+		label.setText(Messages.getString("dialogs.CodeChooserDialog.code")); //$NON-NLS-1$
 		
 		fCodeName = new Text(parent, SWT.BORDER);
-		fCodeName.setText("");
+		fCodeName.setText(""); //$NON-NLS-1$
 		fCodeName.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 		
 		label = new Label(parent, SWT.NULL);
-		label.setText("Description");
+		label.setText(Messages.getString("dialogs.CodeChooserDialog.description")); //$NON-NLS-1$
 		
 		fDescription = new Text(parent, SWT.MULTI | SWT.BORDER);
-		fDescription.setText("");
+		fDescription.setText(""); //$NON-NLS-1$
 		fDescription.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
 		String[] proposals = buildProposals();
@@ -120,10 +120,11 @@ public class CodeChooserDialog extends TitleAreaDialog
 				CodeValidator validator = new CodeValidator(fCodeName.getText(), fProject);
 				if(!validator.isValid())
 				{
-					if(validator.getErrorMessage().equals("This code name is already taken"))
+					if(validator.getErrorMessage().equals(Messages.getString(
+							"dialogs.CodeChooserDialog.nameTaken"))) //$NON-NLS-1$
 					{
 						setErrorMessage(null);
-						setMessage("Enter the name of the code you want to associate with the selected text");
+						setMessage(Messages.getString("dialogs.CodeChooserDialog.enterName")); //$NON-NLS-1$
 						for(Code code : fProject.getCodes())
 						{
 							if(code.getCodeName().equals(fCodeName.getText()))
@@ -142,7 +143,8 @@ public class CodeChooserDialog extends TitleAreaDialog
 				else
 				{
 					setErrorMessage(null);
-					setMessage("This code does not exist and will be created.", IMessageProvider.WARNING);
+					setMessage(Messages.getString(
+							"dialogs.CodeChooserDialog.doesNotExist"), IMessageProvider.WARNING); //$NON-NLS-1$
 					getButton(IDialogConstants.OK_ID).setEnabled(true);
 				}
 				
