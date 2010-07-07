@@ -32,6 +32,18 @@ import ca.mcgill.cs.swevo.qualyzer.wizards.pages.NewProjectPage;
 public class NewProjectWizard extends Wizard implements ProjectCreationProgressListener
 {
 
+	/**
+	 * 
+	 */
+	private static final int PROGRESS_HEIGHT = 50;
+	/**
+	 * 
+	 */
+	private static final int PROGRESS_WIDTH = 260;
+	/**
+	 * 
+	 */
+	private static final int PROGRESS_MAX = 5;
 	private NewProjectPage fOne;
 	private IProject fProject;
 	private ProgressBar fProgressBar;
@@ -61,11 +73,11 @@ public class NewProjectWizard extends Wizard implements ProjectCreationProgressL
 		Shell shell = new Shell(getShell(), SWT.TITLE | SWT.BORDER);
 		shell.setLayout(new GridLayout(1, true));
 		shell.setText("Project Creation Status");
-		shell.setBounds(0, 0, 260, 50);
+		shell.setBounds(0, 0, PROGRESS_WIDTH, PROGRESS_HEIGHT);
 		fProgressBar = new ProgressBar(shell, SWT.HORIZONTAL);
 		fProgressBar.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 		fProgressBar.setMinimum(0);
-		fProgressBar.setMaximum(5);
+		fProgressBar.setMaximum(PROGRESS_MAX);
 		fProgressBar.setSelection(0);
 		shell.open();
 
