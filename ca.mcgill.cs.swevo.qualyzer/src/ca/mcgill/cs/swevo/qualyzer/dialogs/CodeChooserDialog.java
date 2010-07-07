@@ -47,9 +47,7 @@ public class CodeChooserDialog extends TitleAreaDialog
 	private Project fProject;
 	private Text fCodeName;
 	private Text fDescription;
-	
-	private String fName;
-	private String fDesc;
+
 	private Code fCode;
 	
 	/**
@@ -101,6 +99,7 @@ public class CodeChooserDialog extends TitleAreaDialog
 		
 		String[] proposals = buildProposals();
 		
+		@SuppressWarnings("unused")
 		AutoCompleteField field = new AutoCompleteField(fCodeName, new TextContentAdapter(), proposals);
 		
 		fCodeName.addModifyListener(createModifyListener());
@@ -181,13 +180,10 @@ public class CodeChooserDialog extends TitleAreaDialog
 	 */
 	@Override
 	protected void okPressed()
-	{
-		fName = fCodeName.getText();
-		fDesc = fDescription.getText();
-		
+	{	
 		for(Code code : fProject.getCodes())
 		{
-			if(code.getCodeName().equals(fName))
+			if(code.getCodeName().equals(fCodeName.getText()))
 			{
 				fCode = code;
 				break;
@@ -196,7 +192,7 @@ public class CodeChooserDialog extends TitleAreaDialog
 		
 		if(fCode == null)
 		{
-			fCode = Facade.getInstance().createCode(fName, fDesc, fProject);
+			fCode = Facade.getInstance().createCode(fCodeName.getText(), fDescription.getText(), fProject);
 			CommonNavigator view = (CommonNavigator) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 			.getActivePage().findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
 			view.getCommonViewer().refresh();

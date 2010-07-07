@@ -14,6 +14,7 @@
 package ca.mcgill.cs.swevo.qualyzer.editors.pages;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.window.Window;
@@ -82,7 +83,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		{
 			fCodes.add(code);
 		}
-		
+				
 		fIsDirty = false;
 		fCurrentSelection = -1;
 		
@@ -317,12 +318,13 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	 */
 	private void buildFormTable()
 	{
+		Collections.sort(fCodes);
+		
 		for(Code code : fCodes)
 		{
 			TableItem item = new TableItem(fTable, SWT.NULL);
 			item.setText(code.getCodeName());
 		}
-		
 	}
 	
 	/* (non-Javadoc)

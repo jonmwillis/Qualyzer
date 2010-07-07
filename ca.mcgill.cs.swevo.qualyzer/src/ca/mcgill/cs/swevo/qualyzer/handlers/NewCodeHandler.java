@@ -25,6 +25,7 @@ import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.dialogs.NewCodeDialog;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
+import ca.mcgill.cs.swevo.qualyzer.providers.WrapperCode;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
@@ -59,6 +60,8 @@ public class NewCodeHandler extends AbstractHandler
 				CommonNavigator viewer = (CommonNavigator) activePage.findView(
 						QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
 				viewer.getCommonViewer().refresh();
+				
+				ResourcesUtil.openEditor(activePage, new WrapperCode(project));
 			}
 		}
 		
