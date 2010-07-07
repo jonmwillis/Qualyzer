@@ -34,6 +34,7 @@ import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.RTFEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
+import ca.mcgill.cs.swevo.qualyzer.model.Fragment;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.ProjectListener;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
@@ -52,7 +53,7 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 	private static final char UNDERLINE_CHAR = (char) 21;
 	private static final char ITALIC_CHAR = (char) 9;
 	private static final char BOLD_CHAR = (char) 2;
-	private static final char FRAGMENT_CHAR = (char) 11;
+//	private static final char FRAGMENT_CHAR = (char) 11;
 	
 	private Action fBoldAction;
 	private Action fItalicAction;
@@ -102,11 +103,9 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 				Position position = new Position(selection.x, selection.y);
 				
 				Transcript transcript = ((RTFEditorInput) getEditorInput()).getTranscript();
-				Facade.getInstance().createFragment(transcript, position.offset, position.length);
+				Fragment fragment = Facade.getInstance().createFragment(transcript, position.offset, position.length);
 		
-				
-				
-				viewer.markFragment(position);
+				viewer.markFragment(fragment);
 				setDirty();
 			}
 		};
@@ -207,9 +206,11 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 			public void selectionChanged(SelectionChangedEvent event)
 			{
 				Point selection = viewer.getSelectedRange();
-				fBoldAction.setEnabled(selection.y != 0);
-				fItalicAction.setEnabled(selection.y != 0);
-				fUnderlineAction.setEnabled(selection.y != 0);
+				boolean enabled = selection.y != 0;
+				fBoldAction.setEnabled(enabled);
+				fItalicAction.setEnabled(enabled);
+				fUnderlineAction.setEnabled(enabled);
+				//fMarkTextAction.setEnabled(enabled);
 			}
 		});
 		
@@ -264,11 +265,10 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 		setAction(RTFConstants.ITALIC_ACTION_ID, fItalicAction);
 		setAction(RTFConstants.FRAGMENT_ACTION_ID, fMarkTextAction);
 		
-		removeActionActivationCode(ITextEditorActionConstants.FIND);
 		setActionActivationCode(RTFConstants.BOLD_ACTION_ID, BOLD_CHAR, 'b', SWT.CONTROL);
 		setActionActivationCode(RTFConstants.ITALIC_ACTION_ID, ITALIC_CHAR, 'i', SWT.CONTROL);
 		setActionActivationCode(RTFConstants.UNDERLINE_ACTION_ID, UNDERLINE_CHAR, 'u', SWT.CONTROL);
-		setActionActivationCode(RTFConstants.FRAGMENT_ACTION_ID, FRAGMENT_CHAR, 'k', SWT.CONTROL);
+		//setActionActivationCode(RTFConstants.FRAGMENT_ACTION_ID, FRAGMENT_CHAR, 'k', SWT.CONTROL);
 	}
 	
 	/* (non-Javadoc)
@@ -345,7 +345,7 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 		addAction(menu, ITextEditorActionConstants.GROUP_EDIT, RTFConstants.BOLD_ACTION_ID);
 		addAction(menu, ITextEditorActionConstants.GROUP_EDIT, RTFConstants.ITALIC_ACTION_ID);
 		addAction(menu, ITextEditorActionConstants.GROUP_EDIT, RTFConstants.UNDERLINE_ACTION_ID);
-		addAction(menu, ITextEditorActionConstants.GROUP_EDIT, RTFConstants.FRAGMENT_TYPE);
+		addAction(menu, ITextEditorActionConstants.GROUP_EDIT, RTFConstants.FRAGMENT_ACTION_ID);
 	}
 	
 	/* (non-Javadoc)
@@ -354,8 +354,6 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 	@Override
 	public void doSave(IProgressMonitor progressMonitor)
 	{
-		Transcript transcript = ((RTFEditorInput) getEditorInput()).getTranscript();
-		Facade.getInstance().saveTranscript(transcript);
 		super.doSave(progressMonitor);
 		fIsDirty = false;
 	}

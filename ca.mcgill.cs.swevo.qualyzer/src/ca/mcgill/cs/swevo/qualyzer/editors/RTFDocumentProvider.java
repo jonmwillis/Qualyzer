@@ -31,7 +31,6 @@ import org.eclipse.ui.editors.text.FileDocumentProvider;
 import org.eclipse.ui.part.FileEditorInput;
 
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.RTFEditorInput;
-import ca.mcgill.cs.swevo.qualyzer.model.CodeEntry;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Fragment;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
@@ -60,7 +59,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		for(Fragment fragment : transcript.getFragments())
 		{
 			Position position = new Position(fragment.getOffset(), fragment.getLength());
-			doc.addAnnotation(position, new Annotation(RTFConstants.FRAGMENT_TYPE, true, ""));
+			doc.addAnnotation(position, new FragmentAnnotation(fragment));
 		}
 		
 		return doc;
@@ -410,6 +409,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	 * @see org.eclipse.ui.editors.text.FileDocumentProvider#doSaveDocument(org.eclipse.core.runtime.IProgressMonitor,
 	 *  java.lang.Object, org.eclipse.jface.text.IDocument, boolean)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void doSaveDocument(IProgressMonitor monitor, Object element, IDocument document, boolean overwrite)
 			throws CoreException
@@ -431,6 +431,23 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		{
 			
 		}
+		
+		Transcript transcript = ((RTFEditorInput) element).getTranscript();
+		
+		Iterator<Annotation> iter = model.getAnnotationIterator();
+		while(iter.hasNext())
+		{
+			Annotation annotation = iter.next();
+			if(annotation instanceof FragmentAnnotation)
+			{
+				Fragment fragment = ((FragmentAnnotation) annotation).getFragment();
+				Position position = model.getPosition(annotation);
+				fragment.setOffset(position.offset);
+				fragment.setLength(position.length);
+			}
+		}
+		
+		Facade.getInstance().saveTranscript(transcript);
 	}
 
 	/**

@@ -25,6 +25,8 @@ import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.swt.widgets.Composite;
 
+import ca.mcgill.cs.swevo.qualyzer.model.Fragment;
+
 /**
  * The SourceViewer for our editor. Displays Rich Text qualities from annotations.
  *
@@ -307,13 +309,14 @@ public class RTFSourceViewer extends ProjectionViewer
 	}
 
 	/**
-	 * @param position
+	 * @param fragment
 	 */
-	public void markFragment(Position position)
+	public void markFragment(Fragment fragment)
 	{
 		IAnnotationModel model = getAnnotationModel();
 		
-		Annotation annotation = new Annotation(RTFConstants.FRAGMENT_TYPE, true, "");
+		Position position = new Position(fragment.getOffset(), fragment.getLength());
+		Annotation annotation = new FragmentAnnotation(fragment);
 		model.addAnnotation(annotation, position);
 	}
 
