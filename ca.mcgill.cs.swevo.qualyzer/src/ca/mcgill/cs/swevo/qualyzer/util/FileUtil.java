@@ -29,7 +29,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
-import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 
 /**
  * @author Jonathan Faubert (jonfaub@gmail.com)
@@ -155,27 +154,28 @@ public final class FileUtil
 	 * @param audioFilePath
 	 * @param existingTranscript
 	 */
-	public static void setupTranscriptFiles(Transcript transcript, String audioFilePath, String existingTranscript)
+	public static void setupTranscriptFiles(String transcriptName, String projectName, String audioFilePath,
+			String existingTranscript)
 	{
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		IProject wProject = root.getProject(transcript.getProject().getName());
+		IProject wProject = root.getProject(projectName);
 		
 		String workspacePath = wProject.getLocation().toString();
-		hookupAudioFile(audioFilePath, workspacePath, transcript);
+		hookupAudioFile(audioFilePath, workspacePath, transcriptName);
 		
-		createTranscriptFile(existingTranscript, transcript);
+		createTranscriptFile(existingTranscript, projectName, transcriptName+".rtf");
 	}
 	
-	private static void hookupAudioFile(String audioFilePath, String workspacePath, Transcript transcript)
+	private static void hookupAudioFile(String audioFilePath, String workspacePath, String transcriptName)
 	{
 		if(!audioFilePath.isEmpty())
 		{
 			//if the audio file is not in the workspace then copy it there.
 			int i = audioFilePath.lastIndexOf('.');
 			
-			String relativePath = transcript.getName()+audioFilePath.substring(i);
+			String relativePath = transcriptName+audioFilePath.substring(i);
 			
-			if(audioFilePath.indexOf(workspacePath) == -1 || namesAreDifferent(transcript.getName(), audioFilePath))
+			if(audioFilePath.indexOf(workspacePath) == -1 || namesAreDifferent(transcriptName, audioFilePath))
 			{
 				if(!copyAudioFile(audioFilePath, relativePath, workspacePath))
 				{
@@ -215,10 +215,10 @@ public final class FileUtil
 		}
 	}
 	
-	private static void createTranscriptFile(String existingTranscript, Transcript transcript)
+	private static void createTranscriptFile(String existingTranscript, String projectName, String fileName)
 	{
-		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(transcript.getProject().getName());
-		String path = wProject.getLocation()+File.separator+TRANSCRIPTS+File.separator+transcript.getFileName();
+		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+		String path = wProject.getLocation()+File.separator+TRANSCRIPTS+File.separator+fileName;
 		File file = new File(path);
 		
 		if(existingTranscript.isEmpty())
