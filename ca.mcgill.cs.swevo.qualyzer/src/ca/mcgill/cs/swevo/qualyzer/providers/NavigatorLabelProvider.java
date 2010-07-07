@@ -209,11 +209,6 @@ public class NavigatorLabelProvider extends LabelProvider implements ILabelProvi
 		{
 			output = ((Code) anElement).getCodeName();
 		}
-
-		if(output == null || output.isEmpty())
-		{
-			System.out.println(anElement +" : "+ anElement.getClass().getName());
-		}
 		
 		return output;
 	}
