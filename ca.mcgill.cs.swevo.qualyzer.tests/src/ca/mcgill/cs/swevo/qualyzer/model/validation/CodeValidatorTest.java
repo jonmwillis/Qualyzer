@@ -20,6 +20,7 @@ import org.junit.Test;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
+import ca.mcgill.cs.swevo.qualyzer.model.ProjectCreationProgressListener;
 
 public class CodeValidatorTest
 {
@@ -28,6 +29,15 @@ public class CodeValidatorTest
 	private static final String TEST_INVESTIGATOR_NAME = "Bob";
 	
 	private static final String TEST_CODE = "Code1";
+	
+	private static final ProjectCreationProgressListener fProgress = new ProjectCreationProgressListener()
+	{
+		
+		@Override
+		public void statusUpdate()
+		{			
+		}
+	};
 
 	private Facade fFacade;
 	
@@ -40,7 +50,7 @@ public class CodeValidatorTest
 	public void setUp()
 	{
 		fFacade = Facade.getInstance();
-		fProject = fFacade.createProject(TEST_PROJECT_NAME, TEST_INVESTIGATOR_NAME, TEST_INVESTIGATOR_NAME, "");
+		fProject = fFacade.createProject(TEST_PROJECT_NAME, TEST_INVESTIGATOR_NAME, TEST_INVESTIGATOR_NAME, "", fProgress);
 		fFacade.createCode(TEST_CODE, "", fProject);
 	}
 
