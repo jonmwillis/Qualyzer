@@ -24,6 +24,7 @@ import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
@@ -33,7 +34,9 @@ import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 
+import ca.mcgill.cs.swevo.qualyzer.dialogs.CodeChooserDialog;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.RTFEditorInput;
+import ca.mcgill.cs.swevo.qualyzer.model.CodeEntry;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Fragment;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
@@ -100,19 +103,45 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 			@Override
 			public void run()
 			{
-				RTFSourceViewer viewer = (RTFSourceViewer) getSourceViewer();
-				Point selection = viewer.getSelectedRange();
-				Position position = new Position(selection.x, selection.y);
-				
-				Transcript transcript = ((RTFEditorInput) getEditorInput()).getTranscript();
-				Fragment fragment = Facade.getInstance().createFragment(transcript, position.offset, position.length);
+				CodeChooserDialog dialog = new CodeChooserDialog(getSite().getShell(), fTranscript.getProject());
+				dialog.create();
+				if(dialog.open() == Window.OK)
+				{
+					RTFSourceViewer viewer = (RTFSourceViewer) getSourceViewer();
+					Point selection = viewer.getSelectedRange();
+					Position position = new Position(selection.x, selection.y);
+					
+					Fragment fragment = null;
+					for(Fragment existingFragment : fTranscript.getFragments())
+					{
+						if(existingFragment.getOffset() == position.offset && 
+								existingFragment.getLength() == position.length)
+						{
+							fragment = existingFragment;
+							break;
+						}
+					}
+					
+					CodeEntry entry = new CodeEntry();
+					entry.setCode(dialog.getCode());
+					
+					if(fragment == null)
+					{
+						fragment = Facade.getInstance().createFragment(fTranscript, position.offset,
+								position.length);
+					}
+					
+					fragment.getCodeEntries().add(entry);
+					viewer.markFragment(fragment);
+					
+					setDirty();
+				}
 		
-				viewer.markFragment(fragment);
-				setDirty();
+				
 			}
 		};
 		fMarkTextAction.setText(Messages.getString("editors.RTFEditor.mark")); //$NON-NLS-1$
-		fMarkTextAction.setEnabled(true);
+		fMarkTextAction.setEnabled(false);
 	}
 
 	/**
@@ -216,8 +245,6 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 				boolean underlineEnabled = true;
 				
 				IAnnotationModel model = getDocumentProvider().getAnnotationModel(getEditorInput());
-				
-				
 				
 				fBoldAction.setEnabled(enabled && boldEnabled);
 				fItalicAction.setEnabled(enabled && italicEnabled);

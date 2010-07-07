@@ -15,6 +15,7 @@ package ca.mcgill.cs.swevo.qualyzer.editors;
 
 import org.eclipse.jface.text.source.Annotation;
 
+import ca.mcgill.cs.swevo.qualyzer.model.CodeEntry;
 import ca.mcgill.cs.swevo.qualyzer.model.Fragment;
 
 /**
@@ -29,10 +30,24 @@ public class FragmentAnnotation extends Annotation
 	 */
 	public FragmentAnnotation(Fragment fragment)
 	{
-		super(RTFConstants.FRAGMENT_TYPE, true, ""); //$NON-NLS-1$
+		super(RTFConstants.FRAGMENT_TYPE, true, buildCodeString(fragment)); //$NON-NLS-1$
 		fFragment = fragment;
 	}
 	
+	/**
+	 * @return
+	 */
+	private static String buildCodeString(Fragment fragment)
+	{
+		String toReturn = "";
+		for(CodeEntry entry : fragment.getCodeEntries())
+		{
+			toReturn += entry.getCode().getCodeName() + ", ";
+		}
+		
+		return toReturn.isEmpty() ? null : toReturn.substring(0, toReturn.length() - 2);
+	}
+
 	/**
 	 * Get the text fragment associated with this annotation.
 	 * @return
@@ -40,5 +55,13 @@ public class FragmentAnnotation extends Annotation
 	public Fragment getFragment()
 	{
 		return fFragment;
+	}
+
+	/**
+	 * @param fragment
+	 */
+	public void setFragment(Fragment fragment)
+	{
+		fFragment = fragment;
 	}
 }

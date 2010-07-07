@@ -316,11 +316,27 @@ public class RTFSourceViewer extends ProjectionViewer
 	/**
 	 * @param fragment
 	 */
+	@SuppressWarnings("unchecked")
 	public void markFragment(Fragment fragment)
 	{
 		IAnnotationModel model = getAnnotationModel();
-		
 		Position position = new Position(fragment.getOffset(), fragment.getLength());
+		
+		Iterator<Annotation> iter = model.getAnnotationIterator();
+		
+		while(iter.hasNext())
+		{
+			Annotation annot = iter.next();
+			if(annot instanceof FragmentAnnotation)
+			{
+				Position pos = model.getPosition(annot);
+				if(pos.offset == position.offset)
+				{
+					model.removeAnnotation(annot);
+				}
+			}
+		}
+		
 		Annotation annotation = new FragmentAnnotation(fragment);
 		model.addAnnotation(annotation, position);
 	}
