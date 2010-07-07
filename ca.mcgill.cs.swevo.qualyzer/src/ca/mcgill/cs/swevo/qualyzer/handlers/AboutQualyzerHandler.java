@@ -24,7 +24,11 @@ import org.eclipse.ui.handlers.HandlerUtil;
  */
 public class AboutQualyzerHandler extends AbstractHandler
 {
-	private static final String RELEASE = Messages.getString("handlers.AboutQualyzerHandler.releaseTag") + " 0.2.0\n\n";
+	private static final String RELEASE_NUMBER = "0.2.0";
+	private static final String RELEASE = Messages.getString("handlers.AboutQualyzerHandler.releaseTag") +
+		" " + RELEASE_NUMBER + "\n\n";
+	
+	private static final String MCGILL = Messages.getString("handlers.AboutQualyzerHandler.mcGillTag") + "\n\n";
 	
 	private static final String DESCRIPTION = 
 		Messages.getString("handlers.AboutQualyzerHandler.description1") + //$NON-NLS-1$
@@ -53,7 +57,7 @@ public class AboutQualyzerHandler extends AbstractHandler
 		
 		MessageDialog.openInformation(shell, 
 				Messages.getString("handlers.AboutQualyzerHandler.about"), 
-				RELEASE+DESCRIPTION+WEB+COPYRIGHT); //$NON-NLS-1$
+				RELEASE+MCGILL+DESCRIPTION+WEB+COPYRIGHT); //$NON-NLS-1$
 		return null;
 	}
 
