@@ -38,8 +38,10 @@ public class NavigatorLabelProvider extends LabelProvider implements ILabelProvi
 	private static final String FOLDER_IMG = "FOLDER_IMG"; //$NON-NLS-1$
 	private static final String PROJECT_IMG = "PROJECT_IMG"; //$NON-NLS-1$
 	private static final String CPROJECT_IMG = "CPROJECT_IMG"; //$NON-NLS-1$
-	private static final String PERSON_IMG = "PERSON_IMG"; //$NON-NLS-1$
+	private static final String PARTICIPANT_IMG = "PARTICIPANT_IMG"; //$NON-NLS-1$
 	private static final String FILE_IMG = "FILE_IMG"; //$NON-NLS-1$
+	private static final String CODE_IMG = "CODE_IMG"; //$NON-NLS-1$
+	private static final String INVESTIGATOR_IMG = "INVESTIGATOR_IMG"; //$NON-NLS-1$
 	
 	private final ImageRegistry fRegistry;
 	
@@ -51,9 +53,11 @@ public class NavigatorLabelProvider extends LabelProvider implements ILabelProvi
 		fRegistry = QualyzerActivator.getDefault().getImageRegistry();
 		addImage(FOLDER_IMG, QualyzerActivator.PLUGIN_ID, "icons/fldr_obj.gif"); //$NON-NLS-1$
 		addImage(PROJECT_IMG, QualyzerActivator.PLUGIN_ID, "icons/prj_obj.gif"); //$NON-NLS-1$
-		addImage(PERSON_IMG, QualyzerActivator.PLUGIN_ID, "icons/people.png"); //$NON-NLS-1$
+		addImage(PARTICIPANT_IMG, QualyzerActivator.PLUGIN_ID, "icons/participant.png"); //$NON-NLS-1$
 		addImage(FILE_IMG, QualyzerActivator.PLUGIN_ID, "icons/file_obj.gif"); //$NON-NLS-1$
 		addImage(CPROJECT_IMG, QualyzerActivator.PLUGIN_ID, "icons/cprj_obj.gif"); //$NON-NLS-1$
+		addImage(CODE_IMG, QualyzerActivator.PLUGIN_ID, "icons/code_obj.png"); //$NON-NLS-1$
+		addImage(INVESTIGATOR_IMG, QualyzerActivator.PLUGIN_ID, "icons/investigator_obj.png"); //$NON-NLS-1$
 	}
 	
 	/**
@@ -99,7 +103,7 @@ public class NavigatorLabelProvider extends LabelProvider implements ILabelProvi
 				image = getImage(CPROJECT_IMG, QualyzerActivator.PLUGIN_ID);
 			}
 		}
-		else if(element instanceof ProjectWrapper)
+		else if(element instanceof ProjectWrapper && !(element instanceof WrapperCode))
 		{
 			image = getImage(FOLDER_IMG, QualyzerActivator.PLUGIN_ID);
 		}
@@ -109,17 +113,18 @@ public class NavigatorLabelProvider extends LabelProvider implements ILabelProvi
 		}
 		else if(element instanceof Investigator)
 		{
-			image = getImage(PERSON_IMG, QualyzerActivator.PLUGIN_ID);
+			image = getImage(INVESTIGATOR_IMG, QualyzerActivator.PLUGIN_ID);
 		}
 		else if(element instanceof Memo)
 		{
 		}
 		else if(element instanceof Participant)
 		{
-			image = getImage(PERSON_IMG, QualyzerActivator.PLUGIN_ID);
+			image = getImage(PARTICIPANT_IMG, QualyzerActivator.PLUGIN_ID);
 		}
-		else if(element instanceof Code)
+		else if(element instanceof WrapperCode)
 		{
+			image = getImage(CODE_IMG, QualyzerActivator.PLUGIN_ID);
 		}
 		
 		return image;
@@ -205,6 +210,11 @@ public class NavigatorLabelProvider extends LabelProvider implements ILabelProvi
 			output = ((Code) anElement).getCodeName();
 		}
 
+		if(output == null || output.isEmpty())
+		{
+			System.out.println(anElement +" : "+ anElement.getClass().getName());
+		}
+		
 		return output;
 	}
 	
