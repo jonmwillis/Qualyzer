@@ -39,10 +39,10 @@ public class FragmentAnnotation extends Annotation
 	 */
 	private static String buildCodeString(Fragment fragment)
 	{
-		String toReturn = "";
+		String toReturn = ""; //$NON-NLS-1$
 		for(CodeEntry entry : fragment.getCodeEntries())
 		{
-			toReturn += entry.getCode().getCodeName() + ", ";
+			toReturn += entry.getCode().getCodeName() + ", "; //$NON-NLS-1$
 		}
 		
 		return toReturn.isEmpty() ? null : toReturn.substring(0, toReturn.length() - 2);
