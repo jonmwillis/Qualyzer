@@ -18,20 +18,20 @@ package ca.mcgill.cs.swevo.qualyzer.editors;
  */
 public final class RTFConstants
 {
-	public static final String BOLD_TYPE = "RTFEditor.annotation.bold";
-	public static final String ITALIC_TYPE = "RTFEditor.annotation.italic";
-	public static final String UNDERLINE_TYPE = "RTFEditor.annotation.underline";
-	public static final String BOLD_ITALIC_TYPE = "RTFEditor.annotation.boldItalic";
-	public static final String BOLD_UNDERLINE_TYPE = "RTFEditor.annotation.boldUnderline";
-	public static final String ITALIC_UNDERLINE_TYPE = "RTFEditor.annotation.italicUnderline";
-	public static final String BOLD_ITALIC_UNDERLINE_TYPE = "RTFEditor.annotation.boldItalicUnderline";
+	public static final String BOLD_TYPE = "RTFEditor.annotation.bold"; //$NON-NLS-1$
+	public static final String ITALIC_TYPE = "RTFEditor.annotation.italic"; //$NON-NLS-1$
+	public static final String UNDERLINE_TYPE = "RTFEditor.annotation.underline"; //$NON-NLS-1$
+	public static final String BOLD_ITALIC_TYPE = "RTFEditor.annotation.boldItalic"; //$NON-NLS-1$
+	public static final String BOLD_UNDERLINE_TYPE = "RTFEditor.annotation.boldUnderline"; //$NON-NLS-1$
+	public static final String ITALIC_UNDERLINE_TYPE = "RTFEditor.annotation.italicUnderline"; //$NON-NLS-1$
+	public static final String BOLD_ITALIC_UNDERLINE_TYPE = "RTFEditor.annotation.boldItalicUnderline"; //$NON-NLS-1$
 	
-	public static final String FRAGMENT_TYPE = "RTFEditor.annotation.fragment";
+	public static final String FRAGMENT_TYPE = "RTFEditor.annotation.fragment"; //$NON-NLS-1$
 	
-	public static final String BOLD_ACTION_ID = "action.bold";
-	public static final String ITALIC_ACTION_ID = "action.italic";
-	public static final String UNDERLINE_ACTION_ID = "action.underline";
-	public static final String FRAGMENT_ACTION_ID = "action.markFragment";
+	public static final String BOLD_ACTION_ID = "action.bold"; //$NON-NLS-1$
+	public static final String ITALIC_ACTION_ID = "action.italic"; //$NON-NLS-1$
+	public static final String UNDERLINE_ACTION_ID = "action.underline"; //$NON-NLS-1$
+	public static final String FRAGMENT_ACTION_ID = "action.markFragment"; //$NON-NLS-1$
 	
 	private RTFConstants(){}
 }

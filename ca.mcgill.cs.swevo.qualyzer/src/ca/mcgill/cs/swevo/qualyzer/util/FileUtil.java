@@ -163,7 +163,7 @@ public final class FileUtil
 		String workspacePath = wProject.getLocation().toString();
 		hookupAudioFile(audioFilePath, workspacePath, transcriptName);
 		
-		createTranscriptFile(existingTranscript, projectName, transcriptName+".rtf");
+		createTranscriptFile(existingTranscript, projectName, transcriptName+".rtf"); //$NON-NLS-1$
 	}
 	
 	private static void hookupAudioFile(String audioFilePath, String workspacePath, String transcriptName)
@@ -233,7 +233,7 @@ public final class FileUtil
 				else
 				{
 					FileWriter writer = new FileWriter(file);
-					writer.write("{\\rtf1\\ansi\\deff0\n\n\n}\n\0");
+					writer.write("{\\rtf1\\ansi\\deff0\n\n\n}\n\0"); //$NON-NLS-1$
 					writer.close();
 				}
 			}

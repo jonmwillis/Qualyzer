@@ -178,7 +178,7 @@ public final class ResourcesUtil
 		
 		try
 		{
-			if(ext.equals("rtf") || ext.equals("txt"))
+			if(ext.equals("rtf") || ext.equals("txt")) //$NON-NLS-1$ //$NON-NLS-2$
 			{
 				Transcript lTranscript = Facade.getInstance().forceTranscriptLoad(transcript);
 				RTFEditorInput editorInput = new RTFEditorInput(file, lTranscript);
