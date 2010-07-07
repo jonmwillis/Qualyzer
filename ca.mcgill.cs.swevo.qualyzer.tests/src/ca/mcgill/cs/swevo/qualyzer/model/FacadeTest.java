@@ -31,7 +31,16 @@ import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
  */
 public class FacadeTest
 {
-
+	private static ProjectCreationProgressListener fProgress = new ProjectCreationProgressListener()
+	{
+		
+		@Override
+		public void statusUpdate()
+		{
+			
+		}
+	};
+	
 	private static final String TEST_PROJECT_NAME = "TestProject";
 
 	private static final String TEST_INVESTIGATOR_NAME = "Bob";
@@ -52,7 +61,7 @@ public class FacadeTest
 	{
 		fListener = new DebugListener();
 		fFacade = Facade.getInstance();
-		fProject = fFacade.createProject(TEST_PROJECT_NAME, TEST_INVESTIGATOR_NAME, TEST_INVESTIGATOR_NAME, "");
+		fProject = fFacade.createProject(TEST_PROJECT_NAME, TEST_INVESTIGATOR_NAME, TEST_INVESTIGATOR_NAME, "", fProgress);
 		fListenerManager = fFacade.getListenerManager();
 		fListenerManager.registerCodeListener(fProject, fListener);
 		fListenerManager.registerInvestigatorListener(fProject, fListener);
@@ -146,7 +155,7 @@ public class FacadeTest
 	@Test
 	public void testDeleteProject()
 	{
-		Project tempProject = fFacade.createProject("projectb", TEST_INVESTIGATOR_NAME, TEST_INVESTIGATOR_NAME, "");
+		Project tempProject = fFacade.createProject("projectb", TEST_INVESTIGATOR_NAME, TEST_INVESTIGATOR_NAME, "", fProgress);
 		DebugListener tempListener = new DebugListener();
 		fFacade.getListenerManager().registerProjectListener(tempProject, tempListener);
 		fFacade.deleteProject(tempProject);

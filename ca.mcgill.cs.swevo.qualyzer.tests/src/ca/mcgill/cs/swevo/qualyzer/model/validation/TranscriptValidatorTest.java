@@ -24,6 +24,7 @@ import org.junit.Test;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
+import ca.mcgill.cs.swevo.qualyzer.model.ProjectCreationProgressListener;
 
 public class TranscriptValidatorTest
 {
@@ -34,6 +35,16 @@ public class TranscriptValidatorTest
 	private static final String TEST_AUDIO_FILE_NAME1 = "Test.mp3";
 	private static final String TEST_AUDIO_FILE_NAME2 = "Test2.mp3";
 	private static final String TEST_TRANSCRIPT_NAME = "Transcript1";
+	
+	private static final ProjectCreationProgressListener fProgress = new ProjectCreationProgressListener()
+	{
+		
+		@Override
+		public void statusUpdate()
+		{
+			
+		}
+	};
 
 	private Facade fFacade;
 	private Project fProject;
@@ -42,7 +53,7 @@ public class TranscriptValidatorTest
 	public void setUp()
 	{
 		fFacade = Facade.getInstance();
-		fProject = fFacade.createProject(TEST_PROJECT_NAME, TEST_INVESTIGATOR_NAME, TEST_INVESTIGATOR_NAME, "");
+		fProject = fFacade.createProject(TEST_PROJECT_NAME, TEST_INVESTIGATOR_NAME, TEST_INVESTIGATOR_NAME, "", fProgress);
 		Participant lBob = fFacade.createParticipant(TEST_PARTICIPANT_ID, TEST_PARTICIPANT_NAME, fProject);
 		List<Participant> lParticipants = new ArrayList<Participant>();
 		lParticipants.add(lBob);
