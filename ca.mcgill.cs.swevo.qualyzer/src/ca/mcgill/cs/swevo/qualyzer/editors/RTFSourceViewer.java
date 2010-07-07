@@ -35,6 +35,11 @@ public class RTFSourceViewer extends ProjectionViewer
 {
 
 	/**
+	 * 
+	 */
+	private static final String EMPTY = "";  //$NON-NLS-1$
+
+	/**
 	 * @param parent
 	 * @param verticalRuler
 	 * @param overviewRuler
@@ -79,7 +84,7 @@ public class RTFSourceViewer extends ProjectionViewer
 		
 		if(current.size() == 0)
 		{
-			Annotation annotation = new Annotation(RTFConstants.BOLD_TYPE, true, "");
+			Annotation annotation = new Annotation(RTFConstants.BOLD_TYPE, true, EMPTY);
 			model.addAnnotation(annotation, position);
 		}
 		else if(current.size() == 1 && currentPos.get(0).offset == position.offset && 
@@ -103,27 +108,27 @@ public class RTFSourceViewer extends ProjectionViewer
 		
 		if(annotation.getType().equals(RTFConstants.BOLD_ITALIC_TYPE))
 		{
-			toReturn = new Annotation(RTFConstants.ITALIC_TYPE, true, "");
+			toReturn = new Annotation(RTFConstants.ITALIC_TYPE, true, EMPTY);
 		}
 		else if(annotation.getType().equals(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE))
 		{
-			toReturn = new Annotation(RTFConstants.ITALIC_UNDERLINE_TYPE, true, "");
+			toReturn = new Annotation(RTFConstants.ITALIC_UNDERLINE_TYPE, true, EMPTY);
 		}
 		else if(annotation.getType().equals(RTFConstants.BOLD_UNDERLINE_TYPE))
 		{
-			toReturn = new Annotation(RTFConstants.UNDERLINE_TYPE, true, "");
+			toReturn = new Annotation(RTFConstants.UNDERLINE_TYPE, true, EMPTY);
 		}
 		else if(annotation.getType().equals(RTFConstants.ITALIC_UNDERLINE_TYPE))
 		{
-			toReturn = new Annotation(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE, true, "");
+			toReturn = new Annotation(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE, true, EMPTY);
 		}
 		else if(annotation.getType().equals(RTFConstants.UNDERLINE_TYPE))
 		{
-			toReturn = new Annotation(RTFConstants.BOLD_UNDERLINE_TYPE, true, "");
+			toReturn = new Annotation(RTFConstants.BOLD_UNDERLINE_TYPE, true, EMPTY);
 		}
 		else if(annotation.getType().equals(RTFConstants.ITALIC_TYPE))
 		{
-			toReturn = new Annotation(RTFConstants.BOLD_ITALIC_TYPE, true, "");
+			toReturn = new Annotation(RTFConstants.BOLD_ITALIC_TYPE, true, EMPTY);
 		}
 		
 		return toReturn;
@@ -139,27 +144,27 @@ public class RTFSourceViewer extends ProjectionViewer
 		
 		if(annotation.getType().equals(RTFConstants.BOLD_TYPE))
 		{
-			toReturn = new Annotation(RTFConstants.BOLD_ITALIC_TYPE, true, "");
+			toReturn = new Annotation(RTFConstants.BOLD_ITALIC_TYPE, true, EMPTY);
 		}
 		else if(annotation.getType().equals(RTFConstants.BOLD_ITALIC_TYPE))
 		{
-			toReturn = new Annotation(RTFConstants.BOLD_TYPE, true, "");
+			toReturn = new Annotation(RTFConstants.BOLD_TYPE, true, EMPTY);
 		}
 		else if(annotation.getType().equals(RTFConstants.BOLD_UNDERLINE_TYPE))
 		{
-			toReturn = new Annotation(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE, true, "");
+			toReturn = new Annotation(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE, true, EMPTY);
 		}
 		else if(annotation.getType().equals(RTFConstants.ITALIC_UNDERLINE_TYPE))
 		{
-			toReturn = new Annotation(RTFConstants.UNDERLINE_TYPE, true, "");
+			toReturn = new Annotation(RTFConstants.UNDERLINE_TYPE, true, EMPTY);
 		}
 		else if(annotation.getType().equals(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE))
 		{
-			toReturn = new Annotation(RTFConstants.BOLD_UNDERLINE_TYPE, true, "");
+			toReturn = new Annotation(RTFConstants.BOLD_UNDERLINE_TYPE, true, EMPTY);
 		}
 		else if(annotation.getType().equals(RTFConstants.UNDERLINE_TYPE))
 		{
-			toReturn = new Annotation(RTFConstants.ITALIC_UNDERLINE_TYPE, true, "");
+			toReturn = new Annotation(RTFConstants.ITALIC_UNDERLINE_TYPE, true, EMPTY);
 		}
 		
 		return toReturn;
@@ -175,27 +180,27 @@ public class RTFSourceViewer extends ProjectionViewer
 		
 		if(annotation.getType().equals(RTFConstants.BOLD_TYPE))
 		{
-			toReturn = new Annotation(RTFConstants.BOLD_UNDERLINE_TYPE, true, "");
+			toReturn = new Annotation(RTFConstants.BOLD_UNDERLINE_TYPE, true, EMPTY);
 		}
 		else if(annotation.getType().equals(RTFConstants.BOLD_ITALIC_TYPE))
 		{
-			toReturn = new Annotation(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE, true, "");
+			toReturn = new Annotation(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE, true, EMPTY);
 		}
 		else if(annotation.getType().equals(RTFConstants.BOLD_UNDERLINE_TYPE))
 		{
-			toReturn = new Annotation(RTFConstants.BOLD_TYPE, true, "");
+			toReturn = new Annotation(RTFConstants.BOLD_TYPE, true, EMPTY);
 		}
 		else if(annotation.getType().equals(RTFConstants.ITALIC_UNDERLINE_TYPE))
 		{
-			toReturn = new Annotation(RTFConstants.ITALIC_TYPE, true, "");
+			toReturn = new Annotation(RTFConstants.ITALIC_TYPE, true, EMPTY);
 		}
 		else if(annotation.getType().equals(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE))
 		{
-			toReturn = new Annotation(RTFConstants.BOLD_ITALIC_TYPE, true, "");
+			toReturn = new Annotation(RTFConstants.BOLD_ITALIC_TYPE, true, EMPTY);
 		}
 		else if(annotation.getType().equals(RTFConstants.ITALIC_TYPE))
 		{
-			toReturn = new Annotation(RTFConstants.ITALIC_UNDERLINE_TYPE, true, "");
+			toReturn = new Annotation(RTFConstants.ITALIC_UNDERLINE_TYPE, true, EMPTY);
 		}
 		
 		return toReturn;
@@ -215,7 +220,7 @@ public class RTFSourceViewer extends ProjectionViewer
 		
 		if(current.size() == 0)
 		{
-			Annotation annotation = new Annotation(RTFConstants.ITALIC_TYPE, true, "");
+			Annotation annotation = new Annotation(RTFConstants.ITALIC_TYPE, true, EMPTY);
 			model.addAnnotation(annotation, position);
 		}
 		else if(current.size() == 1 && currentPos.get(0).offset == position.offset && 
@@ -294,7 +299,7 @@ public class RTFSourceViewer extends ProjectionViewer
 		
 		if(current.size() == 0)
 		{
-			Annotation annotation = new Annotation(RTFConstants.UNDERLINE_TYPE, true, "");
+			Annotation annotation = new Annotation(RTFConstants.UNDERLINE_TYPE, true, EMPTY);
 			model.addAnnotation(annotation, position);
 		}
 		else if(current.size() == 1 && currentPos.get(0).offset == position.offset && 

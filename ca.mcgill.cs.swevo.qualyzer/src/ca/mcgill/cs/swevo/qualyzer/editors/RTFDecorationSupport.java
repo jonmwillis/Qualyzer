@@ -33,12 +33,12 @@ public class RTFDecorationSupport extends SourceViewerDecorationSupport
 	
 	private static final Color BLACK = new Color(Display.getDefault(), new RGB(0, 0, 0));
 	
-	private static final String BOLD = "BOLD";
-	private static final String ITALIC = "ITALIC";
-	private static final String BOLD_UNDERLINE = "BOLDUNDERLINE";
-	private static final String BOLD_ITALIC = "BOLDITALIC";
-	private static final String ITALIC_UNDERLINE = "ITALICUNDERLINE";
-	private static final String BOLD_ITALIC_UNDERLINE = "BOLDITALICUNDERLINE";
+	private static final String BOLD = "BOLD"; //$NON-NLS-1$
+	private static final String ITALIC = "ITALIC"; //$NON-NLS-1$
+	private static final String BOLD_UNDERLINE = "BOLDUNDERLINE"; //$NON-NLS-1$
+	private static final String BOLD_ITALIC = "BOLDITALIC"; //$NON-NLS-1$
+	private static final String ITALIC_UNDERLINE = "ITALICUNDERLINE"; //$NON-NLS-1$
+	private static final String BOLD_ITALIC_UNDERLINE = "BOLDITALICUNDERLINE"; //$NON-NLS-1$
 
 	
 	private static ITextStyleStrategy gBoldStrategy = new ITextStyleStrategy()

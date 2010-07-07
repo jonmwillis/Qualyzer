@@ -18,6 +18,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.text.Position;
+import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.jface.text.source.SourceViewer;
@@ -48,7 +49,7 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
  */
 public class RTFEditor extends ColorerEditor implements TranscriptListener, ProjectListener
 {
-	public static final String ID = "ca.mcgill.cs.swevo.qualyzer.editors.RTFEditor";
+	public static final String ID = "ca.mcgill.cs.swevo.qualyzer.editors.RTFEditor"; //$NON-NLS-1$
 
 	private static final char UNDERLINE_CHAR = (char) 21;
 	private static final char ITALIC_CHAR = (char) 9;
@@ -91,7 +92,8 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 	 */
 	private void initialiseMarkAction()
 	{
-		fMarkTextAction = new Action(){
+		fMarkTextAction = new Action()
+		{
 			/* (non-Javadoc)
 			 * @see org.eclipse.jface.action.Action#run()
 			 */
@@ -109,7 +111,7 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 				setDirty();
 			}
 		};
-		fMarkTextAction.setText("Mark Fragment (Graphical only)");
+		fMarkTextAction.setText(Messages.getString("editors.RTFEditor.mark")); //$NON-NLS-1$
 		fMarkTextAction.setEnabled(true);
 	}
 
@@ -118,7 +120,8 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 	 */
 	private void initialiseUnderlineAction()
 	{
-		fUnderlineAction = new Action(){
+		fUnderlineAction = new Action(Messages.getString("editors.RTFEditor.underline"),  //$NON-NLS-1$
+				Action.AS_CHECK_BOX){
 			/* (non-Javadoc)
 			 * @see org.eclipse.jface.action.Action#run()
 			 */
@@ -133,7 +136,6 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 				setDirty();
 			}
 		};
-		fUnderlineAction.setText("Underline");
 		fUnderlineAction.setEnabled(false);
 	}
 
@@ -142,7 +144,7 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 	 */
 	private void initialiseItalicAction()
 	{
-		fItalicAction = new Action(){
+		fItalicAction = new Action(Messages.getString("editors.RTFEditor.italic"), Action.AS_CHECK_BOX){ //$NON-NLS-1$
 			/* (non-Javadoc)
 			 * @see org.eclipse.jface.action.Action#run()
 			 */
@@ -157,7 +159,6 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 				setDirty();
 			}
 		};
-		fItalicAction.setText("Italic");
 		fItalicAction.setEnabled(false);
 	}
 
@@ -166,7 +167,7 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 	 */
 	private void initialiseBoldAction()
 	{
-		fBoldAction = new Action(){
+		fBoldAction = new Action(Messages.getString("editors.RTFEditor.bold"), Action.AS_CHECK_BOX){ //$NON-NLS-1$
 			
 			@Override
 			public void run() 
@@ -179,7 +180,6 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 				setDirty();
 			};
 		};
-		fBoldAction.setText("Bold");
 		fBoldAction.setEnabled(false);
 	}
 	
@@ -207,10 +207,22 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 			{
 				Point selection = viewer.getSelectedRange();
 				boolean enabled = selection.y != 0;
-				fBoldAction.setEnabled(enabled);
-				fItalicAction.setEnabled(enabled);
-				fUnderlineAction.setEnabled(enabled);
-				//fMarkTextAction.setEnabled(enabled);
+				boolean boldChecked = false;
+				boolean italicChecked = false;
+				boolean underlineChecked = false;
+				
+				boolean boldEnabled = true;
+				boolean italicEnabled = true;
+				boolean underlineEnabled = true;
+				
+				IAnnotationModel model = getDocumentProvider().getAnnotationModel(getEditorInput());
+				
+				
+				
+				fBoldAction.setEnabled(enabled && boldEnabled);
+				fItalicAction.setEnabled(enabled && italicEnabled);
+				fUnderlineAction.setEnabled(enabled && underlineEnabled);
+				fMarkTextAction.setEnabled(enabled);
 			}
 		});
 		

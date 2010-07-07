@@ -42,6 +42,10 @@ import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 public class RTFDocumentProvider extends FileDocumentProvider
 {
 	
+	/**
+	 * 
+	 */
+	private static final String EMPTY = ""; //$NON-NLS-1$
 	private int fBoldTag;
 	private int fItalicTag;
 	private int fUnderlineTag;
@@ -82,7 +86,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	protected void setDocumentContent(IDocument document, InputStream contentStream, String encoding)
 			throws CoreException
 	{
-		String text = "";
+		String text = EMPTY;
 		fBoldTag = -1;
 		fItalicTag = -1;
 		fUnderlineTag = -1;
@@ -120,7 +124,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 				}
 				else if(ch == '\\')
 				{
-					String escape = " ";
+					String escape = " ";  //$NON-NLS-1$
 					do
 					{
 						escape = nextTag(contentStream);
@@ -142,15 +146,15 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		//It seems that some editors (wordpad) don't put ending tags if the style reaches the EOF
 		if(fBoldTag != -1)
 		{
-			text += handleTag("b0", (RTFDocument)document, text);
+			text += handleTag("b0", (RTFDocument)document, text); //$NON-NLS-1$
 		}
 		if(fItalicTag != -1)
 		{
-			text += handleTag("i0", (RTFDocument)document, text);
+			text += handleTag("i0", (RTFDocument)document, text); //$NON-NLS-1$
 		}
 		if(fUnderlineTag != -1)
 		{
-			text += handleTag("ulnone", (RTFDocument)document, text);
+			text += handleTag("ulnone", (RTFDocument)document, text); //$NON-NLS-1$
 		}
 		
 		document.set(text);
@@ -166,15 +170,15 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		}
 		string = string.trim();
 		
-		if(string.equals("par"))
+		if(string.equals("par")) //$NON-NLS-1$
 		{
-			return "\n";
+			return "\n"; //$NON-NLS-1$
 		}
-		else if(string.equals("tab"))
+		else if(string.equals("tab")) //$NON-NLS-1$
 		{
-			return "\t";
+			return "\t"; //$NON-NLS-1$
 		}
-		else if(string.equals("b"))
+		else if(string.equals("b")) //$NON-NLS-1$
 		{
 			fBoldTag = currentText.length();
 			
@@ -189,7 +193,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 			}
 			else if(fItalicTag != -1 && fItalicTag != fBoldTag)
 			{
-				Annotation annotation = new Annotation(RTFConstants.ITALIC_TYPE, true, "");
+				Annotation annotation = new Annotation(RTFConstants.ITALIC_TYPE, true, EMPTY);
 				Position position = new Position(fItalicTag, fBoldTag - fItalicTag);
 				
 				document.addAnnotation(position, annotation);
@@ -197,14 +201,14 @@ public class RTFDocumentProvider extends FileDocumentProvider
 			}
 			else if(fUnderlineTag != -1 && fUnderlineTag != fBoldTag)
 			{
-				Annotation annotation = new Annotation(RTFConstants.UNDERLINE_TYPE, true, "");
+				Annotation annotation = new Annotation(RTFConstants.UNDERLINE_TYPE, true, EMPTY);
 				Position position = new Position(fUnderlineTag, fBoldTag - fUnderlineTag);
 				
 				document.addAnnotation(position, annotation);
 				fUnderlineTag = fBoldTag;
 			}
 		}
-		else if(string.equals("b0"))
+		else if(string.equals("b0")) //$NON-NLS-1$
 		{	
 			Annotation annotation;
 			int curPos = currentText.length();
@@ -212,23 +216,23 @@ public class RTFDocumentProvider extends FileDocumentProvider
 			
 			if(fItalicTag != -1 && fUnderlineTag != -1)
 			{
-				annotation = new Annotation(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE, true, "");
+				annotation = new Annotation(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE, true, EMPTY);
 				fItalicTag = curPos;
 				fUnderlineTag = curPos;
 			}
 			else if(fItalicTag != -1)
 			{
-				annotation = new Annotation(RTFConstants.BOLD_ITALIC_TYPE, true, "");
+				annotation = new Annotation(RTFConstants.BOLD_ITALIC_TYPE, true, EMPTY);
 				fItalicTag = curPos;
 			}
 			else if(fUnderlineTag != -1)
 			{
-				annotation = new Annotation(RTFConstants.BOLD_UNDERLINE_TYPE, true, "");
+				annotation = new Annotation(RTFConstants.BOLD_UNDERLINE_TYPE, true, EMPTY);
 				fUnderlineTag = curPos;
 			}
 			else
 			{
-				annotation = new Annotation(RTFConstants.BOLD_TYPE, true, "");
+				annotation = new Annotation(RTFConstants.BOLD_TYPE, true, EMPTY);
 			}
 			
 			if(position.length > 0)
@@ -238,13 +242,13 @@ public class RTFDocumentProvider extends FileDocumentProvider
 			
 			fBoldTag = -1;
 		}
-		else if(string.equals("i"))
+		else if(string.equals("i")) //$NON-NLS-1$
 		{
 			fItalicTag = currentText.length();
 			
 			if(fBoldTag != -1 && fUnderlineTag != -1 && fBoldTag != fItalicTag)
 			{
-				Annotation annotation = new Annotation(RTFConstants.BOLD_UNDERLINE_TYPE, true, "");
+				Annotation annotation = new Annotation(RTFConstants.BOLD_UNDERLINE_TYPE, true, EMPTY);
 				Position position = new Position(fBoldTag, fItalicTag - fBoldTag);
 				
 				document.addAnnotation(position, annotation);
@@ -253,7 +257,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 			}
 			else if(fBoldTag != -1 && fBoldTag != fItalicTag)
 			{
-				Annotation annotation = new Annotation(RTFConstants.BOLD_TYPE, true, "");
+				Annotation annotation = new Annotation(RTFConstants.BOLD_TYPE, true, EMPTY);
 				Position position = new Position(fBoldTag, fItalicTag - fBoldTag);
 				
 				document.addAnnotation(position, annotation);
@@ -261,14 +265,14 @@ public class RTFDocumentProvider extends FileDocumentProvider
 			}
 			else if(fUnderlineTag != -1 && fUnderlineTag != fItalicTag)
 			{
-				Annotation annotation = new Annotation(RTFConstants.UNDERLINE_TYPE, true, "");
+				Annotation annotation = new Annotation(RTFConstants.UNDERLINE_TYPE, true, EMPTY);
 				Position position = new Position(fUnderlineTag, fItalicTag - fUnderlineTag);
 				
 				document.addAnnotation(position, annotation);
 				fUnderlineTag = fItalicTag;
 			}
 		}
-		else if(string.equals("i0"))
+		else if(string.equals("i0")) //$NON-NLS-1$
 		{
 			Annotation annotation;
 			int curPos = currentText.length();
@@ -276,23 +280,23 @@ public class RTFDocumentProvider extends FileDocumentProvider
 			
 			if(fBoldTag != -1 && fUnderlineTag != -1)
 			{
-				annotation = new Annotation(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE, true, "");
+				annotation = new Annotation(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE, true, EMPTY);
 				fBoldTag = curPos;
 				fUnderlineTag = curPos;
 			}
 			else if(fBoldTag != -1)
 			{
-				annotation = new Annotation(RTFConstants.BOLD_ITALIC_TYPE, true, "");
+				annotation = new Annotation(RTFConstants.BOLD_ITALIC_TYPE, true, EMPTY);
 				fBoldTag = curPos;
 			}
 			else if(fUnderlineTag != -1)
 			{
-				annotation = new Annotation(RTFConstants.ITALIC_UNDERLINE_TYPE, true, "");
+				annotation = new Annotation(RTFConstants.ITALIC_UNDERLINE_TYPE, true, EMPTY);
 				fUnderlineTag = curPos;
 			}
 			else
 			{
-				annotation = new Annotation(RTFConstants.ITALIC_TYPE, true, "");
+				annotation = new Annotation(RTFConstants.ITALIC_TYPE, true, EMPTY);
 			}
 			
 			if(position.length > 0)
@@ -302,13 +306,13 @@ public class RTFDocumentProvider extends FileDocumentProvider
 			
 			fItalicTag = -1;
 		}
-		else if(string.equals("ul"))
+		else if(string.equals("ul")) //$NON-NLS-1$
 		{
 			fUnderlineTag = currentText.length();
 			
 			if(fBoldTag != -1 && fItalicTag != -1 && fBoldTag != fUnderlineTag)
 			{
-				Annotation annotation = new Annotation(RTFConstants.BOLD_ITALIC_TYPE, true, "");
+				Annotation annotation = new Annotation(RTFConstants.BOLD_ITALIC_TYPE, true, EMPTY);
 				Position position = new Position(fBoldTag, fUnderlineTag - fBoldTag);
 				
 				document.addAnnotation(position, annotation);
@@ -317,7 +321,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 			}
 			else if(fBoldTag != -1 && fBoldTag != fUnderlineTag)
 			{
-				Annotation annotation = new Annotation(RTFConstants.BOLD_TYPE, true, "");
+				Annotation annotation = new Annotation(RTFConstants.BOLD_TYPE, true, EMPTY);
 				Position position = new Position(fBoldTag, fUnderlineTag - fBoldTag);
 				
 				document.addAnnotation(position, annotation);
@@ -325,14 +329,14 @@ public class RTFDocumentProvider extends FileDocumentProvider
 			}
 			else if(fItalicTag != -1 && fItalicTag != fUnderlineTag)
 			{
-				Annotation annotation = new Annotation(RTFConstants.ITALIC_TYPE, true, "");
+				Annotation annotation = new Annotation(RTFConstants.ITALIC_TYPE, true, EMPTY);
 				Position position = new Position(fItalicTag, fUnderlineTag - fItalicTag);
 				
 				document.addAnnotation(position, annotation);
 				fItalicTag = fUnderlineTag;
 			}
 		}
-		else if(string.equals("ulnone"))
+		else if(string.equals("ulnone")) //$NON-NLS-1$
 		{
 			Annotation annotation;
 			int curPos = currentText.length();
@@ -340,23 +344,23 @@ public class RTFDocumentProvider extends FileDocumentProvider
 			
 			if(fBoldTag != -1 && fItalicTag != -1)
 			{
-				annotation = new Annotation(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE, true, "");
+				annotation = new Annotation(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE, true, EMPTY);
 				fBoldTag = curPos;
 				fItalicTag = curPos;
 			}
 			else if(fBoldTag != -1)
 			{
-				annotation = new Annotation(RTFConstants.BOLD_UNDERLINE_TYPE, true, "");
+				annotation = new Annotation(RTFConstants.BOLD_UNDERLINE_TYPE, true, EMPTY);
 				fBoldTag = curPos;
 			}
 			else if(fItalicTag != -1)
 			{
-				annotation = new Annotation(RTFConstants.ITALIC_UNDERLINE_TYPE, true, "");
+				annotation = new Annotation(RTFConstants.ITALIC_UNDERLINE_TYPE, true, EMPTY);
 				fItalicTag = curPos;
 			}
 			else
 			{
-				annotation = new Annotation(RTFConstants.UNDERLINE_TYPE, true, "");
+				annotation = new Annotation(RTFConstants.UNDERLINE_TYPE, true, EMPTY);
 			}
 			
 			if(position.length > 0)
@@ -367,12 +371,12 @@ public class RTFDocumentProvider extends FileDocumentProvider
 			fUnderlineTag = -1;
 		}
 		
-		return "";
+		return EMPTY;
 	}
 	
 	private String nextTag(InputStream ioStream) throws IOException
 	{
-		String escape = "";
+		String escape = EMPTY;
 		char ch2 = (char) ioStream.read();
 		while(ch2 != ' ' && ch2 != '{' && ch2 != '}' && ch2 != '\\' && ch2 != '\n')
 		{
@@ -382,7 +386,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		
 		if(ch2 == '\\')
 		{
-			escape += "\\";
+			escape += "\\"; //$NON-NLS-1$
 		}
 		
 		if(ch2 == '{')
@@ -418,7 +422,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		IAnnotationModel model = getAnnotationModel(element);
 		
 		String contents = document.get();
-		String toWrite = "";
+		String toWrite = EMPTY;
 		
 		toWrite = buildRTFString(contents, model);
 		
@@ -458,7 +462,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	@SuppressWarnings("unchecked")
 	private String buildRTFString(String contents, IAnnotationModel model)
 	{
-		String output = "{\\rtf1\\ansi\\deff0\n";
+		String output = "{\\rtf1\\ansi\\deff0\n"; //$NON-NLS-1$
 		
 		ArrayList<Position> positions = new ArrayList<Position>();
 		ArrayList<Annotation> annotations = new ArrayList<Annotation>();
@@ -512,16 +516,16 @@ public class RTFDocumentProvider extends FileDocumentProvider
 			
 			if(c == '\n')
 			{
-				output += "\\par \n";
+				output += "\\par \n"; //$NON-NLS-1$
 			}
 			else if(c == '\t')
 			{
-				output += "\\tab ";
+				output += "\\tab "; //$NON-NLS-1$
 			}
 			
 		}
 					
-		return output + "\n}\n\0";
+		return output + "\n}\n\0"; //$NON-NLS-1$
 	}
 
 	/**
@@ -530,36 +534,36 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	 */
 	private String getEndTagFromAnnotation(Annotation annotation)
 	{
-		String tag = "";
+		String tag = EMPTY;
 		String type = annotation.getType();
 		
 		if(type.equals(RTFConstants.BOLD_TYPE))
 		{
-			tag = "\\b0 ";
+			tag = "\\b0 "; //$NON-NLS-1$
 		}
 		else if(type.equals(RTFConstants.ITALIC_TYPE))
 		{
-			tag = "\\i0 ";
+			tag = "\\i0 "; //$NON-NLS-1$
 		}
 		else if(type.equals(RTFConstants.UNDERLINE_TYPE))
 		{
-			tag = "\\ulnone ";
+			tag = "\\ulnone "; //$NON-NLS-1$
 		}
 		else if(type.equals(RTFConstants.BOLD_ITALIC_TYPE))
 		{
-			tag = "\\b0\\i0 ";
+			tag = "\\b0\\i0 "; //$NON-NLS-1$
 		}
 		else if(type.equals(RTFConstants.BOLD_UNDERLINE_TYPE))
 		{
-			tag = "\\b0\\ulnone ";
+			tag = "\\b0\\ulnone "; //$NON-NLS-1$
 		}
 		else if(type.equals(RTFConstants.ITALIC_UNDERLINE_TYPE))
 		{
-			tag = "\\i0\\ulnone ";
+			tag = "\\i0\\ulnone "; //$NON-NLS-1$
 		}
 		else if(type.equals(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE))
 		{
-			tag = "\\b0\\i0\\ulnone ";
+			tag = "\\b0\\i0\\ulnone "; //$NON-NLS-1$
 		}
 		
 		return tag;
@@ -571,36 +575,36 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	 */
 	private String getStartTagFromAnnotation(Annotation annotation)
 	{
-		String tag = "";
+		String tag = EMPTY;
 		String type = annotation.getType();
 		
 		if(type.equals(RTFConstants.BOLD_TYPE))
 		{
-			tag = "\\b ";
+			tag = "\\b "; //$NON-NLS-1$
 		}
 		else if(type.equals(RTFConstants.ITALIC_TYPE))
 		{
-			tag = "\\i ";
+			tag = "\\i "; //$NON-NLS-1$
 		}
 		else if(type.equals(RTFConstants.UNDERLINE_TYPE))
 		{
-			tag = "\\ul ";
+			tag = "\\ul "; //$NON-NLS-1$
 		}
 		else if(type.equals(RTFConstants.BOLD_ITALIC_TYPE))
 		{
-			tag = "\\b\\i ";
+			tag = "\\b\\i "; //$NON-NLS-1$
 		}
 		else if(type.equals(RTFConstants.BOLD_UNDERLINE_TYPE))
 		{
-			tag = "\\b\\ul ";
+			tag = "\\b\\ul "; //$NON-NLS-1$
 		}
 		else if(type.equals(RTFConstants.ITALIC_UNDERLINE_TYPE))
 		{
-			tag = "\\i\\ul ";
+			tag = "\\i\\ul "; //$NON-NLS-1$
 		}
 		else if(type.equals(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE))
 		{
-			tag = "\\b\\i\\ul ";
+			tag = "\\b\\i\\ul "; //$NON-NLS-1$
 		}
 		
 		return tag;

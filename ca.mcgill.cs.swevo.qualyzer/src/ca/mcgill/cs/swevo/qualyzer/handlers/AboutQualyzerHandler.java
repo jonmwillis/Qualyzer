@@ -24,9 +24,9 @@ import org.eclipse.ui.handlers.HandlerUtil;
  */
 public class AboutQualyzerHandler extends AbstractHandler
 {
-	private static final String RELEASE_NUMBER = "0.2.0";
-	private static final String RELEASE = Messages.getString("handlers.AboutQualyzerHandler.releaseTag") +
-		" " + RELEASE_NUMBER + "\n\n";
+	private static final String RELEASE_NUMBER = "0.2.0"; //$NON-NLS-1$
+	private static final String RELEASE = Messages.getString("handlers.AboutQualyzerHandler.releaseTag") + //$NON-NLS-1$
+		" " + RELEASE_NUMBER + "\n\n"; //$NON-NLS-1$ //$NON-NLS-2$
 	
 	private static final String MCGILL = Messages.getString("handlers.AboutQualyzerHandler.mcGillTag") + "\n\n";
 	
@@ -37,7 +37,7 @@ public class AboutQualyzerHandler extends AbstractHandler
 	private static final String WEB = Messages.getString("handlers.AboutQualyzerHandler.website"); //$NON-NLS-1$
 	
 	private static final String COPYRIGHT = 
-		Messages.getString("handlers.AboutQualyzerHandler.copyright1") + "\n"+//$NON-NLS-1$
+		Messages.getString("handlers.AboutQualyzerHandler.copyright1") + "\n"+//$NON-NLS-1$ //$NON-NLS-2$
 			Messages.getString("handlers.AboutQualyzerHandler.copyright2") + //$NON-NLS-1$
 			Messages.getString("handlers.AboutQualyzerHandler.copyright3") + //$NON-NLS-1$
 			Messages.getString("handlers.AboutQualyzerHandler.copyright4") + //$NON-NLS-1$
@@ -56,8 +56,8 @@ public class AboutQualyzerHandler extends AbstractHandler
 		Shell shell = HandlerUtil.getActiveShell(event).getShell();
 		
 		MessageDialog.openInformation(shell, 
-				Messages.getString("handlers.AboutQualyzerHandler.about"), 
-				RELEASE+MCGILL+DESCRIPTION+WEB+COPYRIGHT); //$NON-NLS-1$
+				Messages.getString("handlers.AboutQualyzerHandler.about"), //$NON-NLS-1$
+				RELEASE+MCGILL+DESCRIPTION+WEB+COPYRIGHT);
 		return null;
 	}
 

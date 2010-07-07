@@ -72,7 +72,7 @@ public class NewProjectWizard extends Wizard implements ProjectCreationProgressL
 		
 		Shell shell = new Shell(getShell(), SWT.TITLE | SWT.BORDER);
 		shell.setLayout(new GridLayout(1, true));
-		shell.setText("Project Creation Status");
+		shell.setText(Messages.getString("wizards.NewProjectWizard.projectCreation")); //$NON-NLS-1$
 		shell.setBounds(0, 0, PROGRESS_WIDTH, PROGRESS_HEIGHT);
 		fProgressBar = new ProgressBar(shell, SWT.HORIZONTAL);
 		fProgressBar.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));

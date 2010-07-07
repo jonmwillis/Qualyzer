@@ -39,12 +39,12 @@ public class ImportTranscriptValidator extends AbstractValidator
 		
 		if(fTranscriptFileName.length() == 0)
 		{
-			fMessage = Messages.getString("model.validation.ImportTranscriptValidator.chooseFile");
+			fMessage = Messages.getString("model.validation.ImportTranscriptValidator.chooseFile"); //$NON-NLS-1$
 			lReturn = false;
 		}
 		else if(!(new File(fTranscriptFileName).exists()))
 		{
-			fMessage = Messages.getString("model.validation.ImportTranscriptValidator.chooseFile");
+			fMessage = Messages.getString("model.validation.ImportTranscriptValidator.chooseFile"); //$NON-NLS-1$
 			lReturn = false;
 		}
 	
