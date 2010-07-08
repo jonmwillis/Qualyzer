@@ -10,6 +10,11 @@
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.editors;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+
 import net.sf.colorer.eclipse.ColorerPlugin;
 import net.sf.colorer.eclipse.editors.ColorerEditor;
 
@@ -18,6 +23,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.text.Position;
+import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.IVerticalRuler;
@@ -57,7 +63,7 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 	private static final char UNDERLINE_CHAR = (char) 21;
 	private static final char ITALIC_CHAR = (char) 9;
 	private static final char BOLD_CHAR = (char) 2;
-//	private static final char FRAGMENT_CHAR = (char) 11;
+	private static final char FRAGMENT_CHAR = (char) 11;
 	
 	private Action fBoldAction;
 	private Action fItalicAction;
@@ -87,7 +93,6 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 		initialiseMarkAction();
 		
 		getPreferenceStore().setValue(AbstractDecoratedTextEditorPreferenceConstants.QUICK_DIFF_ALWAYS_ON, false);
-		
 	}
 
 	/**
@@ -163,6 +168,7 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 				
 				viewer.toggleUnderline(position);
 				setDirty();
+				//fUnderlineAction.setChecked(!fUnderlineAction.isChecked());
 			}
 		};
 		fUnderlineAction.setEnabled(false);
@@ -228,32 +234,218 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 		getSourceViewerDecorationSupport(viewer);
 		
 		viewer.showAnnotations(true);
-		viewer.addSelectionChangedListener(new ISelectionChangedListener()
+		viewer.addSelectionChangedListener(createSelectionListener(viewer));
+		
+		return viewer;
+	}
+
+	/**
+	 * @param viewer
+	 * @return
+	 */
+	private ISelectionChangedListener createSelectionListener(final SourceViewer viewer)
+	{
+		return new ISelectionChangedListener()
 		{
 			
 			@Override
 			public void selectionChanged(SelectionChangedEvent event)
 			{
 				Point selection = viewer.getSelectedRange();
-				boolean enabled = selection.y != 0;
-				boolean boldChecked = false;
-				boolean italicChecked = false;
-				boolean underlineChecked = false;
-				
-				boolean boldEnabled = true;
-				boolean italicEnabled = true;
-				boolean underlineEnabled = true;
-				
 				IAnnotationModel model = getDocumentProvider().getAnnotationModel(getEditorInput());
+				
+				boolean enabled = selection.y != 0;
+				
+				boolean boldEnabled = isBoldEnabled(model, selection);
+				boolean italicEnabled = isItalicEnabled(model, selection);
+				boolean underlineEnabled = isUnderlineEnabled(model, selection);
+				boolean markTextEnabled = true;
 				
 				fBoldAction.setEnabled(enabled && boldEnabled);
 				fItalicAction.setEnabled(enabled && italicEnabled);
 				fUnderlineAction.setEnabled(enabled && underlineEnabled);
-				fMarkTextAction.setEnabled(enabled);
+				fMarkTextAction.setEnabled(enabled && markTextEnabled);
+			}
+		};
+	}
+	
+	/**
+	 * @param model
+	 * @param selection
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	protected boolean isUnderlineEnabled(IAnnotationModel model, Point selection)
+	{
+		ArrayList<Position> positions = new ArrayList<Position>();
+		Iterator<Annotation> iter = model.getAnnotationIterator();
+		
+		while(iter.hasNext())
+		{
+			Annotation annotation = iter.next();
+			if(isUnderline(annotation))
+			{
+				Position position = model.getPosition(annotation);
+				if(position.overlapsWith(selection.x, selection.y))
+				{
+					positions.add(position);
+				}
+			}
+		}
+				
+		return handleOverlaps(positions, selection);
+	}
+
+	/**
+	 * @param model
+	 * @param selection
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	protected boolean isItalicEnabled(IAnnotationModel model, Point selection)
+	{
+		ArrayList<Position> positions = new ArrayList<Position>();
+		Iterator<Annotation> iter = model.getAnnotationIterator();
+		
+		while(iter.hasNext())
+		{
+			Annotation annotation = iter.next();
+			if(isItalic(annotation))
+			{
+				Position position = model.getPosition(annotation);
+				if(position.overlapsWith(selection.x, selection.y))
+				{
+					positions.add(position);
+				}
+			}
+		}
+						
+		return handleOverlaps(positions, selection);
+	}
+
+	/**
+	 * @param model
+	 * @param selection
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	protected boolean isBoldEnabled(IAnnotationModel model, Point selection)
+	{
+		ArrayList<Position> positions = new ArrayList<Position>();
+		Iterator<Annotation> iter = model.getAnnotationIterator();
+		
+		while(iter.hasNext())
+		{
+			Annotation annotation = iter.next();
+			if(isBold(annotation))
+			{
+				Position position = model.getPosition(annotation);
+				if(position.overlapsWith(selection.x, selection.y))
+				{
+					positions.add(position);
+				}
+			}
+		}
+					
+		return handleOverlaps(positions, selection);
+	}
+
+	private boolean handleOverlaps(ArrayList<Position> positions, Point selection)
+	{
+		boolean toReturn = false;
+		
+		if(positions.size() == 0)
+		{
+			toReturn = true;
+		}
+		else if(positions.size() == 1)
+		{
+			Position position = positions.get(0);
+			toReturn = position.offset <= selection.x && position.offset + position.length >= selection.x + selection.y;
+		}
+		else
+		{
+			sort(positions);
+			Position startPos = positions.get(0);
+			Position endPos = positions.get(positions.size() - 1);
+			if(startPos.offset <= selection.x && endPos.offset + endPos.length >= selection.x + selection.y)
+			{
+				for(int i = 0; i < positions.size() - 1; i++)
+				{
+					Position p1 = positions.get(i);
+					
+					if(p1.offset + p1.length != positions.get(i+1).offset)
+					{
+						return false;
+					}
+				}
+				toReturn = true;
+			}
+		}
+		
+		return toReturn;
+	}
+
+	/**
+	 * @param overlap
+	 * @param positions
+	 */
+	private void sort(ArrayList<Position> positions)
+	{
+		Collections.sort(positions, new Comparator<Position>()
+		{
+
+			@Override
+			public int compare(Position o1, Position o2)
+			{
+				if(o1.offset < o2.offset)
+				{
+					return -1;
+				}
+				else if(o1.offset == o2.offset)
+				{
+					return 0;
+				}
+				else
+				{
+					return 1;
+				}
 			}
 		});
 		
-		return viewer;
+	}
+
+	/**
+	 * @param annotation
+	 * @return
+	 */
+	private boolean isBold(Annotation annotation)
+	{
+		String type = annotation.getType();
+		return type.equals(RTFConstants.BOLD_TYPE) || type.equals(RTFConstants.BOLD_ITALIC_TYPE) || 
+		type.equals(RTFConstants.BOLD_UNDERLINE_TYPE) || type.equals(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE);
+	}
+	
+	/**
+	 * @param annotation
+	 * @return
+	 */
+	private boolean isItalic(Annotation annotation)
+	{
+		String type = annotation.getType();
+		return type.equals(RTFConstants.ITALIC_TYPE) || type.equals(RTFConstants.BOLD_ITALIC_TYPE) || 
+		type.equals(RTFConstants.ITALIC_UNDERLINE_TYPE) || type.equals(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE);
+	}
+
+	/**
+	 * @param annotation
+	 * @return
+	 */
+	private boolean isUnderline(Annotation annotation)
+	{
+		String type = annotation.getType();
+		return type.equals(RTFConstants.UNDERLINE_TYPE) || type.equals(RTFConstants.BOLD_UNDERLINE_TYPE) || 
+		type.equals(RTFConstants.ITALIC_UNDERLINE_TYPE) || type.equals(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE);
 	}
 	
 	/* (non-Javadoc)
@@ -307,7 +499,7 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 		setActionActivationCode(RTFConstants.BOLD_ACTION_ID, BOLD_CHAR, 'b', SWT.CONTROL);
 		setActionActivationCode(RTFConstants.ITALIC_ACTION_ID, ITALIC_CHAR, 'i', SWT.CONTROL);
 		setActionActivationCode(RTFConstants.UNDERLINE_ACTION_ID, UNDERLINE_CHAR, 'u', SWT.CONTROL);
-		//setActionActivationCode(RTFConstants.FRAGMENT_ACTION_ID, FRAGMENT_CHAR, 'k', SWT.CONTROL);
+		setActionActivationCode(RTFConstants.FRAGMENT_ACTION_ID, FRAGMENT_CHAR, 'k', SWT.CONTROL);
 	}
 	
 	/* (non-Javadoc)
@@ -385,8 +577,98 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 		addAction(menu, ITextEditorActionConstants.GROUP_EDIT, RTFConstants.ITALIC_ACTION_ID);
 		addAction(menu, ITextEditorActionConstants.GROUP_EDIT, RTFConstants.UNDERLINE_ACTION_ID);
 		addAction(menu, ITextEditorActionConstants.GROUP_EDIT, RTFConstants.FRAGMENT_ACTION_ID);
+		
+		//check according to selection
+		fBoldAction.setChecked(isBoldChecked());
+		fItalicAction.setChecked(isItalicChecked());
+		fUnderlineAction.setChecked(isUnderlineChecked());
+		
 	}
 	
+	/**
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	private boolean isUnderlineChecked()
+	{
+		IAnnotationModel model = getSourceViewer().getAnnotationModel();
+		Point selection = getSourceViewer().getSelectedRange();
+		
+		ArrayList<Position> positions = new ArrayList<Position>();
+		Iterator<Annotation> iter = model.getAnnotationIterator();
+		
+		while(iter.hasNext())
+		{
+			Annotation annotation = iter.next();
+			if(isUnderline(annotation))
+			{
+				Position position = model.getPosition(annotation);
+				if(position.overlapsWith(selection.x, selection.y))
+				{
+					positions.add(position);
+				}
+			}
+		}
+		
+		return positions.size() > 0;
+	}
+
+	/**
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	private boolean isItalicChecked()
+	{
+		IAnnotationModel model = getSourceViewer().getAnnotationModel();
+		Point selection = getSourceViewer().getSelectedRange();
+		
+		ArrayList<Position> positions = new ArrayList<Position>();
+		Iterator<Annotation> iter = model.getAnnotationIterator();
+		
+		while(iter.hasNext())
+		{
+			Annotation annotation = iter.next();
+			if(isItalic(annotation))
+			{
+				Position position = model.getPosition(annotation);
+				if(position.overlapsWith(selection.x, selection.y))
+				{
+					positions.add(position);
+				}
+			}
+		}
+		
+		return positions.size() > 0;
+	}
+
+	/**
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	private boolean isBoldChecked()
+	{
+		IAnnotationModel model = getSourceViewer().getAnnotationModel();
+		Point selection = getSourceViewer().getSelectedRange();
+		
+		ArrayList<Position> positions = new ArrayList<Position>();
+		Iterator<Annotation> iter = model.getAnnotationIterator();
+		
+		while(iter.hasNext())
+		{
+			Annotation annotation = iter.next();
+			if(isBold(annotation))
+			{
+				Position position = model.getPosition(annotation);
+				if(position.overlapsWith(selection.x, selection.y))
+				{
+					positions.add(position);
+				}
+			}
+		}
+		
+		return positions.size() > 0;
+	}
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.texteditor.AbstractTextEditor#doSave(org.eclipse.core.runtime.IProgressMonitor)
 	 */
