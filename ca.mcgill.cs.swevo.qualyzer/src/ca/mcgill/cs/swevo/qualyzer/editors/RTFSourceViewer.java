@@ -23,6 +23,9 @@ import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.IOverviewRuler;
 import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.VerifyKeyListener;
+import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.widgets.Composite;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Fragment;
@@ -50,6 +53,21 @@ public class RTFSourceViewer extends ProjectionViewer
 			boolean showAnnotationsOverview, int styles)
 	{
 		super(parent, verticalRuler, overviewRuler, showAnnotationsOverview, styles);
+		
+		appendVerifyKeyListener(new VerifyKeyListener(){
+			
+			@Override
+			public void verifyKey(VerifyEvent event)
+			{
+				if(event.stateMask == SWT.CONTROL)
+				{
+					if(event.keyCode == 'i')
+					{ //remove the insert tab action!!! - JF
+						event.doit = false;
+					}
+				}
+			}
+		});
 	}
 	
 	/* (non-Javadoc)
@@ -256,27 +274,7 @@ public class RTFSourceViewer extends ProjectionViewer
 				continue;
 			}
 			
-			if(pos.offset <= position.offset && position.offset <= pos.offset + pos.length)
-			{
-				current.add(next);
-				currentPos.add(pos);
-				model.removeAnnotation(next);
-			}
-			else if(pos.offset <= position.offset + position.length && 
-					position.offset + position.length <= pos.offset + pos.length)
-			{
-				current.add(next);
-				currentPos.add(pos);
-				model.removeAnnotation(next);
-			}
-			else if(position.offset <= pos.offset && pos.offset <= position.offset + position.length)
-			{
-				current.add(next);
-				currentPos.add(pos);
-				model.removeAnnotation(next);
-			}
-			else if(position.offset <= pos.offset + pos.length && 
-					pos.offset + pos.length <= position.offset + position.length)
+			if(position.overlapsWith(pos.offset, pos.length))
 			{
 				current.add(next);
 				currentPos.add(pos);
