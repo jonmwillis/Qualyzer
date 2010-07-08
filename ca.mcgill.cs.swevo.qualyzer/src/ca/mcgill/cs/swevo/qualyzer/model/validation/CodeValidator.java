@@ -46,9 +46,7 @@ public class CodeValidator extends AbstractValidator
 	 */
 	public CodeValidator(String pName, Project pProject)
 	{
-		fName = pName;
-		fOldName = null;
-		fProject = pProject;
+		this(pName, null, pProject);
 	}
 	
 	@Override

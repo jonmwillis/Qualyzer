@@ -34,7 +34,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.ProjectListener;
 import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
-import ca.mcgill.cs.swevo.qualyzer.model.validation.ValidationUtils;
+import ca.mcgill.cs.swevo.qualyzer.model.validation.InvestigatorValidator;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
@@ -115,25 +115,12 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener
 			@Override
 			public void keyReleased(KeyEvent event)
 			{
-				if(fNickname.getText().isEmpty())
+				InvestigatorValidator lValidator = new InvestigatorValidator(fNickname.getText(),
+						fInvestigator.getNickName(), fInvestigator.getProject());
+				
+				if(!lValidator.isValid())
 				{
-					fForm.setMessage(
-							Messages.getString("editors.pages.InvestigatorEditorPage.enterNickname"),  //$NON-NLS-1$
-							IMessageProvider.ERROR);
-					notDirty();
-				}
-				else if(!ValidationUtils.verifyID(fNickname.getText()))
-				{
-					fForm.setMessage(Messages.getString(
-							"editors.pages.InvestigatorEditorPage.invalidName"), //$NON-NLS-1$
-							IMessageProvider.ERROR);
-					notDirty();
-				}
-				else if(nicknameInUse())
-				{
-					fForm.setMessage(
-							Messages.getString("editors.pages.InvestigatorEditorPage.nicknameTaken"),  //$NON-NLS-1$
-							IMessageProvider.ERROR);
+					fForm.setMessage(lValidator.getErrorMessage(), IMessageProvider.ERROR);
 					notDirty();
 				}
 				else
@@ -142,21 +129,6 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener
 				}
 			}
 		};
-	}
-
-	/**
-	 * @return
-	 */
-	protected boolean nicknameInUse()
-	{
-		for(Investigator investigator : fInvestigator.getProject().getInvestigators())
-		{
-			if(!investigator.equals(fInvestigator) && fNickname.getText().equals(investigator.getNickName()))
-			{
-				return true;
-			}
-		}
-		return false;
 	}
 
 	//Removing for 0.2 as they are not yet used. - JF
