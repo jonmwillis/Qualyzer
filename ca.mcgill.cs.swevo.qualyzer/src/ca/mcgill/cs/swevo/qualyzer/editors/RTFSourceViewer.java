@@ -179,30 +179,30 @@ public class RTFSourceViewer extends ProjectionViewer
 	{
 		Map<Position, Annotation> toToggle = new HashMap<Position, Annotation>();
 		
-		Annotation head = current.get(0);
-		Position headPos = currentPos.get(0);
+		handleHead(current, currentPos, position, model, toToggle);
 		
-		if(headPos.offset < position.offset)
+		handleTail(current, currentPos, position, model, toToggle);
+		
+		//handleGaps
+		
+		for(int i = 0; i < current.size(); i++)
 		{
-			current.remove(0);
-			currentPos.remove(0);
-			
-			Annotation newHead = new Annotation(head.getType(), true, EMPTY);
-			Position newHeadPos = new Position(headPos.offset, position.offset - headPos.offset);
-			model.addAnnotation(newHead, newHeadPos);
-			
-			newHead = new Annotation(head.getType(), true, EMPTY);
-			newHeadPos = new Position(headPos.offset + newHeadPos.length, headPos.length - newHeadPos.length);
-			current.add(0, newHead);
-			currentPos.add(0, newHeadPos);
-		}
-		else if(position.offset < headPos.offset)
-		{
-			Annotation annotation = new Annotation(true);
-			Position annotPos = new Position(position.offset, headPos.offset - position.offset);
-			toToggle.put(annotPos, annotation);
+			toToggle.put(currentPos.get(i), current.get(i));
 		}
 		
+		return toToggle;
+	}
+
+	/**
+	 * @param current
+	 * @param currentPos
+	 * @param position
+	 * @param model
+	 * @param toToggle
+	 */
+	private void handleTail(ArrayList<Annotation> current, ArrayList<Position> currentPos, Position position,
+			IAnnotationModel model, Map<Position, Annotation> toToggle)
+	{
 		Annotation tail = current.get(current.size() - 1);
 		Position tailPos = currentPos.get(current.size() - 1);
 		
@@ -228,13 +228,41 @@ public class RTFSourceViewer extends ProjectionViewer
 			Position annotPos = new Position(offset, position.offset + position.length - offset);
 			toToggle.put(annotPos, annotation);
 		}
+	}
+
+	/**
+	 * @param current
+	 * @param currentPos
+	 * @param position
+	 * @param model
+	 * @param toToggle
+	 */
+	private void handleHead(ArrayList<Annotation> current, ArrayList<Position> currentPos, Position position,
+			IAnnotationModel model, Map<Position, Annotation> toToggle)
+	{
+		Annotation head = current.get(0);
+		Position headPos = currentPos.get(0);
 		
-		for(int i = 0; i < current.size(); i++)
+		if(headPos.offset < position.offset)
 		{
-			toToggle.put(currentPos.get(i), current.get(i));
+			current.remove(0);
+			currentPos.remove(0);
+			
+			Annotation newHead = new Annotation(head.getType(), true, EMPTY);
+			Position newHeadPos = new Position(headPos.offset, position.offset - headPos.offset);
+			model.addAnnotation(newHead, newHeadPos);
+			
+			newHead = new Annotation(head.getType(), true, EMPTY);
+			newHeadPos = new Position(headPos.offset + newHeadPos.length, headPos.length - newHeadPos.length);
+			current.add(0, newHead);
+			currentPos.add(0, newHeadPos);
 		}
-		
-		return toToggle;
+		else if(position.offset < headPos.offset)
+		{
+			Annotation annotation = new Annotation(true);
+			Position annotPos = new Position(position.offset, headPos.offset - position.offset);
+			toToggle.put(annotPos, annotation);
+		}
 	}
 	
 	/**
