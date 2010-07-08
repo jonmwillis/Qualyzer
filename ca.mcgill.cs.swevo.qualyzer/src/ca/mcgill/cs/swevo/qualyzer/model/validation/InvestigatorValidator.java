@@ -23,16 +23,30 @@ import ca.mcgill.cs.swevo.qualyzer.model.Project;
 public class InvestigatorValidator extends AbstractValidator
 {
 	private final String fName;
+	private final String fOldName;
 	private final Project fProject;
+	
 	/**
 	 * Constructs a new InvestigatorValidator.
+	 * @param pName The ID chosen for the new investigator.
+	 * @param pOldName The current ID of the investigator (if applicable). Null if there are none.
+	 * @param pProject The Project in which the investigator is to be created.
+	 */
+	public InvestigatorValidator(String pName, String pOldName, Project pProject)
+	{
+		fName = pName;
+		fOldName = pOldName;
+		fProject = pProject;
+	}
+	
+	/**
+	 * Constructs a new InvestigatorValidator with a null old name.
 	 * @param pName The ID chosen for the new investigator.
 	 * @param pProject The Project in which the investigator is to be created.
 	 */
 	public InvestigatorValidator(String pName, Project pProject)
 	{
-		fName = pName;
-		fProject = pProject;
+		this(pName, null, pProject);
 	}
 	
 	@Override
@@ -53,8 +67,11 @@ public class InvestigatorValidator extends AbstractValidator
 		}
 		else if(idInUse())
 		{
-			lReturn = false;
-			fMessage = Messages.getString("model.validation.InvestigatorValidator.nicknameTaken");  //$NON-NLS-1$
+			if((fOldName == null) || (!fName.equals(fOldName)))
+			{
+				lReturn = false;
+				fMessage = Messages.getString("model.validation.InvestigatorValidator.nicknameTaken");  //$NON-NLS-1$
+			}
 		}
 		
 		return lReturn;
