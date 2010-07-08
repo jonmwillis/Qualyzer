@@ -13,6 +13,7 @@ package ca.mcgill.cs.swevo.qualyzer.model.validation;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNull;
 
 import org.junit.After;
 import org.junit.Before;
@@ -27,6 +28,8 @@ public class InvestigatorValidatorTest
 	private static final String TEST_PROJECT_NAME = "TestProject";
 
 	private static final String TEST_INVESTIGATOR_NAME = "Bob";
+	
+	private static final String SAME_INVESTIGATOR_NAME = "Bob";
 
 	private Facade fFacade;
 	
@@ -92,6 +95,28 @@ public class InvestigatorValidatorTest
 		InvestigatorValidator lValidator = new InvestigatorValidator(TEST_INVESTIGATOR_NAME, fProject);
 		assertFalse(lValidator.isValid());
 		assertEquals(Messages.getString("model.validation.InvestigatorValidator.nicknameTaken"),lValidator.getErrorMessage());
+	}
+	
+	/**
+	 * Verifies that the nickname does not already exist with a existing name
+	 */
+	@Test
+	public void testInvestigatorUniqueName2()
+	{
+		InvestigatorValidator lValidator = new InvestigatorValidator(TEST_INVESTIGATOR_NAME, TEST_INVESTIGATOR_NAME + "Foo",fProject);
+		assertFalse(lValidator.isValid());
+		assertEquals(Messages.getString("model.validation.InvestigatorValidator.nicknameTaken"),lValidator.getErrorMessage());
+	}
+	
+	/**
+	 * Verifies that the nickname does not already exist with a existing name
+	 */
+	@Test
+	public void testInvestigatorUniqueName3()
+	{
+		InvestigatorValidator lValidator = new InvestigatorValidator(TEST_INVESTIGATOR_NAME, SAME_INVESTIGATOR_NAME,fProject);
+		assertTrue(lValidator.isValid());
+		assertNull(lValidator.getErrorMessage());
 	}
 	
 	/**
