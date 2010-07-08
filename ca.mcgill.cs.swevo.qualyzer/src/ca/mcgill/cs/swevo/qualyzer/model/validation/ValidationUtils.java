@@ -18,13 +18,14 @@ public final class ValidationUtils
 	private ValidationUtils()
 	{}
 	
-	/**
-	 * Verifies that an id is valid.
+	/*
+	 * Verifies that an id is valid. Package-private on purpose. To perform validation, a 
+	 * validator object should be used.
 	 * An id is valid if and only if it contains only alpha-numeric characters and '_' or '-'.
 	 * @param id 
 	 * @return 
 	 */
-	public static boolean verifyID(String id)
+	static boolean verifyID(String id)
 	{
 		for(int i = 0; i < id.length(); i++)
 		{
