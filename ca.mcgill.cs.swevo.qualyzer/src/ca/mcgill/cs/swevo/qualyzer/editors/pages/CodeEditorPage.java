@@ -7,10 +7,8 @@
  *
  * Contributors:
  *     Jonathan Faubert
+ *     Martin Robillard
  *******************************************************************************/
-/**
- * 
- */
 package ca.mcgill.cs.swevo.qualyzer.editors.pages;
 
 import java.util.ArrayList;
@@ -45,11 +43,11 @@ import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.ProjectListener;
 import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
-import ca.mcgill.cs.swevo.qualyzer.model.validation.ValidationUtils;
+import ca.mcgill.cs.swevo.qualyzer.model.validation.CodeValidator;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
- *
+ * The page for the code editor.
  */
 public class CodeEditorPage extends FormPage implements CodeListener, ProjectListener
 {
@@ -95,9 +93,6 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		Facade.getInstance().getListenerManager().registerProjectListener(fProject, this);
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.forms.editor.FormPage#createFormContent(org.eclipse.ui.forms.IManagedForm)
-	 */
 	@Override
 	protected void createFormContent(IManagedForm managedForm)
 	{
@@ -143,46 +138,24 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	}
 
 	/**
-	 * @return
+	 * @return A keyadapter that acts as a validator for the new code name.
 	 */
 	private KeyAdapter createValidator()
 	{
 		return new KeyAdapter(){
-			/* (non-Javadoc)
-			 * @see org.eclipse.swt.events.KeyAdapter#keyReleased(org.eclipse.swt.events.KeyEvent)
-			 */
+			
 			@Override
 			public void keyReleased(KeyEvent e)
 			{
-				if(fName.getText().isEmpty())
+				CodeValidator lValidator = new CodeValidator(fName.getText(), fProject);
+				if(!lValidator.isValid())
 				{
 					if(fIsDirty)
 					{
 						fIsDirty = false;
 						getEditor().editorDirtyStateChanged();
 					}
-					fForm.setMessage(Messages.getString(
-							"editors.pages.CodeEditorPage.nameEmpty"), IMessageProvider.ERROR); //$NON-NLS-1$
-				}
-				else if(!ValidationUtils.verifyID(fName.getText()))
-				{
-					if(fIsDirty)
-					{
-						fIsDirty = false;
-						getEditor().editorDirtyStateChanged();
-					}
-					fForm.setMessage(Messages.getString(
-							"editors.pages.CodeEditorPage.nameInvalid"), IMessageProvider.ERROR); //$NON-NLS-1$
-				}
-				else if(nameInUse())
-				{
-					if(fIsDirty)
-					{
-						fIsDirty = false;
-						getEditor().editorDirtyStateChanged();
-					}
-					fForm.setMessage(Messages.getString(
-							"editors.pages.CodeEditorPage.nameTaken"), IMessageProvider.ERROR); //$NON-NLS-1$
+					fForm.setMessage(lValidator.getErrorMessage(), IMessageProvider.ERROR);
 				}
 				else
 				{
@@ -243,9 +216,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	private KeyAdapter createKeyAdapter()
 	{
 		return new KeyAdapter(){
-			/* (non-Javadoc)
-			 * @see org.eclipse.swt.events.KeyAdapter#keyReleased(org.eclipse.swt.events.KeyEvent)
-			 */
+			
 			@Override
 			public void keyReleased(KeyEvent e)
 			{
@@ -328,9 +299,6 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.forms.editor.FormPage#isDirty()
-	 */
 	@Override
 	public boolean isDirty()
 	{
@@ -362,11 +330,6 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		return codes.toArray(new Code[]{});
 	}
 
-	/* (non-Javadoc)
-	 * @see ca.mcgill.cs.swevo.qualyzer.model.CodeListener#codeChanged(
-	 * ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType, ca.mcgill.cs.swevo.qualyzer.model.Code[], 
-	 * ca.mcgill.cs.swevo.qualyzer.model.Facade)
-	 */
 	@Override
 	public void codeChanged(ChangeType cType, Code[] codes, Facade facade)
 	{
@@ -406,11 +369,6 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		
 	}
 
-	/* (non-Javadoc)
-	 * @see ca.mcgill.cs.swevo.qualyzer.model.ProjectListener#projectChanged(
-	 * ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType, ca.mcgill.cs.swevo.qualyzer.model.Project[], 
-	 * ca.mcgill.cs.swevo.qualyzer.model.Facade)
-	 */
 	@Override
 	public void projectChanged(ChangeType cType, Project project, Facade facade)
 	{
@@ -422,9 +380,6 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.forms.editor.FormPage#dispose()
-	 */
 	@Override
 	public void dispose()
 	{
