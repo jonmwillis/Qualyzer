@@ -12,6 +12,7 @@ package ca.mcgill.cs.swevo.qualyzer.model.validation;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
@@ -29,6 +30,7 @@ public class ParticipantValidatorTest
 	private static final String TEST_INVESTIGATOR_NAME = "Bob";
 	
 	private static final String TEST_PARTICIPANT_NAME = "Jaffy";
+	private static final String SAME_PARTICIPANT_NAME = "Jaffy";
 	
 	private static final String TEST_PARTICIPANT_ID = "P01";
 
@@ -97,6 +99,28 @@ public class ParticipantValidatorTest
 		ParticipantValidator lValidator = new ParticipantValidator(TEST_PARTICIPANT_ID, fProject);
 		assertFalse(lValidator.isValid());
 		assertEquals(Messages.getString("model.validation.ParticipantValidator.IDTaken"),lValidator.getErrorMessage());
+	}
+	
+	/**
+	 * Verifies that the ID does not already exist with a existing name
+	 */
+	@Test
+	public void testUniqueName2()
+	{
+		ParticipantValidator lValidator = new ParticipantValidator(TEST_PARTICIPANT_ID, TEST_PARTICIPANT_ID + "Foo", fProject);
+		assertFalse(lValidator.isValid());
+		assertEquals(Messages.getString("model.validation.ParticipantValidator.IDTaken"),lValidator.getErrorMessage());
+	}
+	
+	/**
+	 * Verifies that the name does not already exist with a existing name
+	 */
+	@Test
+	public void testUniqueName3()
+	{
+		ParticipantValidator lValidator = new ParticipantValidator(TEST_PARTICIPANT_NAME, SAME_PARTICIPANT_NAME, fProject);
+		assertTrue(lValidator.isValid());
+		assertNull(lValidator.getErrorMessage());
 	}
 	
 	/**
