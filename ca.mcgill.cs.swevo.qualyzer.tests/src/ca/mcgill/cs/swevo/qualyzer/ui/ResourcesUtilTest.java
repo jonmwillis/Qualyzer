@@ -28,6 +28,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Memo;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
+import ca.mcgill.cs.swevo.qualyzer.model.validation.ValidationUtils;
 import ca.mcgill.cs.swevo.qualyzer.providers.WrapperCode;
 import ca.mcgill.cs.swevo.qualyzer.providers.WrapperInvestigator;
 import ca.mcgill.cs.swevo.qualyzer.providers.WrapperMemo;
@@ -47,14 +48,14 @@ public class ResourcesUtilTest
 	@Test
 	public void verifyIDTest()
 	{
-		assertTrue(ResourcesUtil.verifyID("aA1_-"));
-		assertTrue(ResourcesUtil.verifyID("aasdl_sSDFA-3425"));
+		assertTrue(ValidationUtils.verifyID("aA1_-"));
+		assertTrue(ValidationUtils.verifyID("aasdl_sSDFA-3425"));
 		
-		assertFalse(ResourcesUtil.verifyID(""));
-		assertFalse(ResourcesUtil.verifyID(" "));
-		assertFalse(ResourcesUtil.verifyID("!"));
-		assertFalse(ResourcesUtil.verifyID("^"));
-		assertFalse(ResourcesUtil.verifyID("ffffsadfsadfieurASDFSDF84375987 "));
+		assertFalse(ValidationUtils.verifyID(""));
+		assertFalse(ValidationUtils.verifyID(" "));
+		assertFalse(ValidationUtils.verifyID("!"));
+		assertFalse(ValidationUtils.verifyID("^"));
+		assertFalse(ValidationUtils.verifyID("ffffsadfsadfieurASDFSDF84375987 "));
 	}
 	
 	/**
