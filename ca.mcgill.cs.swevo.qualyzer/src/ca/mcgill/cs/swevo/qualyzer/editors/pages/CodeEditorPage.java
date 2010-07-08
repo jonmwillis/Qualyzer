@@ -147,7 +147,8 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 			@Override
 			public void keyReleased(KeyEvent e)
 			{
-				CodeValidator lValidator = new CodeValidator(fName.getText(), fProject);
+				CodeValidator lValidator = new CodeValidator(fName.getText(), 
+						fCodes.get(fCurrentSelection).getCodeName(), fProject);
 				if(!lValidator.isValid())
 				{
 					if(fIsDirty)
@@ -163,23 +164,6 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 				}
 			}
 		};
-	}
-
-	/**
-	 * @return
-	 */
-	protected boolean nameInUse()
-	{
-		for(Code code : fProject.getCodes())
-		{
-			if(code.getCodeName().equals(fName.getText()) && 
-					!fName.getText().equals(fCodes.get(fCurrentSelection).getCodeName()))
-			{
-				return true;
-			}
-		}
-		
-		return false;
 	}
 
 	/**

@@ -17,22 +17,37 @@ import ca.mcgill.cs.swevo.qualyzer.model.Project;
 /**
  * Validates the business rules when a new code is created:
  * - Name non-empty
- * - Name not already in use
+ * - Name not already in use (except if it's oldName)
  * - Name in alphanumerical+ format.
  */
 public class CodeValidator extends AbstractValidator
 {
 	private final String fName;
 	private final Project fProject;
+	private final String fOldName;
 	
 	/**
 	 * Constructs a new CodeValidator.
+	 * @param pName The name chosen for the new code.
+	 * @param pOldName The current name of the code (null if this is a new code).
+	 * @param pProject The Project in which the code is to be created.
+	 */
+	public CodeValidator(String pName, String pOldName, Project pProject)
+	{
+		fName = pName;
+		fOldName = pOldName;
+		fProject = pProject;
+	}
+	
+	/**
+	 * Constructs a new CodeValidator with a null old name.
 	 * @param pName The name chosen for the new code.
 	 * @param pProject The Project in which the code is to be created.
 	 */
 	public CodeValidator(String pName, Project pProject)
 	{
 		fName = pName;
+		fOldName = null;
 		fProject = pProject;
 	}
 	
@@ -54,8 +69,11 @@ public class CodeValidator extends AbstractValidator
 		}
 		else if(nameInUse())
 		{
-			lReturn = false;
-			fMessage = Messages.getString("model.validation.CodeValidator.taken");  //$NON-NLS-1$
+			if((fOldName == null) || (!fName.equals(fOldName)))
+			{
+				lReturn = false;
+				fMessage = Messages.getString("model.validation.CodeValidator.taken");  //$NON-NLS-1$
+			}
 		}
 		
 		return lReturn;
