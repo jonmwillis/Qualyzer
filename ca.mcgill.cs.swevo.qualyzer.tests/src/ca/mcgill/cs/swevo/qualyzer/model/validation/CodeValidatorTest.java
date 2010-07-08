@@ -13,6 +13,7 @@ package ca.mcgill.cs.swevo.qualyzer.model.validation;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNull;
 
 import org.junit.After;
 import org.junit.Before;
@@ -29,6 +30,7 @@ public class CodeValidatorTest
 	private static final String TEST_INVESTIGATOR_NAME = "Bob";
 	
 	private static final String TEST_CODE = "Code1";
+	private static final String SAME_TEST_CODE = "Code1";
 	
 	private static final ProjectCreationProgressListener fProgress = new ProjectCreationProgressListener()
 	{
@@ -94,6 +96,28 @@ public class CodeValidatorTest
 		CodeValidator lValidator = new CodeValidator(TEST_CODE, fProject);
 		assertFalse(lValidator.isValid());
 		assertEquals(Messages.getString("model.validation.CodeValidator.taken"),lValidator.getErrorMessage());
+	}
+	
+	/**
+	 * Verifies that the name does not already exist with a old name
+	 */
+	@Test
+	public void testUniqueName2()
+	{
+		CodeValidator lValidator = new CodeValidator(TEST_CODE, TEST_CODE + "foo", fProject);
+		assertFalse(lValidator.isValid());
+		assertEquals(Messages.getString("model.validation.CodeValidator.taken"),lValidator.getErrorMessage());
+	}
+	
+	/**
+	 * Verifies that the name does not already exist with a old name that's the same
+	 */
+	@Test
+	public void testUniqueName3()
+	{
+		CodeValidator lValidator = new CodeValidator(TEST_CODE, SAME_TEST_CODE, fProject);
+		assertTrue(lValidator.isValid());
+		assertNull(lValidator.getErrorMessage());
 	}
 	
 	/**
