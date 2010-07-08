@@ -13,7 +13,6 @@ package ca.mcgill.cs.swevo.qualyzer.model.validation;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
-import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
  * Validates the business rules when a new investigator is creates:
@@ -46,7 +45,7 @@ public class InvestigatorValidator extends AbstractValidator
 			lReturn = false;
 			fMessage = Messages.getString("model.validation.InvestigatorValidator.emptyInvestigatorID");  //$NON-NLS-1$
 		}
-		else if(!ResourcesUtil.verifyID(fName))
+		else if(!ValidationUtils.verifyID(fName))
 		{
 			lReturn = false;
 			fMessage = Messages.getString(

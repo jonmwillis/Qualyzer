@@ -15,7 +15,6 @@ import java.io.File;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
-import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
  * Validates the business rules when a new transcript is created:
@@ -55,7 +54,7 @@ public class TranscriptValidator extends AbstractValidator
 			fMessage = Messages.getString("model.validation.TranscriptValidator.enterName"); //$NON-NLS-1$
 			lReturn = false;
 		}
-		else if(!ResourcesUtil.verifyID(fName))
+		else if(!ValidationUtils.verifyID(fName))
 		{
 			fMessage = Messages.getString("model.validation.TranscriptValidator.invalidName"); //$NON-NLS-1$
 			lReturn = false;

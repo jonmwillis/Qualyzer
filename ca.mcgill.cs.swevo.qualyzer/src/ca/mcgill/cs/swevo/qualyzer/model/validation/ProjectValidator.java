@@ -14,7 +14,6 @@ package ca.mcgill.cs.swevo.qualyzer.model.validation;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 
-import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
  * Validates the business rules when a new project is created.
@@ -46,7 +45,7 @@ public class ProjectValidator extends AbstractValidator
 			fMessage = Messages.getString("model.validation.ProjectValidator.emptyProjectName"); //$NON-NLS-1$
 			lReturn = false;
 		}
-		else if(!ResourcesUtil.verifyID(fName))
+		else if(!ValidationUtils.verifyID(fName))
 		{
 			fMessage = Messages.getString("model.validation.ProjectValidator.invalidProjectName"); //$NON-NLS-1$
 			lReturn = false;
@@ -65,7 +64,7 @@ public class ProjectValidator extends AbstractValidator
 				fMessage = Messages.getString("model.validation.ProjectValidator.enterNickname"); //$NON-NLS-1$
 				lReturn = false;
 			}
-			else if(!ResourcesUtil.verifyID(fInvestigator))
+			else if(!ValidationUtils.verifyID(fInvestigator))
 			{
 				fMessage = 
 					Messages.getString("model.validation.ProjectValidator.invalidInvestigatorName"); //$NON-NLS-1$

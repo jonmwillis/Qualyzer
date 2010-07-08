@@ -34,6 +34,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.ProjectListener;
 import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
+import ca.mcgill.cs.swevo.qualyzer.model.validation.ValidationUtils;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
@@ -121,7 +122,7 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener
 							IMessageProvider.ERROR);
 					notDirty();
 				}
-				else if(!ResourcesUtil.verifyID(fNickname.getText()))
+				else if(!ValidationUtils.verifyID(fNickname.getText()))
 				{
 					fForm.setMessage(Messages.getString(
 							"editors.pages.InvestigatorEditorPage.invalidName"), //$NON-NLS-1$

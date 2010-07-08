@@ -13,7 +13,6 @@ package ca.mcgill.cs.swevo.qualyzer.model.validation;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
-import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
  * Validates the business rules when a transcript is renamed:
@@ -49,7 +48,7 @@ public class RenameTranscriptValidator extends AbstractValidator
 			lReturn = false;
 			fMessage = Messages.getString("model.validation.RenameTranscriptValidator.nameEmpty");  //$NON-NLS-1$
 		}
-		else if(!ResourcesUtil.verifyID(fName))
+		else if(!ValidationUtils.verifyID(fName))
 		{
 			lReturn = false;
 			fMessage = Messages.getString(

@@ -46,6 +46,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.ProjectListener;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 import ca.mcgill.cs.swevo.qualyzer.model.TranscriptListener;
 import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
+import ca.mcgill.cs.swevo.qualyzer.model.validation.ValidationUtils;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
@@ -135,7 +136,7 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 							"editors.pages.ParticipantEditorPage.enterId"), IMessageProvider.ERROR); //$NON-NLS-1$
 					notDirty();
 				}
-				else if(!ResourcesUtil.verifyID(fID.getText()))
+				else if(!ValidationUtils.verifyID(fID.getText()))
 				{
 					fForm.setMessage(Messages.getString("editors.pages.ParticipantEditorPage.invalidID"), //$NON-NLS-1$
 							IMessageProvider.ERROR);
