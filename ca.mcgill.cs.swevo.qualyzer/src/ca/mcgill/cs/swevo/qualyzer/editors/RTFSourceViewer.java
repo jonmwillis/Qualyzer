@@ -15,7 +15,9 @@ package ca.mcgill.cs.swevo.qualyzer.editors;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
@@ -108,90 +110,131 @@ public class RTFSourceViewer extends ProjectionViewer
 		}
 		else if(current.size() == 1)
 		{
-			Position curPos = currentPos.get(0);
-			if(curPos.offset < position.offset)
-			{
-				Annotation annotation = new Annotation(current.get(0).getType(), true, EMPTY);
-				model.addAnnotation(annotation, new Position(curPos.offset, position.offset - curPos.offset));
-			}
-			else if(position.offset < curPos.offset)
-			{
-				Annotation annotation = new Annotation(RTFConstants.BOLD_TYPE, true, EMPTY);
-				model.addAnnotation(annotation, new Position(position.offset, curPos.offset - position.offset));
-			}
+			Map<Position, Annotation> toggle = handleToggle1(model, position, currentPos, current);
 			
-			if(position.offset + position.length < curPos.offset + curPos.length)
+			for(Position key : toggle.keySet())
 			{
-				Annotation annotation = new Annotation(current.get(0).getType(), false, EMPTY);
-				int offset = position.offset + position.length;
-				model.addAnnotation(annotation, new Position(offset, curPos.offset + curPos.length - offset));
-			}
-			else if(position.offset + position.length > curPos.offset + curPos.length)
-			{
-				Annotation annotation = new Annotation(RTFConstants.BOLD_TYPE, false, EMPTY);
-				int offset = curPos.offset + curPos.length;
-				model.addAnnotation(annotation, new Position(offset, position.offset + position.length - offset));
-			}
-			
-			Annotation annotation = createBoldToggledAnnotation(current.get(0));
-			if(annotation != null)
-			{
-				Position annotPos = position.length < curPos.length ? position : curPos;
-				model.addAnnotation(annotation, annotPos);
+				Annotation annotation = createBoldToggledAnnotation(toggle.get(key));
+				if(annotation != null)
+				{
+					model.addAnnotation(annotation, key);
+				}
 			}
 		}
 		else
 		{
-			Annotation head = current.get(0);
-			Position headPos = currentPos.get(0);
+			Map<Position, Annotation> toggle = handleToggle2(current, currentPos, position, model);
 			
-			if(headPos.offset < position.offset)
+			for(Position key : toggle.keySet())
 			{
-				current.remove(0);
-				currentPos.remove(0);
-				
-				Annotation newHead = new Annotation(head.getType(), true, EMPTY);
-				Position newHeadPos = new Position(headPos.offset, position.offset - headPos.offset);
-				model.addAnnotation(newHead, newHeadPos);
-				
-				newHead = new Annotation(head.getType(), true, EMPTY);
-				newHeadPos = new Position(headPos.offset + newHeadPos.length, headPos.length - newHeadPos.length);
-				current.add(0, newHead);
-				currentPos.add(0, newHeadPos);
-			}
-			
-			Annotation tail = current.get(current.size() - 1);
-			Position tailPos = currentPos.get(current.size() - 1);
-			
-			if(tailPos.offset + tailPos.length > position.offset + position.length)
-			{
-				current.remove(current.size() - 1);
-				currentPos.remove(currentPos.size() - 1);
-				
-				Annotation newTail = new Annotation(tail.getType(), true, EMPTY);
-				int offset = position.offset + position.length;
-				Position newTailPos = new Position(offset, tailPos.offset + tailPos.length - offset);
-				model.addAnnotation(newTail, newTailPos);
-				
-				newTail = new Annotation(tail.getType(), true, EMPTY);
-				newTailPos = new Position(tailPos.offset, offset - tailPos.offset);
-				current.add(newTail);
-				currentPos.add(newTailPos);
-			}
-			
-			for(int i = 0; i < current.size(); i++)
-			{
-				Annotation annotation = createBoldToggledAnnotation(current.get(i));
-				Position newPos = currentPos.get(i);
+				Annotation annotation = createBoldToggledAnnotation(toggle.get(key));
 				if(annotation != null)
 				{
-					model.addAnnotation(annotation, new Position(newPos.offset, newPos.length));
+					model.addAnnotation(annotation, key);
 				}
 			}
-			
-			
-			
 		}
+	}
+	
+	private Map<Position, Annotation> handleToggle1(IAnnotationModel model, Position position, 
+			ArrayList<Position> currentPos, ArrayList<Annotation> current)
+	{
+		Map<Position, Annotation> toToggle = new HashMap<Position, Annotation>();
+		
+		Position curPos = currentPos.get(0);
+		if(curPos.offset < position.offset)
+		{
+			Annotation annotation = new Annotation(current.get(0).getType(), false, EMPTY);
+			model.addAnnotation(annotation, new Position(curPos.offset, position.offset - curPos.offset));
+		}
+		else if(position.offset < curPos.offset)
+		{
+			Annotation annotation = new Annotation(false);
+			toToggle.put(new Position(position.offset, curPos.offset - position.offset), annotation);
+		}
+		
+		if(position.offset + position.length < curPos.offset + curPos.length)
+		{
+			Annotation annotation = new Annotation(current.get(0).getType(), false, EMPTY);
+			int offset = position.offset + position.length;
+			model.addAnnotation(annotation, new Position(offset, curPos.offset + curPos.length - offset));
+		}
+		else if(position.offset + position.length > curPos.offset + curPos.length)
+		{
+			Annotation annotation = new Annotation(false);
+			int offset = curPos.offset + curPos.length;
+			toToggle.put(new Position(offset, position.offset + position.length - offset), annotation);
+		}
+		
+		Annotation annotation = current.get(0);
+
+		Position annotPos = position.length <= curPos.length ? position : curPos;
+		toToggle.put(annotPos, annotation);
+		
+		return toToggle;
+	}
+	
+	private Map<Position, Annotation> handleToggle2(ArrayList<Annotation> current, ArrayList<Position> currentPos,
+			Position position, IAnnotationModel model)
+	{
+		Map<Position, Annotation> toToggle = new HashMap<Position, Annotation>();
+		
+		Annotation head = current.get(0);
+		Position headPos = currentPos.get(0);
+		
+		if(headPos.offset < position.offset)
+		{
+			current.remove(0);
+			currentPos.remove(0);
+			
+			Annotation newHead = new Annotation(head.getType(), true, EMPTY);
+			Position newHeadPos = new Position(headPos.offset, position.offset - headPos.offset);
+			model.addAnnotation(newHead, newHeadPos);
+			
+			newHead = new Annotation(head.getType(), true, EMPTY);
+			newHeadPos = new Position(headPos.offset + newHeadPos.length, headPos.length - newHeadPos.length);
+			current.add(0, newHead);
+			currentPos.add(0, newHeadPos);
+		}
+		else if(position.offset < headPos.offset)
+		{
+			Annotation annotation = new Annotation(true);
+			Position annotPos = new Position(position.offset, headPos.offset - position.offset);
+			toToggle.put(annotPos, annotation);
+		}
+		
+		Annotation tail = current.get(current.size() - 1);
+		Position tailPos = currentPos.get(current.size() - 1);
+		
+		if(tailPos.offset + tailPos.length > position.offset + position.length)
+		{
+			current.remove(current.size() - 1);
+			currentPos.remove(currentPos.size() - 1);
+			
+			Annotation newTail = new Annotation(tail.getType(), true, EMPTY);
+			int offset = position.offset + position.length;
+			Position newTailPos = new Position(offset, tailPos.offset + tailPos.length - offset);
+			model.addAnnotation(newTail, newTailPos);
+			
+			newTail = new Annotation(tail.getType(), true, EMPTY);
+			newTailPos = new Position(tailPos.offset, offset - tailPos.offset);
+			current.add(newTail);
+			currentPos.add(newTailPos);
+		}
+		else if(tailPos.offset + tailPos.length < position.offset + position.length)
+		{
+			Annotation annotation = new Annotation(false);
+			int offset = tailPos.offset + tailPos.length;
+			Position annotPos = new Position(offset, position.offset + position.length - offset);
+			toToggle.put(annotPos, annotation);
+		}
+		
+		for(int i = 0; i < current.size(); i++)
+		{
+			toToggle.put(currentPos.get(i), current.get(i));
+		}
+		
+		return toToggle;
 	}
 	
 	/**
@@ -202,29 +245,33 @@ public class RTFSourceViewer extends ProjectionViewer
 	{
 		Annotation toReturn = null;
 		
-		if(annotation.getType().equals(RTFConstants.BOLD_ITALIC_TYPE))
+		if(annotation.getType().equals(Annotation.TYPE_UNKNOWN))
 		{
-			toReturn = new Annotation(RTFConstants.ITALIC_TYPE, true, EMPTY);
+			toReturn = new Annotation(RTFConstants.BOLD_TYPE, false, EMPTY);
+		}
+		else if(annotation.getType().equals(RTFConstants.BOLD_ITALIC_TYPE))
+		{
+			toReturn = new Annotation(RTFConstants.ITALIC_TYPE, false, EMPTY);
 		}
 		else if(annotation.getType().equals(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE))
 		{
-			toReturn = new Annotation(RTFConstants.ITALIC_UNDERLINE_TYPE, true, EMPTY);
+			toReturn = new Annotation(RTFConstants.ITALIC_UNDERLINE_TYPE, false, EMPTY);
 		}
 		else if(annotation.getType().equals(RTFConstants.BOLD_UNDERLINE_TYPE))
 		{
-			toReturn = new Annotation(RTFConstants.UNDERLINE_TYPE, true, EMPTY);
+			toReturn = new Annotation(RTFConstants.UNDERLINE_TYPE, false, EMPTY);
 		}
 		else if(annotation.getType().equals(RTFConstants.ITALIC_UNDERLINE_TYPE))
 		{
-			toReturn = new Annotation(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE, true, EMPTY);
+			toReturn = new Annotation(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE, false, EMPTY);
 		}
 		else if(annotation.getType().equals(RTFConstants.UNDERLINE_TYPE))
 		{
-			toReturn = new Annotation(RTFConstants.BOLD_UNDERLINE_TYPE, true, EMPTY);
+			toReturn = new Annotation(RTFConstants.BOLD_UNDERLINE_TYPE, false, EMPTY);
 		}
 		else if(annotation.getType().equals(RTFConstants.ITALIC_TYPE))
 		{
-			toReturn = new Annotation(RTFConstants.BOLD_ITALIC_TYPE, true, EMPTY);
+			toReturn = new Annotation(RTFConstants.BOLD_ITALIC_TYPE, false, EMPTY);
 		}
 		
 		return toReturn;
