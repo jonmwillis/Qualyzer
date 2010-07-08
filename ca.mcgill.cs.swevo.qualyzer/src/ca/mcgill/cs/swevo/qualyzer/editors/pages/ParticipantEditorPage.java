@@ -46,7 +46,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.ProjectListener;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 import ca.mcgill.cs.swevo.qualyzer.model.TranscriptListener;
 import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
-import ca.mcgill.cs.swevo.qualyzer.model.validation.ValidationUtils;
+import ca.mcgill.cs.swevo.qualyzer.model.validation.ParticipantValidator;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
@@ -130,22 +130,12 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 			@Override
 			public void keyReleased(KeyEvent event)
 			{
-				if(fID.getText().isEmpty())
+				ParticipantValidator lValidator = new ParticipantValidator(fID.getText(), 
+						fParticipant.getParticipantId(), fParticipant.getProject());
+				
+				if(!lValidator.isValid())
 				{
-					fForm.setMessage(Messages.getString(
-							"editors.pages.ParticipantEditorPage.enterId"), IMessageProvider.ERROR); //$NON-NLS-1$
-					notDirty();
-				}
-				else if(!ValidationUtils.verifyID(fID.getText()))
-				{
-					fForm.setMessage(Messages.getString("editors.pages.ParticipantEditorPage.invalidID"), //$NON-NLS-1$
-							IMessageProvider.ERROR);
-					notDirty();
-				}
-				else if(idInUse())
-				{
-					fForm.setMessage(Messages.getString(
-							"editors.pages.ParticipantEditorPage.idTaken"), IMessageProvider.ERROR); //$NON-NLS-1$
+					fForm.setMessage(lValidator.getErrorMessage(), IMessageProvider.ERROR); 
 					notDirty();
 				}
 				else
@@ -290,21 +280,6 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 
 
 		};
-	}
-
-	/**
-	 * @return
-	 */
-	protected boolean idInUse()
-	{
-		for(Participant participant : fParticipant.getProject().getParticipants())
-		{
-			if(!participant.equals(fParticipant) && participant.getParticipantId().equals(fID.getText()))
-			{
-				return true;
-			}
-		}
-		return false;
 	}
 
 	/**

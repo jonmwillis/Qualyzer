@@ -17,23 +17,36 @@ import ca.mcgill.cs.swevo.qualyzer.model.Project;
 /**
  * Validates the business rules when a new investigator is creates:
  * - Nick Name non-empty
- * - Nick Name not already in use
+ * - Nick Name not already in use (except if current)
  * - Nick Name in alphanumerical+ format.
  */
 public class ParticipantValidator extends AbstractValidator
 {
 	private final String fName;
+	private final String fOldName;
 	private final Project fProject;
 	
 	/**
 	 * Constructs a new ParticipantValidator.
 	 * @param pName The ID chosen for the new participant.
+	 * @param pOldName The ID of the current participant (null if there are none).
+	 * @param pProject The Project in which the participant is to be created.
+	 */
+	public ParticipantValidator(String pName, String pOldName, Project pProject)
+	{
+		fName = pName;
+		fOldName = pOldName;
+		fProject = pProject;
+	}
+	
+	/**
+	 * Constructs a new ParticipantValidator with a null old name.
+	 * @param pName The ID chosen for the new participant.
 	 * @param pProject The Project in which the participant is to be created.
 	 */
 	public ParticipantValidator(String pName, Project pProject)
 	{
-		fName = pName;
-		fProject = pProject;
+		this(pName, null, pProject);
 	}
 	
 	@Override
@@ -54,8 +67,11 @@ public class ParticipantValidator extends AbstractValidator
 		}
 		else if(idInUse())
 		{
-			lReturn = false;
-			fMessage = Messages.getString("model.validation.ParticipantValidator.IDTaken");  //$NON-NLS-1$
+			if((fOldName==null) || (!fName.equals(fOldName)))
+			{
+				lReturn = false;
+				fMessage = Messages.getString("model.validation.ParticipantValidator.IDTaken");  //$NON-NLS-1$
+			}
 		}
 		
 		return lReturn;
