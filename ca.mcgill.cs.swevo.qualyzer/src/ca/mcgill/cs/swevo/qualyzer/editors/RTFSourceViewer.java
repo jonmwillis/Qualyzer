@@ -14,6 +14,7 @@
 package ca.mcgill.cs.swevo.qualyzer.editors;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 
 import org.eclipse.jface.text.IDocument;
@@ -105,14 +106,91 @@ public class RTFSourceViewer extends ProjectionViewer
 			Annotation annotation = new Annotation(RTFConstants.BOLD_TYPE, true, EMPTY);
 			model.addAnnotation(annotation, position);
 		}
-		else if(current.size() == 1 && currentPos.get(0).offset == position.offset && 
-				currentPos.get(0).length == position.length)
+		else if(current.size() == 1)
 		{
+			Position curPos = currentPos.get(0);
+			if(curPos.offset < position.offset)
+			{
+				Annotation annotation = new Annotation(current.get(0).getType(), true, EMPTY);
+				model.addAnnotation(annotation, new Position(curPos.offset, position.offset - curPos.offset));
+			}
+			else if(position.offset < curPos.offset)
+			{
+				Annotation annotation = new Annotation(RTFConstants.BOLD_TYPE, true, EMPTY);
+				model.addAnnotation(annotation, new Position(position.offset, curPos.offset - position.offset));
+			}
+			
+			if(position.offset + position.length < curPos.offset + curPos.length)
+			{
+				Annotation annotation = new Annotation(current.get(0).getType(), false, EMPTY);
+				int offset = position.offset + position.length;
+				model.addAnnotation(annotation, new Position(offset, curPos.offset + curPos.length - offset));
+			}
+			else if(position.offset + position.length > curPos.offset + curPos.length)
+			{
+				Annotation annotation = new Annotation(RTFConstants.BOLD_TYPE, false, EMPTY);
+				int offset = curPos.offset + curPos.length;
+				model.addAnnotation(annotation, new Position(offset, position.offset + position.length - offset));
+			}
+			
 			Annotation annotation = createBoldToggledAnnotation(current.get(0));
 			if(annotation != null)
 			{
-				model.addAnnotation(annotation, position);
+				Position annotPos = position.length < curPos.length ? position : curPos;
+				model.addAnnotation(annotation, annotPos);
 			}
+		}
+		else
+		{
+			Annotation head = current.get(0);
+			Position headPos = currentPos.get(0);
+			
+			if(headPos.offset < position.offset)
+			{
+				current.remove(0);
+				currentPos.remove(0);
+				
+				Annotation newHead = new Annotation(head.getType(), true, EMPTY);
+				Position newHeadPos = new Position(headPos.offset, position.offset - headPos.offset);
+				model.addAnnotation(newHead, newHeadPos);
+				
+				newHead = new Annotation(head.getType(), true, EMPTY);
+				newHeadPos = new Position(headPos.offset + newHeadPos.length, headPos.length - newHeadPos.length);
+				current.add(0, newHead);
+				currentPos.add(0, newHeadPos);
+			}
+			
+			Annotation tail = current.get(current.size() - 1);
+			Position tailPos = currentPos.get(current.size() - 1);
+			
+			if(tailPos.offset + tailPos.length > position.offset + position.length)
+			{
+				current.remove(current.size() - 1);
+				currentPos.remove(currentPos.size() - 1);
+				
+				Annotation newTail = new Annotation(tail.getType(), true, EMPTY);
+				int offset = position.offset + position.length;
+				Position newTailPos = new Position(offset, tailPos.offset + tailPos.length - offset);
+				model.addAnnotation(newTail, newTailPos);
+				
+				newTail = new Annotation(tail.getType(), true, EMPTY);
+				newTailPos = new Position(tailPos.offset, offset - tailPos.offset);
+				current.add(newTail);
+				currentPos.add(newTailPos);
+			}
+			
+			for(int i = 0; i < current.size(); i++)
+			{
+				Annotation annotation = createBoldToggledAnnotation(current.get(i));
+				Position newPos = currentPos.get(i);
+				if(annotation != null)
+				{
+					model.addAnnotation(annotation, new Position(newPos.offset, newPos.length));
+				}
+			}
+			
+			
+			
 		}
 	}
 	
@@ -257,6 +335,7 @@ public class RTFSourceViewer extends ProjectionViewer
 	 * @param model
 	 * @param current
 	 * @param currentPos
+	 * @param type 0: bold, 1: italic, -1: underlined
 	 */
 	@SuppressWarnings("unchecked")
 	private void findOverlaps(Position position, IAnnotationModel model, ArrayList<Annotation> current,
@@ -269,20 +348,61 @@ public class RTFSourceViewer extends ProjectionViewer
 			Annotation next = iter.next();
 			Position pos = model.getPosition(next);
 			
-			if(next.getType().equals(RTFConstants.FRAGMENT_TYPE))
+			if(!(next instanceof FragmentAnnotation))
 			{
-				continue;
+				if(position.overlapsWith(pos.offset, pos.length))
+				{
+					current.add(next);
+					currentPos.add(pos);
+					model.removeAnnotation(next);
+				}
 			}
-			
-			if(position.overlapsWith(pos.offset, pos.length))
-			{
-				current.add(next);
-				currentPos.add(pos);
-				model.removeAnnotation(next);
-			}
+		}
+		if(current.size() > 1)
+		{
+			pseudoSort(current, currentPos);
 		}
 	}
 	
+	/**
+	 * Places the 'first' at the head and the 'last' at the tail.
+	 * According to offsets.
+	 * @param current
+	 * @param currentPos
+	 */
+	private void pseudoSort(ArrayList<Annotation> current, ArrayList<Position> currentPos)
+	{
+		int head = 0;
+		Position headPos = currentPos.get(head);
+		
+		for(int i = 1; i < currentPos.size(); i++)
+		{
+			Position next = currentPos.get(i);
+			if(next.offset < headPos.offset)
+			{
+				head = i;
+				headPos = next;
+			}
+		}
+		Collections.swap(current, 0, head);
+		Collections.swap(currentPos, 0, head);
+		
+		int tail = 0;
+		Position tailPos = currentPos.get(tail);
+		
+		for(int i = 1; i < currentPos.size(); i++)
+		{
+			Position next = currentPos.get(i);
+			if(next.offset > tailPos.offset)
+			{
+				tail = i;
+				tailPos = next;
+			}
+		}
+		Collections.swap(current, current.size() - 1, tail);
+		Collections.swap(currentPos, currentPos.size() - 1, tail);
+	}
+
 	/**
 	 * Toggle underlining for the text at the given position.
 	 * @param position

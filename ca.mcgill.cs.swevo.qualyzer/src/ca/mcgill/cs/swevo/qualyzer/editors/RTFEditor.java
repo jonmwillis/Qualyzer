@@ -419,7 +419,7 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 	 * @param annotation
 	 * @return
 	 */
-	private boolean isBold(Annotation annotation)
+	protected static boolean isBold(Annotation annotation)
 	{
 		String type = annotation.getType();
 		return type.equals(RTFConstants.BOLD_TYPE) || type.equals(RTFConstants.BOLD_ITALIC_TYPE) || 
@@ -430,7 +430,7 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 	 * @param annotation
 	 * @return
 	 */
-	private boolean isItalic(Annotation annotation)
+	protected static boolean isItalic(Annotation annotation)
 	{
 		String type = annotation.getType();
 		return type.equals(RTFConstants.ITALIC_TYPE) || type.equals(RTFConstants.BOLD_ITALIC_TYPE) || 
@@ -441,7 +441,7 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 	 * @param annotation
 	 * @return
 	 */
-	private boolean isUnderline(Annotation annotation)
+	protected static boolean isUnderline(Annotation annotation)
 	{
 		String type = annotation.getType();
 		return type.equals(RTFConstants.UNDERLINE_TYPE) || type.equals(RTFConstants.BOLD_UNDERLINE_TYPE) || 
