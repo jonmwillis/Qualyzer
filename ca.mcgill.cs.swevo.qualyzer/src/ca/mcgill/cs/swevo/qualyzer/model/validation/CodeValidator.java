@@ -13,7 +13,6 @@ package ca.mcgill.cs.swevo.qualyzer.model.validation;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Code;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
-import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
  * Validates the business rules when a new code is created:
@@ -47,7 +46,7 @@ public class CodeValidator extends AbstractValidator
 			lReturn = false;
 			fMessage = Messages.getString("model.validation.CodeValidator.empty");  //$NON-NLS-1$
 		}
-		else if(!ResourcesUtil.verifyID(fName))
+		else if(!ValidationUtils.verifyID(fName))
 		{
 			lReturn = false;
 			fMessage = Messages.getString(

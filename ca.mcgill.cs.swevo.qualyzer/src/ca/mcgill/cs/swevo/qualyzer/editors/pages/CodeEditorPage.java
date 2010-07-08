@@ -45,6 +45,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.ProjectListener;
 import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
+import ca.mcgill.cs.swevo.qualyzer.model.validation.ValidationUtils;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
@@ -163,7 +164,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 					fForm.setMessage(Messages.getString(
 							"editors.pages.CodeEditorPage.nameEmpty"), IMessageProvider.ERROR); //$NON-NLS-1$
 				}
-				else if(!ResourcesUtil.verifyID(fName.getText()))
+				else if(!ValidationUtils.verifyID(fName.getText()))
 				{
 					if(fIsDirty)
 					{
