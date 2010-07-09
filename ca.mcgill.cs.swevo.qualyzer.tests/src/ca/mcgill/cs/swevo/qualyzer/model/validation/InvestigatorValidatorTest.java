@@ -12,8 +12,8 @@ package ca.mcgill.cs.swevo.qualyzer.model.validation;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
 import org.junit.Before;
@@ -21,7 +21,6 @@ import org.junit.Test;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
-import ca.mcgill.cs.swevo.qualyzer.model.ProjectCreationProgressListener;
 
 public class InvestigatorValidatorTest
 {
@@ -35,16 +34,6 @@ public class InvestigatorValidatorTest
 	
 	private Project fProject;
 	
-	private static final ProjectCreationProgressListener fProgress = new ProjectCreationProgressListener()
-	{
-		
-		@Override
-		public void statusUpdate()
-		{
-			
-		}
-	};
-	
 	/**
 	 * 
 	 */
@@ -52,7 +41,7 @@ public class InvestigatorValidatorTest
 	public void setUp()
 	{
 		fFacade = Facade.getInstance();
-		fProject = fFacade.createProject(TEST_PROJECT_NAME, TEST_INVESTIGATOR_NAME, TEST_INVESTIGATOR_NAME, "", fProgress);
+		fProject = fFacade.createProject(TEST_PROJECT_NAME, TEST_INVESTIGATOR_NAME, TEST_INVESTIGATOR_NAME, "");
 	}
 
 	/**
