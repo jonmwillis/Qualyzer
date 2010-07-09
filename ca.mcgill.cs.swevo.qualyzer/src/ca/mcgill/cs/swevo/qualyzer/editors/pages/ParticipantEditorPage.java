@@ -39,7 +39,9 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.ParticipantEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
+import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
+import ca.mcgill.cs.swevo.qualyzer.model.ParticipantListener;
 import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.ProjectListener;
@@ -52,7 +54,7 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 /**
  * The form used to edit participant data.
  */
-public class ParticipantEditorPage extends FormPage implements ProjectListener, TranscriptListener
+public class ParticipantEditorPage extends FormPage implements ProjectListener, TranscriptListener, ParticipantListener
 {
 	private static final String LABEL_PARTICIPANT_NAME = Messages.getString(
 			"editors.pages.ParticipantEditorPage.participantName"); //$NON-NLS-1$
@@ -82,8 +84,10 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 		fParticipant = participant;
 		fIsDirty = false;
 		
-		Facade.getInstance().getListenerManager().registerProjectListener(participant.getProject(), this);
-		Facade.getInstance().getListenerManager().registerTranscriptListener(participant.getProject(), this);
+		ListenerManager listenerManager = Facade.getInstance().getListenerManager();
+		listenerManager.registerProjectListener(participant.getProject(), this);
+		listenerManager.registerTranscriptListener(participant.getProject(), this);
+		listenerManager.registerParticipantListener(participant.getProject(), this);
 	}
 	
 	@Override
@@ -397,7 +401,7 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 		if(ChangeType.DELETE == cType)
 		{
 			IWorkbenchPage page = getEditor().getEditorSite().getPage();
-			ResourcesUtil.closeEditor(page, getEditor().getEditorInput().getName());
+			ResourcesUtil.closeEditor(page, getEditorInput().getName());
 		}
 		
 	}
@@ -441,8 +445,32 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 	@Override
 	public void dispose()
 	{
-		Facade.getInstance().getListenerManager().unregisterProjectListener(fParticipant.getProject(), this);
-		Facade.getInstance().getListenerManager().unregisterTranscriptListener(fParticipant.getProject(), this);
+		ListenerManager listenerManager = Facade.getInstance().getListenerManager();
+		listenerManager.unregisterProjectListener(fParticipant.getProject(), this);
+		listenerManager.unregisterTranscriptListener(fParticipant.getProject(), this);
+		listenerManager.unregisterParticipantListener(fParticipant.getProject(), this);
 		super.dispose();
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.model.ParticipantListener#participantChanged(
+	 * ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType, ca.mcgill.cs.swevo.qualyzer.model.Participant[], 
+	 * ca.mcgill.cs.swevo.qualyzer.model.Facade)
+	 */
+	@Override
+	public void participantChanged(ChangeType cType, Participant[] participants, Facade facade)
+	{
+		IWorkbenchPage page = getEditor().getEditorSite().getPage();
+		if(cType == ChangeType.DELETE)
+		{
+			for(Participant participant : participants)
+			{
+				if(fParticipant.equals(participant))
+				{
+					ResourcesUtil.closeEditor(page, getEditorInput().getName());
+					break;
+				}
+			}
+		}
 	}
 }

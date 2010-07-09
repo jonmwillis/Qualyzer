@@ -20,7 +20,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -124,16 +123,7 @@ public class DeleteInvestigatorHandler extends AbstractHandler
 		if(check)
 		{
 			for(Investigator investigator : toDelete)
-			{
-				IEditorReference[] editors = page.getEditorReferences();
-				for(IEditorReference editor : editors)
-				{
-					if(editor.getName().equals(investigator.getNickName()))
-					{
-						page.closeEditor(editor.getEditor(true), true);
-					}
-				}
-				
+			{	
 				Facade.getInstance().deleteInvestigator(investigator);
 			}
 			CommonNavigator view;

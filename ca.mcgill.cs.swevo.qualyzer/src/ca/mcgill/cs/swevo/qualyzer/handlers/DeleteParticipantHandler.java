@@ -21,14 +21,12 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.navigator.CommonNavigator;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
-import ca.mcgill.cs.swevo.qualyzer.editors.ParticipantFormEditor;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Memo;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
@@ -109,22 +107,12 @@ public class DeleteParticipantHandler extends AbstractHandler
 		
 		if(check)
 		{
-			for(Participant participant : toDelete)
-			{	
-				IEditorReference[] editors = page.getEditorReferences();
-				for(IEditorReference editor : editors)
-				{
-					if(editor.getEditor(true) instanceof ParticipantFormEditor && 
-							editor.getName().equals(participant.getParticipantId()))
-					{
-						page.closeEditor(editor.getEditor(true), true);
-					}
-				}
-				
-				Facade.getInstance().deleteParticipant(participant);	
-			}
 			CommonNavigator view;
 			view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+			for(Participant participant : toDelete)
+			{	
+				Facade.getInstance().deleteParticipant(participant);
+			}
 			view.getCommonViewer().refresh();
 		}
 	}

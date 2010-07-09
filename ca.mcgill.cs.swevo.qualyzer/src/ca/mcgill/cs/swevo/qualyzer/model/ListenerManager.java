@@ -57,9 +57,16 @@ public class ListenerManager
 	{
 
 		ArrayList<ProjectListener> list = fProjectListeners.get(project);
+		ArrayList<ProjectListener> listCopy = new ArrayList<ProjectListener>();
+		
 		if(list != null)
 		{
 			for(ProjectListener listener : list)
+			{
+				listCopy.add(listener);
+			}
+			
+			for(ProjectListener listener : listCopy)
 			{
 				listener.projectChanged(cType, project, facade);
 			}
@@ -78,9 +85,16 @@ public class ListenerManager
 		if(codes.length > 0)
 		{
 			ArrayList<CodeListener> list = fCodeListeners.get(codes[0].getProject());
+			ArrayList<CodeListener> listCopy = new ArrayList<CodeListener>();
+			
 			if(list != null)
 			{
 				for(CodeListener listener : list)
+				{
+					listCopy.add(listener);
+				}
+				
+				for(CodeListener listener : listCopy)
 				{
 					listener.codeChanged(cType, codes, facade);
 				}
@@ -100,9 +114,15 @@ public class ListenerManager
 		if(investigators.length > 0)
 		{
 			ArrayList<InvestigatorListener> list = fInvestigatorListeners.get(investigators[0].getProject());
+			ArrayList<InvestigatorListener> listCopy = new ArrayList<InvestigatorListener>();
 			if(list != null)
 			{
 				for(InvestigatorListener listener : list)
+				{
+					listCopy.add(listener);
+				}
+				
+				for(InvestigatorListener listener : listCopy)
 				{
 					listener.investigatorChanged(cType, investigators, facade);
 				}
@@ -122,9 +142,16 @@ public class ListenerManager
 		if(participants.length > 0)
 		{
 			ArrayList<ParticipantListener> list = fParticipantListeners.get(participants[0].getProject());
+			ArrayList<ParticipantListener> listCopy = new ArrayList<ParticipantListener>();
+			
 			if(list != null)
 			{
 				for(ParticipantListener listener : list)
+				{
+					listCopy.add(listener);
+				}
+				
+				for(ParticipantListener listener : listCopy)
 				{
 					listener.participantChanged(cType, participants, facade);
 				}
@@ -144,9 +171,16 @@ public class ListenerManager
 		if(transcripts.length > 0)
 		{
 			ArrayList<TranscriptListener> list = fTranscriptListeners.get(transcripts[0].getProject());
+			ArrayList<TranscriptListener> listCopy = new ArrayList<TranscriptListener>();
+			
 			if(list != null)
 			{
 				for(TranscriptListener listener : list)
+				{
+					listCopy.add(listener);
+				}
+				
+				for(TranscriptListener listener : listCopy)
 				{
 					listener.transcriptChanged(cType, transcripts, facade);
 				}
