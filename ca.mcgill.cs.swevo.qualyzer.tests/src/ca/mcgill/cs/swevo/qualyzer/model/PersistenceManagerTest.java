@@ -45,7 +45,7 @@ public class PersistenceManagerTest
 	private static final String A_CODE = "a";
 
 	private static final String B_CODE = "b";
-	
+
 	private QualyzerActivator fActivator;
 
 	private PersistenceManager fManager;
@@ -273,5 +273,29 @@ public class PersistenceManagerTest
 	}
 
 	// CSON:
+
+	
+	
+	@Test
+	public void testRefreshManager()
+	{
+		Facade facade = Facade.getInstance();
+		Project project = facade.createProject("project2", "Invest1", "", "",
+				new ProjectCreationProgressListener()
+				{
+					@Override
+					public void statusUpdate()
+					{
+						// TODO Auto-generated method stub
+
+					}
+				});
+		QualyzerActivator activator = QualyzerActivator.getDefault();
+		activator.getHibernateDBManagers().remove(project.getName());
+		
+		PersistenceManager.getInstance().refreshManager(ResourcesPlugin.getWorkspace().getRoot().getProject(project.getName()));
+		
+		assertNotNull(activator.getHibernateDBManagers().get(project.getName()));
+	}
 
 }

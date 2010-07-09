@@ -14,16 +14,20 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.hibernate.HibernateException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
 import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
 
 /**
@@ -33,14 +37,14 @@ public class FacadeTest
 {
 	private static ProjectCreationProgressListener fProgress = new ProjectCreationProgressListener()
 	{
-		
+
 		@Override
 		public void statusUpdate()
 		{
-			
+
 		}
 	};
-	
+
 	private static final String TEST_PROJECT_NAME = "TestProject";
 
 	private static final String TEST_INVESTIGATOR_NAME = "Bob";
@@ -61,7 +65,8 @@ public class FacadeTest
 	{
 		fListener = new DebugListener();
 		fFacade = Facade.getInstance();
-		fProject = fFacade.createProject(TEST_PROJECT_NAME, TEST_INVESTIGATOR_NAME, TEST_INVESTIGATOR_NAME, "", fProgress);
+		fProject = fFacade.createProject(TEST_PROJECT_NAME, TEST_INVESTIGATOR_NAME, TEST_INVESTIGATOR_NAME, "",
+				fProgress);
 		fListenerManager = fFacade.getListenerManager();
 		fListenerManager.registerCodeListener(fProject, fListener);
 		fListenerManager.registerInvestigatorListener(fProject, fListener);
@@ -100,8 +105,8 @@ public class FacadeTest
 		assertEquals(1, PersistenceManager.getInstance().getProject(TEST_PROJECT_NAME).getParticipants().size());
 		// Test event
 		assertEquals(ChangeType.ADD, event.getChangeType());
-		assertArrayEquals(new Participant[]{participant}, (Object[]) event.getObject());
-		
+		assertArrayEquals(new Participant[] { participant }, (Object[]) event.getObject());
+
 	}
 
 	/**
@@ -119,8 +124,8 @@ public class FacadeTest
 		assertEquals(2, PersistenceManager.getInstance().getProject(TEST_PROJECT_NAME).getInvestigators().size());
 		// Test event
 		assertEquals(ChangeType.ADD, event.getChangeType());
-		assertArrayEquals(new Investigator[]{investigator}, (Object[]) event.getObject());
-		
+		assertArrayEquals(new Investigator[] { investigator }, (Object[]) event.getObject());
+
 	}
 
 	/**
@@ -144,30 +149,336 @@ public class FacadeTest
 		assertEquals(1, PersistenceManager.getInstance().getProject(TEST_PROJECT_NAME).getTranscripts().size());
 		// Test event
 		assertEquals(ChangeType.ADD, event.getChangeType());
-		assertArrayEquals(new Transcript[]{transcript}, (Object[]) event.getObject());
+		assertArrayEquals(new Transcript[] { transcript }, (Object[]) event.getObject());
 	}
-	
+
+	/**
+	 * 
+	 * Verifies if a fragment can be created on an initialized and uninitialized transcript
+	 * 
+	 */
+	@Test
+	public void testCreateFragment()
+	{
+		String pId = "p1";
+		String pName = "Toto";
+		String transcriptName = "t1";
+		Participant participant = fFacade.createParticipant(pId, pName, fProject);
+		List<Participant> participants = new ArrayList<Participant>();
+		participants.add(participant);
+
+		Transcript transcript = fFacade.createTranscript(transcriptName, "6/26/2010", "", participants, fProject);
+
+		// Create a fragment from newly created transcript: ok
+		Fragment fragment = fFacade.createFragment(transcript, 0, 1);
+
+		// Test Local
+		assertNotNull(fragment);
+		// Test event
+		ListenerEvent event = fListener.getEvents().get(2);
+		assertEquals(ChangeType.MODIFY, event.getChangeType());
+		assertArrayEquals(new Transcript[] { transcript }, (Object[]) event.getObject());
+
+		// Create a fragment from initialized transcript: ok
+		transcript = fFacade.forceTranscriptLoad(PersistenceManager.getInstance().getProject(fProject.getName())
+				.getTranscripts().get(0));
+		fragment = fFacade.createFragment(transcript, 0, 1);
+
+		// Test Local
+		assertNotNull(fragment);
+		// Test event
+		event = fListener.getEvents().get(3);
+		assertEquals(ChangeType.MODIFY, event.getChangeType());
+		assertArrayEquals(new Transcript[] { transcript }, (Object[]) event.getObject());
+
+		// Create a fragment from uninitialized transcript: not ok
+		try
+		{
+			transcript = PersistenceManager.getInstance().getProject(fProject.getName()).getTranscripts().get(0);
+			fragment = fFacade.createFragment(transcript, 0, 1);
+			fail();
+		}
+		catch (QualyzerException qe)
+		{
+			assertTrue(true);
+		}
+	}
+
+	/**
+	 * Verifies db state and listeners after creating a code.
+	 */
+	@Test
+	public void testCreateCode()
+	{
+		Code code = fFacade.createCode("c1", "", fProject);
+		ListenerEvent event = fListener.getEvents().get(0);
+
+		// Test DB
+		assertNotNull(code);
+		assertEquals(1, PersistenceManager.getInstance().getProject(TEST_PROJECT_NAME).getCodes().size());
+		// Test event
+		assertEquals(ChangeType.ADD, event.getChangeType());
+		assertArrayEquals(new Code[] { code }, (Object[]) event.getObject());
+
+	}
+
 	/**
 	 * 
 	 * Ensures that the project and the files are deleted.
-	 *
+	 * 
 	 */
 	@Test
 	public void testDeleteProject()
 	{
-		Project tempProject = fFacade.createProject("projectb", TEST_INVESTIGATOR_NAME, TEST_INVESTIGATOR_NAME, "", fProgress);
+		Project tempProject = fFacade.createProject("projectb", TEST_INVESTIGATOR_NAME, TEST_INVESTIGATOR_NAME, "",
+				fProgress);
 		DebugListener tempListener = new DebugListener();
 		fFacade.getListenerManager().registerProjectListener(tempProject, tempListener);
 		fFacade.deleteProject(tempProject);
-		
+
 		ListenerEvent event = tempListener.getEvents().get(0);
 		assertEquals(ChangeType.DELETE, event.getChangeType());
 		assertNotNull(event.getObject());
-		
+
 		IProject iProject = ResourcesPlugin.getWorkspace().getRoot().getProject("projectb");
 		assertFalse(iProject.exists());
-		
+
+	}
+
+	/**
+	 * Verifies that a participant can be deleted.
+	 * 
+	 */
+	@Test
+	public void testDeleteParticipant()
+	{
+		String pId = "p1";
+		String pName = "Toto";
+		Participant participant = fFacade.createParticipant(pId, pName, fProject);
+		fFacade.deleteParticipant(PersistenceManager.getInstance().getProject(fProject.getName()).getParticipants()
+				.get(0));
+
+		ListenerEvent event = fListener.getEvents().get(1);
+		assertEquals(ChangeType.DELETE, event.getChangeType());
+		assertArrayEquals(new Participant[] { participant }, (Object[]) event.getObject());
+		assertEquals(0, PersistenceManager.getInstance().getProject(fProject.getName()).getParticipants().size());
+
+		// Test participants associated with a transcript
+		fProject = PersistenceManager.getInstance().getProject(fProject.getName());
+		participant = fFacade.createParticipant(pId, pName, fProject);
+		List<Participant> participants = new ArrayList<Participant>();
+		participants.add(participant);
+		fFacade.createTranscript("t1", "6/26/2010", "", participants, fProject);
+		try
+		{
+			fFacade.deleteParticipant(participant);
+			fail();
+		}
+		catch (QualyzerException qe)
+		{
+			assertTrue(true);
+		}
+	}
+
+	/**
+	 * Verifies that an investigator can be deleted.
+	 * 
+	 */
+	@Test
+	public void testDeleteInvestigator()
+	{
+		Investigator investigator = fFacade.createInvestigator("TestInvestigator", "TestInvestigator FullName",
+				"McGill", fProject, true);
+		fFacade.deleteInvestigator(PersistenceManager.getInstance().getProject(fProject.getName()).getInvestigators()
+				.get(1));
+
+		ListenerEvent event = fListener.getEvents().get(1);
+		assertEquals(ChangeType.DELETE, event.getChangeType());
+		assertArrayEquals(new Investigator[] { investigator }, (Object[]) event.getObject());
+		assertEquals(0, PersistenceManager.getInstance().getProject(fProject.getName()).getParticipants().size());
+	}
+
+	/**
+	 * 
+	 * Verifies that a transcript can be deleted.
+	 * 
+	 */
+	@Test
+	public void testDeleteTranscript()
+	{
+		String pId = "p1";
+		String pName = "Toto";
+		String transcriptName = "t1";
+		Participant participant = fFacade.createParticipant(pId, pName, fProject);
+		List<Participant> participants = new ArrayList<Participant>();
+		participants.add(participant);
+		Transcript transcript = fFacade.createTranscript(transcriptName, "6/26/2010", "", participants, fProject);
+
+		fFacade.deleteTranscript(PersistenceManager.getInstance().getProject(fProject.getName()).getTranscripts()
+				.get(0));
+
+		ListenerEvent event = fListener.getEvents().get(2);
+		assertEquals(ChangeType.DELETE, event.getChangeType());
+		assertArrayEquals(new Transcript[] { transcript }, (Object[]) event.getObject());
+		assertEquals(0, PersistenceManager.getInstance().getProject(fProject.getName()).getTranscripts().size());
+	}
+
+	/**
+	 * 
+	 * Verifies that transcriptload() really loads the various lists.
+	 * 
+	 */
+	@Test
+	public void testForceTranscriptLoad()
+	{
+		String pId = "p1";
+		String pName = "Toto";
+		String transcriptName = "t1";
+		Participant participant = fFacade.createParticipant(pId, pName, fProject);
+		List<Participant> participants = new ArrayList<Participant>();
+		participants.add(participant);
+		fFacade.createTranscript(transcriptName, "6/26/2010", "", participants, fProject);
+
+		Transcript tempTranscript = PersistenceManager.getInstance().getProject(fProject.getName()).getTranscripts()
+				.get(0);
+
+		try
+		{
+			tempTranscript.getFragments().size();
+			fail();
+		}
+		catch (HibernateException he)
+		{
+			assertTrue(true);
+		}
+
+		Transcript newTempTranscript = fFacade.forceTranscriptLoad(tempTranscript);
+		assertEquals(0, newTempTranscript.getFragments().size());
+	}
+
+	/**
+	 * 
+	 * Verifies that a change of description is correctly saved.
+	 * 
+	 */
+	@Test
+	public void testSaveCode()
+	{
+		String newDescription = "Hello World";
+		Code code = fFacade.createCode("c1", "", fProject);
+		code.setDescription(newDescription);
+		fFacade.saveCode(code);
+		ListenerEvent event = fListener.getEvents().get(1);
+
+		// Test DB
+		assertEquals(1, PersistenceManager.getInstance().getProject(TEST_PROJECT_NAME).getCodes().size());
+		assertEquals(newDescription, PersistenceManager.getInstance().getProject(TEST_PROJECT_NAME).getCodes().get(0)
+				.getDescription());
 		// Test event
+		assertEquals(ChangeType.MODIFY, event.getChangeType());
+		assertArrayEquals(new Code[] { code }, (Object[]) event.getObject());
+	}
+
+	/**
+	 * Verifies that multiple codes can be modified together.
+	 */
+	@Test
+	public void testSaveCodes()
+	{
+		String newDescription = "Hello World";
+		String newName = "New Name";
+		Code code1 = fFacade.createCode("c1", "", fProject);
+		code1.setDescription(newDescription);
+		Code code2 = fFacade.createCode("c2", "", fProject);
+		code2.setCodeName(newName);
+
+		fFacade.saveCodes(new Code[] { code1, code2 });
+
+		ListenerEvent event = fListener.getEvents().get(2);
+
+		// Test DB
+		assertEquals(2, PersistenceManager.getInstance().getProject(TEST_PROJECT_NAME).getCodes().size());
+		assertEquals(newDescription, PersistenceManager.getInstance().getProject(TEST_PROJECT_NAME).getCodes().get(0)
+				.getDescription());
+		assertEquals(newName, PersistenceManager.getInstance().getProject(TEST_PROJECT_NAME).getCodes().get(1)
+				.getCodeName());
+		// Test event
+		assertEquals(ChangeType.MODIFY, event.getChangeType());
+		assertArrayEquals(new Code[] { code1, code2 }, (Object[]) event.getObject());
+	}
+
+	/**
+	 * Verifies that a change of institution is correctly saved.
+	 */
+	@Test
+	public void testSaveInvestigator()
+	{
+		String newInstitution = "McGill U.";
+		Investigator investigator = fProject.getInvestigators().get(0);
+		investigator.setInstitution(newInstitution);
+		fFacade.saveInvestigator(investigator);
+
+		ListenerEvent event = fListener.getEvents().get(0);
+
+		// Test DB
+		assertEquals(1, PersistenceManager.getInstance().getProject(TEST_PROJECT_NAME).getInvestigators().size());
+		assertEquals(newInstitution, PersistenceManager.getInstance().getProject(TEST_PROJECT_NAME).getInvestigators()
+				.get(0).getInstitution());
+		// Test event
+		assertEquals(ChangeType.MODIFY, event.getChangeType());
+		assertArrayEquals(new Investigator[] { investigator }, (Object[]) event.getObject());
+	}
+
+	/**
+	 * 
+	 * Verifies that a change of participant id is correctly saved.
+	 * 
+	 */
+	@Test
+	public void testSaveParticipant()
+	{
+		String newId = "p1b";
+		Participant participant = fFacade.createParticipant("p1", "Toto", fProject);
+		participant.setParticipantId(newId);
+		fFacade.saveParticipant(participant);
+		
+		ListenerEvent event = fListener.getEvents().get(1);
+
+		// Test DB
+		assertEquals(1, PersistenceManager.getInstance().getProject(TEST_PROJECT_NAME).getParticipants().size());
+		assertEquals(newId, PersistenceManager.getInstance().getProject(TEST_PROJECT_NAME).getParticipants()
+				.get(0).getParticipantId());
+		// Test event
+		assertEquals(ChangeType.MODIFY, event.getChangeType());
+		assertArrayEquals(new Participant[] { participant }, (Object[]) event.getObject());
+	}
+
+	/**
+	 * Verifies that a transcript's name can be changed.
+	 *
+	 */
+	@Test
+	public void testSaveTranscript()
+	{
+		String newTranscriptName = "t1b";
+		Participant participant = fFacade.createParticipant("p1", "Toto", fProject);
+		List<Participant> participants = new ArrayList<Participant>();
+		participants.add(participant);
+
+		Transcript transcript = fFacade.createTranscript("t1", "6/26/2010", "", participants, fProject);
+		
+		transcript.setName(newTranscriptName);
+		fFacade.saveTranscript(transcript);
+		
+		ListenerEvent event = fListener.getEvents().get(2);
+
+		// Test DB
+		assertEquals(1, PersistenceManager.getInstance().getProject(TEST_PROJECT_NAME).getTranscripts().size());
+		assertEquals(newTranscriptName, PersistenceManager.getInstance().getProject(TEST_PROJECT_NAME).getTranscripts()
+				.get(0).getName());
+		// Test event
+		assertEquals(ChangeType.MODIFY, event.getChangeType());
+		assertArrayEquals(new Transcript[] { transcript }, (Object[]) event.getObject());
 	}
 
 }
