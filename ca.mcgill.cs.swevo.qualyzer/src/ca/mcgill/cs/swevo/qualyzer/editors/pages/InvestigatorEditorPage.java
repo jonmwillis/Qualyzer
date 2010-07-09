@@ -31,6 +31,8 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
+import ca.mcgill.cs.swevo.qualyzer.model.InvestigatorListener;
+import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.ProjectListener;
 import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
@@ -41,7 +43,7 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
  * The main page of the Investigator editor.
  *
  */
-public class InvestigatorEditorPage extends FormPage implements ProjectListener
+public class InvestigatorEditorPage extends FormPage implements ProjectListener, InvestigatorListener
 {
 	/**
 	 * 
@@ -64,7 +66,9 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener
 		fInvestigator = investigator;
 		fIsDirty = false;
 		
-		Facade.getInstance().getListenerManager().registerProjectListener(fInvestigator.getProject(), this);
+		ListenerManager listenerManager = Facade.getInstance().getListenerManager();
+		listenerManager.registerProjectListener(fInvestigator.getProject(), this);
+		listenerManager.registerInvestigatorListener(fInvestigator.getProject(), this);
 	}
 
 	@Override
@@ -351,7 +355,32 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener
 	@Override
 	public void dispose()
 	{
-		Facade.getInstance().getListenerManager().unregisterProjectListener(fInvestigator.getProject(), this);
+		ListenerManager listenerManager = Facade.getInstance().getListenerManager();
+		listenerManager.unregisterProjectListener(fInvestigator.getProject(), this);
+		listenerManager.unregisterInvestigatorListener(fInvestigator.getProject(), this);
 		super.dispose();
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.model.InvestigatorListener#investigatorChanged(
+	 * ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType, ca.mcgill.cs.swevo.qualyzer.model.Investigator[], 
+	 * ca.mcgill.cs.swevo.qualyzer.model.Facade)
+	 */
+	@Override
+	public void investigatorChanged(ChangeType cType, Investigator[] investigators, Facade facade)
+	{
+		if(cType == ChangeType.DELETE)
+		{
+			IWorkbenchPage page = getEditor().getSite().getPage();
+			for(Investigator investigator : investigators)
+			{
+				if(fInvestigator.equals(investigator))
+				{
+					ResourcesUtil.closeEditor(page, getEditorInput().getName());
+					break;
+				}
+			}
+		}
+		
 	}
 }

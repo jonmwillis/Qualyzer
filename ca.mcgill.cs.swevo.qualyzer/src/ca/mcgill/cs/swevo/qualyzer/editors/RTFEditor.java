@@ -712,7 +712,8 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 				if(transcript.equals(fTranscript))
 				{
 					IWorkbenchPage page = getSite().getPage();
-					ResourcesUtil.closeEditor(page, fTranscript.getFileName());
+					ResourcesUtil.closeEditor(page, getEditorInput().getName());
+					break;
 				}
 			}
 		}
