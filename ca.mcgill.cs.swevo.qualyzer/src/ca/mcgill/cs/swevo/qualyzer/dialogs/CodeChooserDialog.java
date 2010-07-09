@@ -18,12 +18,13 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.fieldassist.AutoCompleteField;
-import org.eclipse.jface.fieldassist.TextContentAdapter;
+import org.eclipse.jface.fieldassist.ComboContentAdapter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -45,7 +46,7 @@ public class CodeChooserDialog extends TitleAreaDialog
 {
 
 	private Project fProject;
-	private Text fCodeName;
+	private Combo fCodeName;
 	private Text fDescription;
 
 	private Code fCode;
@@ -86,9 +87,14 @@ public class CodeChooserDialog extends TitleAreaDialog
 		Label label = new Label(parent, SWT.NULL);
 		label.setText(Messages.getString("dialogs.CodeChooserDialog.code")); //$NON-NLS-1$
 		
-		fCodeName = new Text(parent, SWT.BORDER);
+		fCodeName = new Combo(parent, SWT.BORDER | SWT.DROP_DOWN);
 		fCodeName.setText(""); //$NON-NLS-1$
 		fCodeName.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
+		
+		for(Code code : fProject.getCodes())
+		{
+			fCodeName.add(code.getCodeName());
+		}
 		
 		label = new Label(parent, SWT.NULL);
 		label.setText(Messages.getString("dialogs.CodeChooserDialog.description")); //$NON-NLS-1$
@@ -100,7 +106,7 @@ public class CodeChooserDialog extends TitleAreaDialog
 		String[] proposals = buildProposals();
 		
 		@SuppressWarnings("unused")
-		AutoCompleteField field = new AutoCompleteField(fCodeName, new TextContentAdapter(), proposals);
+		AutoCompleteField field = new AutoCompleteField(fCodeName, new ComboContentAdapter(), proposals);
 		
 		fCodeName.addModifyListener(createModifyListener());
 		
