@@ -10,43 +10,32 @@
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.wizards;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.ProgressBar;
-import org.eclipse.swt.widgets.Shell;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
-import ca.mcgill.cs.swevo.qualyzer.model.ProjectCreationProgressListener;
 import ca.mcgill.cs.swevo.qualyzer.wizards.pages.NewProjectPage;
 
 /**
  * The wizard that controls the creation of a new project.
  */
-public class NewProjectWizard extends Wizard implements ProjectCreationProgressListener
+public class NewProjectWizard extends Wizard
 {
-
 	/**
 	 * 
 	 */
-	private static final int PROGRESS_HEIGHT = 50;
-	/**
-	 * 
-	 */
-	private static final int PROGRESS_WIDTH = 260;
-	/**
-	 * 
-	 */
-	private static final int PROGRESS_MAX = 5;
+	private static final int WORK = 5;
 	private NewProjectPage fOne;
 	private IProject fProject;
-	private ProgressBar fProgressBar;
 	
 	/**
 	 * Constructor.
@@ -68,25 +57,44 @@ public class NewProjectWizard extends Wizard implements ProjectCreationProgressL
 	@Override
 	public boolean performFinish()
 	{	
-		Project project = null;
+		fOne.save();
 		
-		Shell shell = new Shell(getShell(), SWT.TITLE | SWT.BORDER);
-		shell.setLayout(new GridLayout(1, true));
-		shell.setText(Messages.getString("wizards.NewProjectWizard.projectCreation")); //$NON-NLS-1$
-		shell.setBounds(0, 0, PROGRESS_WIDTH, PROGRESS_HEIGHT);
-		fProgressBar = new ProgressBar(shell, SWT.HORIZONTAL);
-		fProgressBar.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
-		fProgressBar.setMinimum(0);
-		fProgressBar.setMaximum(PROGRESS_MAX);
-		fProgressBar.setSelection(0);
-		shell.open();
-
+		ProgressMonitorDialog dialog = new ProgressMonitorDialog(getShell());
+		dialog.setOpenOnRun(true);
+		dialog.create();
+		dialog.getShell().setText("Project Creation");
 		try
 		{
-			project = Facade.getInstance().createProject(fOne.getProjectName(), 
-				fOne.getInvestigatorNickname(), fOne.getInvestigatorFullname(), fOne.getInstitution(), this);
+			dialog.run(true, false, new IRunnableWithProgress()
+			{
+				
+				@Override
+				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException
+				{
+					monitor.beginTask("Creating New Project", WORK);
+					monitor.worked(1);
+					monitor.worked(1);
+					Project project = Facade.getInstance().
+					createProject(
+							fOne.getProjectName(), 
+							fOne.getInvestigatorNickname(), 
+							fOne.getInvestigatorFullname(), 
+							fOne.getInstitution());
+					monitor.worked(2);
+					
+					fProject = ResourcesPlugin.getWorkspace().getRoot().getProject(project.getName());
+					monitor.worked(1);
+					monitor.done();
+				}
+			});
+		}
+		catch (InvocationTargetException e)
+		{
 			
-			fProject = ResourcesPlugin.getWorkspace().getRoot().getProject(project.getName());
+		}
+		catch (InterruptedException e)
+		{
+			
 		}
 		catch(QualyzerException e) 
 		{
@@ -95,7 +103,7 @@ public class NewProjectWizard extends Wizard implements ProjectCreationProgressL
 			return false;
 		}
 
-		return project != null;
+		return fProject.exists();
 	}
 	
 	/**
@@ -107,12 +115,4 @@ public class NewProjectWizard extends Wizard implements ProjectCreationProgressL
 		return fProject;
 	}
 
-	/* (non-Javadoc)
-	 * @see ca.mcgill.cs.swevo.qualyzer.model.ProjectCreationProgressListener#statusUpdate()
-	 */
-	@Override
-	public void statusUpdate()
-	{
-		fProgressBar.setSelection(fProgressBar.getSelection() + 1);
-	}
 }
