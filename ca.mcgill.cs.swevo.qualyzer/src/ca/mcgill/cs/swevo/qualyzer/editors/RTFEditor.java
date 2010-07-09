@@ -259,7 +259,7 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 				boolean boldEnabled = isBoldEnabled(model, selection);
 				boolean italicEnabled = isItalicEnabled(model, selection);
 				boolean underlineEnabled = isUnderlineEnabled(model, selection);
-				boolean markTextEnabled = true;
+				boolean markTextEnabled = isMarkEnabled(model, selection);
 				
 				fBoldAction.setEnabled(enabled && boldEnabled);
 				fItalicAction.setEnabled(enabled && italicEnabled);
@@ -267,6 +267,41 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 				fMarkTextAction.setEnabled(enabled && markTextEnabled);
 			}
 		};
+	}
+	
+	@SuppressWarnings("unchecked")
+	private boolean isMarkEnabled(IAnnotationModel model, Point selection)
+	{
+		ArrayList<Position> positions = new ArrayList<Position>();
+		Iterator<Annotation> iter = model.getAnnotationIterator();
+		
+		while(iter.hasNext())
+		{
+			Annotation annotation = iter.next();
+			if(annotation instanceof FragmentAnnotation)
+			{
+				Position position = model.getPosition(annotation);
+				if(position.overlapsWith(selection.x, selection.y))
+				{
+					positions.add(position);
+				}
+			}
+		}
+		
+		if(positions.size() == 0)
+		{
+			return true;
+		}
+		else if(positions.size() == 1)
+		{
+			Position position = positions.get(0);
+			return position.offset == selection.x && position.length == selection.y;
+		}
+		else
+		{
+			return false;
+		}
+			
 	}
 	
 	/**
