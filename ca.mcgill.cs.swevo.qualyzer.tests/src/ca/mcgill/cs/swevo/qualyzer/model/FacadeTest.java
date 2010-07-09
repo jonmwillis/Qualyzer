@@ -219,8 +219,7 @@ public class FacadeTest
 	@Test
 	public void testDeleteProject()
 	{
-		Project tempProject = fFacade.createProject("projectb", TEST_INVESTIGATOR_NAME, TEST_INVESTIGATOR_NAME, "",
-				fProgress);
+		Project tempProject = fFacade.createProject("projectb", TEST_INVESTIGATOR_NAME, TEST_INVESTIGATOR_NAME, "");
 		DebugListener tempListener = new DebugListener();
 		fFacade.getListenerManager().registerProjectListener(tempProject, tempListener);
 		fFacade.deleteProject(tempProject);
