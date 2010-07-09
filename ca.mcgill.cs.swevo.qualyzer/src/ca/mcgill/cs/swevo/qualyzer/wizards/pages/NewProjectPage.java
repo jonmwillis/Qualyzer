@@ -34,6 +34,10 @@ public class NewProjectPage extends WizardPage
 	private Text fNickname;
 	private Text fFullname;
 	private Text fInstitution;
+	private String fProjectNameString;
+	private String fNicknameString;
+	private String fFullNameString;
+	private String fInstitutionString;
 	
 	/**
 	 * Constructor.
@@ -173,7 +177,7 @@ public class NewProjectPage extends WizardPage
 	 */
 	public String getProjectName()
 	{
-		return fProjectName.getText();
+		return fProjectNameString;
 	}
 	
 	/**
@@ -182,7 +186,7 @@ public class NewProjectPage extends WizardPage
 	 */
 	public String getInvestigatorNickname()
 	{
-		return fNickname.getText();
+		return fNicknameString;
 	}
 	
 	/**
@@ -191,7 +195,7 @@ public class NewProjectPage extends WizardPage
 	 */
 	public String getInvestigatorFullname()
 	{
-		return fFullname.getText();
+		return fFullNameString;
 	}
 	
 	/**
@@ -200,6 +204,17 @@ public class NewProjectPage extends WizardPage
 	 */
 	public String getInstitution()
 	{
-		return fInstitution.getText();
+		return fInstitutionString;
+	}
+	
+	/**
+	 * Copy the data from the text fields into strings so they can be retrieved.
+	 */
+	public void save()
+	{
+		fProjectNameString = fProjectName.getText();
+		fNicknameString = fNickname.getText();
+		fFullNameString = fFullname.getText();
+		fInstitutionString = fInstitution.getText();
 	}
 }
