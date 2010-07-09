@@ -257,8 +257,9 @@ public final class Facade
 		}
 		catch (HibernateException he)
 		{
-			String errorMessage = "Cannot create a fragment on an uninitialized transcript."; //$NON-NLS-1$
-			fLogger.error(errorMessage, he);
+			String key = "model.Facade.Fragment.cannotCreate"; //$NON-NLS-1$
+			String errorMessage = Messages.getString(key); 
+			fLogger.error(key, he);
 			throw new QualyzerException(errorMessage, he);
 		}
 		fListenerManager.notifyTranscriptListeners(ChangeType.MODIFY, new Transcript[] { transcript }, this);
@@ -287,8 +288,9 @@ public final class Facade
 		}
 		catch (CoreException e)
 		{
-			String errorMessage = Messages.getString("model.Facade.cannotDelete"); //$NON-NLS-1$
-			fLogger.error(errorMessage, e);
+			String key = "model.Facade.Project.cannotDelete"; //$NON-NLS-1$
+			String errorMessage = Messages.getString(key); 
+			fLogger.error(key, e);
 			throw new QualyzerException(errorMessage, e);
 		}
 
@@ -331,8 +333,9 @@ public final class Facade
 		catch (HibernateException e)
 		{
 			HibernateUtil.quietRollback(t);
-			String errorMessage = Messages.getString("model.Facade.participantDeleteFailed"); //$NON-NLS-1$
-			fLogger.error(errorMessage, e);
+			String key = "model.Facade.Participant.cannotDelete"; //$NON-NLS-1$
+			String errorMessage = Messages.getString(key); 
+			fLogger.error(key, e);
 			throw new QualyzerException(errorMessage, e);
 		}
 		finally
@@ -376,8 +379,9 @@ public final class Facade
 		catch (HibernateException e)
 		{
 			HibernateUtil.quietRollback(t);
-			String errorMessage = Messages.getString("model.Facade.invesDeleteFailed"); //$NON-NLS-1$
-			fLogger.error(errorMessage, e);
+			String key = "model.Facade.Investigator.cannotDelete"; //$NON-NLS-1$
+			String errorMessage = Messages.getString(key);
+			fLogger.error(key, e);
 			throw new QualyzerException(errorMessage, e);
 		}
 		finally
@@ -421,8 +425,9 @@ public final class Facade
 		catch (HibernateException e)
 		{
 			HibernateUtil.quietRollback(t);
-			String errorMessage = Messages.getString("model.Facade.transDeleteFailed"); //$NON-NLS-1$
-			fLogger.error(errorMessage, e);
+			String key = "model.Facade.Transcript.cannotDelete"; //$NON-NLS-1$
+			String errorMessage = Messages.getString(key);
+			fLogger.error(key, e);
 			throw new QualyzerException(errorMessage, e);
 		}
 		finally
