@@ -13,17 +13,37 @@
  */
 package ca.mcgill.cs.swevo.qualyzer.editors;
 
+import java.util.Iterator;
+
+import net.sf.colorer.eclipse.editors.ColorerSourceViewerConfiguration;
+import net.sf.colorer.eclipse.jface.TextColorer;
+
+import org.eclipse.jface.text.DefaultTextDoubleClickStrategy;
 import org.eclipse.jface.text.DefaultTextHover;
+import org.eclipse.jface.text.ITextDoubleClickStrategy;
 import org.eclipse.jface.text.ITextHover;
+import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.Position;
+import org.eclipse.jface.text.source.Annotation;
+import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.jface.text.source.SourceViewerConfiguration;
+import org.eclipse.swt.graphics.Point;
 
 /**
  *
  */
-public class RTFSourceViewerConfiguration extends SourceViewerConfiguration
+public class RTFSourceViewerConfiguration extends ColorerSourceViewerConfiguration
 {
 	
+	/**
+	 * @param textColorer
+	 */
+	public RTFSourceViewerConfiguration(TextColorer textColorer)
+	{
+		super(textColorer);
+		// TODO Auto-generated constructor stub
+	}
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getTextHover(
 	 * org.eclipse.jface.text.source.ISourceViewer, java.lang.String)
@@ -32,5 +52,54 @@ public class RTFSourceViewerConfiguration extends SourceViewerConfiguration
 	public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType)
 	{
 		return new DefaultTextHover(sourceViewer);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getDoubleClickStrategy(
+	 * org.eclipse.jface.text.source.ISourceViewer, java.lang.String)
+	 */
+	@Override
+	public ITextDoubleClickStrategy getDoubleClickStrategy(ISourceViewer sourceViewer, String contentType)
+	{
+		return new FragmentDoubleClickStrategy();
+	}
+	
+	/**
+	 * DoubleClickStrategy for marked fragments.
+	 */
+	private class FragmentDoubleClickStrategy extends DefaultTextDoubleClickStrategy
+	{	
+		/* (non-Javadoc)
+		 * @see org.eclipse.jface.text.DefaultTextDoubleClickStrategy#doubleClicked(org.eclipse.jface.text.ITextViewer)
+		 */
+		@SuppressWarnings("unchecked")
+		@Override
+		public void doubleClicked(ITextViewer text)
+		{	
+			boolean found = false;
+			if(text instanceof ISourceViewer)
+			{
+				Point selection = text.getSelectedRange();
+				IAnnotationModel model = ((ISourceViewer) text).getAnnotationModel();
+				Iterator<Annotation> iter = model.getAnnotationIterator();
+				while(!found && iter.hasNext())
+				{
+					Annotation annotation = iter.next();
+					if(annotation instanceof FragmentAnnotation)
+					{
+						Position position = model.getPosition(annotation);
+						if(selection.x >= position.offset && selection.x <= position.offset + position.length)
+						{
+							text.setSelectedRange(position.offset, position.length);
+							found = true;
+						}
+					}
+				}
+			}
+			if(!found)
+			{
+				super.doubleClicked(text);
+			}
+		}
 	}
 }
