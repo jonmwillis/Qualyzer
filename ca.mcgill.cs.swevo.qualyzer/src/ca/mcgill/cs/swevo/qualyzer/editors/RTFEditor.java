@@ -17,6 +17,7 @@ import java.util.Iterator;
 
 import net.sf.colorer.eclipse.ColorerPlugin;
 import net.sf.colorer.eclipse.editors.ColorerEditor;
+import net.sf.colorer.eclipse.jface.TextColorer;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
@@ -80,6 +81,7 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 	public RTFEditor()
 	{
 		super();
+		setSourceViewerConfiguration(new RTFSourceViewerConfiguration(getTextColorer()));
 		setDocumentProvider(new RTFDocumentProvider());
 		
 		fIsDirty = false;
@@ -94,6 +96,8 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 		
 		getPreferenceStore().setValue(AbstractDecoratedTextEditorPreferenceConstants.QUICK_DIFF_ALWAYS_ON, false);
 	}
+	
+	
 
 	/**
 	 * 
@@ -507,7 +511,6 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 	protected void initializeEditor()
 	{
 		super.initializeEditor();
-		setSourceViewerConfiguration(new RTFSourceViewerConfiguration());
 	}
 	
 	/* (non-Javadoc)
@@ -561,12 +564,21 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 		
 		super.createPartControl(parent);
 		
-		ColorerPlugin.getDefault().setPropertyWordWrap(getTextColorer().getFileType(), 1);
-		
 		fTranscript = ((RTFEditorInput) getEditorInput()).getTranscript();
 
 		Facade.getInstance().getListenerManager().registerProjectListener(fTranscript.getProject(), this);
 		Facade.getInstance().getListenerManager().registerTranscriptListener(fTranscript.getProject(), this);
+		ColorerPlugin.getDefault().setPropertyWordWrap(getTextColorer().getFileType(), 1);
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.colorer.eclipse.editors.ColorerEditor#getTextColorer()
+	 */
+	@Override
+	public TextColorer getTextColorer()
+	{
+		TextColorer colorer = super.getTextColorer();
+		return colorer;
 	}
 	
 	/* (non-Javadoc)
