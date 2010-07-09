@@ -133,7 +133,7 @@ public class DeleteParticipantHandler extends AbstractHandler
 
 	/**
 	 * Determines if the participant is associated with either a memo or a transcript.
-	 * Such an association constituted a conflict.
+	 * Such an association constitutes a conflict.
 	 * @param participant
 	 * @param project
 	 * @param session

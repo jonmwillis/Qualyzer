@@ -15,14 +15,9 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PlatformUI;
 import org.hibernate.Hibernate;
-import org.hibernate.HibernateException;
 import org.hibernate.LockOptions;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
@@ -191,51 +186,51 @@ public final class PersistenceManager
 		}
 	}
 	
-	/**
-	 * Try to delete a transcript.
-	 * @param participant
-	 * @param manager
-	 */
-	public void deleteTranscript(Transcript transcript, HibernateDBManager manager)
-	{
-		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		IEditorReference[] editors = page.getEditorReferences();
-		for(IEditorReference editor : editors)
-		{
-			if(editor.getName().equals(transcript.getFileName()))
-			{
-				page.closeEditor(editor.getEditor(true), true);
-			}
-		}
-		
-		Object project = null;
-		Session session = null;
-		Transaction t = null;
-		try
-		{
-			session = manager.openSession();
-			t = session.beginTransaction();
-			
-			project = session.get(Project.class, transcript.getProject().getPersistenceId());
-			Object trans = session.get(Transcript.class, transcript.getPersistenceId());
-			
-			((Project) project).getTranscripts().remove(trans);
-			
-			session.delete(trans);
-			session.flush();
-			t.commit();
-		}
-		catch(HibernateException e)
-		{
-			System.out.println("Exception while deleting transcript"); //$NON-NLS-1$
-			e.printStackTrace();
-			HibernateUtil.quietRollback(t);
-		}
-		finally
-		{
-			HibernateUtil.quietClose(session);
-			HibernateUtil.quietSave(manager, project);
-		}
-	}
+//	/**
+//	 * Try to delete a transcript.
+//	 * @param participant
+//	 * @param manager
+//	 */
+//	public void deleteTranscript(Transcript transcript, HibernateDBManager manager)
+//	{
+//		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+//		IEditorReference[] editors = page.getEditorReferences();
+//		for(IEditorReference editor : editors)
+//		{
+//			if(editor.getName().equals(transcript.getFileName()))
+//			{
+//				page.closeEditor(editor.getEditor(true), true);
+//			}
+//		}
+//		
+//		Object project = null;
+//		Session session = null;
+//		Transaction t = null;
+//		try
+//		{
+//			session = manager.openSession();
+//			t = session.beginTransaction();
+//			
+//			project = session.get(Project.class, transcript.getProject().getPersistenceId());
+//			Object trans = session.get(Transcript.class, transcript.getPersistenceId());
+//			
+//			((Project) project).getTranscripts().remove(trans);
+//			
+//			session.delete(trans);
+//			session.flush();
+//			t.commit();
+//		}
+//		catch(HibernateException e)
+//		{
+//			System.out.println("Exception while deleting transcript"); //$NON-NLS-1$
+//			e.printStackTrace();
+//			HibernateUtil.quietRollback(t);
+//		}
+//		finally
+//		{
+//			HibernateUtil.quietClose(session);
+//			HibernateUtil.quietSave(manager, project);
+//		}
+//	}
 
 }
