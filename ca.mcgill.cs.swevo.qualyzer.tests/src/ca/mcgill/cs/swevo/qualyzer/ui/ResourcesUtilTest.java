@@ -14,7 +14,6 @@
 package ca.mcgill.cs.swevo.qualyzer.ui;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.eclipse.ui.IEditorReference;
@@ -28,7 +27,6 @@ import ca.mcgill.cs.swevo.qualyzer.model.Memo;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
-import ca.mcgill.cs.swevo.qualyzer.model.validation.ValidationUtils;
 import ca.mcgill.cs.swevo.qualyzer.providers.WrapperCode;
 import ca.mcgill.cs.swevo.qualyzer.providers.WrapperInvestigator;
 import ca.mcgill.cs.swevo.qualyzer.providers.WrapperMemo;
@@ -42,22 +40,6 @@ import ca.mcgill.cs.swevo.qualyzer.providers.WrapperTranscript;
 public class ResourcesUtilTest
 {
 
-	/**
-	 * Verify Ids.
-	 */
-	@Test
-	public void verifyIDTest()
-	{
-		assertTrue(ValidationUtils.verifyID("aA1_-"));
-		assertTrue(ValidationUtils.verifyID("aasdl_sSDFA-3425"));
-		
-		assertFalse(ValidationUtils.verifyID(""));
-		assertFalse(ValidationUtils.verifyID(" "));
-		assertFalse(ValidationUtils.verifyID("!"));
-		assertFalse(ValidationUtils.verifyID("^"));
-		assertFalse(ValidationUtils.verifyID("ffffsadfsadfieurASDFSDF84375987 "));
-	}
-	
 	/**
 	 * Test the getProject() method.
 	 */
