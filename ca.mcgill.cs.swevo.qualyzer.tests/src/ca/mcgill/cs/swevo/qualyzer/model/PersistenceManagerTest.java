@@ -280,16 +280,7 @@ public class PersistenceManagerTest
 	public void testRefreshManager()
 	{
 		Facade facade = Facade.getInstance();
-		Project project = facade.createProject("project2", "Invest1", "", "",
-				new ProjectCreationProgressListener()
-				{
-					@Override
-					public void statusUpdate()
-					{
-						// TODO Auto-generated method stub
-
-					}
-				});
+		Project project = facade.createProject("project2", "Invest1", "", "");
 		QualyzerActivator activator = QualyzerActivator.getDefault();
 		activator.getHibernateDBManagers().remove(project.getName());
 		
