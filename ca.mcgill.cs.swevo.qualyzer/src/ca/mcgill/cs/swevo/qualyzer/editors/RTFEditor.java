@@ -17,7 +17,6 @@ import java.util.Iterator;
 
 import net.sf.colorer.eclipse.ColorerPlugin;
 import net.sf.colorer.eclipse.editors.ColorerEditor;
-import net.sf.colorer.eclipse.jface.TextColorer;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
@@ -562,24 +561,108 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 		setOverviewRulerContextMenuId("#RTFOverviewRulerContext"); //$NON-NLS-1$
 		setEditorContextMenuId("#RTFEditorContext"); //$NON-NLS-1$
 		
+		//This controls displaying of the top button bar.
+//		parent.setLayout(new GridLayout(1, true));
+//		
+//		Composite topBar = new Composite(parent, SWT.BORDER);
+//		topBar.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
+//		topBar.setLayout(new GridLayout(2, false));
+//		
+//		Control buttonBar = createFormatButtonBar(topBar);
+//		buttonBar.setLayoutData(new GridData(SWT.FILL, SWT.NULL, false, false));
+//		Control musicBar = createMusicBar(topBar);
+//		musicBar.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
+		
 		super.createPartControl(parent);
 		
+//		parent.getChildren()[1].setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		
 		fTranscript = ((RTFEditorInput) getEditorInput()).getTranscript();
+//		if(fTranscript.getAudioFile() == null)
+//		{
+//			musicBar.setEnabled(false);
+//		}
 
 		Facade.getInstance().getListenerManager().registerProjectListener(fTranscript.getProject(), this);
 		Facade.getInstance().getListenerManager().registerTranscriptListener(fTranscript.getProject(), this);
 		ColorerPlugin.getDefault().setPropertyWordWrap(getTextColorer().getFileType(), 1);
 	}
 	
-	/* (non-Javadoc)
-	 * @see net.sf.colorer.eclipse.editors.ColorerEditor#getTextColorer()
-	 */
-	@Override
-	public TextColorer getTextColorer()
-	{
-		TextColorer colorer = super.getTextColorer();
-		return colorer;
-	}
+	//these create the top button bar.
+//	/**
+//	 * @param topBar
+//	 * @return
+//	 */
+//	private Control createMusicBar(Composite parent)
+//	{
+//		Composite musicBar = new Composite(parent, SWT.BORDER);
+//		musicBar.setLayout(new GridLayout(4, false));
+//		
+//		Button button = new Button(musicBar, SWT.PUSH);
+//		button.setText("Play");
+//		
+//		button = new Button(musicBar, SWT.PUSH);
+//		button.setText("Stop");
+//		
+//		Scale scale = new Scale(musicBar, SWT.HORIZONTAL);
+//		scale.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+//		
+//		Label label = new Label(musicBar, SWT.NULL);
+//		label.setLayoutData(new GridData(SWT.NULL, SWT.FILL, false, false));
+//		label.setText("m:ss");
+//		
+//		return musicBar;
+//	}
+//
+//
+//
+//	private Control createFormatButtonBar(Composite parent)
+//	{
+//		Composite composite = new Composite(parent, SWT.BORDER);
+//		GridLayout layout = new GridLayout(4, true);
+//		composite.setLayout(layout);
+//		
+//		Button button = new Button(composite, SWT.TOGGLE);
+//		button.setText("B");
+//		button.addSelectionListener(createButtonSelectionListener(fBoldAction));
+//		
+//		button = new Button(composite, SWT.TOGGLE);
+//		button.setText("U");
+//		button.addSelectionListener(createButtonSelectionListener(fUnderlineAction));
+//		
+//		button = new Button(composite, SWT.TOGGLE);
+//		button.setText("I");
+//		button.addSelectionListener(createButtonSelectionListener(fItalicAction));
+//		
+//		button = new Button(composite, SWT.TOGGLE);
+//		button.setText("C");
+//		button.addSelectionListener(createButtonSelectionListener(fMarkTextAction));
+//		
+//		return composite;
+//	}
+//	
+//	/**
+//	 * @param fBoldAction2
+//	 * @return
+//	 */
+//	private SelectionListener createButtonSelectionListener(final Action action)
+//	{
+//		return new SelectionAdapter(){
+//			private Action fAction = action;
+//			
+//			/* (non-Javadoc)
+//			 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+//			 */
+//			@Override
+//			public void widgetSelected(SelectionEvent e)
+//			{
+//				if(fAction.isEnabled())
+//				{
+//					fAction.run();
+//				}
+//			}
+//		};
+//	}
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.texteditor.AbstractDecoratedTextEditor#overviewRulerContextMenuAboutToShow(
