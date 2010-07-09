@@ -19,22 +19,12 @@ import org.junit.Test;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
-import ca.mcgill.cs.swevo.qualyzer.model.ProjectCreationProgressListener;
 
 public class ProjectValidatorTest
 {
 	private static final String TEST_PROJECT_NAME = "TestProject";
 
 	private static final String TEST_INVESTIGATOR_NAME = "Bob";
-	
-	private static final ProjectCreationProgressListener fProgress = new ProjectCreationProgressListener()
-	{
-		
-		@Override
-		public void statusUpdate()
-		{			
-		}
-	};
 
 	/**
 	 * Verifies that the name is not empty.
@@ -64,7 +54,7 @@ public class ProjectValidatorTest
 	@Test
 	public void testProjectUniqueName()
 	{
-		Project project = Facade.getInstance().createProject(TEST_PROJECT_NAME, TEST_INVESTIGATOR_NAME, TEST_INVESTIGATOR_NAME, "", fProgress);
+		Project project = Facade.getInstance().createProject(TEST_PROJECT_NAME, TEST_INVESTIGATOR_NAME, TEST_INVESTIGATOR_NAME, "");
 		ProjectValidator lValidator = new ProjectValidator(TEST_PROJECT_NAME, "Martin", ResourcesPlugin.getWorkspace().getRoot());
 		assertFalse(lValidator.isValid());
 		assertEquals(Messages.getString("model.validation.ProjectValidator.alreadyExists"),lValidator.getErrorMessage());
