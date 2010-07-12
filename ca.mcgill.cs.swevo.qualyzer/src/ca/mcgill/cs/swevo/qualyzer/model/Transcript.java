@@ -83,7 +83,7 @@ public class Transcript implements Comparable<Transcript>, IAnnotatedDocument
 		this.fParticipants = participants;
 	}
 
-	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "transcript")
+	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "transcript")
 	@Override
 	public List<Fragment> getFragments()
 	{

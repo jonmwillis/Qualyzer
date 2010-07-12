@@ -52,11 +52,12 @@ public final class Facade
 
 	/**
 	 * Get the Facade.
+	 * 
 	 * @return
 	 */
 	public static Facade getInstance()
 	{
-		if(gFacade == null)
+		if (gFacade == null)
 		{
 			gFacade = new Facade();
 		}
@@ -66,29 +67,30 @@ public final class Facade
 
 	/**
 	 * Create a new Project with the given name.
+	 * 
 	 * @param name
 	 * @return
 	 */
 	public Project createProject(String name, String nickname, String fullName, String institution)
-		throws QualyzerException
-	{	
+			throws QualyzerException
+	{
 		IProject wProject = FileUtil.makeProjectFileSystem(name);
-		
+
 		Project project;
 
 		project = new Project();
 		project.setName(name);
-		
+
 		createInvestigator(nickname, fullName, institution, project, false);
-		
+
 		PersistenceManager.getInstance().initDB(wProject);
 		HibernateDBManager manager;
 		manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(name);
 		HibernateUtil.quietSave(manager, project);
-		
+
 		fListenerManager.notifyProjectListeners(ChangeType.ADD, project, this);
-		
-		return project;		
+
+		return project;
 	}
 
 	/**
@@ -135,8 +137,8 @@ public final class Facade
 		investigator.setProject(project);
 
 		project.getInvestigators().add(investigator);
-		
-		if(save)
+
+		if (save)
 		{
 			HibernateDBManager manager;
 			manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(project.getName());
@@ -252,7 +254,7 @@ public final class Facade
 		catch (HibernateException he)
 		{
 			String key = "model.Facade.Fragment.cannotCreate"; //$NON-NLS-1$
-			String errorMessage = Messages.getString(key); 
+			String errorMessage = Messages.getString(key);
 			fLogger.error(key, he);
 			throw new QualyzerException(errorMessage, he);
 		}
@@ -283,7 +285,7 @@ public final class Facade
 		catch (CoreException e)
 		{
 			String key = "model.Facade.Project.cannotDelete"; //$NON-NLS-1$
-			String errorMessage = Messages.getString(key); 
+			String errorMessage = Messages.getString(key);
 			fLogger.error(key, e);
 			throw new QualyzerException(errorMessage, e);
 		}
@@ -328,7 +330,7 @@ public final class Facade
 		{
 			HibernateUtil.quietRollback(t);
 			String key = "model.Facade.Participant.cannotDelete"; //$NON-NLS-1$
-			String errorMessage = Messages.getString(key); 
+			String errorMessage = Messages.getString(key);
 			fLogger.error(key, e);
 			throw new QualyzerException(errorMessage, e);
 		}
@@ -407,7 +409,7 @@ public final class Facade
 			 * really understand it myself -JF.
 			 */
 			project = session.get(Project.class, transcript.getProject().getPersistenceId());
-			Object trans = session.get(Transcript.class, transcript.getPersistenceId());
+			Transcript trans = (Transcript) session.get(Transcript.class, transcript.getPersistenceId());
 
 			((Project) project).getTranscripts().remove(trans);
 

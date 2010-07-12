@@ -14,6 +14,7 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -23,18 +24,21 @@ import java.util.List;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.hibernate.HibernateException;
+import org.hibernate.Session;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
 import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
+import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
 
 /**
  * 
  */
 public class FacadeTest
-{	
+{
 	private static final String TEST_PROJECT_NAME = "TestProject";
 
 	private static final String TEST_INVESTIGATOR_NAME = "Bob";
@@ -301,14 +305,31 @@ public class FacadeTest
 		List<Participant> participants = new ArrayList<Participant>();
 		participants.add(participant);
 		Transcript transcript = fFacade.createTranscript(transcriptName, "6/26/2010", "", participants, fProject);
+		Fragment fragment = fFacade.createFragment(transcript, 1, 1);
+		fFacade.saveTranscript(transcript);
+		long id = fragment.getPersistenceId();
 
 		fFacade.deleteTranscript(PersistenceManager.getInstance().getProject(fProject.getName()).getTranscripts()
 				.get(0));
 
-		ListenerEvent event = fListener.getEvents().get(2);
+		// event 0: create part, 1: create tr, 2: create fr., 3: modify tr, 4: delete tr.
+		ListenerEvent event = fListener.getEvents().get(4);
 		assertEquals(ChangeType.DELETE, event.getChangeType());
 		assertArrayEquals(new Transcript[] { transcript }, (Object[]) event.getObject());
 		assertEquals(0, PersistenceManager.getInstance().getProject(fProject.getName()).getTranscripts().size());
+
+		// Test Fragment
+		HibernateDBManager dbManager = QualyzerActivator.getDefault().getHibernateDBManagers().get(TEST_PROJECT_NAME);
+		Session session = dbManager.openSession();
+		// It should be impossible to retrieve the fragment.
+		try
+		{
+			assertNull(session.get(Fragment.class, id));
+		}
+		finally
+		{
+			HibernateUtil.quietClose(session);
+		}
 	}
 
 	/**
@@ -429,13 +450,13 @@ public class FacadeTest
 		Participant participant = fFacade.createParticipant("p1", "Toto", fProject);
 		participant.setParticipantId(newId);
 		fFacade.saveParticipant(participant);
-		
+
 		ListenerEvent event = fListener.getEvents().get(1);
 
 		// Test DB
 		assertEquals(1, PersistenceManager.getInstance().getProject(TEST_PROJECT_NAME).getParticipants().size());
-		assertEquals(newId, PersistenceManager.getInstance().getProject(TEST_PROJECT_NAME).getParticipants()
-				.get(0).getParticipantId());
+		assertEquals(newId, PersistenceManager.getInstance().getProject(TEST_PROJECT_NAME).getParticipants().get(0)
+				.getParticipantId());
 		// Test event
 		assertEquals(ChangeType.MODIFY, event.getChangeType());
 		assertArrayEquals(new Participant[] { participant }, (Object[]) event.getObject());
@@ -443,7 +464,7 @@ public class FacadeTest
 
 	/**
 	 * Verifies that a transcript's name can be changed.
-	 *
+	 * 
 	 */
 	@Test
 	public void testSaveTranscript()
@@ -454,10 +475,10 @@ public class FacadeTest
 		participants.add(participant);
 
 		Transcript transcript = fFacade.createTranscript("t1", "6/26/2010", "", participants, fProject);
-		
+
 		transcript.setName(newTranscriptName);
 		fFacade.saveTranscript(transcript);
-		
+
 		ListenerEvent event = fListener.getEvents().get(2);
 
 		// Test DB
@@ -467,6 +488,32 @@ public class FacadeTest
 		// Test event
 		assertEquals(ChangeType.MODIFY, event.getChangeType());
 		assertArrayEquals(new Transcript[] { transcript }, (Object[]) event.getObject());
+	}
+
+	/**
+	 * Verifies that a transcript's name can be changed.
+	 * 
+	 */
+	@Test
+	public void testSaveTranscriptFragment()
+	{
+		String newTranscriptName = "t1b";
+		Participant participant = fFacade.createParticipant("p1", "Toto", fProject);
+		List<Participant> participants = new ArrayList<Participant>();
+		participants.add(participant);
+
+		Transcript transcript = fFacade.createTranscript("t1", "6/26/2010", "", participants, fProject);
+		fFacade.createFragment(transcript, 1, 1);
+
+		transcript.setName(newTranscriptName);
+		fFacade.saveTranscript(transcript);
+
+		// Test DB
+		Transcript newTranscript = PersistenceManager.getInstance().getProject(TEST_PROJECT_NAME).getTranscripts().get(
+				0);
+		newTranscript = fFacade.forceTranscriptLoad(newTranscript);
+		assertNotNull(newTranscript.getFragments().get(0));
+		assertEquals(transcript, newTranscript.getFragments().get(0).getTranscript());
 	}
 
 }
