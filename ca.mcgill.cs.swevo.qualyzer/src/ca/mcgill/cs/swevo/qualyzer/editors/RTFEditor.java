@@ -144,6 +144,8 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 					fragment.getCodeEntries().add(entry);
 					viewer.markFragment(fragment);
 					
+					Facade.getInstance().saveTranscript(fTranscript);
+					
 					setDirty();
 				}
 		
@@ -816,8 +818,11 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 	 */
 	private void setDirty()
 	{
-		fIsDirty = true;
-		firePropertyChange(PROP_DIRTY);
+		if(!isDirty())
+		{
+			fIsDirty = true;
+			firePropertyChange(PROP_DIRTY);
+		}
 	}
 	
 	/* (non-Javadoc)
@@ -851,11 +856,11 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 		}
 		else if(cType == ChangeType.MODIFY)
 		{
-			IFile file = ((FileEditorInput) getEditorInput()).getFile();
-			Point p = getSourceViewer().getSelectedRange();
-			RTFEditorInput input = new RTFEditorInput(file, transcripts[0]);
-			setInput(input);
-			getSourceViewer().setSelectedRange(p.x, p.y);
+//			IFile file = ((FileEditorInput) getEditorInput()).getFile();
+//			Point p = getSourceViewer().getSelectedRange();
+//			RTFEditorInput input = new RTFEditorInput(file, transcripts[0]);
+//			setInput(input);
+//			getSourceViewer().setSelectedRange(p.x, p.y);
 		}
 		
 	}
