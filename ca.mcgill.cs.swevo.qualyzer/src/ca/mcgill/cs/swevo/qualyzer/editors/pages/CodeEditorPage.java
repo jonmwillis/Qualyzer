@@ -13,8 +13,10 @@ package ca.mcgill.cs.swevo.qualyzer.editors.pages;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
@@ -30,16 +32,20 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.eclipse.ui.navigator.CommonNavigator;
 
+import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.dialogs.NewCodeDialog;
 import ca.mcgill.cs.swevo.qualyzer.model.Code;
 import ca.mcgill.cs.swevo.qualyzer.model.CodeListener;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
+import ca.mcgill.cs.swevo.qualyzer.model.Fragment;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.ProjectListener;
 import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
@@ -191,7 +197,56 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 			}
 		}); 
 		
+		item = new MenuItem(menu, SWT.PUSH);
+		item.setText("Delete Code");
+		item.addSelectionListener(new SelectionAdapter(){
+			/* (non-Javadoc)
+			 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+			 */
+			@Override
+			public void widgetSelected(SelectionEvent e)
+			{
+				Code toDelete = fCodes.get(fTable.getSelectionIndex());
+				
+				List<Fragment> conflicts = detectConflicts(toDelete);
+				
+				boolean check = false;
+				if(conflicts.size() == 0)
+				{
+					check = MessageDialog.openConfirm(getSite().getShell(), "Delete Code",
+					"Are you sure you want to delete this code?");
+				}
+				else
+				{
+					check = MessageDialog.openConfirm(getSite().getShell(), "Delete Code", "Deleting this code will also remove " + 
+							conflicts.size() + " associations. Are you sure you want to proceed?");
+					if(check)
+					{
+						//TODO delete associations
+					}
+				}
+				if(check)
+				{
+					Facade.getInstance().deleteCode(toDelete);
+					CommonNavigator view = (CommonNavigator) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+					.getActivePage().findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+					view.getCommonViewer().refresh();
+				}
+				
+			}
+		});
+		
 		fTable.setMenu(menu);
+	}
+
+	/**
+	 * @param toDelete
+	 * @return
+	 */
+	protected List<Fragment> detectConflicts(Code toDelete)
+	{
+		List<Fragment> conflicts = new ArrayList<Fragment>();
+		return null;
 	}
 
 	/**

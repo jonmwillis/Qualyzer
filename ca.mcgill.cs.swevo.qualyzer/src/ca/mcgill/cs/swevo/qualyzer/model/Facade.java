@@ -560,4 +560,97 @@ public final class Facade
 		}
 
 	}
+
+	/**
+	 * @param toDelete
+	 */
+	public void deleteCode(Code code)
+	{
+		Object project = null;
+		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(
+				code.getProject().getName());
+		Session session = null;
+		Transaction t = null;
+
+		try
+		{
+			session = manager.openSession();
+			t = session.beginTransaction();
+
+			/*
+			 * The following is ALL required in order to delete the object from the database. Don't ask me why, I don't
+			 * really understand it myself -JF.
+			 */
+			project = session.get(Project.class, code.getProject().getPersistenceId());
+			Object lCode = session.get(Code.class, code.getPersistenceId());
+
+			((Project) project).getCodes().remove(lCode);
+
+			session.delete(lCode);
+			session.flush();
+			t.commit();
+
+			fListenerManager.notifyCodeListeners(ChangeType.DELETE, new Code[] {(Code) lCode }, this);
+		}
+		catch (HibernateException e)
+		{
+			HibernateUtil.quietRollback(t);
+			String errorMessage = "Cannot delete this code.";
+			fLogger.error(errorMessage, e);
+			throw new QualyzerException(errorMessage, e);
+		}
+		finally
+		{
+			HibernateUtil.quietClose(session);
+			HibernateUtil.quietSave(manager, project);
+		}
+		
+	}
+
+	/**
+	 * @param fragment
+	 * @param fTranscript
+	 */
+	public void deleteFragment(Fragment fragment, Transcript transcript)
+	{
+		Object lTranscript = null;
+		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(
+				transcript.getProject().getName());
+		Session session = null;
+		Transaction t = null;
+
+		try
+		{
+			session = manager.openSession();
+			t = session.beginTransaction();
+
+			/*
+			 * The following is ALL required in order to delete the object from the database. Don't ask me why, I don't
+			 * really understand it myself -JF.
+			 */
+			lTranscript = session.get(Transcript.class, transcript.getPersistenceId());
+			Object lFragment = session.get(Fragment.class, fragment.getPersistenceId());
+
+			((Transcript) lTranscript).getFragments().remove(lFragment);
+			
+			session.delete(lFragment);
+			
+			session.flush();
+			t.commit();
+
+			fListenerManager.notifyTranscriptListeners(ChangeType.MODIFY, new Transcript[] {transcript}, this);
+		}
+		catch (HibernateException e)
+		{
+			HibernateUtil.quietRollback(t);
+			String errorMessage = "Cannot delete this fragment.";
+			fLogger.error(errorMessage, e);
+			throw new QualyzerException(errorMessage, e);
+		}
+		finally
+		{
+			HibernateUtil.quietClose(session);
+			HibernateUtil.quietSave(manager, transcript);
+		}
+	}
 }
