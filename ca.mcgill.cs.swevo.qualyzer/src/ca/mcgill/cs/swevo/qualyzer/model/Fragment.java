@@ -20,6 +20,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -133,14 +134,15 @@ public class Fragment
 	/**
 	 * 
 	 */
-	@ManyToOne
+	@ManyToOne()
+	@JoinColumn(name = "transcript_fk")
 	public Transcript getTranscript()
 	{
 		return fTranscript;
 	}
-	
+
 	/**
-	 *
+	 * 
 	 * @param transcript
 	 */
 	public void setTranscript(Transcript transcript)
