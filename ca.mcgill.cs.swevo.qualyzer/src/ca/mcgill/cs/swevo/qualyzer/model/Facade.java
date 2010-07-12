@@ -542,7 +542,7 @@ public final class Facade
 				transcript.getProject().getName());
 		HibernateUtil.quietSave(manager, transcript);
 
-		fListenerManager.notifyTranscriptListeners(ChangeType.MODIFY, new Transcript[] { transcript }, this);
+		//fListenerManager.notifyTranscriptListeners(ChangeType.MODIFY, new Transcript[] { transcript }, this);
 	}
 
 	/**
@@ -595,7 +595,7 @@ public final class Facade
 		catch (HibernateException e)
 		{
 			HibernateUtil.quietRollback(t);
-			String errorMessage = "Cannot delete this code.";
+			String errorMessage = Messages.getString("model.Facade.code.cannotDelete"); //$NON-NLS-1$
 			fLogger.error(errorMessage, e);
 			throw new QualyzerException(errorMessage, e);
 		}
@@ -638,12 +638,12 @@ public final class Facade
 			session.flush();
 			t.commit();
 
-			fListenerManager.notifyTranscriptListeners(ChangeType.MODIFY, new Transcript[] {transcript}, this);
+			fListenerManager.notifyTranscriptListeners(ChangeType.MODIFY, new Transcript[] {(Transcript) lTranscript}, this);
 		}
 		catch (HibernateException e)
 		{
 			HibernateUtil.quietRollback(t);
-			String errorMessage = "Cannot delete this fragment.";
+			String errorMessage = Messages.getString("model.Facade.fragment.cannotDelete"); //$NON-NLS-1$
 			fLogger.error(errorMessage, e);
 			throw new QualyzerException(errorMessage, e);
 		}

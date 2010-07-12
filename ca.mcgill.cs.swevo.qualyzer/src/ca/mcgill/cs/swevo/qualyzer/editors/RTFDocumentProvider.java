@@ -475,7 +475,6 @@ public class RTFDocumentProvider extends FileDocumentProvider
 			positions.add(model.getPosition(annotation));
 		}
 		
-		sort(positions, annotations);
 		Position position = null;
 		Annotation annotation = null;
 		
@@ -609,15 +608,19 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		
 		return tag;
 	}
-
-	/**
-	 * @param positions
-	 * @param annotations
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.editors.text.FileDocumentProvider#createAnnotationModel(java.lang.Object)
 	 */
-	private void sort(ArrayList<Position> positions, ArrayList<Annotation> annotations)
+	@Override
+	protected IAnnotationModel createAnnotationModel(Object element) throws CoreException
 	{
-		// TODO Auto-generated method stub
+		if(element instanceof RTFEditorInput)
+		{
+			return new RTFAnnotationModel((RTFEditorInput) element);
+		}
 		
+		return super.createAnnotationModel(element);
 	}
 	
 }
