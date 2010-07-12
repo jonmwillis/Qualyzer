@@ -20,6 +20,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.CollectionId;
@@ -37,6 +38,7 @@ public class Fragment
 	private List<Annotation> fAnnotations = new ArrayList<Annotation>();
 	private List<CodeEntry> fCodeEntries = new ArrayList<CodeEntry>();
 	private Long fPersistenceId;
+	private Transcript fTranscript;
 
 	/**
 	 * @return
@@ -91,7 +93,7 @@ public class Fragment
 	{
 		this.fPersistenceId = persistenceId;
 	}
-	
+
 	/**
 	 * 
 	 * @param position
@@ -100,7 +102,7 @@ public class Fragment
 	{
 		fOffset = offset;
 	}
-	
+
 	/**
 	 * 
 	 * @param length
@@ -109,7 +111,7 @@ public class Fragment
 	{
 		fLength = length;
 	}
-	
+
 	/**
 	 * 
 	 * @return
@@ -118,7 +120,7 @@ public class Fragment
 	{
 		return fOffset;
 	}
-	
+
 	/**
 	 * 
 	 * @return
@@ -128,4 +130,21 @@ public class Fragment
 		return fLength;
 	}
 
+	/**
+	 * 
+	 */
+	@ManyToOne
+	public Transcript getTranscript()
+	{
+		return fTranscript;
+	}
+	
+	/**
+	 *
+	 * @param transcript
+	 */
+	public void setTranscript(Transcript transcript)
+	{
+		this.fTranscript = transcript;
+	}
 }

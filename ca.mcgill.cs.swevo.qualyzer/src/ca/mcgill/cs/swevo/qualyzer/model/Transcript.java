@@ -40,7 +40,7 @@ public class Transcript implements Comparable<Transcript>, IAnnotatedDocument
 {
 	private static final int NUM1 = 3;
 	private static final int NUM2 = 67;
-	
+
 	private AudioFile fAudioFile;
 	private List<Participant> fParticipants = new ArrayList<Participant>();
 	private List<Fragment> fFragments = new ArrayList<Fragment>();
@@ -83,8 +83,7 @@ public class Transcript implements Comparable<Transcript>, IAnnotatedDocument
 		this.fParticipants = participants;
 	}
 
-	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
-	@CollectionId(columns = @Column(name = "COL_ID"), type = @Type(type = "string"), generator = "uuid-gen")
+	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "transcript")
 	@Override
 	public List<Fragment> getFragments()
 	{
@@ -148,7 +147,7 @@ public class Transcript implements Comparable<Transcript>, IAnnotatedDocument
 	{
 		this.fPersistenceId = persistenceId;
 	}
-	
+
 	@ManyToOne
 	@JoinColumn(name = "project_persistenceid", nullable = false, insertable = false, updatable = false)
 	@Override
@@ -188,33 +187,29 @@ public class Transcript implements Comparable<Transcript>, IAnnotatedDocument
 	{
 		return fDate;
 	}
-	
+
 	@Override
 	public int hashCode()
 	{
-		return new HashCodeBuilder(NUM1, NUM2).append(fName)
-			.append(fFileName).append(fProject).toHashCode();
+		return new HashCodeBuilder(NUM1, NUM2).append(fName).append(fFileName).append(fProject).toHashCode();
 	}
-	
+
 	@Override
 	public boolean equals(Object obj)
 	{
-		if(obj == null)
+		if (obj == null)
 		{
 			return false;
 		}
-		if(obj.getClass() != getClass())
+		if (obj.getClass() != getClass())
 		{
 			return false;
 		}
-		
+
 		Transcript transcript = (Transcript) obj;
-		
-		return new EqualsBuilder().append(fName, transcript.fName)
-			.append(fFileName, transcript.fFileName)
-			.append(fProject, transcript.fProject).isEquals();
+
+		return new EqualsBuilder().append(fName, transcript.fName).append(fFileName, transcript.fFileName).append(
+				fProject, transcript.fProject).isEquals();
 	}
-	
-	
 
 }

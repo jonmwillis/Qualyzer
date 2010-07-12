@@ -246,6 +246,7 @@ public final class Facade
 		fragment.setLength(length);
 		try
 		{
+			fragment.setTranscript(transcript);
 			transcript.getFragments().add(fragment);
 		}
 		catch (HibernateException he)
