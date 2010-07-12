@@ -30,7 +30,7 @@ public class FragmentAnnotation extends Annotation
 	 */
 	public FragmentAnnotation(Fragment fragment)
 	{
-		super(RTFConstants.FRAGMENT_TYPE, true, buildCodeString(fragment)); //$NON-NLS-1$
+		super(RTFConstants.FRAGMENT_TYPE, false, buildCodeString(fragment)); //$NON-NLS-1$
 		fFragment = fragment;
 	}
 	
@@ -64,4 +64,5 @@ public class FragmentAnnotation extends Annotation
 	{
 		fFragment = fragment;
 	}
+	
 }
