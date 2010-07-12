@@ -532,20 +532,21 @@ public class FacadeTest
 		List<Participant> participants = new ArrayList<Participant>();
 		participants.add(participant);
 		Transcript transcript = fFacade.createTranscript(transcriptName, "6/26/2010", "", participants, fProject);
-		fFacade.createFragment(transcript, 1, 1);
-		fFacade.saveTranscript(transcript);
-		
 		Transcript newTranscript = fFacade.forceTranscriptLoad(transcript);
+		fFacade.createFragment(newTranscript, 1, 1);
+		fFacade.saveTranscript(newTranscript);
+		
+		
 		Fragment newFragment = newTranscript.getFragments().get(0);
 		CodeEntry ce1 = new CodeEntry();
 		ce1.setCode(code1);
-		ce1.setInvestigator(investigator);
+//		ce1.setInvestigator(investigator);
 		newFragment.getCodeEntries().add(ce1);
 		fFacade.saveTranscript(newTranscript);
 		
 		CodeEntry ce2 = new CodeEntry();
 		ce2.setCode(code2);
-		ce2.setInvestigator(investigator);
+//		ce2.setInvestigator(investigator);
 		newFragment.getCodeEntries().add(ce2);
 		fFacade.saveTranscript(newTranscript);
 	}
