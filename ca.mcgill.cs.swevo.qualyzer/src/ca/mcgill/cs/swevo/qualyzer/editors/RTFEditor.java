@@ -18,7 +18,6 @@ import java.util.Iterator;
 import net.sf.colorer.eclipse.ColorerPlugin;
 import net.sf.colorer.eclipse.editors.ColorerEditor;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IContributionItem;
@@ -37,7 +36,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
@@ -148,8 +146,6 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 					
 					setDirty();
 				}
-		
-				
 			}
 		};
 		fMarkTextAction.setText(Messages.getString("editors.RTFEditor.mark")); //$NON-NLS-1$
@@ -175,7 +171,6 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 				
 				viewer.toggleUnderline(position);
 				setDirty();
-				//fUnderlineAction.setChecked(!fUnderlineAction.isChecked());
 			}
 		};
 		fUnderlineAction.setEnabled(false);

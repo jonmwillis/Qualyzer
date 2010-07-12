@@ -614,7 +614,6 @@ public final class Facade
 	public void deleteFragment(Fragment fragment)
 	{
 		Transcript transcript = fragment.getTranscript();
-		Object lTranscript = null;
 		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(
 				transcript.getProject().getName());
 		Session session = null;
@@ -629,10 +628,8 @@ public final class Facade
 			 * The following is ALL required in order to delete the object from the database. Don't ask me why, I don't
 			 * really understand it myself -JF.
 			 */
-			lTranscript = session.get(Transcript.class, transcript.getPersistenceId());
 			Object lFragment = session.get(Fragment.class, fragment.getPersistenceId());
 
-			//((Transcript) lTranscript).getFragments().remove(lFragment);
 			transcript.getFragments().remove(lFragment);
 			
 			session.delete(lFragment);
@@ -640,8 +637,8 @@ public final class Facade
 			session.flush();
 			t.commit();
 
-			//fListenerManager.notifyTranscriptListeners(ChangeType.MODIFY, 
-			//		new Transcript[] {transcript}, this);
+			fListenerManager.notifyTranscriptListeners(ChangeType.MODIFY, 
+					new Transcript[] {transcript}, this);
 		}
 		catch (HibernateException e)
 		{
@@ -653,7 +650,6 @@ public final class Facade
 		finally
 		{
 			HibernateUtil.quietClose(session);
-			//HibernateUtil.quietSave(manager, lTranscript);
 		}
 	}
 }
