@@ -435,9 +435,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		{
 			
 		}
-		
-		Transcript transcript = ((RTFEditorInput) element).getTranscript();
-		
+				
 		Iterator<Annotation> iter = model.getAnnotationIterator();
 		while(iter.hasNext())
 		{
@@ -446,12 +444,27 @@ public class RTFDocumentProvider extends FileDocumentProvider
 			{
 				Fragment fragment = ((FragmentAnnotation) annotation).getFragment();
 				Position position = model.getPosition(annotation);
-				fragment.setOffset(position.offset);
-				fragment.setLength(position.length);
+				if(position.length == 0)
+				{
+					model.removeAnnotation(annotation);
+					//Facade.getInstance().deleteFragment(fragment);
+				}
+				else
+				{
+					fragment.setOffset(position.offset);
+					fragment.setLength(position.length);
+				}
+			}
+			else
+			{
+				if(model.getPosition(annotation).length == 0)
+				{
+					model.removeAnnotation(annotation);
+				}
 			}
 		}
 		
-		Facade.getInstance().saveTranscript(transcript);
+		//Facade.getInstance().saveTranscript(((RTFEditorInput) element).getTranscript());
 	}
 
 	/**

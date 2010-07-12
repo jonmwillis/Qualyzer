@@ -13,13 +13,7 @@
  */
 package ca.mcgill.cs.swevo.qualyzer.editors;
 
-import java.util.Map;
-
-import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.source.Annotation;
-import org.eclipse.jface.text.source.IAnnotationModel;
-import org.eclipse.jface.text.source.IAnnotationModelListener;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.texteditor.ResourceMarkerAnnotationModel;
@@ -28,14 +22,12 @@ import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.RTFEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Fragment;
-import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 
 /**
  *
  */
 public class RTFAnnotationModel extends ResourceMarkerAnnotationModel
 {
-	private Transcript fTranscript;
 	
 	/**
 	 * Constructor.
@@ -44,15 +36,6 @@ public class RTFAnnotationModel extends ResourceMarkerAnnotationModel
 	public RTFAnnotationModel(RTFEditorInput element)
 	{
 		super(element.getFile());
-		fTranscript = element.getTranscript();
-		addAnnotationModelListener(new IAnnotationModelListener()
-		{
-			@Override
-			public void modelChanged(IAnnotationModel model)
-			{
-				System.out.println("changes");
-			}
-		});
 	}
 	
 	/* (non-Javadoc)
@@ -61,11 +44,10 @@ public class RTFAnnotationModel extends ResourceMarkerAnnotationModel
 	@Override
 	public void removeAnnotation(Annotation annotation)
 	{
-		System.out.println("print");
 		if(annotation instanceof FragmentAnnotation)
 		{
 			Fragment fragment = ((FragmentAnnotation) annotation).getFragment();
-			Facade.getInstance().deleteFragment(fragment, fTranscript);
+			Facade.getInstance().deleteFragment(fragment);
 		}
 		CommonNavigator view = (CommonNavigator) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 		.getActivePage().findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);

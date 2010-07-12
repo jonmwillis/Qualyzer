@@ -611,8 +611,9 @@ public final class Facade
 	 * @param fragment
 	 * @param fTranscript
 	 */
-	public void deleteFragment(Fragment fragment, Transcript transcript)
+	public void deleteFragment(Fragment fragment)
 	{
+		Transcript transcript = fragment.getTranscript();
 		Object lTranscript = null;
 		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(
 				transcript.getProject().getName());
@@ -631,14 +632,16 @@ public final class Facade
 			lTranscript = session.get(Transcript.class, transcript.getPersistenceId());
 			Object lFragment = session.get(Fragment.class, fragment.getPersistenceId());
 
-			((Transcript) lTranscript).getFragments().remove(lFragment);
+			//((Transcript) lTranscript).getFragments().remove(lFragment);
+			transcript.getFragments().remove(lFragment);
 			
 			session.delete(lFragment);
 			
 			session.flush();
 			t.commit();
 
-			fListenerManager.notifyTranscriptListeners(ChangeType.MODIFY, new Transcript[] {(Transcript) lTranscript}, this);
+			//fListenerManager.notifyTranscriptListeners(ChangeType.MODIFY, 
+			//		new Transcript[] {transcript}, this);
 		}
 		catch (HibernateException e)
 		{
@@ -650,7 +653,7 @@ public final class Facade
 		finally
 		{
 			HibernateUtil.quietClose(session);
-			HibernateUtil.quietSave(manager, transcript);
+			//HibernateUtil.quietSave(manager, lTranscript);
 		}
 	}
 }
