@@ -544,7 +544,7 @@ public final class Facade
 				transcript.getProject().getName());
 		HibernateUtil.quietSave(manager, transcript);
 
-		//fListenerManager.notifyTranscriptListeners(ChangeType.MODIFY, new Transcript[] { transcript }, this);
+		fListenerManager.notifyTranscriptListeners(ChangeType.MODIFY, new Transcript[] { transcript }, this);
 	}
 
 	/**

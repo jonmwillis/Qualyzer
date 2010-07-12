@@ -134,7 +134,7 @@ public class Fragment
 	/**
 	 * 
 	 */
-	@ManyToOne()
+	@ManyToOne
 	@JoinColumn(name = "transcript_fk")
 	public Transcript getTranscript()
 	{
