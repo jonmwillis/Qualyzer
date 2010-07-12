@@ -228,7 +228,19 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 					{
 						for(Fragment fragment : conflicts)
 						{
-							//TODO
+							for(int i = 0; i < fragment.getCodeEntries().size(); i++)
+							{
+								CodeEntry entry = fragment.getCodeEntries().get(i);
+								if(entry.getCode().equals(toDelete))
+								{
+									fragment.getCodeEntries().remove(i);
+									break;
+								}
+							}
+							if(fragment.getCodeEntries().isEmpty())
+							{
+								Facade.getInstance().deleteFragment(fragment);
+							}
 						}
 					}
 				}
