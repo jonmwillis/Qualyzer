@@ -515,5 +515,39 @@ public class FacadeTest
 		assertNotNull(newTranscript.getFragments().get(0));
 		assertEquals(transcript, newTranscript.getFragments().get(0).getTranscript());
 	}
+	
+	/**
+	 * Verifies that we can save multiple code entries in a fragment.
+	 */
+	@Test
+	public void testCodeEntries() {
+		Code code1 = fFacade.createCode("c1", "", fProject);
+		Code code2 = fFacade.createCode("c2", "", fProject);
+		Investigator investigator = fFacade.createInvestigator("TestInvestigator", "TestInvestigator FullName",
+				"McGill", fProject, true);
+		String pId = "p1";
+		String pName = "Toto";
+		String transcriptName = "t1";
+		Participant participant = fFacade.createParticipant(pId, pName, fProject);
+		List<Participant> participants = new ArrayList<Participant>();
+		participants.add(participant);
+		Transcript transcript = fFacade.createTranscript(transcriptName, "6/26/2010", "", participants, fProject);
+		fFacade.createFragment(transcript, 1, 1);
+		fFacade.saveTranscript(transcript);
+		
+		Transcript newTranscript = fFacade.forceTranscriptLoad(transcript);
+		Fragment newFragment = newTranscript.getFragments().get(0);
+		CodeEntry ce1 = new CodeEntry();
+		ce1.setCode(code1);
+		ce1.setInvestigator(investigator);
+		newFragment.getCodeEntries().add(ce1);
+		fFacade.saveTranscript(newTranscript);
+		
+		CodeEntry ce2 = new CodeEntry();
+		ce2.setCode(code2);
+		ce2.setInvestigator(investigator);
+		newFragment.getCodeEntries().add(ce2);
+		fFacade.saveTranscript(newTranscript);
+	}
 
 }
