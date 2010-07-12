@@ -62,7 +62,7 @@ public class NewProjectWizard extends Wizard
 		ProgressMonitorDialog dialog = new ProgressMonitorDialog(getShell());
 		dialog.setOpenOnRun(true);
 		dialog.create();
-		dialog.getShell().setText("Project Creation");
+		dialog.getShell().setText(Messages.getString("wizards.NewProjectWizard.projectCreation")); //$NON-NLS-1$
 		try
 		{
 			dialog.run(true, false, new IRunnableWithProgress()
@@ -71,15 +71,13 @@ public class NewProjectWizard extends Wizard
 				@Override
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException
 				{
-					monitor.beginTask("Creating New Project", WORK);
+					monitor.beginTask(Messages.getString("wizards.NewProjectWizard.creatingNewProject"), //$NON-NLS-1$
+							WORK); 
 					monitor.worked(1);
 					monitor.worked(1);
 					Project project = Facade.getInstance().
-					createProject(
-							fOne.getProjectName(), 
-							fOne.getInvestigatorNickname(), 
-							fOne.getInvestigatorFullname(), 
-							fOne.getInstitution());
+					createProject(fOne.getProjectName(), fOne.getInvestigatorNickname(), 
+							fOne.getInvestigatorFullname(), fOne.getInstitution());
 					monitor.worked(2);
 					
 					fProject = ResourcesPlugin.getWorkspace().getRoot().getProject(project.getName());
