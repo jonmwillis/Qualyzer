@@ -24,7 +24,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
  */
 public class AboutQualyzerHandler extends AbstractHandler
 {
-	private static final String RELEASE_NUMBER = "0.2.0"; //$NON-NLS-1$
+	private static final String RELEASE_NUMBER = "0.3.0"; //$NON-NLS-1$
 	private static final String RELEASE = Messages.getString("handlers.AboutQualyzerHandler.releaseTag") + //$NON-NLS-1$
 		" " + RELEASE_NUMBER + "\n\n"; //$NON-NLS-1$ //$NON-NLS-2$
 	
