@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 
 import net.sf.colorer.eclipse.ColorerPlugin;
 import net.sf.colorer.eclipse.editors.ColorerEditor;
@@ -44,9 +45,12 @@ import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 
 import ca.mcgill.cs.swevo.qualyzer.dialogs.CodeChooserDialog;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.RTFEditorInput;
+import ca.mcgill.cs.swevo.qualyzer.model.Code;
 import ca.mcgill.cs.swevo.qualyzer.model.CodeEntry;
+import ca.mcgill.cs.swevo.qualyzer.model.CodeListener;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Fragment;
+import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.ProjectListener;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
@@ -58,7 +62,7 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
  * A Rich Text Editor for Transcripts.
  *
  */
-public class RTFEditor extends ColorerEditor implements TranscriptListener, ProjectListener
+public class RTFEditor extends ColorerEditor implements TranscriptListener, ProjectListener, CodeListener
 {
 	public static final String ID = "ca.mcgill.cs.swevo.qualyzer.editors.RTFEditor"; //$NON-NLS-1$
 
@@ -224,6 +228,7 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 					annotation = new FragmentAnnotation(fragment);
 					model.addAnnotation(annotation, p);
 				}
+				setDirty();
 			}
 		};
 		fRemoveCodeAction.setText(Messages.getString("editors.RTFEditor.removeCode")); //$NON-NLS-1$
@@ -715,8 +720,10 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 //			musicBar.setEnabled(false);
 //		}
 
-		Facade.getInstance().getListenerManager().registerProjectListener(fTranscript.getProject(), this);
-		Facade.getInstance().getListenerManager().registerTranscriptListener(fTranscript.getProject(), this);
+		ListenerManager listenerManager = Facade.getInstance().getListenerManager();
+		listenerManager.registerProjectListener(fTranscript.getProject(), this);
+		listenerManager.registerTranscriptListener(fTranscript.getProject(), this);
+		listenerManager.registerCodeListener(fTranscript.getProject(), this);
 		ColorerPlugin.getDefault().setPropertyWordWrap(getTextColorer().getFileType(), 1);
 	}
 	
@@ -1022,15 +1029,6 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 				}
 			}
 		}
-		else if(cType == ChangeType.MODIFY)
-		{
-//			IFile file = ((FileEditorInput) getEditorInput()).getFile();
-//			Point p = getSourceViewer().getSelectedRange();
-//			RTFEditorInput input = new RTFEditorInput(file, transcripts[0]);
-//			setInput(input);
-//			getSourceViewer().setSelectedRange(p.x, p.y);
-		}
-		
 	}
 
 	/* (non-Javadoc)
@@ -1055,9 +1053,50 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 	@Override
 	public void dispose()
 	{
-		Facade.getInstance().getListenerManager().unregisterProjectListener(fTranscript.getProject(), this);
-		Facade.getInstance().getListenerManager().unregisterTranscriptListener(fTranscript.getProject(), this);
+		ListenerManager listenerManager = Facade.getInstance().getListenerManager();
+		listenerManager.unregisterProjectListener(fTranscript.getProject(), this);
+		listenerManager.unregisterTranscriptListener(fTranscript.getProject(), this);
+		listenerManager.unregisterCodeListener(fTranscript.getProject(), this);
 		super.dispose();
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.model.CodeListener#codeChanged(
+	 * ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType, ca.mcgill.cs.swevo.qualyzer.model.Code[],
+	 *  ca.mcgill.cs.swevo.qualyzer.model.Facade)
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public void codeChanged(ChangeType cType, Code[] codes, Facade facade)
+	{
+		IAnnotationModel model = getSourceViewer().getAnnotationModel();
+		Iterator<Annotation> iter = model.getAnnotationIterator();
+		fTranscript.setProject(codes[0].getProject());
+
+		if(cType == ChangeType.DELETE || cType == ChangeType.MODIFY)
+		{
+			Transcript transcript = Facade.getInstance().forceTranscriptLoad(fTranscript);
+			List<Fragment> newList = transcript.getFragments();
+			fTranscript.setFragments(newList);
+			
+			while(iter.hasNext())
+			{
+				Annotation annotation = iter.next();
+				if(annotation instanceof FragmentAnnotation)
+				{
+					Fragment fragment = ((FragmentAnnotation) annotation).getFragment();
+					if(!newList.contains(fragment))
+					{
+						model.removeAnnotation(annotation);
+					}
+					else
+					{
+						Fragment newFragment = newList.get(newList.indexOf(fragment));
+						((FragmentAnnotation) annotation).setFragment(newFragment);
+					}
+				}
+			}
+		}
 	}
 	
 }

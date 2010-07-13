@@ -41,7 +41,6 @@ public class RTFSourceViewerConfiguration extends ColorerSourceViewerConfigurati
 	public RTFSourceViewerConfiguration(TextColorer textColorer)
 	{
 		super(textColorer);
-		// TODO Auto-generated constructor stub
 	}
 
 	/* (non-Javadoc)

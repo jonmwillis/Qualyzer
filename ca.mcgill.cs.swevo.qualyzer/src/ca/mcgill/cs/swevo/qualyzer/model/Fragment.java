@@ -24,6 +24,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.hibernate.annotations.CollectionId;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
@@ -34,6 +36,9 @@ import org.hibernate.annotations.Type;
 @GenericGenerator(name = "uuid-gen", strategy = "uuid")
 public class Fragment
 {
+	private static final int NUM1 = 37837;
+	private static final int NUM2 = 20661;
+	
 	private int fOffset;
 	private int fLength;
 	private List<Annotation> fAnnotations = new ArrayList<Annotation>();
@@ -148,5 +153,38 @@ public class Fragment
 	public void setTranscript(Transcript transcript)
 	{
 		this.fTranscript = transcript;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj)
+	{
+		if(obj == null)
+		{
+			return false;
+		}
+		else if(obj == this)
+		{
+			return true;
+		}
+		else if(obj.getClass().equals(getClass()))
+		{
+			Fragment fragment = (Fragment) obj;
+			return new EqualsBuilder().append(fOffset, fragment.fOffset)
+			.append(fLength, fragment.fLength).append(fTranscript, fragment.fTranscript).isEquals();
+		}
+		
+		return false;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode()
+	{
+		return new HashCodeBuilder(NUM1, NUM2).append(fOffset).append(fLength).append(fTranscript).toHashCode();
 	}
 }
