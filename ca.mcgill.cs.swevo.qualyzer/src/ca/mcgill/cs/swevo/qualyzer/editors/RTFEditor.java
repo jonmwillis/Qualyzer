@@ -29,6 +29,7 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -36,6 +37,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
@@ -69,6 +71,8 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 	private Action fItalicAction;
 	private Action fUnderlineAction;
 	private Action fMarkTextAction;
+	private Action fRemoveCodeAction;
+	private Action fRemoveAllCodesAction;
 	
 	private boolean fIsDirty;
 	private Transcript fTranscript;
@@ -93,10 +97,137 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 		
 		initialiseMarkAction();
 		
+		initialiseRemoveCodeAction();
+		
+		initialiseRemoveAllCodesAction();
+		
 		getPreferenceStore().setValue(AbstractDecoratedTextEditorPreferenceConstants.QUICK_DIFF_ALWAYS_ON, false);
 	}
 	
 	
+
+	/**
+	 * 
+	 */
+	private void initialiseRemoveAllCodesAction()
+	{
+		fRemoveAllCodesAction = new Action(){
+			/* (non-Javadoc)
+			 * @see org.eclipse.jface.action.Action#run()
+			 */
+			@SuppressWarnings("unchecked")
+			@Override
+			public void run()
+			{
+				Point selection = getSourceViewer().getSelectedRange();
+				IAnnotationModel model = getSourceViewer().getAnnotationModel();
+				Iterator<Annotation> iter = model.getAnnotationIterator();
+				while(iter.hasNext())
+				{
+					Annotation annotation = iter.next();
+					if(annotation instanceof FragmentAnnotation)
+					{
+						Position pos = model.getPosition(annotation);
+						if(pos.offset == selection.x && pos.length == selection.y)
+						{
+							model.removeAnnotation(annotation);
+							Fragment fragment = ((FragmentAnnotation) annotation).getFragment();
+							Facade.getInstance().deleteFragment(fragment);
+							setDirty();
+							break;
+						}
+					}
+				}
+			}
+			
+		};
+		fRemoveAllCodesAction.setText("Remove All Codes");
+	}
+
+
+
+	/**
+	 * 
+	 */
+	private void initialiseRemoveCodeAction()
+	{
+		fRemoveCodeAction = new Action(){
+			/* (non-Javadoc)
+			 * @see org.eclipse.jface.action.Action#run()
+			 */
+			@SuppressWarnings("unchecked")
+			@Override
+			public void run()
+			{
+				Annotation annotation = null;
+				Fragment fragment = null;
+				
+				IAnnotationModel model = getSourceViewer().getAnnotationModel();
+				Point selection = getSourceViewer().getSelectedRange();
+				Iterator<Annotation> iter = model.getAnnotationIterator();
+				
+				while(iter.hasNext())
+				{
+					annotation = iter.next();
+					if(annotation instanceof FragmentAnnotation)
+					{
+						Position position = model.getPosition(annotation);
+						if(position.offset == selection.x && position.length == selection.y)
+						{
+							fragment = ((FragmentAnnotation) annotation).getFragment();
+							break;
+						}
+					}
+				}
+				
+				if(fragment == null)
+				{
+					return;
+				}
+				
+				String[] codes = new String[fragment.getCodeEntries().size()];
+				for(int i = 0; i < codes.length; i++)
+				{
+					codes[i] = fragment.getCodeEntries().get(i).getCode().getCodeName();
+				}
+				
+				ElementListSelectionDialog dialog = new ElementListSelectionDialog(getSite().getShell(),
+						new LabelProvider());
+				dialog.setElements(codes);
+				dialog.setTitle("Remove a Code");
+				
+				dialog.open();
+				Object[] codesToDelete = dialog.getResult();
+				
+				for(Object toDelete : codesToDelete)
+				{
+					for(int i = 0; i < fragment.getCodeEntries().size(); i++)
+					{
+						CodeEntry entry = fragment.getCodeEntries().get(i);
+						if(entry.getCode().getCodeName().equals(toDelete))
+						{
+							fragment.getCodeEntries().remove(i);
+							Facade.getInstance().saveTranscript(fragment.getTranscript());
+							break;
+						}
+					}
+				}
+				if(fragment.getCodeEntries().isEmpty())
+				{
+					Facade.getInstance().deleteFragment(fragment);
+					model.removeAnnotation(annotation);
+				}
+				else
+				{
+					Position p = model.getPosition(annotation);
+					model.removeAnnotation(annotation);
+					annotation = new FragmentAnnotation(fragment);
+					model.addAnnotation(annotation, p);
+				}
+			}
+		};
+		fRemoveCodeAction.setText("Remove a Code");
+	}
 
 	/**
 	 * 
@@ -254,7 +385,7 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 			public void selectionChanged(SelectionChangedEvent event)
 			{
 				Point selection = viewer.getSelectedRange();
-				IAnnotationModel model = getDocumentProvider().getAnnotationModel(getEditorInput());
+				IAnnotationModel model = getSourceViewer().getAnnotationModel();
 				
 				boolean enabled = selection.y != 0;
 				
@@ -531,6 +662,8 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 		setAction(RTFConstants.UNDERLINE_ACTION_ID, fUnderlineAction);
 		setAction(RTFConstants.ITALIC_ACTION_ID, fItalicAction);
 		setAction(RTFConstants.FRAGMENT_ACTION_ID, fMarkTextAction);
+		setAction(RTFConstants.REMOVE_ALL_CODES_ACTION_ID, fRemoveAllCodesAction);
+		setAction(RTFConstants.REMOVE_CODE_ACTION_ID, fRemoveCodeAction);
 		
 		setActionActivationCode(RTFConstants.BOLD_ACTION_ID, BOLD_CHAR, 'b', SWT.CONTROL);
 		setActionActivationCode(RTFConstants.ITALIC_ACTION_ID, ITALIC_CHAR, 'i', SWT.CONTROL);
@@ -707,6 +840,12 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 		addAction(menu, ITextEditorActionConstants.GROUP_EDIT, RTFConstants.UNDERLINE_ACTION_ID);
 		addAction(menu, ITextEditorActionConstants.GROUP_EDIT, RTFConstants.FRAGMENT_ACTION_ID);
 		
+		if(removeIsVisible())
+		{
+			addAction(menu, ITextEditorActionConstants.GROUP_EDIT, RTFConstants.REMOVE_CODE_ACTION_ID);
+			addAction(menu, ITextEditorActionConstants.GROUP_EDIT, RTFConstants.REMOVE_ALL_CODES_ACTION_ID);
+		}
+		
 		//check according to selection
 		fBoldAction.setChecked(isBoldChecked());
 		fItalicAction.setChecked(isItalicChecked());
@@ -714,6 +853,40 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 		
 	}
 	
+	/**
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	private boolean removeIsVisible()
+	{
+		IAnnotationModel model = getSourceViewer().getAnnotationModel();
+		Point selection = getSourceViewer().getSelectedRange();
+		
+		if(selection.y == 0)
+		{
+			return false;
+		}
+		else
+		{
+			Iterator<Annotation> iter = model.getAnnotationIterator();
+			while(iter.hasNext())
+			{
+				Annotation annotation = iter.next();
+				if(annotation instanceof FragmentAnnotation)
+				{
+					Position position = model.getPosition(annotation);
+					if(position.offset == selection.x && position.length == selection.y)
+					{
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+	}
+
+
+
 	/**
 	 * @return
 	 */
