@@ -321,6 +321,7 @@ public final class Facade
 			((Project) project).getParticipants().remove(part);
 
 			session.delete(part);
+			session.saveOrUpdate(project);
 			session.flush();
 			t.commit();
 
@@ -337,7 +338,6 @@ public final class Facade
 		finally
 		{
 			HibernateUtil.quietClose(session);
-			HibernateUtil.quietSave(manager, project);
 		}
 	}
 
@@ -368,6 +368,7 @@ public final class Facade
 			((Project) project).getInvestigators().remove(inv);
 
 			session.delete(inv);
+			session.saveOrUpdate(project);
 			session.flush();
 			t.commit();
 			fListenerManager.notifyInvestigatorListeners(ChangeType.DELETE, new Investigator[] { investigator }, this);
@@ -383,7 +384,6 @@ public final class Facade
 		finally
 		{
 			HibernateUtil.quietClose(session);
-			HibernateUtil.quietSave(manager, project);
 		}
 	}
 
@@ -414,6 +414,7 @@ public final class Facade
 			((Project) project).getTranscripts().remove(trans);
 
 			session.delete(trans);
+			session.saveOrUpdate(project);
 			session.flush();
 			t.commit();
 			fListenerManager.notifyTranscriptListeners(ChangeType.DELETE, new Transcript[] { transcript }, this);
@@ -429,7 +430,6 @@ public final class Facade
 		finally
 		{
 			HibernateUtil.quietClose(session);
-			HibernateUtil.quietSave(manager, project);
 		}
 	}
 
@@ -441,18 +441,24 @@ public final class Facade
 	 */
 	public Transcript forceTranscriptLoad(Transcript transcript)
 	{
+		Transcript toReturn = null;
 		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(
 				transcript.getProject().getName());
 		Session s = manager.openSession();
 
-		Object object = s.get(Transcript.class, transcript.getPersistenceId());
-		Transcript toReturn = (Transcript) object;
+		try
+		{
+			Object object = s.get(Transcript.class, transcript.getPersistenceId());
+			toReturn = (Transcript) object;
 
-		Hibernate.initialize(toReturn.getParticipants());
+			Hibernate.initialize(toReturn.getParticipants());
 
-		Hibernate.initialize(toReturn.getFragments());
-
-		HibernateUtil.quietClose(s);
+			Hibernate.initialize(toReturn.getFragments());
+		}
+		finally
+		{
+			HibernateUtil.quietClose(s);
+		}
 
 		return toReturn;
 	}
@@ -465,19 +471,21 @@ public final class Facade
 	 */
 	public Memo forceMemoLoad(Memo memo)
 	{
+		Memo toReturn = null;
 		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(
 				memo.getProject().getName());
 		Session s = manager.openSession();
-
-		Object object = s.get(Memo.class, memo.getPersistenceId());
-		Memo toReturn = (Memo) object;
-
-		Hibernate.initialize(toReturn.getParticipants());
-
-		Hibernate.initialize(toReturn.getFragments());
-
-		HibernateUtil.quietClose(s);
-
+		try
+		{
+			Object object = s.get(Memo.class, memo.getPersistenceId());
+			toReturn = (Memo) object;
+			Hibernate.initialize(toReturn.getParticipants());
+			Hibernate.initialize(toReturn.getFragments());
+		}
+		finally
+		{
+			HibernateUtil.quietClose(s);
+		}
 		return toReturn;
 	}
 
@@ -587,12 +595,13 @@ public final class Facade
 			Object lCode = session.get(Code.class, code.getPersistenceId());
 
 			((Project) project).getCodes().remove(lCode);
-
+			
 			session.delete(lCode);
+			session.saveOrUpdate(project);
 			session.flush();
 			t.commit();
 
-			fListenerManager.notifyCodeListeners(ChangeType.DELETE, new Code[] {(Code) lCode }, this);
+			fListenerManager.notifyCodeListeners(ChangeType.DELETE, new Code[] { (Code) lCode }, this);
 		}
 		catch (HibernateException e)
 		{
@@ -604,9 +613,8 @@ public final class Facade
 		finally
 		{
 			HibernateUtil.quietClose(session);
-			HibernateUtil.quietSave(manager, project);
 		}
-		
+
 	}
 
 	/**
@@ -633,14 +641,13 @@ public final class Facade
 			Object lFragment = session.get(Fragment.class, fragment.getPersistenceId());
 
 			transcript.getFragments().remove(lFragment);
-			
+
 			session.delete(lFragment);
-			
+			session.saveOrUpdate(transcript);
 			session.flush();
 			t.commit();
 
-			fListenerManager.notifyTranscriptListeners(ChangeType.MODIFY, 
-					new Transcript[] {transcript}, this);
+			fListenerManager.notifyTranscriptListeners(ChangeType.MODIFY, new Transcript[] { transcript }, this);
 		}
 		catch (HibernateException e)
 		{
