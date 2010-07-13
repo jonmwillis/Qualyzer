@@ -63,6 +63,15 @@ public class FragmentAnnotation extends Annotation
 	public void setFragment(Fragment fragment)
 	{
 		fFragment = fragment;
+		setText(buildCodeString(fragment));
+	}
+	
+	/**
+	 * Updates the text field to match the Code Entries in the Fragment.
+	 */
+	public void updateText()
+	{
+		setText(buildCodeString(fFragment));
 	}
 	
 }
