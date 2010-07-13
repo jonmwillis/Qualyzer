@@ -141,7 +141,7 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 			}
 			
 		};
-		fRemoveAllCodesAction.setText("Remove All Codes");
+		fRemoveAllCodesAction.setText(Messages.getString("editors.RTFEditor.removeAll")); //$NON-NLS-1$
 	}
 
 
@@ -194,7 +194,7 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 				ElementListSelectionDialog dialog = new ElementListSelectionDialog(getSite().getShell(),
 						new LabelProvider());
 				dialog.setElements(codes);
-				dialog.setTitle("Remove a Code");
+				dialog.setTitle(Messages.getString("editors.RTFEditor.removeCode")); //$NON-NLS-1$
 				
 				dialog.open();
 				Object[] codesToDelete = dialog.getResult();
@@ -226,7 +226,7 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 				}
 			}
 		};
-		fRemoveCodeAction.setText("Remove a Code");
+		fRemoveCodeAction.setText(Messages.getString("editors.RTFEditor.removeCode")); //$NON-NLS-1$
 	}
 
 	/**

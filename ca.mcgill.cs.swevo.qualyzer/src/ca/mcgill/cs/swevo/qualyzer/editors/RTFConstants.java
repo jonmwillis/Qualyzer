@@ -31,8 +31,8 @@ public final class RTFConstants
 	public static final String ITALIC_ACTION_ID = "action.italic"; //$NON-NLS-1$
 	public static final String UNDERLINE_ACTION_ID = "action.underline"; //$NON-NLS-1$
 	public static final String FRAGMENT_ACTION_ID = "action.markFragment"; //$NON-NLS-1$
-	public static final String REMOVE_ALL_CODES_ACTION_ID = "action.removeAllCodes";
-	public static final String REMOVE_CODE_ACTION_ID = "action.removeCode";
+	public static final String REMOVE_ALL_CODES_ACTION_ID = "action.removeAllCodes"; //$NON-NLS-1$
+	public static final String REMOVE_CODE_ACTION_ID = "action.removeCode"; //$NON-NLS-1$
 	
 	private RTFConstants(){}
 }
