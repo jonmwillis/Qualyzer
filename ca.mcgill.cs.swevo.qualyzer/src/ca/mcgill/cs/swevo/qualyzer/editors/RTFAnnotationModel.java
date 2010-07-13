@@ -13,6 +13,7 @@
  */
 package ca.mcgill.cs.swevo.qualyzer.editors;
 
+import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonNavigator;
@@ -44,7 +45,9 @@ public class RTFAnnotationModel extends ResourceMarkerAnnotationModel
 	@Override
 	public void removeAnnotation(Annotation annotation)
 	{
-		if(annotation instanceof FragmentAnnotation)
+		Position position = getPosition(annotation);
+		
+		if(position.length == 0 && annotation instanceof FragmentAnnotation)
 		{
 			Fragment fragment = ((FragmentAnnotation) annotation).getFragment();
 			Facade.getInstance().deleteFragment(fragment);

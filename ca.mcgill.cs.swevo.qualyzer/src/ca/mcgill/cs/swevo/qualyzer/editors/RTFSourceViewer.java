@@ -582,11 +582,14 @@ public class RTFSourceViewer extends ProjectionViewer
 				Position pos = model.getPosition(annot);
 				if(pos.offset == position.offset)
 				{
-					((FragmentAnnotation) annot).setFragment(fragment);
+					model.removeAnnotation(annot);
 					break;
 				}
 			}
 		}
+		
+		Annotation annotation = new FragmentAnnotation(fragment);
+		model.addAnnotation(annotation, position);
 	}
 
 
