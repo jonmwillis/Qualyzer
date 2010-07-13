@@ -289,7 +289,7 @@ public class DeleteInvestigatorHandler extends AbstractHandler
 		int count = 0;
 		for(CodeEntry codeEntry : fragment.getCodeEntries())
 		{
-			if(codeEntry.getInvestigator().equals(investigator))
+			if(investigator.equals(codeEntry.getInvestigator()))
 			{
 				count++;
 			}
