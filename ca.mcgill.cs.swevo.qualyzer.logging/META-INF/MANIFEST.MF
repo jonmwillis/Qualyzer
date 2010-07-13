@@ -3,7 +3,7 @@ Eclipse-BuddyPolicy: global
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: ca.mcgill.cs.swevo.qualyzer.logging;singleton:=true
-Bundle-Version: 0.3.0.qualifier
+Bundle-Version: 0.2.0.qualifier
 Require-Bundle: org.eclipse.core.runtime
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
