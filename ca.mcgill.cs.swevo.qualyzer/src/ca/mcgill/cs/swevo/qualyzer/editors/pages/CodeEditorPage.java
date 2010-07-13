@@ -202,16 +202,11 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	private SelectionAdapter deleteCodeSelected()
 	{
 		return new SelectionAdapter(){
-			/* (non-Javadoc)
-			 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-			 */
 			@Override
 			public void widgetSelected(SelectionEvent e)
 			{
 				Code toDelete = fCodes.get(fTable.getSelectionIndex());
-				
 				List<Fragment> conflicts = detectConflicts(toDelete);
-				
 				boolean check = false;
 				if(conflicts.size() == 0)
 				{
@@ -252,7 +247,6 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 					.getActivePage().findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
 					view.getCommonViewer().refresh();
 				}
-				
 			}
 		};
 	}
