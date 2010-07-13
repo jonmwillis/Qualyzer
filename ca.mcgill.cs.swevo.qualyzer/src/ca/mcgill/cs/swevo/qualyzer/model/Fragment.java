@@ -62,7 +62,7 @@ public class Fragment
 	/**
 	 * @return
 	 */
-	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
+	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER, orphanRemoval = true)
 	@CollectionId(columns = @Column(name = "COL_ID"), type = @Type(type = "string"), generator = "uuid-gen")
 	public List<CodeEntry> getCodeEntries()
 	{

@@ -85,6 +85,7 @@ public final class HibernateUtil
 			session = manager.openSession();
 			t = session.beginTransaction();
 			session.saveOrUpdate(object);
+			session.flush();
 			t.commit();
 		}
 		catch (HibernateException e)
@@ -114,6 +115,7 @@ public final class HibernateUtil
 			{
 				session.saveOrUpdate(object);
 			}
+			session.flush();
 			t.commit();
 		}
 		catch (HibernateException e)
