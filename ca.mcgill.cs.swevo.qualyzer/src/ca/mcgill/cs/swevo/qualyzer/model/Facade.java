@@ -638,11 +638,10 @@ public final class Facade
 			 * The following is ALL required in order to delete the object from the database. Don't ask me why, I don't
 			 * really understand it myself -JF.
 			 */
-			Object lFragment = session.get(Fragment.class, fragment.getPersistenceId());
+//			Object lFragment = session.get(Fragment.class, fragment.getPersistenceId());
 
-			transcript.getFragments().remove(lFragment);
-
-			session.delete(lFragment);
+			transcript.getFragments().remove(fragment);
+			session.delete(fragment);
 			session.saveOrUpdate(transcript);
 			session.flush();
 			t.commit();
