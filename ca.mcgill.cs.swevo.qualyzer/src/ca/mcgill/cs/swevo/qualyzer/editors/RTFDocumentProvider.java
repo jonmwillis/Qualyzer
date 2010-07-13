@@ -31,6 +31,7 @@ import org.eclipse.ui.editors.text.FileDocumentProvider;
 import org.eclipse.ui.part.FileEditorInput;
 
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.RTFEditorInput;
+import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Fragment;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 
@@ -460,7 +461,9 @@ public class RTFDocumentProvider extends FileDocumentProvider
 					model.removeAnnotation(annotation);
 				}
 			}
-		}		
+		}
+		
+		Facade.getInstance().saveTranscript(((RTFEditorInput) element).getTranscript());
 	}
 
 	/**
