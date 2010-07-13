@@ -117,4 +117,10 @@ IT IS YOUR OBLIGATION TO READ AND ACCEPT ALL SUCH TERMS AND CONDITIONS PRIOR TO 
          install-size="0"
          version="0.0.0"/>
 
+   <plugin
+         id="net.sf.colorer"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
 </feature>
