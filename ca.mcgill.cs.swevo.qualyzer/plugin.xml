@@ -35,7 +35,7 @@
          point="org.eclipse.core.runtime.products">
       <product
             application="ca.mcgill.cs.swevo.qualyzer.application"
-            name="Qualyzer">
+            name="%product.name.0">
          <property
                name="windowImages"
                value="icons/alt_window_16.gif,icons/alt_window_32.gif">
@@ -197,12 +197,12 @@
       <command
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.OpenAllHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.openAll"
-            name="Open All">
+            name="%command.name.openAll">
       </command>
       <command
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.NewCodeHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.newCode"
-            name="New Code">
+            name="%command.name.newCode">
       </command>
    </extension>
    <extension
@@ -377,9 +377,9 @@
             <command
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.newCode"
                   icon="icons/code_obj.png"
-                  label="Code"
+                  label="%command.label.code"
                   style="push"
-                  tooltip="Create a New Code">
+                  tooltip="%command.tooltip.code">
                <visibleWhen
                      checkEnabled="false">
                   <iterate
@@ -746,7 +746,7 @@
             default="false"
             icon="icons/code_obj.png"
             id="ca.mcgill.cs.swevo.qualyzer.editors.codeEditor"
-            name="Code Editor">
+            name="%editor.name.codeEditor">
       </editor>
       <editor
             class="ca.mcgill.cs.swevo.qualyzer.editors.RTFEditor"
@@ -754,7 +754,7 @@
             extensions="rtf, txt"
             icon="icons/file_obj.gif"
             id="ca.mcgill.cs.swevo.qualyzer.editors.RTFEditor"
-            name="RTF Editor">
+            name="%editor.name.rtfEditor">
       </editor>
    </extension>
    <extension
@@ -853,7 +853,7 @@
          point="org.eclipse.ui.activities">
       <activity
             id="ca.mcgill.cs.swevo.qualyzer.activity.hide"
-            name="Hide Menu Items">
+            name="%activity.name.hide">
       </activity>
       <activityPatternBinding
             activityId="ca.mcgill.cs.swevo.qualyzer.activity.hide"
@@ -903,7 +903,7 @@
             colorPreferenceValue="0,0,0"
             highlightPreferenceValue="false"
             includeOnPreferencePage="false"
-            label="Underline"
+            label="%specification.label.underline"
             overviewRulerPreferenceKey="overview.false"
             overviewRulerPreferenceValue="false"
             textPreferenceKey="text.underline"
@@ -920,7 +920,7 @@
             highlightPreferenceKey="highlight.true"
             highlightPreferenceValue="true"
             includeOnPreferencePage="false"
-            label="Text Fragment"
+            label="%specification.label.fragment"
             overviewRulerPreferenceKey="overview.show"
             overviewRulerPreferenceValue="true"
             textPreferenceKey="text.key"
@@ -946,7 +946,7 @@
          point="org.eclipse.ui.contexts">
       <context
             id="ca.mcgill.cs.swevo.qualyzer.context.rtfEditor"
-            name="RTF Editor context"
+            name="%context.name.rtfContext"
             parentId="org.eclipse.ui.contexts.window">
       </context>
    </extension>
