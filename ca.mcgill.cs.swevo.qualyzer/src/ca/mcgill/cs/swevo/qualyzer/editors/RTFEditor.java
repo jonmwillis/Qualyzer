@@ -843,4 +843,57 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 		return fTranscript;
 	}
 	
+	/**
+	 * Get the BoldAction associated with this editor.
+	 * @return
+	 */
+	public Action getBoldAction()
+	{
+		return fBoldAction;
+	}
+	
+	/**
+	 * Get the ItalicAction associated with this editor.
+	 * @return
+	 */
+	public Action getItalicAction()
+	{
+		return fItalicAction;
+	}
+	
+	/**
+	 * Get the UnderlineAction associated with this editor.
+	 * @return
+	 */
+	public Action getUnderlineAction()
+	{
+		return fUnderlineAction;
+	}
+	
+	/**
+	 * Get the MarkTextAction associated with this editor.
+	 * @return
+	 */
+	public Action getMarkTextAction()
+	{
+		return fMarkTextAction;
+	}
+	
+	/**
+	 * Get the RemoveCodeAction associated with this editor.
+	 * @return
+	 */
+	public Action getRemoveCodeAction()
+	{
+		return fRemoveCodeAction;
+	}
+	
+	/**
+	 * Get the RemoveAllCodesAction associated with this editor.
+	 * @return
+	 */
+	public Action getRemoveAllCodesAction()
+	{
+		return fRemoveAllCodesAction;
+	}
 }
