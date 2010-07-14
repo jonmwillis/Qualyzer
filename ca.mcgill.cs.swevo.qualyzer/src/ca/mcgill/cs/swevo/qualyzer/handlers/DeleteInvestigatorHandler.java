@@ -114,7 +114,7 @@ public class DeleteInvestigatorHandler extends AbstractHandler
 		}
 		else
 		{
-			msg = Messages.getString("handlers.DeleteInvestigatorHandler.confirm"); //$NON-NLS-1$
+			msg = Messages.getString("handlers.DeleteInvestigatorHandler.confirm2"); //$NON-NLS-1$
 		}
 		
 		boolean check = MessageDialog.openConfirm(shell, Messages.getString(

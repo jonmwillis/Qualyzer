@@ -165,7 +165,6 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 			{
 				Annotation annotation = null;
 				Fragment fragment = null;
-				
 				IAnnotationModel model = getSourceViewer().getAnnotationModel();
 				Point selection = getSourceViewer().getSelectedRange();
 				Iterator<Annotation> iter = model.getAnnotationIterator();
@@ -189,19 +188,7 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 					return;
 				}
 				
-				String[] codes = new String[fragment.getCodeEntries().size()];
-				for(int i = 0; i < codes.length; i++)
-				{
-					codes[i] = fragment.getCodeEntries().get(i).getCode().getCodeName();
-				}
-				
-				ElementListSelectionDialog dialog = new ElementListSelectionDialog(getSite().getShell(),
-						new LabelProvider());
-				dialog.setElements(codes);
-				dialog.setTitle(Messages.getString("editors.RTFEditor.removeCode")); //$NON-NLS-1$
-				
-				dialog.open();
-				Object[] codesToDelete = dialog.getResult();
+				Object[] codesToDelete = openSelectionDialog(fragment);
 				
 				for(Object toDelete : codesToDelete)
 				{
@@ -216,22 +203,45 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 						}
 					}
 				}
+				
+				Position p = model.getPosition(annotation);
+				model.removeAnnotation(annotation);
+				
 				if(fragment.getCodeEntries().isEmpty())
 				{
 					Facade.getInstance().deleteFragment(fragment);
-					model.removeAnnotation(annotation);
 				}
 				else
 				{
-					Position p = model.getPosition(annotation);
-					model.removeAnnotation(annotation);
 					annotation = new FragmentAnnotation(fragment);
 					model.addAnnotation(annotation, p);
 				}
 				setDirty();
-			}
+			}	
 		};
 		fRemoveCodeAction.setText(Messages.getString("editors.RTFEditor.removeCode")); //$NON-NLS-1$
+	}
+	
+	/**
+	 * @param fragment
+	 * @return
+	 */
+	private Object[] openSelectionDialog(Fragment fragment)
+	{
+		String[] codes = new String[fragment.getCodeEntries().size()];
+		for(int i = 0; i < codes.length; i++)
+		{
+			codes[i] = fragment.getCodeEntries().get(i).getCode().getCodeName();
+		}
+		
+		ElementListSelectionDialog dialog = new ElementListSelectionDialog(getSite().getShell(),
+				new LabelProvider());
+		dialog.setElements(codes);
+		dialog.setTitle(Messages.getString("editors.RTFEditor.removeCode")); //$NON-NLS-1$
+		
+		dialog.open();
+		Object[] codesToDelete = dialog.getResult();
+		return codesToDelete;
 	}
 
 	/**
