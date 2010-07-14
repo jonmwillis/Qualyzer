@@ -66,6 +66,11 @@ public class EqualityTest
 		assertEquals(fProject1, fProject2);
 		assertEquals(fProject1.hashCode(), fProject2.hashCode());
 		
+		assertEquals(fProject1, fProject1);
+		
+		assertFalse(fProject1.equals(null));
+		assertFalse(fProject1.equals(new String()));
+		
 		fProject1.setName(OTHER_NAME);
 		
 		assertFalse(fProject1.equals(fProject2));
@@ -132,6 +137,11 @@ public class EqualityTest
 		wrapper2 = new WrapperTranscript(fProject2);
 		assertFalse(wrapper1.equals(wrapper2));
 		assertFalse(wrapper1.hashCode() == wrapper2.hashCode());
+		
+		assertEquals(wrapper1, wrapper1);
+		assertFalse(wrapper1.equals(null));
+		assertFalse(wrapper1.equals(new String()));
+		
 	}
 	
 	/**
@@ -152,6 +162,11 @@ public class EqualityTest
 		
 		assertEquals(p1, p2);
 		assertEquals(p1.hashCode(), p2.hashCode());
+		assertEquals(p1.compareTo(p2), 0);
+		
+		assertEquals(p1, p1);
+		assertFalse(p1.equals(null));
+		assertFalse(p1.equals(new String()));
 		
 		p2.setParticipantId("p2");
 		assertFalse(p1.equals(p2));
@@ -160,6 +175,7 @@ public class EqualityTest
 		fProject2.setName(OTHER_NAME);
 		assertFalse(p1.equals(p2));
 		assertFalse(p1.hashCode() == p2.hashCode());
+		assertFalse(p1.compareTo(p2) == 0);
 	}
 	
 	/**
@@ -178,6 +194,10 @@ public class EqualityTest
 		
 		assertEquals(i1, i2);
 		assertEquals(i1.hashCode(), i2.hashCode());
+		
+		assertEquals(i1, i1);
+		assertFalse(i1.equals(null));
+		assertFalse(i1.equals(new String()));
 		
 		i2.setNickName(OTHER_NAME);
 		assertFalse(i1.equals(i2));
@@ -208,6 +228,10 @@ public class EqualityTest
 		
 		assertEquals(c1, c2);
 		assertEquals(c1.hashCode(), c2.hashCode());
+		
+		assertEquals(c1, c2);
+		assertFalse(c1.equals(null));
+		assertFalse(c1.equals(new String()));
 		
 		c2.setCodeName(OTHER_NAME);
 		assertFalse(c1.equals(c2));
@@ -252,6 +276,10 @@ public class EqualityTest
 		assertEquals(m1, m2);
 		assertEquals(m1.hashCode(), m2.hashCode());
 		
+		assertEquals(m1, m1);
+		assertFalse(m1.equals(null));
+		assertFalse(m1.equals(name));
+		
 		m2.setName(OTHER_NAME);
 		assertFalse(m1.equals(m2));
 		assertFalse(m1.hashCode() == m2.hashCode());
@@ -293,6 +321,11 @@ public class EqualityTest
 		
 		assertEquals(t1, t2);
 		assertEquals(t1.hashCode(), t2.hashCode());
+		assertEquals(t1.compareTo(t2), 0);
+		
+		assertEquals(t1, t1);
+		assertFalse(t1.equals(name));
+		assertFalse(t1.equals(null));
 		
 		t2.setProject(new Project());
 		assertFalse(t1.equals(t2));
@@ -302,6 +335,7 @@ public class EqualityTest
 		t2.setName(OTHER_NAME);
 		assertFalse(t1.equals(t2));
 		assertFalse(t1.hashCode() == t2.hashCode());
+		assertFalse(t1.compareTo(t2) == 0);
 		
 		t2.setName(name);
 		t2.setFileName(OTHER_NAME);
@@ -323,6 +357,10 @@ public class EqualityTest
 		
 		assertEquals(f1, f2);
 		assertEquals(f1.hashCode(), f2.hashCode());
+		
+		assertEquals(f1, f1);
+		assertFalse(f1.equals(null));
+		assertFalse(f1.equals(new String()));
 		
 		f2.setRelativePath("OTHER PATH");
 		
@@ -363,6 +401,10 @@ public class EqualityTest
 		assertEquals(ce1, ce2);
 		assertEquals(ce1.hashCode(), ce2.hashCode());
 		
+		assertEquals(ce1, ce1);
+		assertFalse(ce1.equals(null));
+		assertFalse(ce1.equals(CODE_NAME));
+		
 		ce2.setInvestigator(new Investigator());
 		assertFalse(ce1.equals(ce2));
 		assertFalse(ce1.hashCode() == ce2.hashCode());
@@ -371,5 +413,54 @@ public class EqualityTest
 		ce2.setCode(new Code());
 		assertFalse(ce1.equals(ce2));
 		assertFalse(ce1.hashCode() == ce2.hashCode());
+	}
+	
+	@Test
+	public void testFragmentEquality()
+	{
+		String name = "TRANSCRIPT NAME";
+		String fileName = "FILE NAME";
+		
+		Transcript t1 = new Transcript();
+		t1.setProject(fProject1);
+		t1.setName(name);
+		t1.setFileName(fileName);
+		
+		Transcript t2 = new Transcript();
+		t2.setProject(fProject2);
+		t2.setName(name);
+		t2.setFileName(fileName);
+		
+		Fragment f1 = new Fragment();
+		f1.setTranscript(t1);
+		f1.setOffset(5);
+		f1.setLength(9);
+
+		Fragment f2 = new Fragment();
+		f2.setTranscript(t2);
+		f2.setOffset(5);
+		f2.setLength(9);
+		
+		assertEquals(f1, f2);
+		assertEquals(f1.hashCode(), f2.hashCode());
+		
+		assertEquals(f1, f1);
+		assertFalse(f1.equals(null));
+		assertFalse(f1.equals(t1));
+		
+		t1.setName("Other");
+		
+		assertFalse(f1.equals(f2));
+		assertFalse(f1.hashCode() == f2.hashCode());
+		
+		t2.setName(name);
+		f1.setOffset(2);
+		assertFalse(f1.equals(f2));
+		assertFalse(f1.hashCode() == f2.hashCode());
+		
+		f1.setOffset(5);
+		f1.setLength(5);
+		assertFalse(f1.equals(f2));
+		assertFalse(f1.hashCode() == f2.hashCode());
 	}
 }
