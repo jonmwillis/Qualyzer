@@ -515,7 +515,6 @@ public class RTFSourceViewer extends ProjectionViewer
 		{
 			current.add(data.get(position));
 		}
-		System.out.println();
 	}
 
 	/**
