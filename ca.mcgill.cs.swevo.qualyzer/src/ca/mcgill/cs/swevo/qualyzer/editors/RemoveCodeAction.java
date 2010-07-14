@@ -43,7 +43,7 @@ public class RemoveCodeAction extends Action
 	 */
 	public RemoveCodeAction(RTFEditor editor, RTFSourceViewer viewer)
 	{
-		super("Remove Code");
+		super(Messages.getString("editors.RemoveCodeAction.removeCode")); //$NON-NLS-1$
 		fEditor = editor;
 		fSourceViewer = viewer;
 	}

@@ -38,7 +38,7 @@ public class MarkTextAction extends Action
 	 */
 	public MarkTextAction(RTFEditor editor, RTFSourceViewer viewer)
 	{
-		super("Add Code");
+		super(Messages.getString("editors.MarkTextAction.addCode")); //$NON-NLS-1$
 		fEditor = editor;
 		fSourceViewer = viewer;
 		

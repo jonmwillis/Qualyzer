@@ -30,7 +30,7 @@ public class UnderlineAction extends Action
 	 */
 	public UnderlineAction(RTFEditor editor, RTFSourceViewer viewer)
 	{
-		super("Underline", Action.AS_CHECK_BOX);
+		super(Messages.getString("editors.UnderlineAction.underline"), Action.AS_CHECK_BOX); //$NON-NLS-1$
 		fEditor = editor;
 		fSourceViewer = viewer;
 		
