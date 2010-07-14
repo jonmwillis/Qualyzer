@@ -30,21 +30,18 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.RTFEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.model.Code;
-import ca.mcgill.cs.swevo.qualyzer.model.CodeEntry;
 import ca.mcgill.cs.swevo.qualyzer.model.CodeListener;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Fragment;
@@ -90,104 +87,8 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 		setDocumentProvider(new RTFDocumentProvider());
 		
 		fIsDirty = false;
-				
-		initialiseRemoveCodeAction();
-				
+								
 		getPreferenceStore().setValue(AbstractDecoratedTextEditorPreferenceConstants.QUICK_DIFF_ALWAYS_ON, false);
-	}
-	
-	/**
-	 * 
-	 */
-	private void initialiseRemoveCodeAction()
-	{
-		fRemoveCodeAction = new Action(){
-			/* (non-Javadoc)
-			 * @see org.eclipse.jface.action.Action#run()
-			 */
-			@SuppressWarnings("unchecked")
-			@Override
-			public void run()
-			{
-				Annotation annotation = null;
-				Fragment fragment = null;
-				IAnnotationModel model = getSourceViewer().getAnnotationModel();
-				Point selection = getSourceViewer().getSelectedRange();
-				Iterator<Annotation> iter = model.getAnnotationIterator();
-				
-				while(iter.hasNext())
-				{
-					annotation = iter.next();
-					if(annotation instanceof FragmentAnnotation)
-					{
-						Position position = model.getPosition(annotation);
-						if(position.offset == selection.x && position.length == selection.y)
-						{
-							fragment = ((FragmentAnnotation) annotation).getFragment();
-							break;
-						}
-					}
-				}
-				
-				if(fragment == null)
-				{
-					return;
-				}
-				
-				Object[] codesToDelete = openSelectionDialog(fragment);
-				
-				for(Object toDelete : codesToDelete)
-				{
-					for(int i = 0; i < fragment.getCodeEntries().size(); i++)
-					{
-						CodeEntry entry = fragment.getCodeEntries().get(i);
-						if(entry.getCode().getCodeName().equals(toDelete))
-						{
-							fragment.getCodeEntries().remove(i);
-							Facade.getInstance().saveTranscript(fragment.getTranscript());
-							break;
-						}
-					}
-				}
-				
-				Position p = model.getPosition(annotation);
-				model.removeAnnotation(annotation);
-				
-				if(fragment.getCodeEntries().isEmpty())
-				{
-					Facade.getInstance().deleteFragment(fragment);
-				}
-				else
-				{
-					annotation = new FragmentAnnotation(fragment);
-					model.addAnnotation(annotation, p);
-				}
-				setDirty();
-			}	
-		};
-		fRemoveCodeAction.setText(Messages.getString("editors.RTFEditor.removeCode")); //$NON-NLS-1$
-	}
-	
-	/**
-	 * @param fragment
-	 * @return
-	 */
-	private Object[] openSelectionDialog(Fragment fragment)
-	{
-		String[] codes = new String[fragment.getCodeEntries().size()];
-		for(int i = 0; i < codes.length; i++)
-		{
-			codes[i] = fragment.getCodeEntries().get(i).getCode().getCodeName();
-		}
-		
-		ElementListSelectionDialog dialog = new ElementListSelectionDialog(getSite().getShell(),
-				new LabelProvider());
-		dialog.setElements(codes);
-		dialog.setTitle(Messages.getString("editors.RTFEditor.removeCode")); //$NON-NLS-1$
-		
-		dialog.open();
-		Object[] codesToDelete = dialog.getResult();
-		return codesToDelete;
 	}
 	
 	/* (non-Javadoc)
@@ -495,6 +396,7 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 		fUnderlineAction = new UnderlineAction(this, sourceViewer);
 		
 		fMarkTextAction = new MarkTextAction(this, sourceViewer);
+		fRemoveCodeAction = new RemoveCodeAction(this, sourceViewer);
 		fRemoveAllCodesAction = new RemoveAllCodesAction(this, sourceViewer);
 		
 		setAction(RTFConstants.BOLD_ACTION_ID, fBoldAction);
