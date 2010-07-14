@@ -93,12 +93,6 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 		
 		fIsDirty = false;
 		
-		initialiseBoldAction();
-		
-		initialiseItalicAction();
-		
-		initialiseUnderlineAction();
-		
 		initialiseMarkAction();
 		
 		initialiseRemoveCodeAction();
@@ -296,74 +290,6 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 		};
 		fMarkTextAction.setText(Messages.getString("editors.RTFEditor.mark")); //$NON-NLS-1$
 		fMarkTextAction.setEnabled(false);
-	}
-
-	/**
-	 * 
-	 */
-	private void initialiseUnderlineAction()
-	{
-		fUnderlineAction = new Action(Messages.getString("editors.RTFEditor.underline"),  //$NON-NLS-1$
-				Action.AS_CHECK_BOX){
-			/* (non-Javadoc)
-			 * @see org.eclipse.jface.action.Action#run()
-			 */
-			@Override
-			public void run()
-			{
-				RTFSourceViewer viewer = (RTFSourceViewer) getSourceViewer();
-				Point selection = viewer.getSelectedRange();
-				Position position = new Position(selection.x, selection.y);
-				
-				viewer.toggleUnderline(position);
-				setDirty();
-			}
-		};
-		fUnderlineAction.setEnabled(false);
-	}
-
-	/**
-	 * 
-	 */
-	private void initialiseItalicAction()
-	{
-		fItalicAction = new Action(Messages.getString("editors.RTFEditor.italic"), Action.AS_CHECK_BOX){ //$NON-NLS-1$
-			/* (non-Javadoc)
-			 * @see org.eclipse.jface.action.Action#run()
-			 */
-			@Override
-			public void run()
-			{
-				RTFSourceViewer viewer = (RTFSourceViewer) getSourceViewer();
-				Point selection = viewer.getSelectedRange();
-				Position position = new Position(selection.x, selection.y);
-
-				viewer.toggleItalic(position);
-				setDirty();
-			}
-		};
-		fItalicAction.setEnabled(false);
-	}
-
-	/**
-	 * 
-	 */
-	private void initialiseBoldAction()
-	{
-		fBoldAction = new Action(Messages.getString("editors.RTFEditor.bold"), Action.AS_CHECK_BOX){ //$NON-NLS-1$
-			
-			@Override
-			public void run() 
-			{
-				RTFSourceViewer viewer = (RTFSourceViewer) getSourceViewer();
-				Point selection = viewer.getSelectedRange();
-				Position position = new Position(selection.x, selection.y);
-				
-				viewer.toggleBold(position);
-				setDirty();
-			};
-		};
-		fBoldAction.setEnabled(false);
 	}
 	
 	/* (non-Javadoc)
@@ -664,6 +590,12 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 	protected void createActions()
 	{
 		super.createActions();
+		
+		RTFSourceViewer sourceViewer = (RTFSourceViewer) getSourceViewer();
+		fBoldAction = new BoldAction(this, sourceViewer);
+		fItalicAction = new ItalicAction(this, sourceViewer);
+		fUnderlineAction = new UnderlineAction(this, sourceViewer);
+		
 		setAction(RTFConstants.BOLD_ACTION_ID, fBoldAction);
 		setAction(RTFConstants.UNDERLINE_ACTION_ID, fUnderlineAction);
 		setAction(RTFConstants.ITALIC_ACTION_ID, fItalicAction);
