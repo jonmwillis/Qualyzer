@@ -96,54 +96,10 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 		initialiseMarkAction();
 		
 		initialiseRemoveCodeAction();
-		
-		initialiseRemoveAllCodesAction();
-		
+				
 		getPreferenceStore().setValue(AbstractDecoratedTextEditorPreferenceConstants.QUICK_DIFF_ALWAYS_ON, false);
 	}
 	
-	
-
-	/**
-	 * 
-	 */
-	private void initialiseRemoveAllCodesAction()
-	{
-		fRemoveAllCodesAction = new Action(){
-			/* (non-Javadoc)
-			 * @see org.eclipse.jface.action.Action#run()
-			 */
-			@SuppressWarnings("unchecked")
-			@Override
-			public void run()
-			{
-				Point selection = getSourceViewer().getSelectedRange();
-				IAnnotationModel model = getSourceViewer().getAnnotationModel();
-				Iterator<Annotation> iter = model.getAnnotationIterator();
-				while(iter.hasNext())
-				{
-					Annotation annotation = iter.next();
-					if(annotation instanceof FragmentAnnotation)
-					{
-						Position pos = model.getPosition(annotation);
-						if(pos.offset == selection.x && pos.length == selection.y)
-						{
-							model.removeAnnotation(annotation);
-							Fragment fragment = ((FragmentAnnotation) annotation).getFragment();
-							Facade.getInstance().deleteFragment(fragment);
-							setDirty();
-							break;
-						}
-					}
-				}
-			}
-			
-		};
-		fRemoveAllCodesAction.setText(Messages.getString("editors.RTFEditor.removeAll")); //$NON-NLS-1$
-	}
-
-
-
 	/**
 	 * 
 	 */
@@ -595,6 +551,8 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 		fBoldAction = new BoldAction(this, sourceViewer);
 		fItalicAction = new ItalicAction(this, sourceViewer);
 		fUnderlineAction = new UnderlineAction(this, sourceViewer);
+		
+		fRemoveAllCodesAction = new RemoveAllCodesAction(this, sourceViewer);
 		
 		setAction(RTFConstants.BOLD_ACTION_ID, fBoldAction);
 		setAction(RTFConstants.UNDERLINE_ACTION_ID, fUnderlineAction);
