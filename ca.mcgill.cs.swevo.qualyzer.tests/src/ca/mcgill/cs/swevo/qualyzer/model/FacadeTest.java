@@ -551,4 +551,43 @@ public class FacadeTest
 		fFacade.saveTranscript(newTranscript);
 	}
 
+	@Test
+	public void testDeleteCode()
+	{
+		String cName = "code";
+		String cDesc = "description";
+		Code code = fFacade.createCode(cName, cDesc, fProject);
+		fFacade.deleteCode(PersistenceManager.getInstance().getProject(fProject.getName()).getCodes()
+				.get(0));
+
+		ListenerEvent event = fListener.getEvents().get(1);
+		assertEquals(ChangeType.DELETE, event.getChangeType());
+		assertArrayEquals(new Code[] { code }, (Object[]) event.getObject());
+		assertEquals(0, PersistenceManager.getInstance().getProject(fProject.getName()).getCodes().size());
+	}
+	
+	@Test
+	public void testDeleteFragment()
+	{
+		String pId = "p1";
+		String pName = "Toto";
+		String transcriptName = "t1";
+		Participant participant = fFacade.createParticipant(pId, pName, fProject);
+		List<Participant> participants = new ArrayList<Participant>();
+		participants.add(participant);
+
+		Transcript transcript = fFacade.createTranscript(transcriptName, "6/26/2010", "", participants, fProject);
+
+		Fragment fragment = fFacade.createFragment(transcript, 0, 1);
+		
+		Facade.getInstance().deleteFragment(fragment);
+		
+		assertEquals(transcript.getFragments().size(), 0);
+		ListenerEvent event = fListener.getEvents().get(3);
+		assertEquals(ChangeType.MODIFY, event.getChangeType());
+		
+	}
+	
+	
+	
 }
