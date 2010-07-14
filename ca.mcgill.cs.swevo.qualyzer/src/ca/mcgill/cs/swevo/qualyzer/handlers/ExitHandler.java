@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Barthelemy Dagenais (bart@cs.mcgill.ca)
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.handlers;
 
@@ -17,8 +17,6 @@ import org.eclipse.ui.handlers.HandlerUtil;
 
 /**
  * Command handling the exit of the workbench.
- * 
- * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
  * 
  */
 public class ExitHandler extends AbstractHandler

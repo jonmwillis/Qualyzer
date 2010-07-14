@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Barthelemy Dagenais (bart@cs.mcgill.ca)
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer;
 
@@ -28,7 +28,6 @@ import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
 /**
  * The activator class controls the plug-in life cycle.
  * 
- * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
  */
 public class QualyzerActivator extends AbstractUIPlugin
 {

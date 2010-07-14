@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Jonathan Faubert
  *******************************************************************************/
 /**
  * 
@@ -21,7 +21,6 @@ import org.eclipse.ui.navigator.INavigatorViewerDescriptor;
 
 
 /**
- * @author Jonathan Faubert (jonfaub@gmail.com)
  *
  */
 @SuppressWarnings("restriction")

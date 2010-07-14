@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Barthelemy Dagenais (bart@cs.mcgill.ca)
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.util;
 
@@ -23,7 +23,6 @@ import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
  * Most methods encapsulate thrown exceptions in a QualyzerException, log the exception, and perform cleanup actions if
  * necessary (e.g., rollback).
  * 
- * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
  * 
  */
 public final class HibernateUtil

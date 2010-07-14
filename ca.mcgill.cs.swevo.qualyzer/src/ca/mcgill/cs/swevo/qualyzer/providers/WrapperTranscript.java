@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Jonathan Fauberts
  *******************************************************************************/
 /**
  * 
@@ -20,7 +20,6 @@ import ca.mcgill.cs.swevo.qualyzer.model.Project;
 
 /**
  * A ProjectWrapper for Transcripts.
- * @author Jonathan Faubert (jonfaub@gmail.com)
  *
  */
 public class WrapperTranscript extends ProjectWrapper

@@ -30,7 +30,6 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
  * Handler for the new code command.
- * @author Jonathan Faubert (jonfaub@gmail.com)
  *
  */
 public class NewCodeHandler extends AbstractHandler

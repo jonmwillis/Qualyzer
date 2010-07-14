@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Barthelemy Dagenais (bart@cs.mcgill.ca)
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.util;
 
@@ -14,7 +14,6 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
  * 
  */
 public final class CollectionUtil
