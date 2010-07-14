@@ -378,7 +378,8 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	{
 		String escape = EMPTY;
 		char ch2 = (char) ioStream.read();
-		while(ch2 != ' ' && ch2 != '{' && ch2 != '}' && ch2 != '\\' && ch2 != '\n')
+		boolean notBracket = ch2 != '{' && ch2 != '}';
+		while(ch2 != ' ' && notBracket && ch2 != '\\' && ch2 != '\n')
 		{
 			escape += ch2;
 			ch2 = (char) ioStream.read();

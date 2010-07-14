@@ -62,7 +62,7 @@ public class NewProjectWizard extends Wizard
 		ProgressMonitorDialog dialog = new ProgressMonitorDialog(getShell());
 		dialog.setOpenOnRun(true);
 		dialog.create();
-		dialog.getShell().setText(Messages.getString("wizards.NewProjectWizard.projectCreation")); //$NON-NLS-1$
+		dialog.getShell().setText(Messages.getString("wizards.NewProjectWizard.projectCreationStatus")); //$NON-NLS-1$
 		try
 		{
 			dialog.run(true, false, new IRunnableWithProgress()
