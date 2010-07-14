@@ -649,15 +649,6 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 	}
 	
 	/* (non-Javadoc)
-	 * @see org.eclipse.ui.editors.text.TextEditor#initializeEditor()
-	 */
-	@Override
-	protected void initializeEditor()
-	{
-		super.initializeEditor();
-	}
-	
-	/* (non-Javadoc)
 	 * @see org.eclipse.ui.texteditor.AbstractDecoratedTextEditor#isLineNumberRulerVisible()
 	 */
 	@Override
@@ -1001,7 +992,7 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 	/**
 	 * 
 	 */
-	private void setDirty()
+	protected void setDirty()
 	{
 		if(!isDirty())
 		{
