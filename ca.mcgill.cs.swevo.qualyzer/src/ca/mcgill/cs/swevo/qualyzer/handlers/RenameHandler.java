@@ -61,30 +61,34 @@ public class RenameHandler extends AbstractHandler
 		if(selection != null && selection instanceof IStructuredSelection)
 		{
 			Object element = ((IStructuredSelection) selection).getFirstElement();
-			Project project = ResourcesUtil.getProject(element);
-
-			RenameDialog dialog = new RenameDialog(HandlerUtil.getActiveShell(event).getShell(), project);
-
-			dialog.create();
-			dialog.setCurrentName(((Transcript) element).getName());
 			
-			if(trancriptNoLongerExists((Transcript) element))
+			if(element instanceof Transcript)
 			{
-				MessageDialog.openError(HandlerUtil.getActiveShell(event), 
-						Messages.getString("handlers.RenameHandler.fileError"),  //$NON-NLS-1$
-						Messages.getString("handlers.RenameHandler.transcriptRenamed")); //$NON-NLS-1$
-				return null;
-			}
-			
-			if(dialog.open() == Window.OK)
-			{
-				if(element instanceof Transcript)
+				Project project = ResourcesUtil.getProject(element);
+
+				RenameDialog dialog = new RenameDialog(HandlerUtil.getActiveShell(event).getShell(), project);
+
+				dialog.create();
+				dialog.setCurrentName(((Transcript) element).getName());
+				
+				if(trancriptNoLongerExists((Transcript) element))
 				{
-					rename((Transcript) element, dialog.getName(), dialog.getChangeAudio());
-					
-					Facade.getInstance().saveTranscript((Transcript) element);	
+					MessageDialog.openError(HandlerUtil.getActiveShell(event), 
+							Messages.getString("handlers.RenameHandler.fileError"),  //$NON-NLS-1$
+							Messages.getString("handlers.RenameHandler.transcriptRenamed")); //$NON-NLS-1$
+					return null;
 				}
-				view.getCommonViewer().refresh();
+				
+				if(dialog.open() == Window.OK)
+				{
+					if(element instanceof Transcript)
+					{
+						rename((Transcript) element, dialog.getName(), dialog.getChangeAudio());
+						
+						Facade.getInstance().saveTranscript((Transcript) element);	
+					}
+					view.getCommonViewer().refresh();
+				}
 			}
 		}
 		return null;
