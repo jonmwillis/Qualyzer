@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Jonathan Faubert
  *******************************************************************************/
 /**
  * 
@@ -21,7 +21,6 @@ import ca.mcgill.cs.swevo.qualyzer.model.Project;
 /**
  * Acts as a folder containing parts of a project.
  * Holds a reference back to the project.
- * @author Jonathan Faubert (jonfaub@gmail.com)
  *
  */
 public abstract class ProjectWrapper

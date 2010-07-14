@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Jonathan Faubert
  *******************************************************************************/
 
 package ca.mcgill.cs.swevo.qualyzer.handlers;
@@ -15,7 +15,6 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
- * @author Jonathan Faubert (jonfaub@gmail.com)
  *
  */
 public final class Messages

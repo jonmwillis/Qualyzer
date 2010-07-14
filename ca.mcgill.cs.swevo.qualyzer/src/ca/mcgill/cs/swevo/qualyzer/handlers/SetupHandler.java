@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Barthelemy Dagenais (bart@cs.mcgill.ca)
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.handlers;
 
@@ -23,7 +23,6 @@ import org.eclipse.ui.part.FileEditorInput;
 /**
  * Test command used to setup a basic project.
  * 
- * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
  * 
  */
 public class SetupHandler extends AbstractHandler

@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Jonathan Faubert
+ *     Barthelemy Dagenais (bart@cs.mcgill.ca)
  *******************************************************************************/
 /**
  * 
@@ -34,7 +35,6 @@ import ca.mcgill.cs.swevo.qualyzer.util.FileUtil;
 import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
 
 /**
- * @author Jonathan Faubert (jonfaub@gmail.com)
  * 
  */
 public final class Facade

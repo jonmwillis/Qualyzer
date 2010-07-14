@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *		Barthelemy Dagenais (bart@cs.mcgill.ca)
+ *		Jonathan Faubert
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.handlers;
 
@@ -23,9 +24,7 @@ import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.wizards.NewProjectWizard;
 
 /**
- * 
- * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
- * @author Jonathan Faubert
+ * Handler for the New Project Command.
  * 
  */
 public class NewProjectHandler extends AbstractHandler

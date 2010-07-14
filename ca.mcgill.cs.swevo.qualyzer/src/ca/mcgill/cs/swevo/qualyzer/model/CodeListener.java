@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Jonathan Faubert
  *******************************************************************************/
 /**
  * 
@@ -16,7 +16,6 @@ package ca.mcgill.cs.swevo.qualyzer.model;
 import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
 
 /**
- * @author Jonathan Faubert (jonfaub@gmail.com)
  *
  */
 public interface CodeListener

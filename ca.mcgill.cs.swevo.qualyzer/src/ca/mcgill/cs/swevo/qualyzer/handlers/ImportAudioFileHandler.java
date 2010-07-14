@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Jonathan Faubert
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.handlers;
 
@@ -33,7 +33,6 @@ import ca.mcgill.cs.swevo.qualyzer.util.FileUtil;
 
 /**
  * 
- * @author Jonathan Faubert (jonfaub@gmail.com)
  *
  */
 public class ImportAudioFileHandler extends AbstractHandler
