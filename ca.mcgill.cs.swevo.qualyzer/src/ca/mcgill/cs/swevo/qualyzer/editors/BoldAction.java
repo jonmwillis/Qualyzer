@@ -30,7 +30,7 @@ public class BoldAction extends Action
 	 */
 	public BoldAction(RTFEditor editor, RTFSourceViewer viewer)
 	{
-		super("Bold", Action.AS_CHECK_BOX);
+		super(Messages.getString("editors.BoldAction.bold"), Action.AS_CHECK_BOX); //$NON-NLS-1$
 		fEditor = editor;
 		fSourceViewer = viewer;
 		

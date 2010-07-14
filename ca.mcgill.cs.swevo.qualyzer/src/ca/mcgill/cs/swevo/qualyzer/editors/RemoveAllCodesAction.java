@@ -40,7 +40,7 @@ public class RemoveAllCodesAction extends Action
 	 */
 	public RemoveAllCodesAction(RTFEditor editor, RTFSourceViewer viewer)
 	{
-		super("Remove All Codes");
+		super(Messages.getString("editors.RemoveAllCodesAction.removeAllCodes")); //$NON-NLS-1$
 		fEditor = editor;
 		fSourceViewer = viewer;
 	}

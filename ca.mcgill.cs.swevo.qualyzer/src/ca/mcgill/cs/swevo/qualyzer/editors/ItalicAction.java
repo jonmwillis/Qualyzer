@@ -30,7 +30,7 @@ public class ItalicAction extends Action
 	 */
 	public ItalicAction(RTFEditor editor, RTFSourceViewer viewer)
 	{
-		super("Italic", Action.AS_CHECK_BOX);
+		super(Messages.getString("editors.ItalicAction.italic"), Action.AS_CHECK_BOX); //$NON-NLS-1$
 		fEditor = editor;
 		fSourceViewer = viewer;
 		
