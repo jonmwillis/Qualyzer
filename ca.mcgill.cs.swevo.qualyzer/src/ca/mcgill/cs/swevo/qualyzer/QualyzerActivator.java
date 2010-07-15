@@ -18,7 +18,6 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.hibernate.HibernateException;
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,14 +67,7 @@ public class QualyzerActivator extends AbstractUIPlugin
 		
 		for(IProject project : root.getProjects())
 		{
-			try
-			{
-				PersistenceManager.getInstance().refreshManager(project);
-			}
-			catch(QualyzerException e)
-			{
-				//Stop the exception.
-			}
+			PersistenceManager.getInstance().refreshManager(project);
 		}
 		
 		fLogger.info("Qualyzer Started"); //$NON-NLS-1$
