@@ -10,12 +10,15 @@
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.model;
 
+import java.io.File;
+
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.hibernate.Hibernate;
+import org.hibernate.HibernateException;
 import org.hibernate.LockOptions;
 import org.hibernate.Session;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
@@ -105,13 +108,28 @@ public final class PersistenceManager
 	public void refreshManager(IProject project)
 	{
 		String dbPath = getDBPath(project).toOSString();
+		
+		File file = new File(dbPath+".h2.db");
+		if(!file.exists())
+		{
+			return;
+		}
+		
 		String connectionString = DB_CONNECTION_STRING.replace("%s", dbPath) + DB_INIT_STRING; //$NON-NLS-1$
 
-		HibernateDBManager dbManager;
-		dbManager = new HibernateDBManager(connectionString, DB_USERNAME, "", DB_DRIVER, DB_DIALECT); //$NON-NLS-1$
-
-		// Add DB Manager
-		fActivator.getHibernateDBManagers().put(project.getName(), dbManager);
+		try
+		{
+			HibernateDBManager dbManager;
+			dbManager = new HibernateDBManager(connectionString, DB_USERNAME, "", DB_DRIVER, DB_DIALECT); //$NON-NLS-1$
+			// Add DB Manager
+			fActivator.getHibernateDBManagers().put(project.getName(), dbManager);
+		}
+		catch(QualyzerException e)
+		{
+			//Stop the exception
+		}
+		
+		
 	}
 
 	/**
@@ -159,6 +177,10 @@ public final class PersistenceManager
 		{
 			project = (Project) session.createQuery("from Project").uniqueResult(); //$NON-NLS-1$
 		}
+		catch(HibernateException e)
+		{
+			return null;
+		}
 		finally
 		{
 			HibernateUtil.quietClose(session);
@@ -190,52 +212,5 @@ public final class PersistenceManager
 			HibernateUtil.quietClose(session);
 		}
 	}
-	
-//	/**
-//	 * Try to delete a transcript.
-//	 * @param participant
-//	 * @param manager
-//	 */
-//	public void deleteTranscript(Transcript transcript, HibernateDBManager manager)
-//	{
-//		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-//		IEditorReference[] editors = page.getEditorReferences();
-//		for(IEditorReference editor : editors)
-//		{
-//			if(editor.getName().equals(transcript.getFileName()))
-//			{
-//				page.closeEditor(editor.getEditor(true), true);
-//			}
-//		}
-//		
-//		Object project = null;
-//		Session session = null;
-//		Transaction t = null;
-//		try
-//		{
-//			session = manager.openSession();
-//			t = session.beginTransaction();
-//			
-//			project = session.get(Project.class, transcript.getProject().getPersistenceId());
-//			Object trans = session.get(Transcript.class, transcript.getPersistenceId());
-//			
-//			((Project) project).getTranscripts().remove(trans);
-//			
-//			session.delete(trans);
-//			session.flush();
-//			t.commit();
-//		}
-//		catch(HibernateException e)
-//		{
-//			System.out.println("Exception while deleting transcript"); //$NON-NLS-1$
-//			e.printStackTrace();
-//			HibernateUtil.quietRollback(t);
-//		}
-//		finally
-//		{
-//			HibernateUtil.quietClose(session);
-//			HibernateUtil.quietSave(manager, project);
-//		}
-//	}
 
 }
