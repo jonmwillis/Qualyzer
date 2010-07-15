@@ -583,7 +583,7 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 		addAction(menu, ITextEditorActionConstants.GROUP_EDIT, RTFConstants.UNDERLINE_ACTION_ID);
 		addAction(menu, ITextEditorActionConstants.GROUP_EDIT, RTFConstants.FRAGMENT_ACTION_ID);
 		
-		if(removeIsVisible())
+		if(isRemoveVisible())
 		{
 			addAction(menu, ITextEditorActionConstants.GROUP_EDIT, RTFConstants.REMOVE_CODE_ACTION_ID);
 			addAction(menu, ITextEditorActionConstants.GROUP_EDIT, RTFConstants.REMOVE_ALL_CODES_ACTION_ID);
@@ -600,7 +600,7 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	private boolean removeIsVisible()
+	private boolean isRemoveVisible()
 	{
 		IAnnotationModel model = getSourceViewer().getAnnotationModel();
 		Point selection = getSourceViewer().getSelectedRange();
