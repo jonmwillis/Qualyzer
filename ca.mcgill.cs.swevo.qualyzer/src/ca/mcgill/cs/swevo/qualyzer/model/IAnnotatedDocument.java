@@ -37,4 +37,16 @@ public interface IAnnotatedDocument
 	 * @return
 	 */
 	String getFileName();
+	
+	/**
+	 * Set the fragments.
+	 * @param fragments
+	 */
+	void setFragments(List<Fragment> fragments);
+	
+	/**
+	 * Set the project.
+	 * @param project
+	 */
+	void setProject(Project project);
 }

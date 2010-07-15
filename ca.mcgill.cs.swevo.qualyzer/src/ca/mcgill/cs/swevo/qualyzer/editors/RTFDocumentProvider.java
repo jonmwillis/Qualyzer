@@ -33,7 +33,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.RTFEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Fragment;
-import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
+import ca.mcgill.cs.swevo.qualyzer.model.IAnnotatedDocument;
 
 /**
  * The DocumentProvider for our editor.
@@ -58,7 +58,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	{
 		RTFDocument doc = (RTFDocument) super.createDocument(element);
 		
-		Transcript transcript = ((RTFEditorInput) element).getTranscript();
+		IAnnotatedDocument transcript = ((RTFEditorInput) element).getDocument();
 		
 		for(Fragment fragment : transcript.getFragments())
 		{
@@ -475,7 +475,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 			}
 		}
 		
-		Facade.getInstance().saveTranscript(((RTFEditorInput) element).getTranscript());
+		Facade.getInstance().saveDocument(((RTFEditorInput) element).getDocument());
 	}
 
 	/**

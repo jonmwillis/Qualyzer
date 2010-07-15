@@ -16,7 +16,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.ui.part.FileEditorInput;
 
-import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
+import ca.mcgill.cs.swevo.qualyzer.model.IAnnotatedDocument;
 
 /**
  *	Input for the RTFEditor.
@@ -26,24 +26,24 @@ public class RTFEditorInput extends FileEditorInput
 	private static final int NUM1 = 39753;
 	private static final int NUM2 = 50071;
 	
-	private Transcript fTranscript;
+	private IAnnotatedDocument fDocument;
 	
 	/**
 	 * @param file
 	 */
-	public RTFEditorInput(IFile file, Transcript transcript)
+	public RTFEditorInput(IFile file, IAnnotatedDocument document)
 	{
 		super(file);
-		fTranscript = transcript;
+		fDocument = document;
 	}
 	
 	/**
 	 * Get the transcript that serves as input.
 	 * @return
 	 */
-	public Transcript getTranscript()
+	public IAnnotatedDocument getDocument()
 	{
-		return fTranscript;
+		return fDocument;
 	}
 	
 	/* (non-Javadoc)
@@ -59,7 +59,7 @@ public class RTFEditorInput extends FileEditorInput
 		else if(obj.getClass().equals(getClass()))
 		{
 			RTFEditorInput rhs = (RTFEditorInput) obj;
-			return new EqualsBuilder().appendSuper(super.equals(obj)).append(fTranscript, rhs.fTranscript).isEquals();
+			return new EqualsBuilder().appendSuper(super.equals(obj)).append(fDocument, rhs.fDocument).isEquals();
 		}
 		return false;
 	}
@@ -70,7 +70,7 @@ public class RTFEditorInput extends FileEditorInput
 	@Override
 	public int hashCode()
 	{
-		return new HashCodeBuilder(NUM1, NUM2).appendSuper(super.hashCode()).append(fTranscript).toHashCode();
+		return new HashCodeBuilder(NUM1, NUM2).appendSuper(super.hashCode()).append(fDocument).toHashCode();
 	}
 	
 }

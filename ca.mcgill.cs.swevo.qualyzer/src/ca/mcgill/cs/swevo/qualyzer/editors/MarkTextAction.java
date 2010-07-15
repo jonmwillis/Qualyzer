@@ -22,7 +22,7 @@ import ca.mcgill.cs.swevo.qualyzer.dialogs.CodeChooserDialog;
 import ca.mcgill.cs.swevo.qualyzer.model.CodeEntry;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Fragment;
-import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
+import ca.mcgill.cs.swevo.qualyzer.model.IAnnotatedDocument;
 
 /**
  *
@@ -51,12 +51,12 @@ public class MarkTextAction extends Action
 	@Override
 	public void run()
 	{
-		Transcript transcript = fEditor.getTranscript();
+		IAnnotatedDocument document = fEditor.getDocument();
 		Point selection = fSourceViewer.getSelectedRange();
 		Position position = new Position(selection.x, selection.y);
 		
 		Fragment fragment = null;
-		for(Fragment existingFragment : transcript.getFragments())
+		for(Fragment existingFragment : document.getFragments())
 		{
 			if(existingFragment.getOffset() == position.offset && 
 					existingFragment.getLength() == position.length)
@@ -66,7 +66,7 @@ public class MarkTextAction extends Action
 			}
 		}
 		
-		CodeChooserDialog dialog = new CodeChooserDialog(fEditor.getSite().getShell(), transcript.getProject(),
+		CodeChooserDialog dialog = new CodeChooserDialog(fEditor.getSite().getShell(), document.getProject(),
 				fragment);
 		dialog.create();
 		if(dialog.open() == Window.OK)
@@ -76,14 +76,14 @@ public class MarkTextAction extends Action
 			
 			if(fragment == null)
 			{
-				fragment = Facade.getInstance().createFragment(transcript, position.offset,
+				fragment = Facade.getInstance().createFragment(document, position.offset,
 						position.length);
 			}
 			
 			fragment.getCodeEntries().add(entry);
 			fSourceViewer.markFragment(fragment);
 			
-			Facade.getInstance().saveTranscript(transcript);
+			Facade.getInstance().saveDocument(document);
 			
 			fEditor.setDirty();
 		}

@@ -45,6 +45,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Code;
 import ca.mcgill.cs.swevo.qualyzer.model.CodeListener;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Fragment;
+import ca.mcgill.cs.swevo.qualyzer.model.IAnnotatedDocument;
 import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.ProjectListener;
@@ -54,7 +55,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
- * A Rich Text Editor for Transcripts.
+ * A Rich Text Editor.
  *
  */
 public class RTFEditor extends ColorerEditor implements TranscriptListener, ProjectListener, CodeListener
@@ -74,7 +75,7 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 	private Action fRemoveAllCodesAction;
 	
 	private boolean fIsDirty;
-	private Transcript fTranscript;
+	private IAnnotatedDocument fDocument;
 	
 	/**
 	 * Constructor.
@@ -450,16 +451,16 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 		
 //		parent.getChildren()[1].setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
-		fTranscript = ((RTFEditorInput) getEditorInput()).getTranscript();
+		fDocument = ((RTFEditorInput) getEditorInput()).getDocument();
 //		if(fTranscript.getAudioFile() == null)
 //		{
 //			musicBar.setEnabled(false);
 //		}
 
 		ListenerManager listenerManager = Facade.getInstance().getListenerManager();
-		listenerManager.registerProjectListener(fTranscript.getProject(), this);
-		listenerManager.registerTranscriptListener(fTranscript.getProject(), this);
-		listenerManager.registerCodeListener(fTranscript.getProject(), this);
+		listenerManager.registerProjectListener(fDocument.getProject(), this);
+		listenerManager.registerTranscriptListener(fDocument.getProject(), this);
+		listenerManager.registerCodeListener(fDocument.getProject(), this);
 		ColorerPlugin.getDefault().setPropertyWordWrap(getTextColorer().getFileType(), 1);
 	}
 	
@@ -757,7 +758,7 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 		{
 			for(Transcript transcript : transcripts)
 			{
-				if(transcript.equals(fTranscript))
+				if(transcript.equals(fDocument))
 				{
 					IWorkbenchPage page = getSite().getPage();
 					ResourcesUtil.closeEditor(page, getEditorInput().getName());
@@ -790,9 +791,9 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 	public void dispose()
 	{
 		ListenerManager listenerManager = Facade.getInstance().getListenerManager();
-		listenerManager.unregisterProjectListener(fTranscript.getProject(), this);
-		listenerManager.unregisterTranscriptListener(fTranscript.getProject(), this);
-		listenerManager.unregisterCodeListener(fTranscript.getProject(), this);
+		listenerManager.unregisterProjectListener(fDocument.getProject(), this);
+		listenerManager.unregisterTranscriptListener(fDocument.getProject(), this);
+		listenerManager.unregisterCodeListener(fDocument.getProject(), this);
 		super.dispose();
 	}
 
@@ -807,13 +808,13 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 	{
 		IAnnotationModel model = getSourceViewer().getAnnotationModel();
 		Iterator<Annotation> iter = model.getAnnotationIterator();
-		fTranscript.setProject(codes[0].getProject());
+		fDocument.setProject(codes[0].getProject());
 
 		if(cType == ChangeType.DELETE || cType == ChangeType.MODIFY)
 		{
-			Transcript transcript = Facade.getInstance().forceTranscriptLoad(fTranscript);
-			List<Fragment> newList = transcript.getFragments();
-			fTranscript.setFragments(newList);
+			IAnnotatedDocument document = Facade.getInstance().forceDocumentLoad(fDocument);
+			List<Fragment> newList = document.getFragments();
+			fDocument.setFragments(newList);
 			
 			while(iter.hasNext())
 			{
@@ -838,9 +839,9 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 	/**
 	 * @return
 	 */
-	public Transcript getTranscript()
+	public IAnnotatedDocument getDocument()
 	{
-		return fTranscript;
+		return fDocument;
 	}
 	
 	/**
