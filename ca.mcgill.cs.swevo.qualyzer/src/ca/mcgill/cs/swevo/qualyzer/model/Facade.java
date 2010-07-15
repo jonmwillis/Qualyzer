@@ -240,7 +240,7 @@ public final class Facade
 	 * @param length
 	 * @return
 	 */
-	public Fragment createFragment(Transcript transcript, int offset, int length)
+	public Fragment createFragment(IAnnotatedDocument document, int offset, int length)
 	{
 		Fragment fragment = new Fragment();
 
@@ -248,8 +248,8 @@ public final class Facade
 		fragment.setLength(length);
 		try
 		{
-			fragment.setTranscript(transcript);
-			transcript.getFragments().add(fragment);
+			fragment.setTranscript((Transcript) document); //TODO fix
+			document.getFragments().add(fragment);
 		}
 		catch (HibernateException he)
 		{
@@ -258,7 +258,8 @@ public final class Facade
 			fLogger.error(key, he);
 			throw new QualyzerException(errorMessage, he);
 		}
-		fListenerManager.notifyTranscriptListeners(ChangeType.MODIFY, new Transcript[] { transcript }, this);
+		//TODO fix
+		fListenerManager.notifyTranscriptListeners(ChangeType.MODIFY, new Transcript[] {(Transcript) document}, this);
 
 		return fragment;
 	}
@@ -658,6 +659,39 @@ public final class Facade
 		finally
 		{
 			HibernateUtil.quietClose(session);
+		}
+	}
+	
+	/**
+	 * Try to save the document.
+	 * @param document
+	 */
+	public void saveDocument(IAnnotatedDocument document)
+	{
+		if(document instanceof Transcript)
+		{
+			saveTranscript((Transcript) document);
+		}
+	}
+	
+	/**
+	 * Force a document to load.
+	 * @param document
+	 * @return
+	 */
+	public IAnnotatedDocument forceDocumentLoad(IAnnotatedDocument document)
+	{
+		if(document instanceof Transcript)
+		{
+			return forceTranscriptLoad((Transcript) document);
+		}
+		else if(document instanceof Memo)
+		{
+			return forceMemoLoad((Memo) document);
+		}
+		else
+		{
+			return null;
 		}
 	}
 }
