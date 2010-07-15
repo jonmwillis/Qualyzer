@@ -72,7 +72,7 @@ public class NewMemoWizard extends Wizard
 			return false;
 		}
 		
-		return true;
+		return fMemo != null;
 	}
 
 	/**

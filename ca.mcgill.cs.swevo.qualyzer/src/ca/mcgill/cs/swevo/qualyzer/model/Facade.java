@@ -714,7 +714,7 @@ public final class Facade
 		memo.setProject(project);
 		
 		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(project.getName());
-		HibernateUtil.quietSave(manager, memo);
+		HibernateUtil.quietSave(manager, project);
 		
 		fListenerManager.notifyMemoListeners(ChangeType.ADD, new Memo[]{memo}, this);
 		
