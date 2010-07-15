@@ -694,4 +694,30 @@ public final class Facade
 			return null;
 		}
 	}
+
+	/**
+	 * @param memoName
+	 * @param date
+	 * @param participants
+	 * @param fProject
+	 * @return
+	 */
+	public Memo createMemo(String memoName, Investigator author, List<Participant> participants, Project project)
+	{
+		Memo memo = new Memo();
+		memo.setName(memoName);
+		memo.setFileName(memoName + ".rtf");
+		memo.setAuthor(author);
+		memo.setParticipants(participants);
+		
+		project.getMemos().add(memo);
+		memo.setProject(project);
+		
+		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(project.getName());
+		HibernateUtil.quietSave(manager, memo);
+		
+		fListenerManager.notifyMemoListeners(ChangeType.ADD, new Memo[]{memo}, this);
+		
+		return memo;
+	}
 }

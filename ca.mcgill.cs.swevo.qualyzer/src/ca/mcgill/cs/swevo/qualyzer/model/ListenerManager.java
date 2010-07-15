@@ -33,6 +33,7 @@ public class ListenerManager
 	private HashMap<Project, ArrayList<InvestigatorListener>> fInvestigatorListeners;
 	private HashMap<Project, ArrayList<ParticipantListener>> fParticipantListeners;
 	private HashMap<Project, ArrayList<TranscriptListener>> fTranscriptListeners;
+	private HashMap<Project, ArrayList<MemoListener>> fMemoListeners;
 	
 	/**
 	 * Constructor.
@@ -44,6 +45,7 @@ public class ListenerManager
 		fInvestigatorListeners = new HashMap<Project, ArrayList<InvestigatorListener>>();
 		fParticipantListeners = new HashMap<Project, ArrayList<ParticipantListener>>();
 		fTranscriptListeners = new HashMap<Project, ArrayList<TranscriptListener>>();
+		fMemoListeners = new HashMap<Project, ArrayList<MemoListener>>();
 	}
 	
 	/**
@@ -351,6 +353,65 @@ public class ListenerManager
 		if(listenerList != null)
 		{
 			listenerList.remove(listener);
+		}
+	}
+
+	/**
+	 * @param add
+	 * @param memos
+	 * @param facade
+	 */
+	public void notifyMemoListeners(ChangeType cType, Memo[] memos, Facade facade)
+	{
+		if(memos.length > 0)
+		{
+			ArrayList<MemoListener> list = fMemoListeners.get(memos[0].getProject());
+			ArrayList<MemoListener> listCopy = new ArrayList<MemoListener>();
+			if(list != null)
+			{
+				for(MemoListener listener : list)
+				{
+					listCopy.add(listener);
+				}
+				
+				for(MemoListener listener : listCopy)
+				{
+					listener.memoChanged(cType, memos, facade);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * 
+	 * @param project
+	 * @param listener
+	 */
+	public void registerMemoListener(Project project, MemoListener listener)
+	{
+		ArrayList<MemoListener> list = fMemoListeners.get(project);
+		
+		if(list == null)
+		{
+			list = new ArrayList<MemoListener>();
+		}
+		
+		list.add(listener);
+		fMemoListeners.put(project, list);
+	}
+	
+	/**
+	 * 
+	 * @param project
+	 * @param listener
+	 */
+	public void unregisterMemoListener(Project project, MemoListener listener)
+	{
+		ArrayList<MemoListener> list = fMemoListeners.get(project);
+		
+		if(list != null)
+		{
+			list.remove(listener);
 		}
 	}
 }

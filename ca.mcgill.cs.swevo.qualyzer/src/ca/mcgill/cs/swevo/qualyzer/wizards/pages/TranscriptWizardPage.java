@@ -61,7 +61,7 @@ public class TranscriptWizardPage extends WizardPage
 	private DateTime fDate;
 	private Project fProject;
 	private ArrayList<Participant> fParticipants;
-	private Text fDescription;
+	//private Text fDescription;
 	private final String fWorkspacePath;
 	
 	/**
@@ -136,9 +136,9 @@ public class TranscriptWizardPage extends WizardPage
 		createLongLabel();
 		createTable();
 		
-		label = createLabel(fContainer, 
-				Messages.getString("wizards.pages.TranscriptWizardPage.description")); //$NON-NLS-1$
-		fDescription = createText(fContainer);
+//		label = createLabel(fContainer, 
+//				Messages.getString("wizards.pages.TranscriptWizardPage.description")); //$NON-NLS-1$
+//		fDescription = createText(fContainer);
 		
 		Composite composite = createComposite();
 		label = createLabel(composite, 
@@ -414,14 +414,14 @@ public class TranscriptWizardPage extends WizardPage
 		return fAudioFile.getText();
 	}
 	
-	/**
-	 * 
-	 * @return The Description field.
-	 */
-	public String getTranscriptDescription()
-	{
-		return fDescription.getText();
-	}
+//	/**
+//	 * 
+//	 * @return The Description field.
+//	 */
+//	public String getTranscriptDescription()
+//	{
+//		return fDescription.getText();
+//	}
 	
 	/**
 	 * 

@@ -265,4 +265,14 @@ public final class FileUtil
 			}
 		}
 	}
+
+	/**
+	 * @param memoName
+	 * @param name
+	 */
+	public static void setupMemoFiles(String memoName, String projectName)
+	{
+		// TODO Auto-generated method stub
+		
+	}
 }

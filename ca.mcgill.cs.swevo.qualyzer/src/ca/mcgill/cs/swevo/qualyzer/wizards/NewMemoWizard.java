@@ -13,9 +13,14 @@
  */
 package ca.mcgill.cs.swevo.qualyzer.wizards;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
 
+import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
+import ca.mcgill.cs.swevo.qualyzer.model.Facade;
+import ca.mcgill.cs.swevo.qualyzer.model.Memo;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
+import ca.mcgill.cs.swevo.qualyzer.util.FileUtil;
 import ca.mcgill.cs.swevo.qualyzer.wizards.pages.NewMemoPage;
 
 /**
@@ -26,6 +31,7 @@ public class NewMemoWizard extends Wizard
 
 	private NewMemoPage fPage;
 	private Project fProject;
+	private Memo fMemo;
 	
 	/**
 	 * 
@@ -52,8 +58,30 @@ public class NewMemoWizard extends Wizard
 	@Override
 	public boolean performFinish()
 	{
-		// TODO Auto-generated method stub
-		return false;
+		try
+		{
+			FileUtil.setupMemoFiles(fPage.getMemoName(), fProject.getName());
+			
+			fMemo = Facade.getInstance().createMemo(fPage.getMemoName(), fPage.getAuthor(), 
+					fPage.getParticipants(), fProject);
+			
+		}
+		catch(QualyzerException e)
+		{
+			MessageDialog.openError(getShell(), "Memo Creation Error", e.getMessage());
+			return false;
+		}
+		
+		return true;
 	}
 
+	/**
+	 * Get the memo created by this wizard.
+	 * @return
+	 */
+	public Memo getMemo()
+	{
+		return fMemo;
+	}
+	
 }
