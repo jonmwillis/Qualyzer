@@ -210,7 +210,7 @@ public class CodeChooserDialog extends TitleAreaDialog
 	 * @see org.eclipse.jface.dialogs.Dialog#okPressed()
 	 */
 	@Override
-	protected void okPressed()
+	public void okPressed()
 	{	
 		for(Code code : fProject.getCodes())
 		{
@@ -230,5 +230,14 @@ public class CodeChooserDialog extends TitleAreaDialog
 		}
 		
 		super.okPressed();
+	}
+	
+	/**
+	 *
+	 * @return
+	 */
+	public Combo getCodeName()
+	{
+		return fCodeName;
 	}
 }
