@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Barthelemy Dagenais (bart@cs.mcgill.ca)
+ *     Jonathan Faubert
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.model;
 
@@ -30,4 +31,10 @@ public interface IAnnotatedDocument
 	 * @return
 	 */
 	Project getProject();
+	
+	/**
+	 * Get the file name.
+	 * @return
+	 */
+	String getFileName();
 }
