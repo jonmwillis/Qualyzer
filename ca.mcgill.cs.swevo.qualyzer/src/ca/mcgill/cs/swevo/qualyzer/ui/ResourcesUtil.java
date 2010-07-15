@@ -22,6 +22,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -154,8 +155,9 @@ public final class ResourcesUtil
 	 * @param page
 	 * @param transcript
 	 */
-	public static void openEditor(IWorkbenchPage page, Transcript transcript)
+	public static IEditorPart openEditor(IWorkbenchPage page, Transcript transcript)
 	{
+		IEditorPart editorPart = null;
 		IProject proj = ResourcesPlugin.getWorkspace().getRoot().getProject(transcript.getProject().getName());
 		IFile file = proj.getFile("transcripts" + File.separator + transcript.getFileName()); //$NON-NLS-1$
 		try
@@ -172,7 +174,7 @@ public final class ResourcesUtil
 			MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 					Messages.getString("ui.ResourcesUtil.fileError"), //$NON-NLS-1$
 					Messages.getString("ui.ResourcesUtil.transcriptMissing")); //$NON-NLS-1$ 
-			return;
+			return editorPart;
 		}
 		String ext = file.getFileExtension();
 		
@@ -182,13 +184,15 @@ public final class ResourcesUtil
 			{
 				Transcript lTranscript = Facade.getInstance().forceTranscriptLoad(transcript);
 				RTFEditorInput editorInput = new RTFEditorInput(file, lTranscript);
-				page.openEditor(editorInput, RTFEditor.ID);
+				editorPart = page.openEditor(editorInput, RTFEditor.ID);
 			}
 		}
 		catch (PartInitException e)
 		{
 			gLogger.error(ERROR_MSG, e);
 		}
+		
+		return editorPart;
 	}
 	
 	/**
