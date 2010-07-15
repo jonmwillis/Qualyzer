@@ -52,24 +52,25 @@ public class MarkTextAction extends Action
 	public void run()
 	{
 		Transcript transcript = fEditor.getTranscript();
-		CodeChooserDialog dialog = new CodeChooserDialog(fEditor.getSite().getShell(), transcript.getProject());
+		Point selection = fSourceViewer.getSelectedRange();
+		Position position = new Position(selection.x, selection.y);
+		
+		Fragment fragment = null;
+		for(Fragment existingFragment : transcript.getFragments())
+		{
+			if(existingFragment.getOffset() == position.offset && 
+					existingFragment.getLength() == position.length)
+			{
+				fragment = existingFragment;
+				break;
+			}
+		}
+		
+		CodeChooserDialog dialog = new CodeChooserDialog(fEditor.getSite().getShell(), transcript.getProject(),
+				fragment);
 		dialog.create();
 		if(dialog.open() == Window.OK)
-		{
-			Point selection = fSourceViewer.getSelectedRange();
-			Position position = new Position(selection.x, selection.y);
-			
-			Fragment fragment = null;
-			for(Fragment existingFragment : transcript.getFragments())
-			{
-				if(existingFragment.getOffset() == position.offset && 
-						existingFragment.getLength() == position.length)
-				{
-					fragment = existingFragment;
-					break;
-				}
-			}
-			
+		{	
 			CodeEntry entry = new CodeEntry();
 			entry.setCode(dialog.getCode());
 			
