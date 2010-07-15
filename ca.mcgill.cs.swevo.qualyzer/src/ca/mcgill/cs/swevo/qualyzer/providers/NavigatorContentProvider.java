@@ -12,6 +12,7 @@ package ca.mcgill.cs.swevo.qualyzer.providers;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -49,7 +50,18 @@ public class NavigatorContentProvider extends WorkbenchContentProvider
 		if(element instanceof IWorkspaceRoot)
 		{
 			IWorkspaceRoot root = (IWorkspaceRoot) element;
-			return root.getProjects();
+			IProject[] projects = root.getProjects();
+			List<IProject> toReturn = new ArrayList<IProject>();
+			for(IProject project : projects)
+			{
+				Project qProject = PersistenceManager.getInstance().getProject(project.getName());
+				if(qProject != null)
+				{
+					toReturn.add(project);
+				}
+			}
+			
+			return toReturn.toArray();
 		}
 		return NO_CHILDREN;
 	}

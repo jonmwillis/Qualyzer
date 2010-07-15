@@ -148,6 +148,11 @@ public final class PersistenceManager
 	{
 		HibernateDBManager dbManager = fActivator.getHibernateDBManagers().get(name);
 
+		if(dbManager == null)
+		{
+			return null;
+		}
+		
 		Session session = dbManager.openSession();
 		Project project = null;
 		try
