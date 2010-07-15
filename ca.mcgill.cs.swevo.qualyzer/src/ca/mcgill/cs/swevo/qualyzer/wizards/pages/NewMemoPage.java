@@ -13,6 +13,9 @@
  */
 package ca.mcgill.cs.swevo.qualyzer.wizards.pages;
 
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
+
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 
 /**
@@ -30,4 +33,21 @@ public class NewMemoPage extends TranscriptWizardPage
 		setTitle("New Memo Wizard");
 		setDescription("Enter the following information to create a new Memo.");
 	}
+	
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.wizards.pages.TranscriptWizardPage#createControl(
+	 * org.eclipse.swt.widgets.Composite)
+	 */
+	@Override
+	public void createControl(Composite parent)
+	{
+		super.createControl(parent);
+		
+		Composite composite = (Composite) parent.getChildren()[0];
+		
+		((Label) composite.getChildren()[0]).setText("Memo name");
+		composite.getChildren()[composite.getChildren().length - 1].dispose();
+	}
+	
+	
 }
