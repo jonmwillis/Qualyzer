@@ -91,6 +91,7 @@ public class MarkTextAction extends Action implements ITestableAction
 	{
 		this.fTester = tester;
 	}
+
 	// CSON:
 
 	/*
@@ -101,77 +102,40 @@ public class MarkTextAction extends Action implements ITestableAction
 	@Override
 	public void run()
 	{
-<<<<<<< local
 		IAnnotatedDocument document = fEditor.getDocument();
 		Point selection = fSourceViewer.getSelectedRange();
 		Position position = new Position(selection.x, selection.y);
-		
+
 		Fragment fragment = null;
-		for(Fragment existingFragment : document.getFragments())
+		for (Fragment existingFragment : document.getFragments())
 		{
-			if(existingFragment.getOffset() == position.offset && 
-					existingFragment.getLength() == position.length)
+			if (existingFragment.getOffset() == position.offset && existingFragment.getLength() == position.length)
 			{
 				fragment = existingFragment;
 				break;
 			}
 		}
-		
-		CodeChooserDialog dialog = new CodeChooserDialog(fEditor.getSite().getShell(), document.getProject(),
-				fragment);
-=======
-		Transcript transcript = fEditor.getTranscript();
-		CodeChooserDialog dialog = new CodeChooserDialog(fEditor.getSite().getShell(), transcript.getProject());
-		dialog.setBlockOnOpen(fWindowsBlock);
 
->>>>>>> other
+		CodeChooserDialog dialog = new CodeChooserDialog(fEditor.getSite().getShell(), document.getProject(), fragment);
+		dialog.setBlockOnOpen(fWindowsBlock);
 		dialog.create();
-<<<<<<< local
-		if(dialog.open() == Window.OK)
-		{	
-=======
 		dialog.open();
 		fTester.execute(dialog);
 		if (dialog.getReturnCode() == Window.OK)
 		{
-			Point selection = fSourceViewer.getSelectedRange();
-			Position position = new Position(selection.x, selection.y);
-
-			Fragment fragment = null;
-			for (Fragment existingFragment : transcript.getFragments())
-			{
-				if (existingFragment.getOffset() == position.offset && existingFragment.getLength() == position.length)
-				{
-					fragment = existingFragment;
-					break;
-				}
-			}
-
->>>>>>> other
 			CodeEntry entry = new CodeEntry();
 			entry.setCode(dialog.getCode());
 
 			if (fragment == null)
 			{
-<<<<<<< local
-				fragment = Facade.getInstance().createFragment(document, position.offset,
-						position.length);
-=======
-				fragment = Facade.getInstance().createFragment(transcript, position.offset, position.length);
->>>>>>> other
+				fragment = Facade.getInstance().createFragment(document, position.offset, position.length);
 			}
 
 			fragment.getCodeEntries().add(entry);
 			fSourceViewer.markFragment(fragment);
-<<<<<<< local
-			
+
 			Facade.getInstance().saveDocument(document);
-			
-=======
 
-			Facade.getInstance().saveTranscript(transcript);
-
->>>>>>> other
 			fEditor.setDirty();
 		}
 
