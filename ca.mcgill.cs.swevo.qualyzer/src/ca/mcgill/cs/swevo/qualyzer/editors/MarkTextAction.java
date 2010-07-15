@@ -27,12 +27,14 @@ import ca.mcgill.cs.swevo.qualyzer.model.IAnnotatedDocument;
 /**
  *
  */
-public class MarkTextAction extends Action
+public class MarkTextAction extends Action implements ITestableAction
 {
 
 	private RTFEditor fEditor;
 	private RTFSourceViewer fSourceViewer;
-	
+	private boolean fWindowsBlock;
+	private IDialogTester fTester = new NullTester();
+
 	/**
 	 * 
 	 */
@@ -41,16 +43,65 @@ public class MarkTextAction extends Action
 		super(Messages.getString("editors.MarkTextAction.addCode")); //$NON-NLS-1$
 		fEditor = editor;
 		fSourceViewer = viewer;
-		
+		fWindowsBlock = true;
 		setEnabled(false);
 	}
-	
-	/* (non-Javadoc)
+
+	/**
+	 * Does something.
+	 * 
+	 * @return
+	 * @see ca.mcgill.cs.swevo.qualyzer.editors.ITestableAction#isWindowsBlock()
+	 */
+	public boolean isWindowsBlock()
+	{
+		return fWindowsBlock;
+	}
+
+	/**
+	 * Does something.
+	 * 
+	 * @param windowsBlock
+	 * @see ca.mcgill.cs.swevo.qualyzer.editors.ITestableAction#setWindowsBlock(boolean)
+	 */
+	public void setWindowsBlock(boolean windowsBlock)
+	{
+		fWindowsBlock = windowsBlock;
+	}
+
+	/**
+	 * Does something.
+	 * 
+	 * @return
+	 * @see ca.mcgill.cs.swevo.qualyzer.editors.ITestableAction#getTester()
+	 */
+	public IDialogTester getTester()
+	{
+		return fTester;
+	}
+
+	// CSOFF:
+	/**
+	 * Does something.
+	 * 
+	 * @param tester
+	 * @see ca.mcgill.cs.swevo.qualyzer.editors.ITestableAction#setTester(ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester)
+	 */
+	public void setTester(IDialogTester tester)
+	{
+		this.fTester = tester;
+	}
+	// CSON:
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.action.Action#run()
 	 */
 	@Override
 	public void run()
 	{
+<<<<<<< local
 		IAnnotatedDocument document = fEditor.getDocument();
 		Point selection = fSourceViewer.getSelectedRange();
 		Position position = new Position(selection.x, selection.y);
@@ -68,23 +119,59 @@ public class MarkTextAction extends Action
 		
 		CodeChooserDialog dialog = new CodeChooserDialog(fEditor.getSite().getShell(), document.getProject(),
 				fragment);
+=======
+		Transcript transcript = fEditor.getTranscript();
+		CodeChooserDialog dialog = new CodeChooserDialog(fEditor.getSite().getShell(), transcript.getProject());
+		dialog.setBlockOnOpen(fWindowsBlock);
+
+>>>>>>> other
 		dialog.create();
+<<<<<<< local
 		if(dialog.open() == Window.OK)
 		{	
+=======
+		dialog.open();
+		fTester.execute(dialog);
+		if (dialog.getReturnCode() == Window.OK)
+		{
+			Point selection = fSourceViewer.getSelectedRange();
+			Position position = new Position(selection.x, selection.y);
+
+			Fragment fragment = null;
+			for (Fragment existingFragment : transcript.getFragments())
+			{
+				if (existingFragment.getOffset() == position.offset && existingFragment.getLength() == position.length)
+				{
+					fragment = existingFragment;
+					break;
+				}
+			}
+
+>>>>>>> other
 			CodeEntry entry = new CodeEntry();
 			entry.setCode(dialog.getCode());
-			
-			if(fragment == null)
+
+			if (fragment == null)
 			{
+<<<<<<< local
 				fragment = Facade.getInstance().createFragment(document, position.offset,
 						position.length);
+=======
+				fragment = Facade.getInstance().createFragment(transcript, position.offset, position.length);
+>>>>>>> other
 			}
-			
+
 			fragment.getCodeEntries().add(entry);
 			fSourceViewer.markFragment(fragment);
+<<<<<<< local
 			
 			Facade.getInstance().saveDocument(document);
 			
+=======
+
+			Facade.getInstance().saveTranscript(transcript);
+
+>>>>>>> other
 			fEditor.setDirty();
 		}
 
