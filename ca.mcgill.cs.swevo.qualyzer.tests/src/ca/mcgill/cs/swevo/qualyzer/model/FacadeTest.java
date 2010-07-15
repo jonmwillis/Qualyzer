@@ -523,7 +523,7 @@ public class FacadeTest
 	public void testCodeEntries() {
 		Code code1 = fFacade.createCode("c1", "", fProject);
 		Code code2 = fFacade.createCode("c2", "", fProject);
-		Investigator investigator = fFacade.createInvestigator("TestInvestigator", "TestInvestigator FullName",
+		fFacade.createInvestigator("TestInvestigator", "TestInvestigator FullName",
 				"McGill", fProject, true);
 		String pId = "p1";
 		String pName = "Toto";
