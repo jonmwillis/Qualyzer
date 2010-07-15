@@ -204,6 +204,11 @@
             id="ca.mcgill.cs.swevo.qualyzer.commands.newCode"
             name="%command.name.newCode">
       </command>
+      <command
+            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.NewMemoHandler"
+            id="ca.mcgill.cs.swevo.qualyzer.commands.newMemo"
+            name="New Memo">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -285,16 +290,16 @@
                   tooltip="%command.tooltip.createNewProject">
             </command>
             <command
-                  commandId="ca.mcgill.cs.swevo.qualyzer.commands.addParticipant"
-                  icon="icons/participant.png"
-                  label="%command.label.particpant"
+                  commandId="ca.mcgill.cs.swevo.qualyzer.commands.newCode"
+                  icon="icons/code_obj.png"
+                  label="%command.label.code"
                   style="push"
-                  tooltip="%command.tooltip.createParticipant">
+                  tooltip="%command.tooltip.code">
                <visibleWhen
                      checkEnabled="false">
                   <iterate
                         ifEmpty="false"
-                        operator="or">
+                        operator="and">
                      <or>
                         <and>
                            <instanceof
@@ -345,16 +350,15 @@
                </visibleWhen>
             </command>
             <command
-                  commandId="ca.mcgill.cs.swevo.qualyzer.commands.newTranscript"
+                  commandId="ca.mcgill.cs.swevo.qualyzer.commands.newMemo"
                   icon="icons/file_obj.gif"
-                  label="%command.label.transcript"
-                  style="push"
-                  tooltip="%command.tooltip.createTranscript">
+                  label="Memo"
+                  style="push">
                <visibleWhen
                      checkEnabled="false">
                   <iterate
                         ifEmpty="false"
-                        operator="and">
+                        operator="or">
                      <or>
                         <and>
                            <instanceof
@@ -375,11 +379,41 @@
                </visibleWhen>
             </command>
             <command
-                  commandId="ca.mcgill.cs.swevo.qualyzer.commands.newCode"
-                  icon="icons/code_obj.png"
-                  label="%command.label.code"
+                  commandId="ca.mcgill.cs.swevo.qualyzer.commands.addParticipant"
+                  icon="icons/participant.png"
+                  label="%command.label.particpant"
                   style="push"
-                  tooltip="%command.tooltip.code">
+                  tooltip="%command.tooltip.createParticipant">
+               <visibleWhen
+                     checkEnabled="false">
+                  <iterate
+                        ifEmpty="false"
+                        operator="or">
+                     <or>
+                        <and>
+                           <instanceof
+                                 value="org.eclipse.core.resources.IProject">
+                           </instanceof>
+                           <test
+                                 property="org.eclipse.core.resources.open"
+                                 value="open">
+                           </test>
+                        </and>
+                        <not>
+                           <instanceof
+                                 value="org.eclipse.core.resources.IProject">
+                           </instanceof>
+                        </not>
+                     </or>
+                  </iterate>
+               </visibleWhen>
+            </command>
+            <command
+                  commandId="ca.mcgill.cs.swevo.qualyzer.commands.newTranscript"
+                  icon="icons/file_obj.gif"
+                  label="%command.label.transcript"
+                  style="push"
+                  tooltip="%command.tooltip.createTranscript">
                <visibleWhen
                      checkEnabled="false">
                   <iterate
@@ -441,13 +475,6 @@
                         operator="or">
                      <instanceof
                            value="ca.mcgill.cs.swevo.qualyzer.model.Memo">
-                     </instanceof>
-                  </iterate>
-                  <iterate
-                        ifEmpty="false"
-                        operator="or">
-                     <instanceof
-                           value="ca.mcgill.cs.swevo.qualyzer.model.Code">
                      </instanceof>
                   </iterate>
                   <iterate
@@ -790,6 +817,9 @@
                </adapt>
                <instanceof
                      value="ca.mcgill.cs.swevo.qualyzer.providers.WrapperCode">
+               </instanceof>
+               <instanceof
+                     value="ca.mcgill.cs.swevo.qualyzer.model.Memo">
                </instanceof>
             </or>
          </enablement>
