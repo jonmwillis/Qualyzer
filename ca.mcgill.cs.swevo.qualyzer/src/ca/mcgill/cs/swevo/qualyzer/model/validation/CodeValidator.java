@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Martin Robillard
+ *     Jonathan Faubert
  *******************************************************************************/
 
 package ca.mcgill.cs.swevo.qualyzer.model.validation;
@@ -88,5 +89,14 @@ public class CodeValidator extends AbstractValidator
 		}
 		
 		return false;
+	}
+	
+	/**
+	 * The name of the code to test.
+	 * @return
+	 */
+	protected String getName()
+	{
+		return fName;
 	}
 }

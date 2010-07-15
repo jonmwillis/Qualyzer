@@ -35,9 +35,11 @@ import org.eclipse.ui.navigator.CommonNavigator;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.model.Code;
+import ca.mcgill.cs.swevo.qualyzer.model.CodeEntry;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
+import ca.mcgill.cs.swevo.qualyzer.model.Fragment;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
-import ca.mcgill.cs.swevo.qualyzer.model.validation.CodeValidator;
+import ca.mcgill.cs.swevo.qualyzer.model.validation.CodeChooserValidator;
 
 /**
  *
@@ -48,17 +50,20 @@ public class CodeChooserDialog extends TitleAreaDialog
 	private Project fProject;
 	private Combo fCodeName;
 	private Text fDescription;
+	private String[] fProposals;
 
 	private Code fCode;
+	private Fragment fFragment;
 	
 	/**
 	 * Constructor.
 	 * @param shell
 	 */
-	public CodeChooserDialog(Shell shell, Project project)
+	public CodeChooserDialog(Shell shell, Project project, Fragment fragment)
 	{
 		super(shell);
 		fProject = project;
+		fFragment = fragment;
 		fCode = null;
 	}
 	
@@ -91,11 +96,6 @@ public class CodeChooserDialog extends TitleAreaDialog
 		fCodeName.setText(""); //$NON-NLS-1$
 		fCodeName.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 		
-		for(Code code : fProject.getCodes())
-		{
-			fCodeName.add(code.getCodeName());
-		}
-		
 		label = new Label(parent, SWT.NULL);
 		label.setText(Messages.getString("dialogs.CodeChooserDialog.description")); //$NON-NLS-1$
 		
@@ -103,10 +103,15 @@ public class CodeChooserDialog extends TitleAreaDialog
 		fDescription.setText(""); //$NON-NLS-1$
 		fDescription.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
-		String[] proposals = buildProposals();
+		fProposals = buildProposals();
+		
+		for(String prop : fProposals)
+		{
+			fCodeName.add(prop);
+		}
 		
 		@SuppressWarnings("unused")
-		AutoCompleteField field = new AutoCompleteField(fCodeName, new ComboContentAdapter(), proposals);
+		AutoCompleteField field = new AutoCompleteField(fCodeName, new ComboContentAdapter(), fProposals);
 		
 		fCodeName.addModifyListener(createModifyListener());
 		
@@ -123,7 +128,7 @@ public class CodeChooserDialog extends TitleAreaDialog
 			@Override
 			public void modifyText(ModifyEvent e)
 			{
-				CodeValidator validator = new CodeValidator(fCodeName.getText(), fProject);
+				CodeChooserValidator validator = new CodeChooserValidator(fCodeName.getText(), fProject, fFragment);
 				if(!validator.isValid())
 				{
 					if(validator.getErrorMessage().equals(Messages.getString(
@@ -168,7 +173,25 @@ public class CodeChooserDialog extends TitleAreaDialog
 		ArrayList<String> proposals = new ArrayList<String>();
 		for(Code code : fProject.getCodes())
 		{
-			proposals.add(code.getCodeName());
+			if(fFragment == null)
+			{
+				proposals.add(code.getCodeName());
+			}
+			else 
+			{
+				boolean found = false;
+				for(CodeEntry entry : fFragment.getCodeEntries())
+				{
+					if(entry.getCode().equals(code))
+					{
+						found = true;
+					}
+				}
+				if(!found)
+				{
+					proposals.add(code.getCodeName());
+				}
+			}
 		}
 		
 		return proposals.toArray(new String[0]);
