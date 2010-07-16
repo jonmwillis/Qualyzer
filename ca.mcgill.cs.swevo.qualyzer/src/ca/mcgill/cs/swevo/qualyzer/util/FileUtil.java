@@ -35,9 +35,10 @@ import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
  */
 public final class FileUtil
 {
-	
-	public static final String TRANSCRIPTS = "transcripts"; //$NON-NLS-1$
-	public static final String AUDIO = "audio"; //$NON-NLS-1$
+
+	private static final String MEMOS = "memos"; //$NON-NLS-1$
+	private static final String TRANSCRIPTS = "transcripts"; //$NON-NLS-1$
+	private static final String AUDIO = "audio"; //$NON-NLS-1$
 	private static Logger gLogger = LoggerFactory.getLogger(FileUtil.class);
 
 	private FileUtil(){}
@@ -123,7 +124,7 @@ public final class FileUtil
 		{
 			dir.delete();
 		}
-		dir = new File(path+File.separator+"memos"); //$NON-NLS-1$
+		dir = new File(path+File.separator+MEMOS);
 		if(!dir.exists())
 		{
 			dir.delete();
@@ -143,7 +144,7 @@ public final class FileUtil
 		{
 			return false;
 		}
-		dir = new File(path+File.separator+"memos"); //$NON-NLS-1$
+		dir = new File(path+File.separator+MEMOS); //$NON-NLS-1$
 		return dir.mkdir();
 	}
 	
@@ -272,7 +273,30 @@ public final class FileUtil
 	 */
 	public static void setupMemoFiles(String memoName, String projectName)
 	{
-		// TODO Auto-generated method stub
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		IProject wProject = root.getProject(projectName);
+		String workspacePath = wProject.getLocation().toString();
 		
+		String path = workspacePath+File.separator+MEMOS+File.separator+memoName+".rtf";
+		File file = new File(path);
+		
+		try
+		{
+			if(!file.createNewFile())
+			{
+				throw new QualyzerException("Unable to create the memo file. One may already exist with that name.");
+			}
+			else
+			{
+				FileWriter writer = new FileWriter(file);
+				writer.write("{\\rtf1\\ansi\\deff0\n\n\n}\n\0"); //$NON-NLS-1$
+				writer.close();
+			}
+		}
+		catch (IOException e)
+		{
+			gLogger.error("Failed to create new File", e); 
+			throw new QualyzerException("There was an error creating the memo file.", e); 
+		}
 	}
 }
