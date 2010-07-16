@@ -214,6 +214,11 @@
             id="ca.mcgill.cs.swevo.qualyzer.commands.editMemoProperties"
             name="Edit Memo Properties">
       </command>
+      <command
+            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.ImportMemoHandler"
+            id="ca.mcgill.cs.swevo.qualyzer.commands.importMemo"
+            name="Import Memo">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -637,6 +642,35 @@
                   </iterate>
                </visibleWhen>
             </command>
+            <command
+                  commandId="ca.mcgill.cs.swevo.qualyzer.commands.importMemo"
+                  icon="icons/memo_obj.png"
+                  label="Memo"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <iterate
+                        ifEmpty="false"
+                        operator="and">
+                     <or>
+                        <and>
+                           <instanceof
+                                 value="org.eclipse.core.resources.IProject">
+                           </instanceof>
+                           <test
+                                 property="org.eclipse.core.resources.open"
+                                 value="open">
+                           </test>
+                        </and>
+                        <not>
+                           <instanceof
+                                 value="org.eclipse.core.resources.IProject">
+                           </instanceof>
+                        </not>
+                     </or>
+                  </iterate>
+               </visibleWhen>
+            </command>
          </menu>
       </menuContribution>
       <menuContribution
@@ -685,16 +719,16 @@
                   style="push">
             </command>
             <command
-                  commandId="ca.mcgill.cs.swevo.qualyzer.commands.addParticipant"
-                  icon="icons/participant.png"
-                  label="%command.label.particpant"
+                  commandId="ca.mcgill.cs.swevo.qualyzer.commands.newCode"
+                  icon="icons/code_obj.png"
+                  label="%command.label.code"
                   style="push"
-                  tooltip="%command.tooltip.createParticipant">
+                  tooltip="%command.tooltip.code">
                <visibleWhen
                      checkEnabled="false">
                   <iterate
                         ifEmpty="false"
-                        operator="or">
+                        operator="and">
                      <or>
                         <and>
                            <instanceof
@@ -725,6 +759,65 @@
                   <iterate
                         ifEmpty="false"
                         operator="and">
+                     <or>
+                        <and>
+                           <instanceof
+                                 value="org.eclipse.core.resources.IProject">
+                           </instanceof>
+                           <test
+                                 property="org.eclipse.core.resources.open"
+                                 value="open">
+                           </test>
+                        </and>
+                        <not>
+                           <instanceof
+                                 value="org.eclipse.core.resources.IProject">
+                           </instanceof>
+                        </not>
+                     </or>
+                  </iterate>
+               </visibleWhen>
+            </command>
+            <command
+                  commandId="ca.mcgill.cs.swevo.qualyzer.commands.newMemo"
+                  icon="icons/memo_obj.png"
+                  label="Memo"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <iterate
+                        ifEmpty="false"
+                        operator="or">
+                     <or>
+                        <and>
+                           <instanceof
+                                 value="org.eclipse.core.resources.IProject">
+                           </instanceof>
+                           <test
+                                 property="org.eclipse.core.resources.open"
+                                 value="open">
+                           </test>
+                        </and>
+                        <not>
+                           <instanceof
+                                 value="org.eclipse.core.resources.IProject">
+                           </instanceof>
+                        </not>
+                     </or>
+                  </iterate>
+               </visibleWhen>
+            </command>
+            <command
+                  commandId="ca.mcgill.cs.swevo.qualyzer.commands.addParticipant"
+                  icon="icons/participant.png"
+                  label="%command.label.particpant"
+                  style="push"
+                  tooltip="%command.tooltip.createParticipant">
+               <visibleWhen
+                     checkEnabled="false">
+                  <iterate
+                        ifEmpty="false"
+                        operator="or">
                      <or>
                         <and>
                            <instanceof
