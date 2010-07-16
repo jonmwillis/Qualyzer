@@ -24,6 +24,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
@@ -46,6 +47,7 @@ public class NewMemoPage extends WizardPage
 	private Text fName;
 	private Combo fAuthorName;
 	private Table fTable;
+	private DateTime fDate;
 
 	/**
 	 * Constructor.
@@ -78,6 +80,9 @@ public class NewMemoPage extends WizardPage
 		fName.setText("");
 		fName.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 		fName.addModifyListener(createModifyListener());
+		
+		createLabel(fContainer, "Date");
+		fDate = new DateTime(fContainer, SWT.DATE);
 		
 		createLabel(fContainer, "Author");
 		fAuthorName = new Combo(fContainer, SWT.DROP_DOWN | SWT.READ_ONLY);
@@ -230,5 +235,15 @@ public class NewMemoPage extends WizardPage
 		}
 		
 		return fAuthor;
+	}
+	
+	/**
+	 * Get the date the was assigned to the memo.
+	 * In the format MM/DD/YYYY.
+	 * @return
+	 */
+	public String getDate()
+	{
+		return (fDate.getMonth() + 1) + "/" + fDate.getDay() + "/" + fDate.getYear();
 	}
 }

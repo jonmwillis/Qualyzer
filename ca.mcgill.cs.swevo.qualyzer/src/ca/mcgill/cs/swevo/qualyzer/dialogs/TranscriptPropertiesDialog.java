@@ -23,11 +23,14 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -40,7 +43,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 
+import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
@@ -54,6 +59,8 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 	 * 
 	 */
 	private static final String SLASH = "/"; //$NON-NLS-1$
+	private static final String ADD_IMG = "ADD_IMG";
+	private static final String REMOVE_IMG = "REMOVE_IMG";
 	/**
 	 * 
 	 */
@@ -61,6 +68,8 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 	private static final String TRANSCRIPT = File.separator+"transcripts"+File.separator; //$NON-NLS-1$
 	
 	private final String fProjectName;
+	
+	private ImageRegistry fRegistry;
 	
 	private Transcript fTranscript;
 	private DateTime fDate;
@@ -83,8 +92,32 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 		fParticipants = new ArrayList<Participant>();
 		fProjectName = fTranscript.getProject().getName();
 		fAudioPath = ""; //$NON-NLS-1$
+		fRegistry = QualyzerActivator.getDefault().getImageRegistry();
+		addImage(ADD_IMG, QualyzerActivator.PLUGIN_ID, "icons/add_obj.gif");
+		addImage(REMOVE_IMG, QualyzerActivator.PLUGIN_ID, "icons/remove_obj.gif");
+		
 	}
 	
+	private void addImage(String key, String pluginID, String path)
+	{
+		String fullKey = computeKey(key, pluginID);
+		ImageDescriptor descriptor = fRegistry.getDescriptor(fullKey);
+		if(descriptor == null)
+		{
+			fRegistry.put(fullKey, AbstractUIPlugin.imageDescriptorFromPlugin(pluginID, path));
+		}
+	}
+	
+	private String computeKey(String key, String pluginID)
+	{
+		return pluginID + "_" + key; //$NON-NLS-1$
+	}
+	
+	private Image getImage(String key, String pluginID)
+	{
+		return fRegistry.get(computeKey(key, pluginID));
+	}
+
 	@Override
 	public void create()
 	{
@@ -117,7 +150,7 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 		createParticipantButtonBar(composite);
 		
 		fTable = new Table(parent, SWT.MULTI);
-		GridData gd = createTextGridData();
+		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gd.horizontalSpan = 2;
 		fTable.setLayoutData(gd);
 		buildParticipants();
@@ -187,10 +220,10 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 				Messages.getString("dialogs.TranscriptPropertiesDialog.participants")); //$NON-NLS-1$
 		label.setLayoutData(createTextGridData());
 		Button button = new Button(composite, SWT.PUSH);
-		button.setText("+"); //$NON-NLS-1$
+		button.setImage(getImage(ADD_IMG, QualyzerActivator.PLUGIN_ID));
 		button.addSelectionListener(createAddListener());
 		button = new Button(composite, SWT.PUSH);
-		button.setText("-"); //$NON-NLS-1$
+		button.setImage(getImage(REMOVE_IMG, QualyzerActivator.PLUGIN_ID));
 		button.addSelectionListener(createRemoveListener());
 	}
 

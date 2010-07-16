@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Barthelemy Dagenais (bart@cs.mcgill.ca)
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.model;
 
@@ -37,7 +37,6 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 /**
- * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
  * 
  */
 @Entity
@@ -57,6 +56,10 @@ public abstract class AnnotatedDocument implements IAnnotatedDocument
 	private List<Fragment> fFragments = new ArrayList<Fragment>();
 	private String fName;
 	private String fFileName;
+	
+	/**
+	 * Has the format MM/DD/YYYY. Always entered using a DateTime Widget.
+	 */
 	private String fDate;
 
 	/**
