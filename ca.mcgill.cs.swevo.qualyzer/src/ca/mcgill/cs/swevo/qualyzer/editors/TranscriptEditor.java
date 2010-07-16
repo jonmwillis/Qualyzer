@@ -18,5 +18,6 @@ package ca.mcgill.cs.swevo.qualyzer.editors;
  */
 public class TranscriptEditor extends RTFEditor
 {
+	public static final String ID = "ca.mcgill.cs.swevo.qualyzer.editors.transcriptEditor";
 
 }
