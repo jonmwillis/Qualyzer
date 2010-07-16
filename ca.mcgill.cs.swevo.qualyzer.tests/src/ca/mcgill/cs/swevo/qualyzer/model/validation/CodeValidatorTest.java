@@ -30,6 +30,11 @@ public class CodeValidatorTest
 	
 	private static final String TEST_CODE = "Code1";
 	private static final String SAME_TEST_CODE = "Code1";
+	private static final String LONG_NAME = "AAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBB"+
+											"AAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBB"+
+											"AAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBB"+
+											"AAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBB"+
+											"AAAAAAAAAABBBBBB";
 	
 	private Facade fFacade;
 	
@@ -63,7 +68,18 @@ public class CodeValidatorTest
 	{
 		CodeValidator lValidator = new CodeValidator("", fProject);
 		assertFalse(lValidator.isValid());
-		assertEquals(Messages.getString("model.validation.CodeValidator.empty"),lValidator.getErrorMessage());
+		assertEquals("Code name " + Messages.getString("model.validation.BasicNameValidator.empty"),lValidator.getErrorMessage());
+	}
+	
+	/**
+	 * Verifies that the name is not tooLong.
+	 */
+	@Test
+	public void testTooLong()
+	{
+		CodeValidator lValidator = new CodeValidator(LONG_NAME, fProject);
+		assertFalse(lValidator.isValid());
+		assertEquals("Code name " + Messages.getString("model.validation.BasicNameValidator.tooLong"),lValidator.getErrorMessage());
 	}
 	
 	/**
@@ -74,7 +90,7 @@ public class CodeValidatorTest
 	{
 		CodeValidator lValidator = new CodeValidator("Moon Indigo", fProject);
 		assertFalse(lValidator.isValid());
-		assertEquals(Messages.getString("model.validation.CodeValidator.invalid"),lValidator.getErrorMessage());
+		assertEquals("Code name " + Messages.getString("model.validation.BasicNameValidator.invalid"),lValidator.getErrorMessage());
 	}
 	
 	/**
@@ -85,7 +101,7 @@ public class CodeValidatorTest
 	{
 		CodeValidator lValidator = new CodeValidator(TEST_CODE, fProject);
 		assertFalse(lValidator.isValid());
-		assertEquals(Messages.getString("model.validation.CodeValidator.taken"),lValidator.getErrorMessage());
+		assertEquals("Code name " + Messages.getString("model.validation.BasicNameValidator.taken"),lValidator.getErrorMessage());
 	}
 	
 	/**
@@ -96,7 +112,7 @@ public class CodeValidatorTest
 	{
 		CodeValidator lValidator = new CodeValidator(TEST_CODE, TEST_CODE + "foo", fProject);
 		assertFalse(lValidator.isValid());
-		assertEquals(Messages.getString("model.validation.CodeValidator.taken"),lValidator.getErrorMessage());
+		assertEquals("Code name " + Messages.getString("model.validation.BasicNameValidator.taken"),lValidator.getErrorMessage());
 	}
 	
 	/**
