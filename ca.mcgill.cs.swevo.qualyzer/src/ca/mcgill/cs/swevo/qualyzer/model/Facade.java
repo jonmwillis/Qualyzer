@@ -713,11 +713,13 @@ public final class Facade
 	 * @param fProject
 	 * @return
 	 */
-	public Memo createMemo(String memoName, Investigator author, List<Participant> participants, Project project)
+	public Memo createMemo(String memoName, String date, Investigator author, List<Participant> participants,
+			Project project)
 	{
 		Memo memo = new Memo();
 		memo.setName(memoName);
 		memo.setFileName(memoName + ".rtf");
+		memo.setDate(date);
 		memo.setAuthor(author);
 		memo.setParticipants(participants);
 
