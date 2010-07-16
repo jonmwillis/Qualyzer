@@ -248,7 +248,7 @@ public final class Facade
 		fragment.setLength(length);
 		try
 		{
-			fragment.setDocument(document); // TODO fix
+			fragment.setDocument(document);
 			document.getFragments().add(fragment);
 		}
 		catch (HibernateException he)
@@ -258,8 +258,16 @@ public final class Facade
 			fLogger.error(key, he);
 			throw new QualyzerException(errorMessage, he);
 		}
-		// TODO fix
-		fListenerManager.notifyTranscriptListeners(ChangeType.MODIFY, new Transcript[] { (Transcript) document }, this);
+		
+		if(document instanceof Transcript)
+		{
+			fListenerManager.notifyTranscriptListeners(ChangeType.MODIFY,
+					new Transcript[] { (Transcript) document }, this);
+		}
+		else if(document instanceof Memo)
+		{
+			fListenerManager.notifyMemoListeners(ChangeType.MODIFY, new Memo[]{(Memo) document}, this);
+		}
 
 		return fragment;
 	}
@@ -681,6 +689,10 @@ public final class Facade
 		if (document instanceof Transcript)
 		{
 			saveTranscript((Transcript) document);
+		}
+		else if(document instanceof Memo)
+		{
+			saveMemo((Memo) document);
 		}
 	}
 
