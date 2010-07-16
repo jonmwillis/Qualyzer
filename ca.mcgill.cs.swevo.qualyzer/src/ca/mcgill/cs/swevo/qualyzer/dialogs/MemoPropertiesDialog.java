@@ -51,9 +51,9 @@ import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 public class MemoPropertiesDialog extends TitleAreaDialog
 {
 	private static final int COLS = 3;
-	private static final String ADD_IMG = "ADD_IMG";
-	private static final String REMOVE_IMG = "REMOVE_IMG";
-	private static final String SLASH = "/";
+	private static final String ADD_IMG = "ADD_IMG"; //$NON-NLS-1$
+	private static final String REMOVE_IMG = "REMOVE_IMG"; //$NON-NLS-1$
+	private static final String SLASH = "/"; //$NON-NLS-1$
 	
 	private Memo fMemo;
 	private ImageRegistry fRegistry;
@@ -75,8 +75,8 @@ public class MemoPropertiesDialog extends TitleAreaDialog
 		super(shell);
 		fMemo = memo;
 		fRegistry = QualyzerActivator.getDefault().getImageRegistry();
-		addImage(ADD_IMG, QualyzerActivator.PLUGIN_ID, "icons/add_obj.gif");
-		addImage(REMOVE_IMG, QualyzerActivator.PLUGIN_ID, "icons/remove_obj.gif");
+		addImage(ADD_IMG, QualyzerActivator.PLUGIN_ID, "icons/add_obj.gif"); //$NON-NLS-1$
+		addImage(REMOVE_IMG, QualyzerActivator.PLUGIN_ID, "icons/remove_obj.gif"); //$NON-NLS-1$
 	}
 	
 	private void addImage(String key, String pluginID, String path)
@@ -106,7 +106,7 @@ public class MemoPropertiesDialog extends TitleAreaDialog
 	public void create()
 	{
 		super.create();
-		setTitle("Properties");
+		setTitle(Messages.getString("dialogs.MemoPropertiesDialog.properties")); //$NON-NLS-1$
 		
 	}
 	
@@ -122,18 +122,18 @@ public class MemoPropertiesDialog extends TitleAreaDialog
 		container.setLayout(new GridLayout(2, true));
 		container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
-		createSimpleLabel(container, "Memo name");
+		createSimpleLabel(container, Messages.getString("dialogs.MemoPropertiesDialog.memoName")); //$NON-NLS-1$
 		createLongLabel(container, fMemo.getName());
 		
-		createSimpleLabel(container, "File name");
+		createSimpleLabel(container, Messages.getString("dialogs.MemoPropertiesDialog.fileName")); //$NON-NLS-1$
 		createLongLabel(container, fMemo.getFileName());
 		
-		createSimpleLabel(container, "Date");
+		createSimpleLabel(container, Messages.getString("dialogs.MemoPropertiesDialog.date")); //$NON-NLS-1$
 		fDate = new DateTime(container, SWT.DATE);
 		String[] info = fMemo.getDate().split(SLASH);
 		fDate.setDate(Integer.parseInt(info[2]), Integer.parseInt(info[0])-1, Integer.parseInt(info[1]));
 		
-		createSimpleLabel(container, "Author");
+		createSimpleLabel(container, Messages.getString("dialogs.MemoPropertiesDialog.author")); //$NON-NLS-1$
 		buildAuthorCombo(container);
 		
 		Composite composite = new Composite(container, SWT.BORDER);
@@ -159,7 +159,7 @@ public class MemoPropertiesDialog extends TitleAreaDialog
 		composite.setLayout(new GridLayout(COLS, false));
 		
 		Label label = new Label(composite, SWT.NULL);
-		label.setText("Participants");
+		label.setText(Messages.getString("dialogs.MemoPropertiesDialog.participants")); //$NON-NLS-1$
 		label.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		
 		Button button = new Button(composite, SWT.PUSH);
@@ -227,7 +227,7 @@ public class MemoPropertiesDialog extends TitleAreaDialog
 					names[i] = list.get(i).getParticipantId();
 				}
 				dialog.setElements(names);
-				dialog.setTitle("Which participant would you like to add");
+				dialog.setTitle(Messages.getString("dialogs.MemoPropertiesDialog.addWhich")); //$NON-NLS-1$
 				dialog.open();
 				Object[] result = dialog.getResult();
 				for(Object s : result)

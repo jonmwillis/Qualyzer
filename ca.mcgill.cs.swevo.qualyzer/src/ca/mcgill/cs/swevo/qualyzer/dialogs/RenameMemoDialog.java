@@ -57,8 +57,8 @@ public class RenameMemoDialog extends TitleAreaDialog
 	public void create()
 	{
 		super.create();
-		setTitle("Renaming Memo");
-		setMessage("Please enter a new name for your memo");
+		setTitle(Messages.getString("dialog.RenameMemoDialog.renaming")); //$NON-NLS-1$
+		setMessage(Messages.getString("dialog.RenameMemoDialog.enterName")); //$NON-NLS-1$
 		getButton(IDialogConstants.OK_ID).setEnabled(false);
 	}
 	
@@ -77,10 +77,10 @@ public class RenameMemoDialog extends TitleAreaDialog
 		container.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 		
 		Label label = new Label(container, SWT.NULL);
-		label.setText("Memo name");
+		label.setText(Messages.getString("dialog.RenameMemoDialog.memoName")); //$NON-NLS-1$
 		
 		fNewName = new Text(container, SWT.BORDER);
-		fNewName.setText("");
+		fNewName.setText(""); //$NON-NLS-1$
 		fNewName.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 		
 		fNewName.addModifyListener(new ModifyListener()

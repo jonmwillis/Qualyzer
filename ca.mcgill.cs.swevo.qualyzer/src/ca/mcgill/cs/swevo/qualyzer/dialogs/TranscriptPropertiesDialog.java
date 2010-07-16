@@ -59,8 +59,8 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 	 * 
 	 */
 	private static final String SLASH = "/"; //$NON-NLS-1$
-	private static final String ADD_IMG = "ADD_IMG";
-	private static final String REMOVE_IMG = "REMOVE_IMG";
+	private static final String ADD_IMG = "ADD_IMG"; //$NON-NLS-1$
+	private static final String REMOVE_IMG = "REMOVE_IMG"; //$NON-NLS-1$
 	/**
 	 * 
 	 */
@@ -93,8 +93,8 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 		fProjectName = fTranscript.getProject().getName();
 		fAudioPath = ""; //$NON-NLS-1$
 		fRegistry = QualyzerActivator.getDefault().getImageRegistry();
-		addImage(ADD_IMG, QualyzerActivator.PLUGIN_ID, "icons/add_obj.gif");
-		addImage(REMOVE_IMG, QualyzerActivator.PLUGIN_ID, "icons/remove_obj.gif");
+		addImage(ADD_IMG, QualyzerActivator.PLUGIN_ID, "icons/add_obj.gif"); //$NON-NLS-1$
+		addImage(REMOVE_IMG, QualyzerActivator.PLUGIN_ID, "icons/remove_obj.gif"); //$NON-NLS-1$
 		
 	}
 	

@@ -41,8 +41,8 @@ public class RenameMemoHandler extends AbstractHandler
 {
 
 	
-	private static final String MEMO = File.separator + "memos" + File.separator;
-	private static final String EXT = ".rtf";
+	private static final String MEMO = File.separator + "memos" + File.separator; //$NON-NLS-1$
+	private static final String EXT = ".rtf"; //$NON-NLS-1$
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException

@@ -40,6 +40,10 @@ import ca.mcgill.cs.swevo.qualyzer.model.validation.MemoValidator;
  */
 public class NewMemoPage extends WizardPage
 {
+	/**
+	 * 
+	 */
+	private static final String SLASH = "/";  //$NON-NLS-1$
 	private Project fProject;
 	private List<Participant> fParticipants;
 	private Investigator fAuthor;
@@ -55,10 +59,10 @@ public class NewMemoPage extends WizardPage
 	 */
 	public NewMemoPage(Project project)
 	{
-		super("New Memo");
+		super(Messages.getString("wizards.pages.NewMemoPage.newMemo")); //$NON-NLS-1$
 		fProject = project;
-		setTitle("New Memo Wizard");
-		setDescription("Enter the following information to create a new Memo.");
+		setTitle(Messages.getString("wizards.pages.NewMemoPage.newMemoWizard")); //$NON-NLS-1$
+		setDescription(Messages.getString("wizards.pages.NewMemoPage.enterInfo")); //$NON-NLS-1$
 		
 		fParticipants = new ArrayList<Participant>();
 	}
@@ -75,16 +79,16 @@ public class NewMemoPage extends WizardPage
 		layout.numColumns = 2;
 		fContainer.setLayout(layout);
 		
-		createLabel(fContainer, "Memo name"); 
+		createLabel(fContainer, Messages.getString("wizards.pages.NewMemoPage.memoName"));  //$NON-NLS-1$
 		fName = new Text(fContainer, SWT.BORDER);
-		fName.setText("");
+		fName.setText(""); //$NON-NLS-1$
 		fName.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 		fName.addModifyListener(createModifyListener());
 		
-		createLabel(fContainer, "Date");
+		createLabel(fContainer, Messages.getString("wizards.pages.NewMemoPage.date")); //$NON-NLS-1$
 		fDate = new DateTime(fContainer, SWT.DATE);
 		
-		createLabel(fContainer, "Author");
+		createLabel(fContainer, Messages.getString("wizards.pages.NewMemoPage.author")); //$NON-NLS-1$
 		fAuthorName = new Combo(fContainer, SWT.DROP_DOWN | SWT.READ_ONLY);
 		fAuthorName.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 		fAuthorName.addModifyListener(createModifyListener());
@@ -159,7 +163,7 @@ public class NewMemoPage extends WizardPage
 	{
 		GridData gd;
 		Label label = new Label(fContainer, SWT.NULL);
-		label.setText("Participants");
+		label.setText(Messages.getString("wizards.pages.NewMemoPage.participants")); //$NON-NLS-1$
 		gd = new GridData(SWT.FILL, SWT.NULL, true, false);
 		gd.horizontalSpan = 2;
 		label.setLayoutData(gd);
@@ -244,6 +248,6 @@ public class NewMemoPage extends WizardPage
 	 */
 	public String getDate()
 	{
-		return (fDate.getMonth() + 1) + "/" + fDate.getDay() + "/" + fDate.getYear();
+		return (fDate.getMonth() + 1) + SLASH + fDate.getDay() + SLASH + fDate.getYear();
 	}
 }

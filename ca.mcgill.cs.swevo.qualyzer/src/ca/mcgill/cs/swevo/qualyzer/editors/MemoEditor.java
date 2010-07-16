@@ -18,6 +18,6 @@ package ca.mcgill.cs.swevo.qualyzer.editors;
  */
 public class MemoEditor extends RTFEditor
 {
-	public static final String ID = "ca.mcgill.cs.swevo.qualyzer.editors.memoEditor";
+	public static final String ID = "ca.mcgill.cs.swevo.qualyzer.editors.memoEditor"; //$NON-NLS-1$
 
 }

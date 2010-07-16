@@ -110,7 +110,7 @@ public final class PersistenceManager
 	{
 		String dbPath = getDBPath(project).toOSString();
 		
-		File file = new File(dbPath+".h2.db");
+		File file = new File(dbPath+".h2.db"); //$NON-NLS-1$
 		if(!file.exists())
 		{
 			return;

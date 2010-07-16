@@ -50,22 +50,22 @@ public class MemoValidator extends AbstractValidator
 		if(fName.isEmpty())
 		{
 			valid = false;
-			fMessage = "The Memo's name cannot be empty.";
+			fMessage = Messages.getString("model.validation.MemoValidator.emptyName"); //$NON-NLS-1$
 		}
 		else if(!ValidationUtils.verifyID(fName))
 		{
 			valid = false;
-			fMessage = "Invalid name. It can contain letters, numbers, - or _.";
+			fMessage = Messages.getString("model.validation.MemoValidator.invalidName"); //$NON-NLS-1$
 		}
 		else if(nameIsTaken())
 		{
 			valid = false;
-			fMessage = "That name is already taken.";
+			fMessage = Messages.getString("model.validation.MemoValidator.nameTaken"); //$NON-NLS-1$
 		}
 		else if(fAuthor == null)
 		{
 			valid = false;
-			fMessage = "Please select an Author.";
+			fMessage = Messages.getString("model.validation.MemoValidator.chooseAuthor"); //$NON-NLS-1$
 		}
 		
 		return valid;

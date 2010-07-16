@@ -49,17 +49,17 @@ public class RenameMemoValidator extends AbstractValidator
 		if(fNewName.isEmpty())
 		{
 			valid = false;
-			fMessage = "The name cannot be empty.";
+			fMessage = Messages.getString("model.validation.RenameMemoValidator.emptyName"); //$NON-NLS-1$
 		}
 		else if(!ValidationUtils.verifyID(fNewName))
 		{
 			valid = false;
-			fMessage = "The name is invalid. It can contain letters, numbers, - and _.";
+			fMessage = Messages.getString("model.validation.RenameMemoValidator.invalidName"); //$NON-NLS-1$
 		}
 		else if(memoExists())
 		{
 			valid = false;
-			fMessage = "That name is already taken.";
+			fMessage = Messages.getString("model.validation.RenameMemoValidator.nameTaken"); //$NON-NLS-1$
 		}
 		
 		return valid;
