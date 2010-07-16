@@ -44,7 +44,7 @@ public class CodeChooserValidator extends CodeValidator
 	{
 		boolean valid = super.isValid();
 		
-		if(fFragment != null && codeInUse(getName()))
+		if(fFragment != null && codeInUse(fName))
 		{
 			fMessage = "This code is already attached to this fragment.";
 			return false;
