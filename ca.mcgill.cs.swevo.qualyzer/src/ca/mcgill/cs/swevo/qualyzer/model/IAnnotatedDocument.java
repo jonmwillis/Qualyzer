@@ -17,6 +17,12 @@ import java.util.List;
  */
 public interface IAnnotatedDocument
 {
+	
+	/**
+	 * @return
+	 */
+	String getName();
+	
 	/**
 	 * @return
 	 */
@@ -39,6 +45,12 @@ public interface IAnnotatedDocument
 	String getFileName();
 	
 	/**
+	 * 
+	 * @return
+	 */
+	String getDate();
+	
+	/**
 	 * Set the fragments.
 	 * @param fragments
 	 */
@@ -49,4 +61,15 @@ public interface IAnnotatedDocument
 	 * @param project
 	 */
 	void setProject(Project project);
+
+	/**
+	 * @param name
+	 */
+	void setName(String name);
+	
+	/**
+	 * 
+	 * @param date
+	 */
+	void setDate(String date);
 }

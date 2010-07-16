@@ -248,7 +248,7 @@ public final class Facade
 		fragment.setLength(length);
 		try
 		{
-			fragment.setTranscript((Transcript) document); //TODO fix
+			fragment.setDocument(document); // TODO fix
 			document.getFragments().add(fragment);
 		}
 		catch (HibernateException he)
@@ -258,8 +258,8 @@ public final class Facade
 			fLogger.error(key, he);
 			throw new QualyzerException(errorMessage, he);
 		}
-		//TODO fix
-		fListenerManager.notifyTranscriptListeners(ChangeType.MODIFY, new Transcript[] {(Transcript) document}, this);
+		// TODO fix
+		fListenerManager.notifyTranscriptListeners(ChangeType.MODIFY, new Transcript[] { (Transcript) document }, this);
 
 		return fragment;
 	}
@@ -596,7 +596,7 @@ public final class Facade
 			Object lCode = session.get(Code.class, code.getPersistenceId());
 
 			((Project) project).getCodes().remove(lCode);
-			
+
 			session.delete(lCode);
 			session.saveOrUpdate(project);
 			session.flush();
@@ -624,9 +624,9 @@ public final class Facade
 	 */
 	public void deleteFragment(Fragment fragment)
 	{
-		Transcript transcript = fragment.getTranscript();
+		IAnnotatedDocument document = fragment.getDocument();
 		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(
-				transcript.getProject().getName());
+				document.getProject().getName());
 		Session session = null;
 		Transaction t = null;
 
@@ -639,15 +639,24 @@ public final class Facade
 			 * The following is ALL required in order to delete the object from the database. Don't ask me why, I don't
 			 * really understand it myself -JF.
 			 */
-//			Object lFragment = session.get(Fragment.class, fragment.getPersistenceId());
+			// Object lFragment = session.get(Fragment.class, fragment.getPersistenceId());
 
-			transcript.getFragments().remove(fragment);
+			document.getFragments().remove(fragment);
 			session.delete(fragment);
-			session.saveOrUpdate(transcript);
+			session.saveOrUpdate(document);
 			session.flush();
 			t.commit();
 
-			fListenerManager.notifyTranscriptListeners(ChangeType.MODIFY, new Transcript[] { transcript }, this);
+			if (document instanceof Transcript)
+			{
+
+				fListenerManager.notifyTranscriptListeners(ChangeType.MODIFY,
+						new Transcript[] { (Transcript) document }, this);
+			}
+			else
+			{
+				fListenerManager.notifyMemoListeners(ChangeType.MODIFY, new Memo[] { (Memo) document }, this);
+			}
 		}
 		catch (HibernateException e)
 		{
@@ -661,31 +670,33 @@ public final class Facade
 			HibernateUtil.quietClose(session);
 		}
 	}
-	
+
 	/**
 	 * Try to save the document.
+	 * 
 	 * @param document
 	 */
 	public void saveDocument(IAnnotatedDocument document)
 	{
-		if(document instanceof Transcript)
+		if (document instanceof Transcript)
 		{
 			saveTranscript((Transcript) document);
 		}
 	}
-	
+
 	/**
 	 * Force a document to load.
+	 * 
 	 * @param document
 	 * @return
 	 */
 	public IAnnotatedDocument forceDocumentLoad(IAnnotatedDocument document)
 	{
-		if(document instanceof Transcript)
+		if (document instanceof Transcript)
 		{
 			return forceTranscriptLoad((Transcript) document);
 		}
-		else if(document instanceof Memo)
+		else if (document instanceof Memo)
 		{
 			return forceMemoLoad((Memo) document);
 		}
@@ -709,15 +720,15 @@ public final class Facade
 		memo.setFileName(memoName + ".rtf");
 		memo.setAuthor(author);
 		memo.setParticipants(participants);
-		
+
 		project.getMemos().add(memo);
 		memo.setProject(project);
-		
+
 		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(project.getName());
 		HibernateUtil.quietSave(manager, project);
-		
-		fListenerManager.notifyMemoListeners(ChangeType.ADD, new Memo[]{memo}, this);
-		
+
+		fListenerManager.notifyMemoListeners(ChangeType.ADD, new Memo[] { memo }, this);
+
 		return memo;
 	}
 }

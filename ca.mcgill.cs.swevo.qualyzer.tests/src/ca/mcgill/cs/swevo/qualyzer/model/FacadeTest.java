@@ -513,7 +513,7 @@ public class FacadeTest
 				0);
 		newTranscript = fFacade.forceTranscriptLoad(newTranscript);
 		assertNotNull(newTranscript.getFragments().get(0));
-		assertEquals(transcript, newTranscript.getFragments().get(0).getTranscript());
+		assertEquals(transcript, newTranscript.getFragments().get(0).getDocument());
 	}
 	
 	/**

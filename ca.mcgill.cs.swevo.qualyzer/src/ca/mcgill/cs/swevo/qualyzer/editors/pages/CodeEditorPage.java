@@ -229,7 +229,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 								if(entry.getCode().equals(toDelete))
 								{
 									fragment.getCodeEntries().remove(i);
-									Facade.getInstance().saveTranscript(fragment.getTranscript());
+									Facade.getInstance().saveTranscript((Transcript)fragment.getDocument());
 									break;
 								}
 							}
