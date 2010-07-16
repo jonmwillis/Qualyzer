@@ -9,24 +9,16 @@
  *     Martin Robillard
  *     Jonathan Faubert
  *******************************************************************************/
-
 package ca.mcgill.cs.swevo.qualyzer.model.validation;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Code;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 
 /**
- * Validates the business rules when a new code is created:
- * - Name non-empty
- * - Name not already in use (except if it's oldName)
- * - Name in alphanumerical+ format.
+ * Validates the business rules when a new code is created.
  */
-public class CodeValidator extends AbstractValidator
+public class CodeValidator extends BasicNameValidator
 {
-	private final String fName;
-	private final Project fProject;
-	private final String fOldName;
-	
 	/**
 	 * Constructs a new CodeValidator.
 	 * @param pName The name chosen for the new code.
@@ -35,9 +27,7 @@ public class CodeValidator extends AbstractValidator
 	 */
 	public CodeValidator(String pName, String pOldName, Project pProject)
 	{
-		fName = pName;
-		fOldName = pOldName;
-		fProject = pProject;
+		super(Messages.getString("model.validation.CodeValidator.label"), pName, pOldName, pProject);
 	}
 	
 	/**
@@ -51,34 +41,7 @@ public class CodeValidator extends AbstractValidator
 	}
 	
 	@Override
-	public boolean isValid() 
-	{
-		boolean lReturn = true;
-		
-		if(fName.length() == 0)
-		{
-			lReturn = false;
-			fMessage = Messages.getString("model.validation.CodeValidator.empty");  //$NON-NLS-1$
-		}
-		else if(!ValidationUtils.verifyID(fName))
-		{
-			lReturn = false;
-			fMessage = Messages.getString(
-					"model.validation.CodeValidator.invalid");  //$NON-NLS-1$
-		}
-		else if(nameInUse())
-		{
-			if((fOldName == null) || (!fName.equals(fOldName)))
-			{
-				lReturn = false;
-				fMessage = Messages.getString("model.validation.CodeValidator.taken");  //$NON-NLS-1$
-			}
-		}
-		
-		return lReturn;
-	}
-	
-	private boolean nameInUse()
+	protected boolean nameInUse()
 	{
 		for(Code code : fProject.getCodes())
 		{
@@ -87,16 +50,6 @@ public class CodeValidator extends AbstractValidator
 				return true;
 			}
 		}
-		
 		return false;
-	}
-	
-	/**
-	 * The name of the code to test.
-	 * @return
-	 */
-	protected String getName()
-	{
-		return fName;
 	}
 }
