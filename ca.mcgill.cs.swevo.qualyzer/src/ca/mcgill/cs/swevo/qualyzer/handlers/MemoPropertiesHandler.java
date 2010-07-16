@@ -19,8 +19,11 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.navigator.CommonNavigator;
 
+import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.dialogs.MemoPropertiesDialog;
+import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Memo;
 
 /**
@@ -49,7 +52,14 @@ public class MemoPropertiesHandler extends AbstractHandler
 				dialog.create();
 				if(dialog.open() == Window.OK)
 				{
+					memo.setDate(dialog.getDate());
+					memo.setAuthor(dialog.getAuthor());
+					memo.setParticipants(dialog.getParticipants());
 					
+					Facade.getInstance().saveMemo(memo);
+					
+					CommonNavigator view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+					view.getCommonViewer().refresh();
 				}
 			}
 		}

@@ -733,4 +733,17 @@ public final class Facade
 
 		return memo;
 	}
+
+	/**
+	 * @param memo
+	 */
+	public void saveMemo(Memo memo)
+	{
+		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(
+				memo.getProject().getName());
+		HibernateUtil.quietSave(manager, memo);
+
+		fListenerManager.notifyMemoListeners(ChangeType.MODIFY, new Memo[] { memo }, this);
+		
+	}
 }
