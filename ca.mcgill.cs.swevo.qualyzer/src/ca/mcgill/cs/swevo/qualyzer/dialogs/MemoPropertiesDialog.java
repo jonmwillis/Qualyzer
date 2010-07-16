@@ -16,10 +16,15 @@ package ca.mcgill.cs.swevo.qualyzer.dialogs;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -32,6 +37,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
@@ -54,8 +60,11 @@ public class MemoPropertiesDialog extends TitleAreaDialog
 	private ImageRegistry fRegistry;
 	private DateTime fDate;
 	private Combo fAuthor;
-
 	private Table fTable;
+	
+	private List<Participant> fParticipants;
+	private Investigator fInvestigator;
+	private String fDateString;
 	
 	/**
 	 * Constructor.
@@ -112,7 +121,7 @@ public class MemoPropertiesDialog extends TitleAreaDialog
 		
 		Composite container = new Composite(parent, SWT.NULL);
 		container.setLayout(new GridLayout(2, true));
-		container.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
+		container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
 		Label label = new Label(container, SWT.NULL);
 		label.setText("Name");
@@ -159,11 +168,11 @@ public class MemoPropertiesDialog extends TitleAreaDialog
 		
 		Button button = new Button(composite, SWT.PUSH);
 		button.setImage(getImage(ADD_IMG, QualyzerActivator.PLUGIN_ID));
-		//TODO add listener
+		button.addSelectionListener(createAddListener());
 		
 		button = new Button(composite, SWT.PUSH);
 		button.setImage(getImage(REMOVE_IMG, QualyzerActivator.PLUGIN_ID));
-		//TODO add listener
+		button.addSelectionListener(addRemoveListener());
 		
 		fTable = new Table(container, SWT.MULTI);
 		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -174,6 +183,78 @@ public class MemoPropertiesDialog extends TitleAreaDialog
 		return parent;
 	}
 	
+	/**
+	 * @return
+	 */
+	private SelectionListener createAddListener()
+	{
+		return new SelectionAdapter()
+		{
+			/* (non-Javadoc)
+			 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+			 */
+			@Override
+			public void widgetSelected(SelectionEvent e)
+			{
+				List<Participant> list = fMemo.getProject().getParticipants();
+				ElementListSelectionDialog dialog = new ElementListSelectionDialog(getShell(), new LabelProvider());
+				String[] names = new String[list.size()];
+				for(int i = 0; i < list.size(); i++)
+				{
+					names[i] = list.get(i).getParticipantId();
+				}
+				dialog.setElements(names);
+				dialog.setTitle("Which participant would you like to add");
+				dialog.open();
+				Object[] result = dialog.getResult();
+				for(Object s : result)
+				{
+					if(notInTable(s))
+					{
+						TableItem item = new TableItem(fTable, SWT.NULL);
+						item.setText((String)s);
+					}
+				}
+			}
+		};
+	}
+
+	/**
+	 * @param s
+	 * @return
+	 */
+	protected boolean notInTable(Object s)
+	{
+		for(TableItem item : fTable.getItems())
+		{
+			if(item.getText().equals(s))
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * @return
+	 */
+	private SelectionListener addRemoveListener()
+	{
+		return new SelectionAdapter(){
+			/* (non-Javadoc)
+			 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+			 */
+			@Override
+			public void widgetSelected(SelectionEvent e)
+			{
+				while(fTable.getSelectionCount() > 0)
+				{
+					fTable.remove(fTable.getSelectionIndex());
+				}
+			}
+		};
+	}
+
 	private void buildParticipants()
 	{
 		Memo lMemo = Facade.getInstance().forceMemoLoad(fMemo);
@@ -189,13 +270,18 @@ public class MemoPropertiesDialog extends TitleAreaDialog
 	 */
 	public String getDate()
 	{
-		return (fDate.getMonth() + 1)+SLASH+fDate.getDay()+SLASH+fDate.getYear();
+		return fDateString;
 	}
 	
 	/**
 	 * @return the fAuthor
 	 */
 	public Investigator getAuthor()
+	{
+		return fInvestigator;
+	}
+	
+	private Investigator retrieveAuthor()
 	{
 		String iName = fAuthor.getText();
 		
@@ -217,6 +303,12 @@ public class MemoPropertiesDialog extends TitleAreaDialog
 	 */
 	public List<Participant> getParticipants()
 	{
+		return fParticipants;
+	}
+	
+	
+	private List<Participant> retrieveParticipants()
+	{
 		List<Participant> participants = new ArrayList<Participant>();
 		
 		for(TableItem item : fTable.getItems())
@@ -231,5 +323,18 @@ public class MemoPropertiesDialog extends TitleAreaDialog
 		}
 		
 		return participants;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.dialogs.Dialog#okPressed()
+	 */
+	@Override
+	protected void okPressed()
+	{
+		fDateString = (fDate.getMonth() + 1)+SLASH+fDate.getDay()+SLASH+fDate.getYear();
+		fParticipants = retrieveParticipants();
+		fInvestigator = retrieveAuthor();
+		
+		super.okPressed();
 	}
 }
