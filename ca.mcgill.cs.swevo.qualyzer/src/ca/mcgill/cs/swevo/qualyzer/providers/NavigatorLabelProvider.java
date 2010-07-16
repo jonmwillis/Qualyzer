@@ -59,7 +59,7 @@ public class NavigatorLabelProvider extends LabelProvider implements ILabelProvi
 		addImage(CPROJECT_IMG, QualyzerActivator.PLUGIN_ID, "icons/cprj_obj.gif"); //$NON-NLS-1$
 		addImage(CODE_IMG, QualyzerActivator.PLUGIN_ID, "icons/code_obj.png"); //$NON-NLS-1$
 		addImage(INVESTIGATOR_IMG, QualyzerActivator.PLUGIN_ID, "icons/investigator_obj.png"); //$NON-NLS-1$
-		addImage(MEMO_IMG, QualyzerActivator.PLUGIN_ID, "icons/memo_obj.png");
+		addImage(MEMO_IMG, QualyzerActivator.PLUGIN_ID, "icons/memo_obj.png"); //$NON-NLS-1$
 	}
 	
 	/**

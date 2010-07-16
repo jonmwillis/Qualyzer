@@ -172,9 +172,9 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		
 		if(string.isEmpty())
 		{
-			return "\\";
+			return "\\"; //$NON-NLS-1$
 		}
-		else if(string.equals("}") || string.equals("{"))
+		else if(string.equals("}") || string.equals("{")) //$NON-NLS-1$ //$NON-NLS-2$
 		{
 			return string;
 		}

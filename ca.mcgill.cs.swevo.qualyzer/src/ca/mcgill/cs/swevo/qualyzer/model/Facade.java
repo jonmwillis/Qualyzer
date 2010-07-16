@@ -718,7 +718,7 @@ public final class Facade
 	{
 		Memo memo = new Memo();
 		memo.setName(memoName);
-		memo.setFileName(memoName + ".rtf");
+		memo.setFileName(memoName + ".rtf"); //$NON-NLS-1$
 		memo.setDate(date);
 		memo.setAuthor(author);
 		memo.setParticipants(participants);

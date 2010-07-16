@@ -46,7 +46,7 @@ public class CodeChooserValidator extends CodeValidator
 		
 		if(fFragment != null && codeInUse(fName))
 		{
-			fMessage = "This code is already attached to this fragment.";
+			fMessage = Messages.getString("model.validator.CodeChooserValidator.codeAttached"); //$NON-NLS-1$
 			return false;
 		}
 		

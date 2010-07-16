@@ -27,7 +27,7 @@ public class CodeValidator extends BasicNameValidator
 	 */
 	public CodeValidator(String pName, String pOldName, Project pProject)
 	{
-		super(Messages.getString("model.validation.CodeValidator.label"), pName, pOldName, pProject);
+		super(Messages.getString("model.validation.CodeValidator.label"), pName, pOldName, pProject); //$NON-NLS-1$
 	}
 	
 	/**

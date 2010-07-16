@@ -22,7 +22,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Project;
  */
 public class BasicNameValidator extends AbstractValidator
 {
-	private static final String BLANK = " ";
+	private static final String BLANK = " "; //$NON-NLS-1$
 	private static final int MAX_LENGTH = 255;
 	
 	protected final Project fProject;
@@ -64,24 +64,25 @@ public class BasicNameValidator extends AbstractValidator
 		if(fName.length() == 0)
 		{
 			lReturn = false;
-			fMessage = fLabel + BLANK + Messages.getString("model.validation.BasicNameValidator.empty");
+			fMessage = fLabel + BLANK + Messages.getString("model.validation.BasicNameValidator.empty"); //$NON-NLS-1$
 		}
 		else if(fName.length() > MAX_LENGTH)
 		{
 			lReturn = false;
-			fMessage = fLabel + BLANK + Messages.getString("model.validation.BasicNameValidator.tooLong");
+			fMessage = fLabel + BLANK + Messages.getString("model.validation.BasicNameValidator.tooLong"); //$NON-NLS-1$
 		}
 		else if(!ValidationUtils.verifyID(fName))
 		{
 			lReturn = false;
-			fMessage = fLabel + BLANK + Messages.getString("model.validation.BasicNameValidator.invalid");  
+			fMessage = fLabel + BLANK + Messages.getString("model.validation.BasicNameValidator.invalid"); //$NON-NLS-1$
 		}
 		else if(nameInUse())
 		{
 			if((fOldName == null) || (!fName.equals(fOldName)))
 			{
 				lReturn = false;
-				fMessage = fLabel + BLANK + Messages.getString("model.validation.BasicNameValidator.taken");  
+				fMessage = fLabel + BLANK + 
+					Messages.getString("model.validation.BasicNameValidator.taken"); //$NON-NLS-1$
 			}
 		}
 		return lReturn;

@@ -68,7 +68,8 @@ public class NewMemoWizard extends Wizard
 		}
 		catch(QualyzerException e)
 		{
-			MessageDialog.openError(getShell(), "Memo Creation Error", e.getMessage());
+			MessageDialog.openError(getShell(),
+					Messages.getString("wizards.NewMemoWizard.memoError"), e.getMessage()); //$NON-NLS-1$
 			return false;
 		}
 		

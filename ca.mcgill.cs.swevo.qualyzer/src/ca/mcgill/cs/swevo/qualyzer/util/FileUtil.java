@@ -277,14 +277,14 @@ public final class FileUtil
 		IProject wProject = root.getProject(projectName);
 		String workspacePath = wProject.getLocation().toString();
 		
-		String path = workspacePath+File.separator+MEMOS+File.separator+memoName+".rtf";
+		String path = workspacePath+File.separator+MEMOS+File.separator+memoName+".rtf"; //$NON-NLS-1$
 		File file = new File(path);
 		
 		try
 		{
 			if(!file.createNewFile())
 			{
-				throw new QualyzerException("Unable to create the memo file. One may already exist with that name.");
+				throw new QualyzerException(Messages.getString("util.FileUtil.memoFailed")); //$NON-NLS-1$
 			}
 			else
 			{
@@ -295,8 +295,8 @@ public final class FileUtil
 		}
 		catch (IOException e)
 		{
-			gLogger.error("Failed to create new File", e); 
-			throw new QualyzerException("There was an error creating the memo file.", e); 
+			gLogger.error("Failed to create new File", e);  //$NON-NLS-1$
+			throw new QualyzerException(Messages.getString("util.FileUtil.memoCreationFailed"), e);  //$NON-NLS-1$
 		}
 	}
 }
