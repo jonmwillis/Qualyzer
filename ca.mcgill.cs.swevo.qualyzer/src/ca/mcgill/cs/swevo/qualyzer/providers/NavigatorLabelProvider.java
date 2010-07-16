@@ -42,6 +42,7 @@ public class NavigatorLabelProvider extends LabelProvider implements ILabelProvi
 	private static final String FILE_IMG = "FILE_IMG"; //$NON-NLS-1$
 	private static final String CODE_IMG = "CODE_IMG"; //$NON-NLS-1$
 	private static final String INVESTIGATOR_IMG = "INVESTIGATOR_IMG"; //$NON-NLS-1$
+	private static final String MEMO_IMG = "MEMO_IMG"; //$NON-NLS-1$
 	
 	private final ImageRegistry fRegistry;
 	
@@ -58,6 +59,7 @@ public class NavigatorLabelProvider extends LabelProvider implements ILabelProvi
 		addImage(CPROJECT_IMG, QualyzerActivator.PLUGIN_ID, "icons/cprj_obj.gif"); //$NON-NLS-1$
 		addImage(CODE_IMG, QualyzerActivator.PLUGIN_ID, "icons/code_obj.png"); //$NON-NLS-1$
 		addImage(INVESTIGATOR_IMG, QualyzerActivator.PLUGIN_ID, "icons/investigator_obj.png"); //$NON-NLS-1$
+		addImage(MEMO_IMG, QualyzerActivator.PLUGIN_ID, "icons/memo_obj.png");
 	}
 	
 	/**
@@ -117,6 +119,7 @@ public class NavigatorLabelProvider extends LabelProvider implements ILabelProvi
 		}
 		else if(element instanceof Memo)
 		{
+			image = getImage(MEMO_IMG, QualyzerActivator.PLUGIN_ID);
 		}
 		else if(element instanceof Participant)
 		{
