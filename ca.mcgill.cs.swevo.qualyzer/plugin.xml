@@ -351,7 +351,7 @@
             </command>
             <command
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.newMemo"
-                  icon="icons/file_obj.gif"
+                  icon="icons/memo_obj.png"
                   label="Memo"
                   style="push">
                <visibleWhen
@@ -500,9 +500,14 @@
                <iterate
                      ifEmpty="false"
                      operator="and">
-                  <instanceof
-                        value="ca.mcgill.cs.swevo.qualyzer.model.Transcript">
-                  </instanceof>
+                  <or>
+                     <instanceof
+                           value="ca.mcgill.cs.swevo.qualyzer.model.Transcript">
+                     </instanceof>
+                     <instanceof
+                           value="ca.mcgill.cs.swevo.qualyzer.model.Memo">
+                     </instanceof>
+                  </or>
                </iterate>
             </visibleWhen>
          </command>
@@ -783,6 +788,20 @@
             id="ca.mcgill.cs.swevo.qualyzer.editors.RTFEditor"
             name="%editor.name.rtfEditor">
       </editor>
+      <editor
+            class="ca.mcgill.cs.swevo.qualyzer.editors.TranscriptEditor"
+            default="false"
+            icon="icons/file_obj.gif"
+            id="ca.mcgill.cs.swevo.qualyzer.editors.transcriptEditor"
+            name="Transcript Editor">
+      </editor>
+      <editor
+            class="ca.mcgill.cs.swevo.qualyzer.editors.MemoEditor"
+            default="false"
+            icon="icons/memo_obj.png"
+            id="ca.mcgill.cs.swevo.qualyzer.editors.memoEditor"
+            name="Memo Editor">
+      </editor>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
@@ -790,12 +809,42 @@
             class="ca.mcgill.cs.swevo.qualyzer.handlers.RenameHandler"
             commandId="org.eclipse.ui.edit.rename">
          <activeWhen>
-            <with
-                  variable="activePartId">
-               <equals
-                     value="ca.mcgill.cs.swevo.qualyzer.projectexplorer">
-               </equals>
-            </with>
+            <and>
+               <with
+                     variable="activePartId">
+                  <equals
+                        value="ca.mcgill.cs.swevo.qualyzer.projectexplorer">
+                  </equals>
+               </with>
+               <iterate
+                     ifEmpty="false"
+                     operator="and">
+                  <instanceof
+                        value="ca.mcgill.cs.swevo.qualyzer.model.Transcript">
+                  </instanceof>
+               </iterate>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="ca.mcgill.cs.swevo.qualyzer.handlers.RenameMemoHandler"
+            commandId="org.eclipse.ui.edit.rename">
+         <activeWhen>
+            <and>
+               <with
+                     variable="activePartId">
+                  <equals
+                        value="ca.mcgill.cs.swevo.qualyzer.projectexplorer">
+                  </equals>
+               </with>
+               <iterate
+                     ifEmpty="false"
+                     operator="and">
+                  <instanceof
+                        value="ca.mcgill.cs.swevo.qualyzer.model.Memo">
+                  </instanceof>
+               </iterate>
+            </and>
          </activeWhen>
       </handler>
    </extension>
