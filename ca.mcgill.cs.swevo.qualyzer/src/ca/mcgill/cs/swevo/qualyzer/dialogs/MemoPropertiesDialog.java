@@ -16,7 +16,6 @@ package ca.mcgill.cs.swevo.qualyzer.dialogs;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
@@ -123,46 +122,43 @@ public class MemoPropertiesDialog extends TitleAreaDialog
 		container.setLayout(new GridLayout(2, true));
 		container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
-		Label label = new Label(container, SWT.NULL);
-		label.setText("Name");
+		createSimpleLabel(container, "Memo name");
+		createLongLabel(container, fMemo.getName());
 		
-		label = new Label(container, SWT.BORDER);
-		label.setText(fMemo.getName());
-		label.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
+		createSimpleLabel(container, "File name");
+		createLongLabel(container, fMemo.getFileName());
 		
-		label = new Label(container, SWT.NULL);
-		label.setText("File name");
-		
-		label = new Label(container, SWT.BORDER);
-		label.setText(fMemo.getFileName());
-		label.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
-		
-		label = new Label(container, SWT.NULL);
-		label.setText("Date");
-		
+		createSimpleLabel(container, "Date");
 		fDate = new DateTime(container, SWT.DATE);
 		String[] info = fMemo.getDate().split(SLASH);
 		fDate.setDate(Integer.parseInt(info[2]), Integer.parseInt(info[0])-1, Integer.parseInt(info[1]));
 		
-		label = new Label(container, SWT.NULL);
-		label.setText("Author");
+		createSimpleLabel(container, "Author");
+		buildAuthorCombo(container);
 		
-		fAuthor = new Combo(container, SWT.READ_ONLY);
-		fAuthor.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
-		for(Investigator investigator : fMemo.getProject().getInvestigators())
-		{
-			fAuthor.add(investigator.getNickName());
-			if(investigator.equals(fMemo.getAuthor()))
-			{
-				fAuthor.select(fAuthor.getItemCount() - 1);
-			}
-		}
+		Composite composite = new Composite(container, SWT.BORDER);
+		composite.setLayout(new GridLayout(1, true));
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		
+		createParticipantButtonBar(composite);
+		
+		fTable = new Table(composite, SWT.MULTI);
+		fTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		buildParticipants();
+		
+		return parent;
+	}
+
+	/**
+	 * @param container
+	 */
+	private void createParticipantButtonBar(Composite container)
+	{
 		Composite composite = new Composite(container, SWT.NULL);
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false,  2, 1));
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 		composite.setLayout(new GridLayout(COLS, false));
 		
-		label = new Label(composite, SWT.NULL);
+		Label label = new Label(composite, SWT.NULL);
 		label.setText("Participants");
 		label.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		
@@ -173,14 +169,41 @@ public class MemoPropertiesDialog extends TitleAreaDialog
 		button = new Button(composite, SWT.PUSH);
 		button.setImage(getImage(REMOVE_IMG, QualyzerActivator.PLUGIN_ID));
 		button.addSelectionListener(addRemoveListener());
+	}
+
+	/**
+	 * @param container
+	 * @param name
+	 */
+	private void createLongLabel(Composite container, String text)
+	{
+		Label label = new Label(container, SWT.BORDER);
+		label.setText(text);
+		label.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 		
-		fTable = new Table(container, SWT.MULTI);
-		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
-		gd.horizontalSpan = 2;
-		fTable.setLayoutData(gd);
-		buildParticipants();
-		
-		return parent;
+	}
+
+	private void createSimpleLabel(Composite container, String text)
+	{
+		Label label = new Label(container, SWT.NULL);
+		label.setText(text);
+	}
+	
+	/**
+	 * @param container
+	 */
+	private void buildAuthorCombo(Composite container)
+	{
+		fAuthor = new Combo(container, SWT.READ_ONLY);
+		fAuthor.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
+		for(Investigator investigator : fMemo.getProject().getInvestigators())
+		{
+			fAuthor.add(investigator.getNickName());
+			if(investigator.equals(fMemo.getAuthor()))
+			{
+				fAuthor.select(fAuthor.getItemCount() - 1);
+			}
+		}
 	}
 	
 	/**
