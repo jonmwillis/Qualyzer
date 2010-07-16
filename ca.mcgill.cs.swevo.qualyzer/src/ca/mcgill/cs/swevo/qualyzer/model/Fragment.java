@@ -39,13 +39,13 @@ public class Fragment
 {
 	private static final int NUM1 = 37837;
 	private static final int NUM2 = 20661;
-	
+
 	private int fOffset;
 	private int fLength;
 	private List<Annotation> fAnnotations = new ArrayList<Annotation>();
 	private List<CodeEntry> fCodeEntries = new ArrayList<CodeEntry>();
 	private Long fPersistenceId;
-	private Transcript fTranscript;
+	private IAnnotatedDocument fDocument;
 
 	/**
 	 * @return
@@ -140,52 +140,56 @@ public class Fragment
 	/**
 	 * 
 	 */
-	@ManyToOne
-	@JoinColumn(name = "transcript_fk")
-	public Transcript getTranscript()
+	@ManyToOne(targetEntity = AnnotatedDocument.class)
+	@JoinColumn(name = "document_fk")
+	public IAnnotatedDocument getDocument()
 	{
-		return fTranscript;
+		return fDocument;
 	}
 
 	/**
 	 * 
 	 * @param transcript
 	 */
-	public void setTranscript(Transcript transcript)
+	public void setDocument(IAnnotatedDocument document)
 	{
-		this.fTranscript = transcript;
+		this.fDocument = document;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
 	public boolean equals(Object obj)
 	{
-		if(obj == null)
+		if (obj == null)
 		{
 			return false;
 		}
-		else if(obj == this)
+		else if (obj == this)
 		{
 			return true;
 		}
-		else if(obj.getClass().equals(getClass()))
+		else if (obj.getClass().equals(getClass()))
 		{
 			Fragment fragment = (Fragment) obj;
-			return new EqualsBuilder().append(fOffset, fragment.fOffset)
-			.append(fLength, fragment.fLength).append(fTranscript, fragment.fTranscript).isEquals();
+			return new EqualsBuilder().append(fOffset, fragment.fOffset).append(fLength, fragment.fLength).append(
+					fDocument, fragment.fDocument).isEquals();
 		}
-		
+
 		return false;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
 	public int hashCode()
 	{
-		return new HashCodeBuilder(NUM1, NUM2).append(fOffset).append(fLength).append(fTranscript).toHashCode();
+		return new HashCodeBuilder(NUM1, NUM2).append(fOffset).append(fLength).append(fDocument).toHashCode();
 	}
 }

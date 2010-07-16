@@ -432,12 +432,12 @@ public class EqualityTest
 		t2.setFileName(fileName);
 		
 		Fragment f1 = new Fragment();
-		f1.setTranscript(t1);
+		f1.setDocument(t1);
 		f1.setOffset(5);
 		f1.setLength(9);
 
 		Fragment f2 = new Fragment();
-		f2.setTranscript(t2);
+		f2.setDocument(t2);
 		f2.setOffset(5);
 		f2.setLength(9);
 		

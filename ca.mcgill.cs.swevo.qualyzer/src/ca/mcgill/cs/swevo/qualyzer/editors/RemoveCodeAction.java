@@ -26,6 +26,7 @@ import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import ca.mcgill.cs.swevo.qualyzer.model.CodeEntry;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Fragment;
+import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 
 /**
  *
@@ -111,7 +112,7 @@ public class RemoveCodeAction extends Action
 				if(entry.getCode().getCodeName().equals(toDelete))
 				{
 					fragment.getCodeEntries().remove(i);
-					Facade.getInstance().saveTranscript(fragment.getTranscript());
+					Facade.getInstance().saveTranscript((Transcript)fragment.getDocument());
 					break;
 				}
 			}
