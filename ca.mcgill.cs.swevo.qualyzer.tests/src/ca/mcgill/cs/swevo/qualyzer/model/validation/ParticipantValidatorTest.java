@@ -32,6 +32,12 @@ public class ParticipantValidatorTest
 	private static final String SAME_PARTICIPANT_NAME = "Jaffy";
 	
 	private static final String TEST_PARTICIPANT_ID = "P01";
+	
+	private static final String LONG_NAME = "AAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBB"+
+	"AAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBB"+
+	"AAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBB"+
+	"AAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBB"+
+	"AAAAAAAAAABBBBBB";
 
 	private Facade fFacade;
 	
@@ -65,7 +71,7 @@ public class ParticipantValidatorTest
 	{
 		ParticipantValidator lValidator = new ParticipantValidator("", fProject);
 		assertFalse(lValidator.isValid());
-		assertEquals(Messages.getString("model.validation.ParticipantValidator.emptyParticipantID"),lValidator.getErrorMessage());
+		assertEquals("Participant ID " + Messages.getString("model.validation.BasicNameValidator.empty"),lValidator.getErrorMessage());
 	}
 	
 	/**
@@ -76,7 +82,7 @@ public class ParticipantValidatorTest
 	{
 		ParticipantValidator lValidator = new ParticipantValidator("Bing! Crosby", fProject);
 		assertFalse(lValidator.isValid());
-		assertEquals(Messages.getString("model.validation.ParticipantValidator.invalidParticipantName"),lValidator.getErrorMessage());
+		assertEquals("Participant ID " + Messages.getString("model.validation.BasicNameValidator.invalid"),lValidator.getErrorMessage());
 	}
 	
 	/**
@@ -87,7 +93,7 @@ public class ParticipantValidatorTest
 	{
 		ParticipantValidator lValidator = new ParticipantValidator(TEST_PARTICIPANT_ID, fProject);
 		assertFalse(lValidator.isValid());
-		assertEquals(Messages.getString("model.validation.ParticipantValidator.IDTaken"),lValidator.getErrorMessage());
+		assertEquals("Participant ID " + Messages.getString("model.validation.BasicNameValidator.taken"),lValidator.getErrorMessage());
 	}
 	
 	/**
@@ -98,7 +104,18 @@ public class ParticipantValidatorTest
 	{
 		ParticipantValidator lValidator = new ParticipantValidator(TEST_PARTICIPANT_ID, TEST_PARTICIPANT_ID + "Foo", fProject);
 		assertFalse(lValidator.isValid());
-		assertEquals(Messages.getString("model.validation.ParticipantValidator.IDTaken"),lValidator.getErrorMessage());
+		assertEquals("Participant ID " + Messages.getString("model.validation.BasicNameValidator.taken"),lValidator.getErrorMessage());
+	}
+	
+	/**
+	 * Verifies that the name is not tooLong.
+	 */
+	@Test
+	public void testTooLong()
+	{
+		ParticipantValidator lValidator = new ParticipantValidator(LONG_NAME, fProject);
+		assertFalse(lValidator.isValid());
+		assertEquals("Participant ID " + Messages.getString("model.validation.BasicNameValidator.tooLong"),lValidator.getErrorMessage());
 	}
 	
 	/**
