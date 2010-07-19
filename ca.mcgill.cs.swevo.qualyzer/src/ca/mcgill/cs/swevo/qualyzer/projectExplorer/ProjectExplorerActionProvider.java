@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
+import ca.mcgill.cs.swevo.qualyzer.model.Memo;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 import ca.mcgill.cs.swevo.qualyzer.providers.WrapperCode;
@@ -101,6 +102,10 @@ public class ProjectExplorerActionProvider extends CommonActionProvider
 			commandId = OPEN_ALL_COMMAND_ID; //$NON-NLS-1$
 		}
 		else if(element instanceof WrapperCode)
+		{
+			commandId = OPEN_ALL_COMMAND_ID;
+		}
+		else if(element instanceof Memo)
 		{
 			commandId = OPEN_ALL_COMMAND_ID;
 		}

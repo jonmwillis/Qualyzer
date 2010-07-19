@@ -19,6 +19,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
+import ca.mcgill.cs.swevo.qualyzer.model.Memo;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 import ca.mcgill.cs.swevo.qualyzer.providers.WrapperCode;
@@ -60,7 +61,10 @@ public class OpenAllHandler extends AbstractHandler
 				{
 					ResourcesUtil.openEditor(page, (WrapperCode) element);
 				}
-				//TODO memo
+				else if(element instanceof Memo)
+				{
+					ResourcesUtil.openEditor(page, (Memo) element);
+				}
 			}
 		}
 		

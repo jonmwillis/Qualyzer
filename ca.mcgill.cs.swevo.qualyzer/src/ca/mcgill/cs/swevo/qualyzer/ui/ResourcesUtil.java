@@ -32,8 +32,9 @@ import org.slf4j.LoggerFactory;
 
 import ca.mcgill.cs.swevo.qualyzer.editors.CodeEditor;
 import ca.mcgill.cs.swevo.qualyzer.editors.InvestigatorFormEditor;
+import ca.mcgill.cs.swevo.qualyzer.editors.MemoEditor;
 import ca.mcgill.cs.swevo.qualyzer.editors.ParticipantFormEditor;
-import ca.mcgill.cs.swevo.qualyzer.editors.RTFEditor;
+import ca.mcgill.cs.swevo.qualyzer.editors.TranscriptEditor;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.CodeEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.InvestigatorEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.ParticipantEditorInput;
@@ -184,7 +185,52 @@ public final class ResourcesUtil
 			{
 				Transcript lTranscript = Facade.getInstance().forceTranscriptLoad(transcript);
 				RTFEditorInput editorInput = new RTFEditorInput(file, lTranscript);
-				editorPart = page.openEditor(editorInput, RTFEditor.ID);
+				editorPart = page.openEditor(editorInput, TranscriptEditor.ID);
+			}
+		}
+		catch (PartInitException e)
+		{
+			gLogger.error(ERROR_MSG, e);
+		}
+		
+		return editorPart;
+	}
+	
+	/**
+	 * Open the Transcript editor.
+	 * @param page
+	 * @param transcript
+	 */
+	public static IEditorPart openEditor(IWorkbenchPage page, Memo memo)
+	{
+		IEditorPart editorPart = null;
+		IProject proj = ResourcesPlugin.getWorkspace().getRoot().getProject(memo.getProject().getName());
+		IFile file = proj.getFile("memos" + File.separator + memo.getFileName()); //$NON-NLS-1$
+		try
+		{
+			file.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
+		}
+		catch (CoreException e)
+		{
+			gLogger.error(ERROR_MSG, e);
+		}
+		
+		if(!file.exists())
+		{
+			MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+					Messages.getString("ui.ResourcesUtil.fileError"), //$NON-NLS-1$
+					"The memo could not be found."); 
+			return editorPart;
+		}
+		String ext = file.getFileExtension();
+		
+		try
+		{
+			if(ext.equals("rtf") || ext.equals("txt")) //$NON-NLS-1$ //$NON-NLS-2$
+			{
+				Memo lMemo = Facade.getInstance().forceMemoLoad(memo);
+				RTFEditorInput editorInput = new RTFEditorInput(file, lMemo);
+				editorPart = page.openEditor(editorInput, MemoEditor.ID);
 			}
 		}
 		catch (PartInitException e)
