@@ -41,13 +41,9 @@ import ca.mcgill.cs.swevo.qualyzer.model.IAnnotatedDocument;
  *
  */
 public class RTFDocumentProvider extends FileDocumentProvider
-{
-	private static final String[] IGNORE_GROUPS = {"fonttbl", /*"colortbl",*/ "colortbl;", "stylesheet", "info", "*"};
-	
-	/**
-	 * 
-	 */
-	private static final String EMPTY = ""; //$NON-NLS-1$
+{	
+	private static final String EMPTY = ""; 
+	private static final String SPACE = " ";
 	private int fBoldTag;
 	private int fItalicTag;
 	private int fUnderlineTag;
@@ -137,7 +133,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 				}
 				else if(ch == '\\')
 				{
-					String escape = " ";  //$NON-NLS-1$
+					String escape = " ";  
 					boolean stop = false;
 					do
 					{
@@ -154,9 +150,9 @@ public class RTFDocumentProvider extends FileDocumentProvider
 			}
 		
 			//It seems that some editors (wordpad) don't put ending tags if the style reaches the EOF
-			text += handleTag("b0", (RTFDocument)document, text, contentStream); //$NON-NLS-1$
-			text += handleTag("i0", (RTFDocument)document, text, contentStream); //$NON-NLS-1$
-			text += handleTag("ulnone", (RTFDocument)document, text, contentStream); //$NON-NLS-1$
+			text += handleTag(RTFTags.BOLD_END, (RTFDocument)document, text, contentStream); 
+			text += handleTag(RTFTags.ITALIC_END, (RTFDocument)document, text, contentStream); 
+			text += handleTag(RTFTags.UNDERLINE_END, (RTFDocument)document, text, contentStream); 
 		}
 		catch(IOException e)
 		{
@@ -173,7 +169,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	 */
 	private boolean isIgnoredGroup(String groupTag)
 	{
-		for(String tag : IGNORE_GROUPS)
+		for(String tag : RTFTags.IGNORE_GROUPS)
 		{
 			if(tag.equals(groupTag))
 			{
@@ -220,47 +216,47 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		
 		if(string.isEmpty())
 		{
-			toReturn = "\\"; //$NON-NLS-1$
+			toReturn = RTFTags.BACKSLASH; 
 		}
-		else if(string.equals("}") || string.equals("{")) //$NON-NLS-1$ //$NON-NLS-2$
+		else if(string.equals("}") || string.equals("{"))  
 		{
 			toReturn = string;
 		}
-		else if(string.equals("par")) //$NON-NLS-1$
+		else if(string.equals(RTFTags.NEW_LINE)) 
 		{
-			toReturn = "\n"; //$NON-NLS-1$
+			toReturn = "\n"; 
 		}
-		else if(string.equals("pard") || string.equals("plain")) //$NON-NLS-1$ //$NON-NLS-2$
+		else if(string.equals(RTFTags.PAR_DEFAULT) || string.equals(RTFTags.PLAIN)) 
 		{
 			endBold(document, currentText);
 			endItalic(document, currentText);
 			endUnderline(document, currentText);
 		}
-		else if(string.equals("tab")) //$NON-NLS-1$
+		else if(string.equals(RTFTags.TAB)) 
 		{
-			toReturn = "\t"; //$NON-NLS-1$
+			toReturn = "\t"; 
 		}
-		else if(string.equals("b")) //$NON-NLS-1$
+		else if(string.equals(RTFTags.BOLD_START)) 
 		{
 			startBold(document, currentText);
 		}
-		else if(string.equals("b0") && fBoldTag != -1) //$NON-NLS-1$
+		else if(string.equals(RTFTags.BOLD_END)) 
 		{	
 			endBold(document, currentText);
 		}
-		else if(string.equals("i")) //$NON-NLS-1$
+		else if(string.equals(RTFTags.ITALIC_START)) 
 		{
 			startItalic(document, currentText);
 		}
-		else if(string.equals("i0") && fItalicTag != -1) //$NON-NLS-1$
+		else if(string.equals(RTFTags.ITALIC_END)) 
 		{
 			endItalic(document, currentText);
 		}
-		else if(string.equals("ul")) //$NON-NLS-1$
+		else if(string.equals(RTFTags.UNDERLINE_START)) 
 		{
 			startUnderline(document, currentText);
 		}
-		else if(string.equals("ulnone") && fUnderlineTag != -1) //$NON-NLS-1$
+		else if(string.equals(RTFTags.UNDERLINE_END)) 
 		{
 			endUnderline(document, currentText);
 		}
@@ -534,7 +530,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		
 		if(ch2 == '\\')
 		{
-			escape += "\\"; //$NON-NLS-1$
+			escape += "\\"; 
 		}
 		else if(ch2 != '{')
 		{
@@ -609,7 +605,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	@SuppressWarnings("unchecked")
 	private String buildRTFString(String contents, IAnnotationModel model)
 	{
-		String output = "{\\rtf1\\ansi\\deff0\n"; //$NON-NLS-1$
+		String output = RTFTags.HEADER; 
 		
 		ArrayList<Position> positions = new ArrayList<Position>();
 		ArrayList<Annotation> annotations = new ArrayList<Annotation>();
@@ -666,16 +662,16 @@ public class RTFDocumentProvider extends FileDocumentProvider
 			
 			if(c == '\n')
 			{
-				output += "\\par \n"; //$NON-NLS-1$
+				output += "\\par \n"; 
 			}
 			else if(c == '\t')
 			{
-				output += "\\tab "; //$NON-NLS-1$
+				output += "\\tab "; 
 			}
 			
 		}
 					
-		return output + "\n}\n\0"; //$NON-NLS-1$
+		return output + RTFTags.FOOTER; 
 	}
 
 	/**
@@ -689,31 +685,31 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		
 		if(type.equals(RTFConstants.BOLD_TYPE))
 		{
-			tag = "\\b0 "; //$NON-NLS-1$
+			tag = RTFTags.BOLD_END_TAG + SPACE; 
 		}
 		else if(type.equals(RTFConstants.ITALIC_TYPE))
 		{
-			tag = "\\i0 "; //$NON-NLS-1$
+			tag = RTFTags.ITALIC_END_TAG + SPACE; 
 		}
 		else if(type.equals(RTFConstants.UNDERLINE_TYPE))
 		{
-			tag = "\\ulnone "; //$NON-NLS-1$
+			tag = RTFTags.UNDERLINE_END_TAG + SPACE; 
 		}
 		else if(type.equals(RTFConstants.BOLD_ITALIC_TYPE))
 		{
-			tag = "\\b0\\i0 "; //$NON-NLS-1$
+			tag = RTFTags.BOLD_END_TAG + RTFTags.ITALIC_END_TAG + SPACE; 
 		}
 		else if(type.equals(RTFConstants.BOLD_UNDERLINE_TYPE))
 		{
-			tag = "\\b0\\ulnone "; //$NON-NLS-1$
+			tag = RTFTags.BOLD_END_TAG + RTFTags.UNDERLINE_END_TAG + SPACE; 
 		}
 		else if(type.equals(RTFConstants.ITALIC_UNDERLINE_TYPE))
 		{
-			tag = "\\i0\\ulnone "; //$NON-NLS-1$
+			tag = RTFTags.ITALIC_END_TAG + RTFTags.UNDERLINE_END_TAG + SPACE; 
 		}
 		else if(type.equals(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE))
 		{
-			tag = "\\b0\\i0\\ulnone "; //$NON-NLS-1$
+			tag = RTFTags.BOLD_END_TAG + RTFTags.ITALIC_END_TAG + RTFTags.UNDERLINE_END_TAG + SPACE; 
 		}
 		
 		return tag;
@@ -730,31 +726,31 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		
 		if(type.equals(RTFConstants.BOLD_TYPE))
 		{
-			tag = "\\b "; //$NON-NLS-1$
+			tag = "\\b "; 
 		}
 		else if(type.equals(RTFConstants.ITALIC_TYPE))
 		{
-			tag = "\\i "; //$NON-NLS-1$
+			tag = "\\i "; 
 		}
 		else if(type.equals(RTFConstants.UNDERLINE_TYPE))
 		{
-			tag = "\\ul "; //$NON-NLS-1$
+			tag = "\\ul "; 
 		}
 		else if(type.equals(RTFConstants.BOLD_ITALIC_TYPE))
 		{
-			tag = "\\b\\i "; //$NON-NLS-1$
+			tag = "\\b\\i "; 
 		}
 		else if(type.equals(RTFConstants.BOLD_UNDERLINE_TYPE))
 		{
-			tag = "\\b\\ul "; //$NON-NLS-1$
+			tag = "\\b\\ul "; 
 		}
 		else if(type.equals(RTFConstants.ITALIC_UNDERLINE_TYPE))
 		{
-			tag = "\\i\\ul "; //$NON-NLS-1$
+			tag = "\\i\\ul "; 
 		}
 		else if(type.equals(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE))
 		{
-			tag = "\\b\\i\\ul "; //$NON-NLS-1$
+			tag = "\\b\\i\\ul "; 
 		}
 		
 		return tag;
@@ -778,36 +774,36 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	{
 		ParserState state = new ParserState(fBoldTag != -1, fItalicTag != -1, fUnderlineTag != -1);
 		fStack.push(state);
-		handleTag("plain", document, text, stream);
+		handleTag(RTFTags.PLAIN, document, text, stream);
 		if(state.isBold())
 		{
-			handleTag("b", document, text, stream);
+			handleTag(RTFTags.BOLD_START, document, text, stream);
 		}
 		if(state.isItalic())
 		{
-			handleTag("i", document, text, stream);
+			handleTag(RTFTags.ITALIC_START, document, text, stream);
 		}
 		if(state.isUnderline())
 		{
-			handleTag("ul", document, text, stream);
+			handleTag(RTFTags.UNDERLINE_START, document, text, stream);
 		}
 	}
 	
 	private void popState(RTFDocument document, String text, InputStream stream) throws IOException
 	{
-		handleTag("plain", document, text, stream);
+		handleTag(RTFTags.PLAIN, document, text, stream);
 		ParserState state = fStack.pop();
 		if(state.isBold())
 		{
-			handleTag("b", document, text, stream);
+			handleTag(RTFTags.BOLD_START, document, text, stream);
 		}
 		if(state.isItalic())
 		{
-			handleTag("i", document, text, stream);
+			handleTag(RTFTags.ITALIC_START, document, text, stream);
 		}
 		if(state.isUnderline())
 		{
-			handleTag("ul", document, text, stream);
+			handleTag(RTFTags.UNDERLINE_START, document, text, stream);
 		}
 	}
 	
