@@ -441,6 +441,52 @@ public final class Facade
 			HibernateUtil.quietClose(session);
 		}
 	}
+	
+	/**
+	 * Try to delete the transcript.
+	 * 
+	 * @param memo
+	 */
+	public void deleteMemo(Memo memo)
+	{
+		Object project = null;
+		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(
+				memo.getProject().getName());
+		Session session = null;
+		Transaction t = null;
+		try
+		{
+			session = manager.openSession();
+			t = session.beginTransaction();
+
+			/*
+			 * The following is ALL required in order to delete the object from the database. Don't ask me why, I don't
+			 * really understand it myself -JF.
+			 */
+			project = session.get(Project.class, memo.getProject().getPersistenceId());
+			Memo lMemo = (Memo) session.get(Memo.class, memo.getPersistenceId());
+
+			((Project) project).getMemos().remove(lMemo);
+
+			session.delete(lMemo);
+			session.saveOrUpdate(project);
+			session.flush();
+			t.commit();
+			fListenerManager.notifyMemoListeners(ChangeType.DELETE, new Memo[] { memo }, this);
+		}
+		catch (HibernateException e)
+		{
+			HibernateUtil.quietRollback(t);
+			String key = "model.Facade.Transcript.cannotDelete"; //$NON-NLS-1$
+			String errorMessage = Messages.getString(key);
+			fLogger.error(key, e);
+			throw new QualyzerException(errorMessage, e);
+		}
+		finally
+		{
+			HibernateUtil.quietClose(session);
+		}
+	}
 
 	/**
 	 * Force a Transcript to load all its fields.
