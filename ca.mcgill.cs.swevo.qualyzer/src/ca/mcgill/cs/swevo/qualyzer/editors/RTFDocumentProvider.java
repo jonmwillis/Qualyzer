@@ -164,6 +164,8 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	private String handleTag(String escape, RTFDocument document, String currentText)
 	{
 		String string = escape.trim();
+		String toReturn = EMPTY;
+		
 		if(escape.charAt(escape.length() - 1) == '\\')
 		{
 			string = escape.substring(0, escape.length() - 1);
@@ -172,214 +174,283 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		
 		if(string.isEmpty())
 		{
-			return "\\"; //$NON-NLS-1$
+			toReturn = "\\"; //$NON-NLS-1$
 		}
 		else if(string.equals("}") || string.equals("{")) //$NON-NLS-1$ //$NON-NLS-2$
 		{
-			return string;
+			toReturn = string;
 		}
 		else if(string.equals("par")) //$NON-NLS-1$
 		{
-			return "\n"; //$NON-NLS-1$
+			toReturn = "\n"; //$NON-NLS-1$
+		}
+		else if(string.equals("pard") || string.equals("plain")) //$NON-NLS-1$ //$NON-NLS-2$
+		{
+			if(fBoldTag != -1)
+			{
+				endBold(document, currentText);
+			}
+			if(fItalicTag != -1)
+			{
+				endItalic(document, currentText);
+			}
+			if(fUnderlineTag != -1)
+			{
+				endUnderline(document, currentText);
+			}
 		}
 		else if(string.equals("tab")) //$NON-NLS-1$
 		{
-			return "\t"; //$NON-NLS-1$
+			toReturn = "\t"; //$NON-NLS-1$
 		}
 		else if(string.equals("b")) //$NON-NLS-1$
 		{
-			fBoldTag = currentText.length();
-			
-			if(fItalicTag != -1 && fUnderlineTag != -1 && fItalicTag != fBoldTag)
-			{
-				Annotation annotation = new Annotation(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE, true, string);
-				Position position = new Position(fItalicTag, fBoldTag - fItalicTag);
-				
-				document.addAnnotation(position, annotation);
-				fItalicTag = fBoldTag;
-				fUnderlineTag = fBoldTag;
-			}
-			else if(fItalicTag != -1 && fItalicTag != fBoldTag)
-			{
-				Annotation annotation = new Annotation(RTFConstants.ITALIC_TYPE, true, EMPTY);
-				Position position = new Position(fItalicTag, fBoldTag - fItalicTag);
-				
-				document.addAnnotation(position, annotation);
-				fItalicTag = fBoldTag;
-			}
-			else if(fUnderlineTag != -1 && fUnderlineTag != fBoldTag)
-			{
-				Annotation annotation = new Annotation(RTFConstants.UNDERLINE_TYPE, true, EMPTY);
-				Position position = new Position(fUnderlineTag, fBoldTag - fUnderlineTag);
-				
-				document.addAnnotation(position, annotation);
-				fUnderlineTag = fBoldTag;
-			}
+			startBold(document, currentText);
 		}
-		else if(string.equals("b0")) //$NON-NLS-1$
+		else if(string.equals("b0") && fBoldTag != -1) //$NON-NLS-1$
 		{	
-			Annotation annotation;
-			int curPos = currentText.length();
-			Position position = new Position(fBoldTag, curPos - fBoldTag);
-			
-			if(fItalicTag != -1 && fUnderlineTag != -1)
-			{
-				annotation = new Annotation(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE, true, EMPTY);
-				fItalicTag = curPos;
-				fUnderlineTag = curPos;
-			}
-			else if(fItalicTag != -1)
-			{
-				annotation = new Annotation(RTFConstants.BOLD_ITALIC_TYPE, true, EMPTY);
-				fItalicTag = curPos;
-			}
-			else if(fUnderlineTag != -1)
-			{
-				annotation = new Annotation(RTFConstants.BOLD_UNDERLINE_TYPE, true, EMPTY);
-				fUnderlineTag = curPos;
-			}
-			else
-			{
-				annotation = new Annotation(RTFConstants.BOLD_TYPE, true, EMPTY);
-			}
-			
-			if(position.length > 0)
-			{
-				document.addAnnotation(position, annotation);
-			}
-			
-			fBoldTag = -1;
+			endBold(document, currentText);
 		}
 		else if(string.equals("i")) //$NON-NLS-1$
 		{
-			fItalicTag = currentText.length();
-			
-			if(fBoldTag != -1 && fUnderlineTag != -1 && fBoldTag != fItalicTag)
-			{
-				Annotation annotation = new Annotation(RTFConstants.BOLD_UNDERLINE_TYPE, true, EMPTY);
-				Position position = new Position(fBoldTag, fItalicTag - fBoldTag);
-				
-				document.addAnnotation(position, annotation);
-				fBoldTag = fItalicTag;
-				fUnderlineTag = fItalicTag;
-			}
-			else if(fBoldTag != -1 && fBoldTag != fItalicTag)
-			{
-				Annotation annotation = new Annotation(RTFConstants.BOLD_TYPE, true, EMPTY);
-				Position position = new Position(fBoldTag, fItalicTag - fBoldTag);
-				
-				document.addAnnotation(position, annotation);
-				fBoldTag = fItalicTag;
-			}
-			else if(fUnderlineTag != -1 && fUnderlineTag != fItalicTag)
-			{
-				Annotation annotation = new Annotation(RTFConstants.UNDERLINE_TYPE, true, EMPTY);
-				Position position = new Position(fUnderlineTag, fItalicTag - fUnderlineTag);
-				
-				document.addAnnotation(position, annotation);
-				fUnderlineTag = fItalicTag;
-			}
+			startItalic(document, currentText);
 		}
-		else if(string.equals("i0")) //$NON-NLS-1$
+		else if(string.equals("i0") && fItalicTag != -1) //$NON-NLS-1$
 		{
-			Annotation annotation;
-			int curPos = currentText.length();
-			Position position = new Position(fItalicTag, curPos - fItalicTag);
-			
-			if(fBoldTag != -1 && fUnderlineTag != -1)
-			{
-				annotation = new Annotation(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE, true, EMPTY);
-				fBoldTag = curPos;
-				fUnderlineTag = curPos;
-			}
-			else if(fBoldTag != -1)
-			{
-				annotation = new Annotation(RTFConstants.BOLD_ITALIC_TYPE, true, EMPTY);
-				fBoldTag = curPos;
-			}
-			else if(fUnderlineTag != -1)
-			{
-				annotation = new Annotation(RTFConstants.ITALIC_UNDERLINE_TYPE, true, EMPTY);
-				fUnderlineTag = curPos;
-			}
-			else
-			{
-				annotation = new Annotation(RTFConstants.ITALIC_TYPE, true, EMPTY);
-			}
-			
-			if(position.length > 0)
-			{
-				document.addAnnotation(position, annotation);
-			}
-			
-			fItalicTag = -1;
+			endItalic(document, currentText);
 		}
 		else if(string.equals("ul")) //$NON-NLS-1$
 		{
-			fUnderlineTag = currentText.length();
-			
-			if(fBoldTag != -1 && fItalicTag != -1 && fBoldTag != fUnderlineTag)
-			{
-				Annotation annotation = new Annotation(RTFConstants.BOLD_ITALIC_TYPE, true, EMPTY);
-				Position position = new Position(fBoldTag, fUnderlineTag - fBoldTag);
-				
-				document.addAnnotation(position, annotation);
-				fBoldTag = fUnderlineTag;
-				fItalicTag = fUnderlineTag;
-			}
-			else if(fBoldTag != -1 && fBoldTag != fUnderlineTag)
-			{
-				Annotation annotation = new Annotation(RTFConstants.BOLD_TYPE, true, EMPTY);
-				Position position = new Position(fBoldTag, fUnderlineTag - fBoldTag);
-				
-				document.addAnnotation(position, annotation);
-				fBoldTag = fUnderlineTag;
-			}
-			else if(fItalicTag != -1 && fItalicTag != fUnderlineTag)
-			{
-				Annotation annotation = new Annotation(RTFConstants.ITALIC_TYPE, true, EMPTY);
-				Position position = new Position(fItalicTag, fUnderlineTag - fItalicTag);
-				
-				document.addAnnotation(position, annotation);
-				fItalicTag = fUnderlineTag;
-			}
+			startUnderline(document, currentText);
 		}
-		else if(string.equals("ulnone")) //$NON-NLS-1$
+		else if(string.equals("ulnone") && fUnderlineTag != -1) //$NON-NLS-1$
 		{
-			Annotation annotation;
-			int curPos = currentText.length();
-			Position position = new Position(fUnderlineTag, curPos - fUnderlineTag);
-			
-			if(fBoldTag != -1 && fItalicTag != -1)
-			{
-				annotation = new Annotation(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE, true, EMPTY);
-				fBoldTag = curPos;
-				fItalicTag = curPos;
-			}
-			else if(fBoldTag != -1)
-			{
-				annotation = new Annotation(RTFConstants.BOLD_UNDERLINE_TYPE, true, EMPTY);
-				fBoldTag = curPos;
-			}
-			else if(fItalicTag != -1)
-			{
-				annotation = new Annotation(RTFConstants.ITALIC_UNDERLINE_TYPE, true, EMPTY);
-				fItalicTag = curPos;
-			}
-			else
-			{
-				annotation = new Annotation(RTFConstants.UNDERLINE_TYPE, true, EMPTY);
-			}
-			
-			if(position.length > 0)
-			{
-				document.addAnnotation(position, annotation);
-			}
-			
-			fUnderlineTag = -1;
+			endUnderline(document, currentText);
 		}
 		
-		return EMPTY;
+		return toReturn;
+	}
+
+	/**
+	 * @param document
+	 * @param currentText
+	 */
+	private void endUnderline(RTFDocument document, String currentText)
+	{
+		Annotation annotation;
+		int curPos = currentText.length();
+		Position position = new Position(fUnderlineTag, curPos - fUnderlineTag);
+		
+		if(fBoldTag != -1 && fItalicTag != -1)
+		{
+			annotation = new Annotation(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE, true, EMPTY);
+			fBoldTag = curPos;
+			fItalicTag = curPos;
+		}
+		else if(fBoldTag != -1)
+		{
+			annotation = new Annotation(RTFConstants.BOLD_UNDERLINE_TYPE, true, EMPTY);
+			fBoldTag = curPos;
+		}
+		else if(fItalicTag != -1)
+		{
+			annotation = new Annotation(RTFConstants.ITALIC_UNDERLINE_TYPE, true, EMPTY);
+			fItalicTag = curPos;
+		}
+		else
+		{
+			annotation = new Annotation(RTFConstants.UNDERLINE_TYPE, true, EMPTY);
+		}
+		
+		if(position.length > 0)
+		{
+			document.addAnnotation(position, annotation);
+		}
+		
+		fUnderlineTag = -1;
+	}
+
+	/**
+	 * @param document
+	 * @param currentText
+	 */
+	private void startUnderline(RTFDocument document, String currentText)
+	{
+		fUnderlineTag = currentText.length();
+		
+		if(fBoldTag != -1 && fItalicTag != -1 && fBoldTag != fUnderlineTag)
+		{
+			Annotation annotation = new Annotation(RTFConstants.BOLD_ITALIC_TYPE, true, EMPTY);
+			Position position = new Position(fBoldTag, fUnderlineTag - fBoldTag);
+			
+			document.addAnnotation(position, annotation);
+			fBoldTag = fUnderlineTag;
+			fItalicTag = fUnderlineTag;
+		}
+		else if(fBoldTag != -1 && fBoldTag != fUnderlineTag)
+		{
+			Annotation annotation = new Annotation(RTFConstants.BOLD_TYPE, true, EMPTY);
+			Position position = new Position(fBoldTag, fUnderlineTag - fBoldTag);
+			
+			document.addAnnotation(position, annotation);
+			fBoldTag = fUnderlineTag;
+		}
+		else if(fItalicTag != -1 && fItalicTag != fUnderlineTag)
+		{
+			Annotation annotation = new Annotation(RTFConstants.ITALIC_TYPE, true, EMPTY);
+			Position position = new Position(fItalicTag, fUnderlineTag - fItalicTag);
+			
+			document.addAnnotation(position, annotation);
+			fItalicTag = fUnderlineTag;
+		}
+	}
+
+	/**
+	 * @param document
+	 * @param currentText
+	 */
+	private void endItalic(RTFDocument document, String currentText)
+	{
+		Annotation annotation;
+		int curPos = currentText.length();
+		Position position = new Position(fItalicTag, curPos - fItalicTag);
+		
+		if(fBoldTag != -1 && fUnderlineTag != -1)
+		{
+			annotation = new Annotation(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE, true, EMPTY);
+			fBoldTag = curPos;
+			fUnderlineTag = curPos;
+		}
+		else if(fBoldTag != -1)
+		{
+			annotation = new Annotation(RTFConstants.BOLD_ITALIC_TYPE, true, EMPTY);
+			fBoldTag = curPos;
+		}
+		else if(fUnderlineTag != -1)
+		{
+			annotation = new Annotation(RTFConstants.ITALIC_UNDERLINE_TYPE, true, EMPTY);
+			fUnderlineTag = curPos;
+		}
+		else
+		{
+			annotation = new Annotation(RTFConstants.ITALIC_TYPE, true, EMPTY);
+		}
+		
+		if(position.length > 0)
+		{
+			document.addAnnotation(position, annotation);
+		}
+		
+		fItalicTag = -1;
+	}
+
+	/**
+	 * @param document
+	 * @param currentText
+	 */
+	private void startItalic(RTFDocument document, String currentText)
+	{
+		fItalicTag = currentText.length();
+		
+		if(fBoldTag != -1 && fUnderlineTag != -1 && fBoldTag != fItalicTag)
+		{
+			Annotation annotation = new Annotation(RTFConstants.BOLD_UNDERLINE_TYPE, true, EMPTY);
+			Position position = new Position(fBoldTag, fItalicTag - fBoldTag);
+			
+			document.addAnnotation(position, annotation);
+			fBoldTag = fItalicTag;
+			fUnderlineTag = fItalicTag;
+		}
+		else if(fBoldTag != -1 && fBoldTag != fItalicTag)
+		{
+			Annotation annotation = new Annotation(RTFConstants.BOLD_TYPE, true, EMPTY);
+			Position position = new Position(fBoldTag, fItalicTag - fBoldTag);
+			
+			document.addAnnotation(position, annotation);
+			fBoldTag = fItalicTag;
+		}
+		else if(fUnderlineTag != -1 && fUnderlineTag != fItalicTag)
+		{
+			Annotation annotation = new Annotation(RTFConstants.UNDERLINE_TYPE, true, EMPTY);
+			Position position = new Position(fUnderlineTag, fItalicTag - fUnderlineTag);
+			
+			document.addAnnotation(position, annotation);
+			fUnderlineTag = fItalicTag;
+		}
+	}
+
+	/**
+	 * @param document
+	 * @param currentText
+	 */
+	private void endBold(RTFDocument document, String currentText)
+	{
+		Annotation annotation;
+		int curPos = currentText.length();
+		Position position = new Position(fBoldTag, curPos - fBoldTag);
+		
+		if(fItalicTag != -1 && fUnderlineTag != -1)
+		{
+			annotation = new Annotation(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE, true, EMPTY);
+			fItalicTag = curPos;
+			fUnderlineTag = curPos;
+		}
+		else if(fItalicTag != -1)
+		{
+			annotation = new Annotation(RTFConstants.BOLD_ITALIC_TYPE, true, EMPTY);
+			fItalicTag = curPos;
+		}
+		else if(fUnderlineTag != -1)
+		{
+			annotation = new Annotation(RTFConstants.BOLD_UNDERLINE_TYPE, true, EMPTY);
+			fUnderlineTag = curPos;
+		}
+		else
+		{
+			annotation = new Annotation(RTFConstants.BOLD_TYPE, true, EMPTY);
+		}
+		
+		if(position.length > 0)
+		{
+			document.addAnnotation(position, annotation);
+		}
+		
+		fBoldTag = -1;
+	}
+
+	/**
+	 * @param document
+	 * @param currentText
+	 */
+	private void startBold(RTFDocument document, String currentText)
+	{
+		fBoldTag = currentText.length();
+		
+		if(fItalicTag != -1 && fUnderlineTag != -1 && fItalicTag != fBoldTag)
+		{
+			Annotation annotation = new Annotation(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE, true, EMPTY);
+			Position position = new Position(fItalicTag, fBoldTag - fItalicTag);
+			
+			document.addAnnotation(position, annotation);
+			fItalicTag = fBoldTag;
+			fUnderlineTag = fBoldTag;
+		}
+		else if(fItalicTag != -1 && fItalicTag != fBoldTag)
+		{
+			Annotation annotation = new Annotation(RTFConstants.ITALIC_TYPE, true, EMPTY);
+			Position position = new Position(fItalicTag, fBoldTag - fItalicTag);
+			
+			document.addAnnotation(position, annotation);
+			fItalicTag = fBoldTag;
+		}
+		else if(fUnderlineTag != -1 && fUnderlineTag != fBoldTag)
+		{
+			Annotation annotation = new Annotation(RTFConstants.UNDERLINE_TYPE, true, EMPTY);
+			Position position = new Position(fUnderlineTag, fBoldTag - fUnderlineTag);
+			
+			document.addAnnotation(position, annotation);
+			fUnderlineTag = fBoldTag;
+		}
 	}
 	
 	private String nextTag(InputStream ioStream) throws IOException
