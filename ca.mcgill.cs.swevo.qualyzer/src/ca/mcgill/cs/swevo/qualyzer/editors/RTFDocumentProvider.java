@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Stack;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -50,6 +51,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	private int fBoldTag;
 	private int fItalicTag;
 	private int fUnderlineTag;
+	private Stack<ParserState> fStack;
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.editors.text.StorageDocumentProvider#createDocument(java.lang.Object)
@@ -91,6 +93,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		fBoldTag = -1;
 		fItalicTag = -1;
 		fUnderlineTag = -1;
+		fStack = new Stack<ParserState>();
 		
 		try
 		{
@@ -111,19 +114,27 @@ public class RTFDocumentProvider extends FileDocumentProvider
 						ch = (char) contentStream.read();
 						if(ch == '\\')
 						{
-							String groupTag = nextTag(contentStream);
-							text += handleTag(groupTag, (RTFDocument) document, text, contentStream);
+							String groupTag = EMPTY;
+							boolean stop = false;
+							do
+							{
+								groupTag = nextTag(contentStream);
+								text += handleTag(groupTag, (RTFDocument) document, text, contentStream);
+								stop = isIgnoredGroup(groupTag) || groupTag.equals("*") || groupTag.equals("*\\");
+							}while(!stop && groupTag.length() > 1 && groupTag.charAt(groupTag.length() - 1) == '\\');
 						}
 					}
 				}
 				else if(ch == '\\')
 				{
 					String escape = " ";  //$NON-NLS-1$
+					boolean stop = false;
 					do
 					{
 						escape = nextTag(contentStream);
 						text += handleTag(escape, (RTFDocument) document, text, contentStream);
-					}while(escape.charAt(escape.length() - 1) == '\\' && escape.length() > 1);
+						stop = escape.equals("*") || escape.equals("*\\");
+					}while(escape.length() > 1 && escape.charAt(escape.length() - 1) == '\\' && !stop);
 					
 				}
 				else if((!Character.isWhitespace(ch) && ch != '\0') || ch == ' ')
@@ -133,19 +144,9 @@ public class RTFDocumentProvider extends FileDocumentProvider
 			}
 		
 			//It seems that some editors (wordpad) don't put ending tags if the style reaches the EOF
-			if(fBoldTag != -1)
-			{
-				text += handleTag("b0", (RTFDocument)document, text, contentStream); //$NON-NLS-1$
-			}
-			if(fItalicTag != -1)
-			{
-				text += handleTag("i0", (RTFDocument)document, text, contentStream); //$NON-NLS-1$
-			}
-			if(fUnderlineTag != -1)
-			{
-				text += handleTag("ulnone", (RTFDocument)document, text, contentStream); //$NON-NLS-1$
-			}
-		
+			text += handleTag("b0", (RTFDocument)document, text, contentStream); //$NON-NLS-1$
+			text += handleTag("i0", (RTFDocument)document, text, contentStream); //$NON-NLS-1$
+			text += handleTag("ulnone", (RTFDocument)document, text, contentStream); //$NON-NLS-1$
 		}
 		catch(IOException e)
 		{
@@ -156,37 +157,55 @@ public class RTFDocumentProvider extends FileDocumentProvider
 
 	}
 	
+	/**
+	 * @param groupTag
+	 * @return
+	 */
+	private boolean isIgnoredGroup(String groupTag)
+	{
+		for(String tag : IGNORE_GROUPS)
+		{
+			if(tag.equals(groupTag))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
 	private String handleTag(String escape, RTFDocument document, String currentText, InputStream stream) 
 		throws IOException
 	{
 		String string = escape.trim();
 		String toReturn = EMPTY;
 		
-		if(escape.charAt(escape.length() - 1) == '\\')
+		if(string.isEmpty())
 		{
-			string = escape.substring(0, escape.length() - 1);
+			return toReturn;
+		}
+		
+		if(string.charAt(string.length() - 1) == '\\')
+		{
+			string = string.substring(0, string.length() - 1);
 		}
 		string = string.trim();
 		
-		for(String tag : IGNORE_GROUPS)
+		if(isIgnoredGroup(string))
 		{
-			if(tag.equals(string))
+			int count = string.equals("*") || string.equals("colortbl;") ? 1 : 2;
+			while(count > 0)
 			{
-				int count = tag.equals("*") || tag.equals("colortbl;") ? 1 : 2;
-				while(count > 0)
+				char c = (char) stream.read();
+				if(c == '{')
 				{
-					char c = (char) stream.read();
-					if(c == '{')
-					{
-						count++;
-					}
-					else if(c == '}')
-					{
-						count--;
-					}
+					count++;
 				}
-				return toReturn;
+				else if(c == '}')
+				{
+					count--;
+				}
 			}
+			return toReturn;
 		}
 		
 		if(string.isEmpty())
@@ -203,18 +222,9 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		}
 		else if(string.equals("pard") || string.equals("plain")) //$NON-NLS-1$ //$NON-NLS-2$
 		{
-			if(fBoldTag != -1)
-			{
-				endBold(document, currentText);
-			}
-			if(fItalicTag != -1)
-			{
-				endItalic(document, currentText);
-			}
-			if(fUnderlineTag != -1)
-			{
-				endUnderline(document, currentText);
-			}
+			endBold(document, currentText);
+			endItalic(document, currentText);
+			endUnderline(document, currentText);
 		}
 		else if(string.equals("tab")) //$NON-NLS-1$
 		{
@@ -254,6 +264,11 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	 */
 	private void endUnderline(RTFDocument document, String currentText)
 	{
+		if(fUnderlineTag == -1)
+		{
+			return;
+		}
+		
 		Annotation annotation;
 		int curPos = currentText.length();
 		Position position = new Position(fUnderlineTag, curPos - fUnderlineTag);
@@ -293,6 +308,11 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	 */
 	private void startUnderline(RTFDocument document, String currentText)
 	{
+		if(fUnderlineTag != -1)
+		{
+			return;
+		}
+		
 		fUnderlineTag = currentText.length();
 		
 		if(fBoldTag != -1 && fItalicTag != -1 && fBoldTag != fUnderlineTag)
@@ -328,6 +348,11 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	 */
 	private void endItalic(RTFDocument document, String currentText)
 	{
+		if(fItalicTag == -1)
+		{
+			return;
+		}
+		
 		Annotation annotation;
 		int curPos = currentText.length();
 		Position position = new Position(fItalicTag, curPos - fItalicTag);
@@ -367,6 +392,11 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	 */
 	private void startItalic(RTFDocument document, String currentText)
 	{
+		if(fItalicTag != -1)
+		{
+			return;
+		}
+		
 		fItalicTag = currentText.length();
 		
 		if(fBoldTag != -1 && fUnderlineTag != -1 && fBoldTag != fItalicTag)
@@ -402,6 +432,11 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	 */
 	private void endBold(RTFDocument document, String currentText)
 	{
+		if(fBoldTag == -1)
+		{
+			return;
+		}
+		
 		Annotation annotation;
 		int curPos = currentText.length();
 		Position position = new Position(fBoldTag, curPos - fBoldTag);
@@ -441,11 +476,16 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	 */
 	private void startBold(RTFDocument document, String currentText)
 	{
+		if(fBoldTag != -1)
+		{
+			return;
+		}
+		
 		fBoldTag = currentText.length();
 		
 		if(fItalicTag != -1 && fUnderlineTag != -1 && fItalicTag != fBoldTag)
 		{
-			Annotation annotation = new Annotation(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE, true, EMPTY);
+			Annotation annotation = new Annotation(RTFConstants.ITALIC_UNDERLINE_TYPE, true, EMPTY);
 			Position position = new Position(fItalicTag, fBoldTag - fItalicTag);
 			
 			document.addAnnotation(position, annotation);
@@ -722,6 +762,43 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		}
 		
 		return super.createAnnotationModel(element);
+	}
+	
+	private void pushState(RTFDocument document, String text, InputStream stream) throws IOException
+	{
+		ParserState state = new ParserState(fBoldTag != -1, fItalicTag != -1, fUnderlineTag != -1);
+		fStack.push(state);
+		handleTag("plain", document, text, stream);
+		if(state.isBold())
+		{
+			handleTag("b", document, text, stream);
+		}
+		if(state.isItalic())
+		{
+			handleTag("i", document, text, stream);
+		}
+		if(state.isUnderline())
+		{
+			handleTag("ul", document, text, stream);
+		}
+	}
+	
+	private void popState(RTFDocument document, String text, InputStream stream) throws IOException
+	{
+		handleTag("plain", document, text, stream);
+		ParserState state = fStack.pop();
+		if(state.isBold())
+		{
+			handleTag("b", document, text, stream);
+		}
+		if(state.isItalic())
+		{
+			handleTag("i", document, text, stream);
+		}
+		if(state.isUnderline())
+		{
+			handleTag("ul", document, text, stream);
+		}
 	}
 	
 }
