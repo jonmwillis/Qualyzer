@@ -27,7 +27,7 @@ public class ParticipantValidator extends BasicNameValidator
 	 */
 	public ParticipantValidator(String pName, String pOldName, Project pProject)
 	{
-		super(Messages.getString("model.validation.ParticipantValidator.label"), pName, pOldName, pProject);
+		super(Messages.getString("model.validation.ParticipantValidator.label"), pName, pOldName, pProject); //$NON-NLS-1$
 	}
 	
 	/**
