@@ -27,7 +27,7 @@ public class InvestigatorValidator extends BasicNameValidator
 	 */
 	public InvestigatorValidator(String pName, String pOldName, Project pProject)
 	{
-		super(Messages.getString("model.validation.InvestigatorValidator.label"), pName, pOldName, pProject);
+		super(Messages.getString("model.validation.InvestigatorValidator.label"), pName, pOldName, pProject); //$NON-NLS-1$
 	}
 	
 	/**

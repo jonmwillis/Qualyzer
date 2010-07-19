@@ -74,9 +74,9 @@ public class DeleteMemoHandler extends AbstractHandler
 			
 			if(projects.size() > 1)
 			{
-				String warningMessage = "Unable to delete memo across multiple projects.";
+				String warningMessage = Messages.getString("handlers.DeleteMemoHandler.tooManyProjects"); //$NON-NLS-1$
 				fLogger.warn(warningMessage);
-				MessageDialog.openError(shell, "Unable to Delete", warningMessage);
+				MessageDialog.openError(shell, Messages.getString("handlers.DeleteMemoHandler.unableToDelete"), warningMessage); //$NON-NLS-1$
 			}
 			else
 			{
@@ -93,8 +93,8 @@ public class DeleteMemoHandler extends AbstractHandler
 	 */
 	private void proceedWithDeletion(IWorkbenchPage page, Shell shell, List<Memo> toDelete)
 	{
-		boolean check = MessageDialog.openConfirm(shell, "Delete Memo(s)", 
-				"Are you sure you want to delete the selected Memo(s)?");
+		boolean check = MessageDialog.openConfirm(shell, Messages.getString("handlers.DeleteMemoHandler.deleteMemos"),  //$NON-NLS-1$
+				Messages.getString("handlers.DeleteMemoHandler.confirm")); //$NON-NLS-1$
 			
 		if(check)
 		{	
@@ -122,9 +122,9 @@ public class DeleteMemoHandler extends AbstractHandler
 		File file = new File(wProject.getLocation() + MEMO + memo.getFileName());
 		if(!file.delete())
 		{
-			String warningMessage = "The memo file could not be deleted";
+			String warningMessage = Messages.getString("handlers.DeleteMemoHandler.deleteFailed"); //$NON-NLS-1$
 			fLogger.warn(warningMessage);
-			MessageDialog.openWarning(shell, "File Access Error", warningMessage);
+			MessageDialog.openWarning(shell, Messages.getString("handlers.DeleteMemoHandler.fileError"), warningMessage); //$NON-NLS-1$
 		}
 		
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
