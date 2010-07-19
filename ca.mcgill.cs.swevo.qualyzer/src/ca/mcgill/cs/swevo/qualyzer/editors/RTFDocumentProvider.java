@@ -112,6 +112,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 					else if(ch == '{')
 					{
 						ch = (char) contentStream.read();
+						boolean push = true;
 						if(ch == '\\')
 						{
 							String groupTag = EMPTY;
@@ -119,10 +120,19 @@ public class RTFDocumentProvider extends FileDocumentProvider
 							do
 							{
 								groupTag = nextTag(contentStream);
+								if(push && !isIgnoredGroup(groupTag))
+								{
+									pushState((RTFDocument) document, text, contentStream);
+									push = false;
+								}
 								text += handleTag(groupTag, (RTFDocument) document, text, contentStream);
 								stop = isIgnoredGroup(groupTag) || groupTag.equals("*") || groupTag.equals("*\\");
 							}while(!stop && groupTag.length() > 1 && groupTag.charAt(groupTag.length() - 1) == '\\');
 						}
+					}
+					else if(ch == '}')
+					{
+						popState((RTFDocument) document, text, contentStream);
 					}
 				}
 				else if(ch == '\\')
