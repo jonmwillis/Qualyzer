@@ -41,6 +41,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.IAnnotatedDocument;
  */
 public class RTFDocumentProvider extends FileDocumentProvider
 {
+	private static final String[] IGNORE_GROUPS = {"fonttbl", /*"colortbl",*/ "colortbl;", "stylesheet", "info", "*"};
 	
 	/**
 	 * 
@@ -107,18 +108,11 @@ public class RTFDocumentProvider extends FileDocumentProvider
 					}
 					else if(ch == '{')
 					{
-						int count = 1;
-						while(count >= 1)
+						ch = (char) contentStream.read();
+						if(ch == '\\')
 						{
-							ch = (char) contentStream.read();
-							if(ch == '{')
-							{
-								count++;
-							}
-							else if(ch == '}')
-							{
-								count--;
-							}
+							String groupTag = nextTag(contentStream);
+							text += handleTag(groupTag, (RTFDocument) document, text, contentStream);
 						}
 					}
 				}
@@ -128,7 +122,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 					do
 					{
 						escape = nextTag(contentStream);
-						text += handleTag(escape, (RTFDocument) document, text);
+						text += handleTag(escape, (RTFDocument) document, text, contentStream);
 					}while(escape.charAt(escape.length() - 1) == '\\' && escape.length() > 1);
 					
 				}
@@ -137,31 +131,33 @@ public class RTFDocumentProvider extends FileDocumentProvider
 					text += ch;
 				}
 			}
+		
+			//It seems that some editors (wordpad) don't put ending tags if the style reaches the EOF
+			if(fBoldTag != -1)
+			{
+				text += handleTag("b0", (RTFDocument)document, text, contentStream); //$NON-NLS-1$
+			}
+			if(fItalicTag != -1)
+			{
+				text += handleTag("i0", (RTFDocument)document, text, contentStream); //$NON-NLS-1$
+			}
+			if(fUnderlineTag != -1)
+			{
+				text += handleTag("ulnone", (RTFDocument)document, text, contentStream); //$NON-NLS-1$
+			}
+		
 		}
 		catch(IOException e)
 		{
 			e.printStackTrace();
 		}
 		
-		//It seems that some editors (wordpad) don't put ending tags if the style reaches the EOF
-		if(fBoldTag != -1)
-		{
-			text += handleTag("b0", (RTFDocument)document, text); //$NON-NLS-1$
-		}
-		if(fItalicTag != -1)
-		{
-			text += handleTag("i0", (RTFDocument)document, text); //$NON-NLS-1$
-		}
-		if(fUnderlineTag != -1)
-		{
-			text += handleTag("ulnone", (RTFDocument)document, text); //$NON-NLS-1$
-		}
-		
 		document.set(text);
 
 	}
 	
-	private String handleTag(String escape, RTFDocument document, String currentText)
+	private String handleTag(String escape, RTFDocument document, String currentText, InputStream stream) 
+		throws IOException
 	{
 		String string = escape.trim();
 		String toReturn = EMPTY;
@@ -171,6 +167,27 @@ public class RTFDocumentProvider extends FileDocumentProvider
 			string = escape.substring(0, escape.length() - 1);
 		}
 		string = string.trim();
+		
+		for(String tag : IGNORE_GROUPS)
+		{
+			if(tag.equals(string))
+			{
+				int count = tag.equals("*") || tag.equals("colortbl;") ? 1 : 2;
+				while(count > 0)
+				{
+					char c = (char) stream.read();
+					if(c == '{')
+					{
+						count++;
+					}
+					else if(c == '}')
+					{
+						count--;
+					}
+				}
+				return toReturn;
+			}
+		}
 		
 		if(string.isEmpty())
 		{
@@ -462,29 +479,14 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		{
 			escape += ch2;
 			ch2 = (char) ioStream.read();
+			notBracket = ch2 != '{' && ch2 != '}';
 		}
 		
 		if(ch2 == '\\')
 		{
 			escape += "\\"; //$NON-NLS-1$
 		}
-		else if(ch2 == '{' && escape.length() > 1)
-		{
-			int count = 1;
-			while(count >= 1)
-			{
-				ch2 = (char) ioStream.read();
-				if(ch2 == '{')
-				{
-					count++;
-				}
-				else if(ch2 == '}')
-				{
-					count--;
-				}
-			}
-		}
-		else
+		else if(ch2 != '{')
 		{
 			escape += ch2;
 		}
