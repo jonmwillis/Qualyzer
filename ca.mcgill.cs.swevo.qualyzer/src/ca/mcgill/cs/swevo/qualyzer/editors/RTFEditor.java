@@ -49,8 +49,6 @@ import ca.mcgill.cs.swevo.qualyzer.model.IAnnotatedDocument;
 import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.ProjectListener;
-import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
-import ca.mcgill.cs.swevo.qualyzer.model.TranscriptListener;
 import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
@@ -58,7 +56,7 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
  * A Rich Text Editor.
  *
  */
-public class RTFEditor extends ColorerEditor implements TranscriptListener, ProjectListener, CodeListener
+public class RTFEditor extends ColorerEditor implements ProjectListener, CodeListener
 {
 	public static final String ID = "ca.mcgill.cs.swevo.qualyzer.editors.RTFEditor"; //$NON-NLS-1$
 
@@ -459,9 +457,10 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 
 		ListenerManager listenerManager = Facade.getInstance().getListenerManager();
 		listenerManager.registerProjectListener(fDocument.getProject(), this);
-		listenerManager.registerTranscriptListener(fDocument.getProject(), this);
 		listenerManager.registerCodeListener(fDocument.getProject(), this);
 		ColorerPlugin.getDefault().setPropertyWordWrap(getTextColorer().getFileType(), 1);
+		
+		setPartName(fDocument.getFileName());
 	}
 	
 	//these create the top button bar.
@@ -746,27 +745,7 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 		return super.isDirty() || fIsDirty;
 	}
 
-	/* (non-Javadoc)
-	 * @see ca.mcgill.cs.swevo.qualyzer.model.TranscriptListener#transcriptChanged(
-	 * ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType, ca.mcgill.cs.swevo.qualyzer.model.Transcript[],
-	 *  ca.mcgill.cs.swevo.qualyzer.model.Facade)
-	 */
-	@Override
-	public void transcriptChanged(ChangeType cType, Transcript[] transcripts, Facade facade)
-	{
-		if(cType == ChangeType.DELETE)
-		{
-			for(Transcript transcript : transcripts)
-			{
-				if(transcript.equals(fDocument))
-				{
-					IWorkbenchPage page = getSite().getPage();
-					ResourcesUtil.closeEditor(page, getEditorInput().getName());
-					break;
-				}
-			}
-		}
-	}
+	
 
 	/* (non-Javadoc)
 	 * @see ca.mcgill.cs.swevo.qualyzer.model.ProjectListener#projectChanged(
@@ -792,7 +771,6 @@ public class RTFEditor extends ColorerEditor implements TranscriptListener, Proj
 	{
 		ListenerManager listenerManager = Facade.getInstance().getListenerManager();
 		listenerManager.unregisterProjectListener(fDocument.getProject(), this);
-		listenerManager.unregisterTranscriptListener(fDocument.getProject(), this);
 		listenerManager.unregisterCodeListener(fDocument.getProject(), this);
 		super.dispose();
 	}
