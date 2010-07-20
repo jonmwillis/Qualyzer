@@ -175,27 +175,31 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 			private final Image fPLAY = getImage(PLAY_IMG, QualyzerActivator.PLUGIN_ID);
 			private final Image fPAUSE = getImage(PAUSE_IMG, QualyzerActivator.PLUGIN_ID);
 			private boolean fPlaying = false;
-			
 			@Override
 			public void widgetSelected(SelectionEvent e)
 			{
-				if(fPlaying)
+				try
 				{
-					fAudioPlayer.pause();
-					fPlayButton.setImage(fPLAY);
-					fPlaying = false;
+					if(fPlaying)
+					{
+						fAudioPlayer.pause();
+						fPlayButton.setImage(fPLAY);
+						fPlaying = false;
+					}
+					else
+					{
+						fAudioPlayer.play();
+						fPlayButton.setImage(fPAUSE);
+						fPlaying = true;
+					}
 				}
-				else
+				catch(QualyzerException ex)
 				{
-					fAudioPlayer.play();
-					fPlayButton.setImage(fPAUSE);
-					fPlaying = true;
+					System.out.println(ex.getMessage());
 				}
 			}
 		});
-		
 		fStopButton.addSelectionListener(new SelectionAdapter(){
-			
 			@Override
 			public void widgetSelected(SelectionEvent e)
 			{
