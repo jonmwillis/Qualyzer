@@ -42,8 +42,10 @@ import ca.mcgill.cs.swevo.qualyzer.model.IAnnotatedDocument;
  */
 public class RTFDocumentProvider extends FileDocumentProvider
 {	
-	private static final String EMPTY = ""; 
-	private static final String SPACE = " ";
+	
+	private static final String STAR_SLASH = "*\\"; //$NON-NLS-1$
+	private static final String EMPTY = "";  //$NON-NLS-1$
+	private static final String SPACE = " "; //$NON-NLS-1$
 	private int fBoldTag;
 	private int fItalicTag;
 	private int fUnderlineTag;
@@ -122,7 +124,8 @@ public class RTFDocumentProvider extends FileDocumentProvider
 									push = false;
 								}
 								text += handleTag(groupTag, (RTFDocument) document, text, contentStream);
-								stop = isIgnoredGroup(groupTag) || groupTag.equals("*") || groupTag.equals("*\\");
+								stop = isIgnoredGroup(groupTag) || groupTag.equals(RTFTags.IGNORE) || 
+									groupTag.equals(STAR_SLASH);
 							}while(!stop && groupTag.length() > 1 && groupTag.charAt(groupTag.length() - 1) == '\\');
 						}
 					}
@@ -133,13 +136,13 @@ public class RTFDocumentProvider extends FileDocumentProvider
 				}
 				else if(ch == '\\')
 				{
-					String escape = " ";  
+					String escape = EMPTY;  
 					boolean stop = false;
 					do
 					{
 						escape = nextTag(contentStream);
 						text += handleTag(escape, (RTFDocument) document, text, contentStream);
-						stop = escape.equals("*") || escape.equals("*\\");
+						stop = escape.equals(RTFTags.IGNORE) || escape.equals(STAR_SLASH);
 					}while(escape.length() > 1 && escape.charAt(escape.length() - 1) == '\\' && !stop);
 					
 				}
@@ -198,7 +201,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		
 		if(isIgnoredGroup(string))
 		{
-			int count = string.equals("*") || string.equals("colortbl;") ? 1 : 2;
+			int count = string.equals(RTFTags.IGNORE) || string.equals(RTFTags.COLOR_TABLE) ? 1 : 2;
 			while(count > 0)
 			{
 				char c = (char) stream.read();
@@ -218,13 +221,13 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		{
 			toReturn = RTFTags.BACKSLASH; 
 		}
-		else if(string.equals("}") || string.equals("{"))  
+		else if(string.equals(RTFTags.RIGHT_BRACE) || string.equals(RTFTags.LEFT_BRACE))  
 		{
 			toReturn = string;
 		}
 		else if(string.equals(RTFTags.NEW_LINE)) 
 		{
-			toReturn = "\n"; 
+			toReturn = "\n";  //$NON-NLS-1$
 		}
 		else if(string.equals(RTFTags.PAR_DEFAULT) || string.equals(RTFTags.PLAIN)) 
 		{
@@ -234,7 +237,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		}
 		else if(string.equals(RTFTags.TAB)) 
 		{
-			toReturn = "\t"; 
+			toReturn = "\t";  //$NON-NLS-1$
 		}
 		else if(string.equals(RTFTags.BOLD_START)) 
 		{
@@ -530,7 +533,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		
 		if(ch2 == '\\')
 		{
-			escape += "\\"; 
+			escape += RTFTags.BACKSLASH; 
 		}
 		else if(ch2 != '{')
 		{
@@ -647,7 +650,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 			{
 				if(c == '{' || c == '}' || c =='\\')
 				{
-					output += '\\';
+					output += RTFTags.BACKSLASH;
 				}
 				output += c;
 			}
@@ -662,11 +665,11 @@ public class RTFDocumentProvider extends FileDocumentProvider
 			
 			if(c == '\n')
 			{
-				output += "\\par \n"; 
+				output += RTFTags.NEW_LINE_TAG; 
 			}
 			else if(c == '\t')
 			{
-				output += "\\tab "; 
+				output += RTFTags.TAB_TAG; 
 			}
 			
 		}
@@ -726,31 +729,31 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		
 		if(type.equals(RTFConstants.BOLD_TYPE))
 		{
-			tag = "\\b "; 
+			tag = RTFTags.BOLD_START_TAG + SPACE; 
 		}
 		else if(type.equals(RTFConstants.ITALIC_TYPE))
 		{
-			tag = "\\i "; 
+			tag = RTFTags.ITALIC_START_TAG + SPACE; 
 		}
 		else if(type.equals(RTFConstants.UNDERLINE_TYPE))
 		{
-			tag = "\\ul "; 
+			tag = RTFTags.UNDERLINE_START_TAG + SPACE; 
 		}
 		else if(type.equals(RTFConstants.BOLD_ITALIC_TYPE))
 		{
-			tag = "\\b\\i "; 
+			tag = RTFTags.BOLD_START_TAG + RTFTags.ITALIC_START_TAG + SPACE; 
 		}
 		else if(type.equals(RTFConstants.BOLD_UNDERLINE_TYPE))
 		{
-			tag = "\\b\\ul "; 
+			tag = RTFTags.BOLD_START_TAG + RTFTags.UNDERLINE_START_TAG + SPACE; 
 		}
 		else if(type.equals(RTFConstants.ITALIC_UNDERLINE_TYPE))
 		{
-			tag = "\\i\\ul "; 
+			tag = RTFTags.ITALIC_START_TAG + RTFTags.UNDERLINE_START_TAG + SPACE; 
 		}
 		else if(type.equals(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE))
 		{
-			tag = "\\b\\i\\ul "; 
+			tag = RTFTags.BOLD_START_TAG + RTFTags.ITALIC_START_TAG + RTFTags.UNDERLINE_START_TAG + SPACE; 
 		}
 		
 		return tag;
