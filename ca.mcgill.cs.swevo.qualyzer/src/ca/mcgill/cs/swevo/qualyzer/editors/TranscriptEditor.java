@@ -13,6 +13,10 @@
  */
 package ca.mcgill.cs.swevo.qualyzer.editors;
 
+import java.io.File;
+
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
@@ -23,6 +27,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -34,6 +39,7 @@ import org.eclipse.swt.widgets.Scale;
 import org.eclipse.ui.IWorkbenchPage;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
+import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 import ca.mcgill.cs.swevo.qualyzer.model.TranscriptListener;
@@ -59,12 +65,15 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 	private static final String CODE_IMG = "CODE_IMG";
 
 	private Button fBoldButton;
-
 	private Button fUnderlineButton;
-
 	private Button fItalicButton;
-
 	private Button fCodeButton;
+	private Button fPlayButton;
+	private Button fStopButton;
+	private AudioPlayer fAudioPlayer;
+
+	private Label fTimeLabel;
+
 	
 	/**
 	 * Constructor.
@@ -138,6 +147,14 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 		{
 			musicBar.setEnabled(false);
 		}
+		else
+		{
+			Transcript trans = (Transcript) getDocument();
+			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(trans.getProject().getName());
+			String audioFile = project.getLocation() + File.separator + trans.getAudioFile().getRelativePath();
+			
+			fAudioPlayer = new AudioPlayer(audioFile, fTimeLabel);
+		}
 		
 		hookupButtonActions();
 		
@@ -153,6 +170,46 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 		fUnderlineButton.addSelectionListener(createButtonSelectionListener(getUnderlineAction()));
 		fItalicButton.addSelectionListener(createButtonSelectionListener(getItalicAction()));
 		fCodeButton.addSelectionListener(createButtonSelectionListener(getMarkTextAction()));
+		
+		fPlayButton.addSelectionListener(new SelectionAdapter(){
+			private final Image fPLAY = getImage(PLAY_IMG, QualyzerActivator.PLUGIN_ID);
+			private final Image fPAUSE = getImage(PAUSE_IMG, QualyzerActivator.PLUGIN_ID);
+			private boolean fPlaying = false;
+			
+			@Override
+			public void widgetSelected(SelectionEvent e)
+			{
+				if(fPlaying)
+				{
+					fAudioPlayer.pause();
+					fPlayButton.setImage(fPLAY);
+					fPlaying = false;
+				}
+				else
+				{
+					fAudioPlayer.play();
+					fPlayButton.setImage(fPAUSE);
+					fPlaying = true;
+				}
+			}
+		});
+		
+		fStopButton.addSelectionListener(new SelectionAdapter(){
+			
+			@Override
+			public void widgetSelected(SelectionEvent e)
+			{
+				try
+				{
+					fAudioPlayer.stop();
+					fPlayButton.setImage(getImage(PLAY_IMG, QualyzerActivator.PLUGIN_ID));
+				}
+				catch(QualyzerException ex)
+				{
+					System.out.println(ex.getMessage());
+				}
+			}
+		});
 	}
 
 	//these create the top button bar.
@@ -165,19 +222,19 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 		Composite musicBar = new Composite(parent, SWT.BORDER);
 		musicBar.setLayout(new GridLayout(NUM_COLS, false));
 		
-		Button button = new Button(musicBar, SWT.PUSH);
-		button.setImage(getImage(PLAY_IMG, QualyzerActivator.PLUGIN_ID));
+		fPlayButton = new Button(musicBar, SWT.PUSH);
+		fPlayButton.setImage(getImage(PLAY_IMG, QualyzerActivator.PLUGIN_ID));
 		
-		button = new Button(musicBar, SWT.PUSH);
-		button.setImage(getImage(STOP_IMG, QualyzerActivator.PLUGIN_ID));
+		fStopButton = new Button(musicBar, SWT.PUSH);
+		fStopButton.setImage(getImage(STOP_IMG, QualyzerActivator.PLUGIN_ID));
 		
 		Scale scale = new Scale(musicBar, SWT.HORIZONTAL);
 		scale.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		
-		Label label = new Label(musicBar, SWT.NULL);
-		label.setLayoutData(new GridData(SWT.NULL, SWT.FILL, false, false));
-		label.setText("m:ss");
-		
+		fTimeLabel = new Label(musicBar, SWT.NULL);
+		fTimeLabel.setLayoutData(new GridData(SWT.NULL, SWT.FILL, false, false));
+		fTimeLabel.setText("0:00/0:00");
+	
 		return musicBar;
 	}
 
