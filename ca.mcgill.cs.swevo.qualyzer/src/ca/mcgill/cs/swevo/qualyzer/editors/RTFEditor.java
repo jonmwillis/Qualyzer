@@ -181,8 +181,14 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 		};
 	}
 	
+	/**
+	 * 
+	 * @param model
+	 * @param selection
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
-	private boolean isMarkEnabled(IAnnotationModel model, Point selection)
+	protected boolean isMarkEnabled(IAnnotationModel model, Point selection)
 	{
 		ArrayList<Position> positions = new ArrayList<Position>();
 		Iterator<Annotation> iter = model.getAnnotationIterator();
@@ -580,7 +586,7 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	private boolean isUnderlineChecked()
+	protected boolean isUnderlineChecked()
 	{
 		IAnnotationModel model = getSourceViewer().getAnnotationModel();
 		Point selection = getSourceViewer().getSelectedRange();
@@ -608,7 +614,7 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	private boolean isItalicChecked()
+	protected boolean isItalicChecked()
 	{
 		IAnnotationModel model = getSourceViewer().getAnnotationModel();
 		Point selection = getSourceViewer().getSelectedRange();
@@ -636,7 +642,7 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	private boolean isBoldChecked()
+	protected boolean isBoldChecked()
 	{
 		IAnnotationModel model = getSourceViewer().getAnnotationModel();
 		Point selection = getSourceViewer().getSelectedRange();
