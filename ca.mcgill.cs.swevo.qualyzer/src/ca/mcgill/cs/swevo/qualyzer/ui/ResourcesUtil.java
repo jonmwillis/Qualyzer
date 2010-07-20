@@ -31,11 +31,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ca.mcgill.cs.swevo.qualyzer.editors.CodeEditor;
+import ca.mcgill.cs.swevo.qualyzer.editors.CodeFragmentViewer;
 import ca.mcgill.cs.swevo.qualyzer.editors.InvestigatorFormEditor;
 import ca.mcgill.cs.swevo.qualyzer.editors.MemoEditor;
 import ca.mcgill.cs.swevo.qualyzer.editors.ParticipantFormEditor;
 import ca.mcgill.cs.swevo.qualyzer.editors.TranscriptEditor;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.CodeEditorInput;
+import ca.mcgill.cs.swevo.qualyzer.editors.inputs.CodeFragmentViewerInput;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.InvestigatorEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.ParticipantEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.RTFEditorInput;
@@ -98,6 +100,24 @@ public final class ResourcesUtil
 		catch (PartInitException e)
 		{
 			gLogger.error(ERROR_MSG, e);
+		}
+	}
+	
+	/**
+	 * Open the CodeFragmentViewer for the given code.
+	 * @param page
+	 * @param code
+	 */
+	public static void openEditor(IWorkbenchPage page, Code code)
+	{
+		CodeFragmentViewerInput input = new CodeFragmentViewerInput(code);
+		try
+		{
+			page.openEditor(input, CodeFragmentViewer.ID);
+		}
+		catch(PartInitException e)
+		{
+			e.printStackTrace();
 		}
 	}
 	

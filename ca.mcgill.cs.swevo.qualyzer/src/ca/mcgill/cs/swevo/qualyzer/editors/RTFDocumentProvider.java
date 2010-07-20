@@ -79,6 +79,25 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		return new RTFDocument();
 	}
 	
+	/**
+	 * Exists only for use by things that need parsed documents, but that don't want to open the editor.
+	 * @param element
+	 * @return
+	 */
+	public IDocument getCreatedDocument(Object element)
+	{
+		try
+		{
+			return createDocument(element);
+		}
+		catch (CoreException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.editors.text.StorageDocumentProvider#setDocumentContent(
 	 * org.eclipse.jface.text.IDocument, java.io.InputStream, java.lang.String)
