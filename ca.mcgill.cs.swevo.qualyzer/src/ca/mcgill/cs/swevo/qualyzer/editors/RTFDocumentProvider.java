@@ -92,6 +92,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		fItalicTag = -1;
 		fUnderlineTag = -1;
 		fStack = new Stack<ParserState>();
+		fStack.push(new ParserState(false, false, false));
 		
 		try
 		{
