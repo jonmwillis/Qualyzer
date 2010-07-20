@@ -15,16 +15,18 @@ package ca.mcgill.cs.swevo.qualyzer.editors.pages;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.FormPage;
@@ -127,9 +129,21 @@ public class CodeFragmentViewerPage extends FormPage
 		
 		for(Fragment fragment : contents)
 		{
-			String fragText = text.substring(fragment.getOffset(), fragment.getOffset() + fragment.getLength());
-			Label label = toolkit.createLabel(sectionClient, fragText, SWT.BORDER);
-			label.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
+			int start = fragment.getOffset();
+			while(start > 0 && text.charAt(start-1) != '\n' && text.charAt(start-1) != '.')
+			{
+				start--;
+			}
+			
+			int end = fragment.getOffset() + fragment.getLength();
+			while(end < text.length() && text.charAt(end) != '\n' && text.charAt(end) != '.')
+			{
+				end++;
+			}
+			String fragText = text.substring(start, end);
+			StyledText style = new StyledText(sectionClient, SWT.READ_ONLY | SWT.WRAP | SWT.MULTI | SWT.BORDER);
+			style.setText(fragText);
+			style.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 		}
 		
 		section.setClient(sectionClient);
@@ -140,7 +154,14 @@ public class CodeFragmentViewerPage extends FormPage
 	 */
 	private void sort(ArrayList<Fragment> contents)
 	{
-		// TODO Auto-generated method stub
+		Collections.sort(contents, new Comparator<Fragment>(){
+
+			@Override
+			public int compare(Fragment o1, Fragment o2)
+			{
+				return o1.getOffset() - o2.getOffset();
+			}
+		});
 		
 	}
 
