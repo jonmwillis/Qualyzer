@@ -207,22 +207,22 @@
       <command
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.NewMemoHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.newMemo"
-            name="New Memo">
+            name="%command.name.newMemo">
       </command>
       <command
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.MemoPropertiesHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.editMemoProperties"
-            name="Edit Memo Properties">
+            name="%command.name.memoProperties">
       </command>
       <command
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.ImportMemoHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.importMemo"
-            name="Import Memo">
+            name="%command.name.importMemo">
       </command>
       <command
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.DeleteMemoHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.deleteMemo"
-            name="Delete Memo">
+            name="%command.name.deleteMemo">
       </command>
    </extension>
    <extension
@@ -367,7 +367,7 @@
             <command
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.newMemo"
                   icon="icons/memo_obj.png"
-                  label="Memo"
+                  label="%command.label.memo"
                   style="push">
                <visibleWhen
                      checkEnabled="false">
@@ -599,7 +599,7 @@
                icon="icons/delete.gif"
                label="%command.label.delete"
                style="push"
-               tooltip="Delete the memo">
+               tooltip="%command.tooltip.deleteMemo">
             <visibleWhen
                   checkEnabled="false">
                <iterate
@@ -667,7 +667,7 @@
             <command
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.importMemo"
                   icon="icons/memo_obj.png"
-                  label="Memo"
+                  label="%command.label.memo"
                   style="push">
                <visibleWhen
                      checkEnabled="false">
@@ -803,7 +803,7 @@
             <command
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.newMemo"
                   icon="icons/memo_obj.png"
-                  label="Memo"
+                  label="%command.label.memo"
                   style="push">
                <visibleWhen
                      checkEnabled="false">
@@ -928,14 +928,14 @@
             default="false"
             icon="icons/file_obj.gif"
             id="ca.mcgill.cs.swevo.qualyzer.editors.transcriptEditor"
-            name="Transcript Editor">
+            name="%editor.name.transcriptEditor">
       </editor>
       <editor
             class="ca.mcgill.cs.swevo.qualyzer.editors.MemoEditor"
             default="false"
             icon="icons/memo_obj.png"
             id="ca.mcgill.cs.swevo.qualyzer.editors.memoEditor"
-            name="Memo Editor">
+            name="%editor.name.memoEditor">
       </editor>
    </extension>
    <extension

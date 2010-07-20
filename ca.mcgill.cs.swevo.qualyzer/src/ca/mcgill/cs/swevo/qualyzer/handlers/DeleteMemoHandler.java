@@ -76,7 +76,8 @@ public class DeleteMemoHandler extends AbstractHandler
 			{
 				String warningMessage = Messages.getString("handlers.DeleteMemoHandler.tooManyProjects"); //$NON-NLS-1$
 				fLogger.warn(warningMessage);
-				MessageDialog.openError(shell, Messages.getString("handlers.DeleteMemoHandler.unableToDelete"), warningMessage); //$NON-NLS-1$
+				MessageDialog.openError(shell, Messages.getString(
+						"handlers.DeleteMemoHandler.unableToDelete"), warningMessage); //$NON-NLS-1$
 			}
 			else
 			{
@@ -93,7 +94,8 @@ public class DeleteMemoHandler extends AbstractHandler
 	 */
 	private void proceedWithDeletion(IWorkbenchPage page, Shell shell, List<Memo> toDelete)
 	{
-		boolean check = MessageDialog.openConfirm(shell, Messages.getString("handlers.DeleteMemoHandler.deleteMemos"),  //$NON-NLS-1$
+		boolean check = MessageDialog.openConfirm(shell, 
+				Messages.getString("handlers.DeleteMemoHandler.deleteMemos"),  //$NON-NLS-1$
 				Messages.getString("handlers.DeleteMemoHandler.confirm")); //$NON-NLS-1$
 			
 		if(check)
@@ -124,7 +126,8 @@ public class DeleteMemoHandler extends AbstractHandler
 		{
 			String warningMessage = Messages.getString("handlers.DeleteMemoHandler.deleteFailed"); //$NON-NLS-1$
 			fLogger.warn(warningMessage);
-			MessageDialog.openWarning(shell, Messages.getString("handlers.DeleteMemoHandler.fileError"), warningMessage); //$NON-NLS-1$
+			MessageDialog.openWarning(shell, Messages.getString(
+					"handlers.DeleteMemoHandler.fileError"), warningMessage); //$NON-NLS-1$
 		}
 		
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();

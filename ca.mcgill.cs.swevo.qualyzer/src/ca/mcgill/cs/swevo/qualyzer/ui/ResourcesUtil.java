@@ -219,7 +219,7 @@ public final class ResourcesUtil
 		{
 			MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 					Messages.getString("ui.ResourcesUtil.fileError"), //$NON-NLS-1$
-					"The memo could not be found."); 
+					Messages.getString("ui.ResourcesUtil.memoNotFound"));  //$NON-NLS-1$
 			return editorPart;
 		}
 		String ext = file.getFileExtension();
