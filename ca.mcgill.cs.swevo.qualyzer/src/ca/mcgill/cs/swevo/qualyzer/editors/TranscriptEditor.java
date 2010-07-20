@@ -201,8 +201,8 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 			{
 				try
 				{
-					fAudioPlayer.stop();
 					fPlayButton.setImage(getImage(PLAY_IMG, QualyzerActivator.PLUGIN_ID));
+					fAudioPlayer.stop();
 				}
 				catch(QualyzerException ex)
 				{
