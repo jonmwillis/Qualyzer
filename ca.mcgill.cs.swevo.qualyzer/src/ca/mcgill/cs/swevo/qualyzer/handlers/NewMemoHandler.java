@@ -53,6 +53,8 @@ public class NewMemoHandler extends AbstractHandler
 			{
 				CommonNavigator view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
 				view.getCommonViewer().refresh();
+				
+				ResourcesUtil.openEditor(page, wizard.getMemo());
 			}
 			
 			
