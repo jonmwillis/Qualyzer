@@ -23,6 +23,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.IAnnotationModel;
@@ -32,14 +34,17 @@ import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 
+import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.RTFEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.model.Code;
 import ca.mcgill.cs.swevo.qualyzer.model.CodeListener;
@@ -65,6 +70,8 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 	private static final char BOLD_CHAR = (char) 2;
 	private static final char FRAGMENT_CHAR = (char) 11;
 	
+	protected ImageRegistry fRegistry;
+	
 	private Action fBoldAction;
 	private Action fItalicAction;
 	private Action fUnderlineAction;
@@ -86,8 +93,41 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 		setDocumentProvider(new RTFDocumentProvider());
 		
 		fIsDirty = false;
+		fRegistry = QualyzerActivator.getDefault().getImageRegistry();
 								
 		getPreferenceStore().setValue(AbstractDecoratedTextEditorPreferenceConstants.QUICK_DIFF_ALWAYS_ON, false);
+	}
+	
+	/**
+	 * Add an image to the registry.
+	 * @param key
+	 * @param pluginID
+	 * @param path
+	 */
+	protected void addImage(String key, String pluginID, String path)
+	{
+		String fullKey = computeKey(key, pluginID);
+		ImageDescriptor descriptor = fRegistry.getDescriptor(fullKey);
+		if(descriptor == null)
+		{
+			fRegistry.put(fullKey, AbstractUIPlugin.imageDescriptorFromPlugin(pluginID, path));
+		}
+	}
+	
+	private String computeKey(String key, String pluginID)
+	{
+		return pluginID + "_" + key; //$NON-NLS-1$
+	}
+	
+	/**
+	 * Get an image from the registry.
+	 * @param key
+	 * @param pluginID
+	 * @return
+	 */
+	protected Image getImage(String key, String pluginID)
+	{
+		return fRegistry.get(computeKey(key, pluginID));
 	}
 	
 	/* (non-Javadoc)
@@ -432,28 +472,10 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 		setRulerContextMenuId("#RTFRulerContext"); //$NON-NLS-1$
 		setOverviewRulerContextMenuId("#RTFOverviewRulerContext"); //$NON-NLS-1$
 		setEditorContextMenuId("#RTFEditorContext"); //$NON-NLS-1$
-		
-		//This controls displaying of the top button bar.
-//		parent.setLayout(new GridLayout(1, true));
-//		
-//		Composite topBar = new Composite(parent, SWT.BORDER);
-//		topBar.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
-//		topBar.setLayout(new GridLayout(2, false));
-//		
-//		Control buttonBar = createFormatButtonBar(topBar);
-//		buttonBar.setLayoutData(new GridData(SWT.FILL, SWT.NULL, false, false));
-//		Control musicBar = createMusicBar(topBar);
-//		musicBar.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
-		
+
 		super.createPartControl(parent);
 		
-//		parent.getChildren()[1].setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		
 		fDocument = ((RTFEditorInput) getEditorInput()).getDocument();
-//		if(fTranscript.getAudioFile() == null)
-//		{
-//			musicBar.setEnabled(false);
-//		}
 
 		ListenerManager listenerManager = Facade.getInstance().getListenerManager();
 		listenerManager.registerProjectListener(fDocument.getProject(), this);
@@ -462,82 +484,6 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 		
 		setPartName(fDocument.getFileName());
 	}
-	
-	//these create the top button bar.
-//	/**
-//	 * @param topBar
-//	 * @return
-//	 */
-//	private Control createMusicBar(Composite parent)
-//	{
-//		Composite musicBar = new Composite(parent, SWT.BORDER);
-//		musicBar.setLayout(new GridLayout(4, false));
-//		
-//		Button button = new Button(musicBar, SWT.PUSH);
-//		button.setText("Play");
-//		
-//		button = new Button(musicBar, SWT.PUSH);
-//		button.setText("Stop");
-//		
-//		Scale scale = new Scale(musicBar, SWT.HORIZONTAL);
-//		scale.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-//		
-//		Label label = new Label(musicBar, SWT.NULL);
-//		label.setLayoutData(new GridData(SWT.NULL, SWT.FILL, false, false));
-//		label.setText("m:ss");
-//		
-//		return musicBar;
-//	}
-//
-//
-//
-//	private Control createFormatButtonBar(Composite parent)
-//	{
-//		Composite composite = new Composite(parent, SWT.BORDER);
-//		GridLayout layout = new GridLayout(4, true);
-//		composite.setLayout(layout);
-//		
-//		Button button = new Button(composite, SWT.TOGGLE);
-//		button.setText("B");
-//		button.addSelectionListener(createButtonSelectionListener(fBoldAction));
-//		
-//		button = new Button(composite, SWT.TOGGLE);
-//		button.setText("U");
-//		button.addSelectionListener(createButtonSelectionListener(fUnderlineAction));
-//		
-//		button = new Button(composite, SWT.TOGGLE);
-//		button.setText("I");
-//		button.addSelectionListener(createButtonSelectionListener(fItalicAction));
-//		
-//		button = new Button(composite, SWT.TOGGLE);
-//		button.setText("C");
-//		button.addSelectionListener(createButtonSelectionListener(fMarkTextAction));
-//		
-//		return composite;
-//	}
-//	
-//	/**
-//	 * @param fBoldAction2
-//	 * @return
-//	 */
-//	private SelectionListener createButtonSelectionListener(final Action action)
-//	{
-//		return new SelectionAdapter(){
-//			private Action fAction = action;
-//			
-//			/* (non-Javadoc)
-//			 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-//			 */
-//			@Override
-//			public void widgetSelected(SelectionEvent e)
-//			{
-//				if(fAction.isEnabled())
-//				{
-//					fAction.run();
-//				}
-//			}
-//		};
-//	}
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.texteditor.AbstractDecoratedTextEditor#overviewRulerContextMenuAboutToShow(
