@@ -937,6 +937,13 @@
             id="ca.mcgill.cs.swevo.qualyzer.editors.memoEditor"
             name="%editor.name.memoEditor">
       </editor>
+      <editor
+            class="ca.mcgill.cs.swevo.qualyzer.editors.CodeFragmentViewer"
+            default="false"
+            icon="icons/code_obj.png"
+            id="ca.mcgill.cs.swevo.qualyzer.editors.codeFragmentViewer"
+            name="Code Fragment Viewer">
+      </editor>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">

@@ -23,6 +23,7 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -193,7 +194,43 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		item.setText(Messages.getString(DELETE_CODE_KEY));
 		item.addSelectionListener(deleteCodeSelected());
 		
+		item = new MenuItem(menu, SWT.PUSH);
+		item.setText("View Associated Fragments");
+		item.addSelectionListener(viewFragmentsSelected());
+		
 		fTable.setMenu(menu);
+	}
+
+	/**
+	 * @return
+	 */
+	private SelectionListener viewFragmentsSelected()
+	{	
+		return new SelectionAdapter(){
+			/* (non-Javadoc)
+			 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+			 */
+			@Override
+			public void widgetSelected(SelectionEvent e)
+			{
+				Code toView = null;
+				
+				TableItem item = fTable.getSelection()[0];
+				
+				for(Code code : fProject.getCodes())
+				{
+					if(code.getCodeName().equals(item.getText()))
+					{
+						toView = code;
+						break;
+					}
+				}
+				if(toView != null)
+				{
+					ResourcesUtil.openEditor(getSite().getPage(), toView);
+				}
+			}
+		};
 	}
 
 	/**
