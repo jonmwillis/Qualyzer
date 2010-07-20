@@ -73,4 +73,13 @@ public class RTFEditorInput extends FileEditorInput
 		return new HashCodeBuilder(NUM1, NUM2).appendSuper(super.hashCode()).append(fDocument).toHashCode();
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.part.FileEditorInput#getName()
+	 */
+	@Override
+	public String getName()
+	{
+		return fDocument.getClass().getSimpleName() + "." + super.getName();
+	}
+	
 }
