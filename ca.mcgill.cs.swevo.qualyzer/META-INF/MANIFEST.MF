@@ -21,6 +21,7 @@ Require-Bundle: org.eclipse.ui,
  org.apache.commons.lang;bundle-version="2.3.0",
  ca.mcgill.cs.swevo.qualyzer.logging;bundle-version="0.2.0",
  com.h2database;bundle-version="1.2.138",
- net.sf.colorer;bundle-version="0.9.5"
+ net.sf.colorer;bundle-version="0.9.5",
+ ca.mcgill.cs.swevo.qualyzer.audio;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
