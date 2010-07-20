@@ -14,9 +14,16 @@
 package ca.mcgill.cs.swevo.qualyzer.editors;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.text.source.IAnnotationModel;
+import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.jface.text.source.IVerticalRuler;
+import org.eclipse.jface.text.source.SourceViewer;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -38,7 +45,10 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
  */
 public class TranscriptEditor extends RTFEditor implements TranscriptListener
 {
+
 	public static final String ID = "ca.mcgill.cs.swevo.qualyzer.editors.transcriptEditor"; //$NON-NLS-1$
+	
+	private static final int NUM_COLS = 4;
 	
 	private static final String PLAY_IMG = "PLAY_IMG";
 	private static final String PAUSE_IMG = "PAUSE_IMG";
@@ -47,6 +57,14 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 	private static final String ITALIC_IMG = "ITALIC_IMG";
 	private static final String UNDERLINE_IMG = "UNDERLINE_IMG";
 	private static final String CODE_IMG = "CODE_IMG";
+
+	private Button fBoldButton;
+
+	private Button fUnderlineButton;
+
+	private Button fItalicButton;
+
+	private Button fCodeButton;
 	
 	/**
 	 * Constructor.
@@ -60,7 +78,39 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 		addImage(ITALIC_IMG, QualyzerActivator.PLUGIN_ID, "icons/text_italic.png");
 		addImage(UNDERLINE_IMG, QualyzerActivator.PLUGIN_ID, "icons/text_underline.png");
 		addImage(CODE_IMG, QualyzerActivator.PLUGIN_ID, "icons/code_obj.gif");
+		
 	}
+	
+/* (non-Javadoc)
+ * @see ca.mcgill.cs.swevo.qualyzer.editors.RTFEditor#createSourceViewer(org.eclipse.swt.widgets.Composite,
+ *  org.eclipse.jface.text.source.IVerticalRuler, int)
+ */
+@Override
+protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler ruler, int styles)
+{
+	final SourceViewer viewer = (SourceViewer) super.createSourceViewer(parent, ruler, styles);
+	viewer.addSelectionChangedListener(new ISelectionChangedListener(){
+		@Override
+		public void selectionChanged(SelectionChangedEvent event)
+		{
+			IAnnotationModel model = viewer.getAnnotationModel();
+			Point selection = viewer.getSelectedRange();
+			
+			boolean enabled = selection.y != 0;
+			
+			fBoldButton.setEnabled(enabled && isBoldEnabled(model, selection));
+			fItalicButton.setEnabled(enabled && isItalicEnabled(model, selection));
+			fUnderlineButton.setEnabled(enabled && isUnderlineEnabled(model, selection));
+			fCodeButton.setEnabled(enabled && isMarkEnabled(model, selection));
+			
+			fBoldButton.setSelection(isBoldChecked());
+			fItalicButton.setSelection(isItalicChecked());
+			fUnderlineButton.setSelection(isUnderlineChecked());
+		}
+		
+	});
+	return viewer;
+}
 	
 	/* (non-Javadoc)
 	 * @see ca.mcgill.cs.swevo.qualyzer.editors.RTFEditor#createPartControl(org.eclipse.swt.widgets.Composite)
@@ -89,9 +139,22 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 			musicBar.setEnabled(false);
 		}
 		
+		hookupButtonActions();
+		
 		Facade.getInstance().getListenerManager().registerTranscriptListener(getDocument().getProject(), this);
 	}
 	
+	/**
+	 * 
+	 */
+	private void hookupButtonActions()
+	{
+		fBoldButton.addSelectionListener(createButtonSelectionListener(getBoldAction()));
+		fUnderlineButton.addSelectionListener(createButtonSelectionListener(getUnderlineAction()));
+		fItalicButton.addSelectionListener(createButtonSelectionListener(getItalicAction()));
+		fCodeButton.addSelectionListener(createButtonSelectionListener(getMarkTextAction()));
+	}
+
 	//these create the top button bar.
 	/**
 	 * @param topBar
@@ -100,7 +163,7 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 	private Control createMusicBar(Composite parent)
 	{
 		Composite musicBar = new Composite(parent, SWT.BORDER);
-		musicBar.setLayout(new GridLayout(4, false));
+		musicBar.setLayout(new GridLayout(NUM_COLS, false));
 		
 		Button button = new Button(musicBar, SWT.PUSH);
 		button.setImage(getImage(PLAY_IMG, QualyzerActivator.PLUGIN_ID));
@@ -121,24 +184,24 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 	private Control createFormatButtonBar(Composite parent)
 	{
 		Composite composite = new Composite(parent, SWT.BORDER);
-		GridLayout layout = new GridLayout(4, true);
+		GridLayout layout = new GridLayout(NUM_COLS, true);
 		composite.setLayout(layout);
 		
-		Button button = new Button(composite, SWT.TOGGLE);
-		button.setImage(getImage(BOLD_IMG, QualyzerActivator.PLUGIN_ID));
-		button.addSelectionListener(createButtonSelectionListener(getBoldAction()));
+		fBoldButton = new Button(composite, SWT.TOGGLE);
+		fBoldButton.setImage(getImage(BOLD_IMG, QualyzerActivator.PLUGIN_ID));
+		fBoldButton.setEnabled(false);
 		
-		button = new Button(composite, SWT.TOGGLE);
-		button.setImage(getImage(UNDERLINE_IMG, QualyzerActivator.PLUGIN_ID));
-		button.addSelectionListener(createButtonSelectionListener(getUnderlineAction()));
+		fUnderlineButton = new Button(composite, SWT.TOGGLE);
+		fUnderlineButton.setImage(getImage(UNDERLINE_IMG, QualyzerActivator.PLUGIN_ID));
+		fUnderlineButton.setEnabled(false);
 		
-		button = new Button(composite, SWT.TOGGLE);
-		button.setImage(getImage(ITALIC_IMG, QualyzerActivator.PLUGIN_ID));
-		button.addSelectionListener(createButtonSelectionListener(getItalicAction()));
+		fItalicButton = new Button(composite, SWT.TOGGLE);
+		fItalicButton.setImage(getImage(ITALIC_IMG, QualyzerActivator.PLUGIN_ID));
+		fItalicButton.setEnabled(false);
 		
-		button = new Button(composite, SWT.TOGGLE);
-		button.setImage(getImage(CODE_IMG, QualyzerActivator.PLUGIN_ID));
-		button.addSelectionListener(createButtonSelectionListener(getMarkTextAction()));
+		fCodeButton = new Button(composite, SWT.PUSH);
+		fCodeButton.setImage(getImage(CODE_IMG, QualyzerActivator.PLUGIN_ID));
+		fCodeButton.setEnabled(false);
 		
 		return composite;
 	}

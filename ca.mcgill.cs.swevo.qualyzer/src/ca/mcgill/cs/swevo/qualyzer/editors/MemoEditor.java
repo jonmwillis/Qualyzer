@@ -13,9 +13,25 @@
  */
 package ca.mcgill.cs.swevo.qualyzer.editors;
 
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.text.source.IAnnotationModel;
+import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.jface.text.source.IVerticalRuler;
+import org.eclipse.jface.text.source.SourceViewer;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbenchPage;
 
+import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Memo;
 import ca.mcgill.cs.swevo.qualyzer.model.MemoListener;
@@ -29,6 +45,32 @@ public class MemoEditor extends RTFEditor implements MemoListener
 {
 	public static final String ID = "ca.mcgill.cs.swevo.qualyzer.editors.memoEditor"; //$NON-NLS-1$
 
+	private static final int NUM_COLS = 4;
+	
+	private static final String BOLD_IMG = "BOLD_IMG";
+	private static final String ITALIC_IMG = "ITALIC_IMG";
+	private static final String UNDERLINE_IMG = "UNDERLINE_IMG";
+	private static final String CODE_IMG = "CODE_IMG";
+
+	private Button fBoldButton;
+
+	private Button fUnderlineButton;
+
+	private Button fItalicButton;
+
+	private Button fCodeButton;
+	
+	/**
+	 * 
+	 */
+	public MemoEditor()
+	{
+		addImage(BOLD_IMG, QualyzerActivator.PLUGIN_ID, "icons/text_bold.png");
+		addImage(ITALIC_IMG, QualyzerActivator.PLUGIN_ID, "icons/text_italic.png");
+		addImage(UNDERLINE_IMG, QualyzerActivator.PLUGIN_ID, "icons/text_underline.png");
+		addImage(CODE_IMG, QualyzerActivator.PLUGIN_ID, "icons/code_obj.gif");
+	}
+	
 	/* (non-Javadoc)
 	 * @see ca.mcgill.cs.swevo.qualyzer.model.MemoListener#memoChanged(
 	 * ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType, ca.mcgill.cs.swevo.qualyzer.model.Memo[],
@@ -37,15 +79,45 @@ public class MemoEditor extends RTFEditor implements MemoListener
 	@Override
 	public void memoChanged(ChangeType cType, Memo[] memos, Facade facade)
 	{
-		for(Memo memo : memos)
+		if(cType == ChangeType.DELETE)
 		{
-			if(memo.equals(getDocument()))
+			for(Memo memo : memos)
 			{
-				IWorkbenchPage page = getSite().getPage();
-				ResourcesUtil.closeEditor(page, getEditorInput().getName());
+				if(memo.equals(getDocument()))
+				{
+					IWorkbenchPage page = getSite().getPage();
+					ResourcesUtil.closeEditor(page, getEditorInput().getName());
+					break;
+				}
 			}
 		}
-		
+	}
+	
+	@Override
+	protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler ruler, int styles)
+	{
+		final SourceViewer viewer = (SourceViewer) super.createSourceViewer(parent, ruler, styles);
+		viewer.addSelectionChangedListener(new ISelectionChangedListener(){
+			@Override
+			public void selectionChanged(SelectionChangedEvent event)
+			{
+				IAnnotationModel model = viewer.getAnnotationModel();
+				Point selection = viewer.getSelectedRange();
+				
+				boolean enabled = selection.y != 0;
+				
+				fBoldButton.setEnabled(enabled && isBoldEnabled(model, selection));
+				fItalicButton.setEnabled(enabled && isItalicEnabled(model, selection));
+				fUnderlineButton.setEnabled(enabled && isUnderlineEnabled(model, selection));
+				fCodeButton.setEnabled(enabled && isMarkEnabled(model, selection));
+				
+				fBoldButton.setSelection(isBoldChecked());
+				fItalicButton.setSelection(isItalicChecked());
+				fUnderlineButton.setSelection(isUnderlineChecked());
+			}
+			
+		});
+		return viewer;
 	}
 	
 	/* (non-Javadoc)
@@ -54,9 +126,78 @@ public class MemoEditor extends RTFEditor implements MemoListener
 	@Override
 	public void createPartControl(Composite parent)
 	{
+		//This controls displaying of the top button bar.
+		parent.setLayout(new GridLayout(1, true));
+		
+		Composite topBar = new Composite(parent, SWT.BORDER);
+		topBar.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
+		topBar.setLayout(new GridLayout(1, false));
+		
+		Control buttonBar = createFormatButtonBar(topBar);
+		buttonBar.setLayoutData(new GridData(SWT.FILL, SWT.NULL, false, false));
+		
 		super.createPartControl(parent);
 		
+		parent.getChildren()[1].setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		hookupButtonActions();
+		
 		Facade.getInstance().getListenerManager().registerMemoListener(getDocument().getProject(), this);
+	}
+	
+	private Control createFormatButtonBar(Composite parent)
+	{
+		Composite composite = new Composite(parent, SWT.BORDER);
+		GridLayout layout = new GridLayout(NUM_COLS, true);
+		composite.setLayout(layout);
+		
+		fBoldButton = new Button(composite, SWT.TOGGLE);
+		fBoldButton.setImage(getImage(BOLD_IMG, QualyzerActivator.PLUGIN_ID));
+		fBoldButton.setEnabled(false);
+		
+		fUnderlineButton = new Button(composite, SWT.TOGGLE);
+		fUnderlineButton.setImage(getImage(UNDERLINE_IMG, QualyzerActivator.PLUGIN_ID));
+		fUnderlineButton.setEnabled(false);
+		
+		fItalicButton = new Button(composite, SWT.TOGGLE);
+		fItalicButton.setImage(getImage(ITALIC_IMG, QualyzerActivator.PLUGIN_ID));
+		fItalicButton.setEnabled(false);
+		
+		fCodeButton = new Button(composite, SWT.TOGGLE);
+		fCodeButton.setImage(getImage(CODE_IMG, QualyzerActivator.PLUGIN_ID));
+		fCodeButton.setEnabled(false);
+		
+		return composite;
+	}
+	
+	private void hookupButtonActions()
+	{
+		fBoldButton.addSelectionListener(createButtonSelectionListener(getBoldAction()));
+		fUnderlineButton.addSelectionListener(createButtonSelectionListener(getUnderlineAction()));
+		fItalicButton.addSelectionListener(createButtonSelectionListener(getItalicAction()));
+		fCodeButton.addSelectionListener(createButtonSelectionListener(getMarkTextAction()));
+	}
+	
+	/**
+	 * @param fBoldAction2
+	 * @return
+	 */
+	private SelectionAdapter createButtonSelectionListener(final Action action)
+	{
+		return new SelectionAdapter(){
+			private Action fAction = action;
+			
+			/* (non-Javadoc)
+			 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+			 */
+			@Override
+			public void widgetSelected(SelectionEvent e)
+			{
+				if(fAction.isEnabled())
+				{
+					fAction.run();
+				}
+			}
+		};
 	}
 	
 	/* (non-Javadoc)
