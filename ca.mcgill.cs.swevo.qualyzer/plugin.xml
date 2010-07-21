@@ -115,16 +115,6 @@
    <extension
          point="org.eclipse.ui.commands">
       <command
-            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.ExitHandler"
-            id="ca.mcgill.cs.swevo.qualyzer.commands.exit"
-            name="%command.name.exit">
-      </command>
-      <command
-            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.SetupHandler"
-            id="ca.mcgill.cs.swevo.qualyzer.commands.setup"
-            name="%command.name.setup">
-      </command>
-      <command
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.NewProjectHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.newProject"
             name="%command.name.newProject">
@@ -275,7 +265,7 @@
                   visible="true">
             </separator>
             <command
-                  commandId="ca.mcgill.cs.swevo.qualyzer.commands.exit"
+                  commandId="org.eclipse.ui.file.exit"
                   label="%command.label.exit"
                   style="push"
                   tooltip="%command.tooltip.exitApp">
