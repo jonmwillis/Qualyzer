@@ -22,6 +22,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
@@ -31,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
+import ca.mcgill.cs.swevo.qualyzer.dialogs.MemoDeleteDialog;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Memo;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
@@ -94,11 +96,11 @@ public class DeleteMemoHandler extends AbstractHandler
 	 */
 	private void proceedWithDeletion(IWorkbenchPage page, Shell shell, List<Memo> toDelete)
 	{
-		boolean check = MessageDialog.openConfirm(shell, 
-				Messages.getString("handlers.DeleteMemoHandler.deleteMemos"),  //$NON-NLS-1$
-				Messages.getString("handlers.DeleteMemoHandler.confirm")); //$NON-NLS-1$
+		MemoDeleteDialog dialog = new MemoDeleteDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
+		dialog.create();
+		int check = dialog.open();
 			
-		if(check)
+		if(check == Window.OK)
 		{	
 			for(Memo memo : toDelete)
 			{
