@@ -44,11 +44,13 @@ public class NewMemoPage extends WizardPage
 	 * 
 	 */
 	private static final String SLASH = "/";  //$NON-NLS-1$
+	
+	protected Text fName;
+	
 	private Project fProject;
 	private List<Participant> fParticipants;
 	private Investigator fAuthor;
 	private Composite fContainer;
-	private Text fName;
 	private Combo fAuthorName;
 	private Table fTable;
 	private DateTime fDate;
@@ -74,10 +76,13 @@ public class NewMemoPage extends WizardPage
 	@Override
 	public void createControl(Composite parent)
 	{	
-		fContainer = new Composite(parent, SWT.NULL);
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 2;
-		fContainer.setLayout(layout);
+		if(fContainer == null)
+		{
+			fContainer = new Composite(parent, SWT.NULL);
+			GridLayout layout = new GridLayout();
+			layout.numColumns = 2;
+			fContainer.setLayout(layout);
+		}
 		
 		createLabel(fContainer, Messages.getString("wizards.pages.NewMemoPage.memoName"));  //$NON-NLS-1$
 		fName = new Text(fContainer, SWT.BORDER);
@@ -106,6 +111,16 @@ public class NewMemoPage extends WizardPage
 	}
 
 	/**
+	 * Set the internal container for the page.
+	 * To be used by subclasses that need to create controls above the existing ones.
+	 * @param container
+	 */
+	protected void setfContainer(Composite container)
+	{
+		fContainer = container;
+	}
+	
+	/**
 	 * @return
 	 */
 	private ModifyListener createModifyListener()
@@ -115,20 +130,28 @@ public class NewMemoPage extends WizardPage
 			@Override
 			public void modifyText(ModifyEvent e)
 			{
-				MemoValidator validator = new MemoValidator(fName.getText(), getAuthor(), fProject);
-				
-				if(validator.isValid())
-				{
-					setErrorMessage(null);
-					setPageComplete(true);
-				}
-				else
-				{
-					setErrorMessage(validator.getErrorMessage());
-					setPageComplete(false);
-				}
+				validate();
 			}
 		};
+	}
+	
+	/**
+	 * 
+	 */
+	protected void validate()
+	{
+		MemoValidator validator = new MemoValidator(fName.getText(), getAuthor(), fProject);
+		
+		if(validator.isValid())
+		{
+			setErrorMessage(null);
+			setPageComplete(true);
+		}
+		else
+		{
+			setErrorMessage(validator.getErrorMessage());
+			setPageComplete(false);
+		}
 	}
 	
 	/**

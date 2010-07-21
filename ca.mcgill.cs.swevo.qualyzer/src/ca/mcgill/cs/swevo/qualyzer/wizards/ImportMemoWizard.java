@@ -21,34 +21,34 @@ import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Memo;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.util.FileUtil;
-import ca.mcgill.cs.swevo.qualyzer.wizards.pages.NewMemoPage;
+import ca.mcgill.cs.swevo.qualyzer.wizards.pages.ImportMemoPage;
 
 /**
  *
  */
-public class NewMemoWizard extends Wizard
+public class ImportMemoWizard extends Wizard
 {
-
-	private NewMemoPage fPage;
+	
+	private ImportMemoPage fPage;
 	private Project fProject;
 	private Memo fMemo;
 	
 	/**
-	 * 
+	 * Constructor.
 	 * @param project
 	 */
-	public NewMemoWizard(Project project)
+	public ImportMemoWizard(Project project)
 	{
 		fProject = project;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.wizard.Wizard#addPages()
 	 */
 	@Override
 	public void addPages()
 	{
-		fPage = new NewMemoPage(fProject);
+		fPage = new ImportMemoPage(fProject);
 		addPage(fPage);
 	}
 	
@@ -60,24 +60,22 @@ public class NewMemoWizard extends Wizard
 	{
 		try
 		{
-			FileUtil.setupMemoFiles(fPage.getMemoName(), fProject.getName(), "");
+			FileUtil.setupMemoFiles(fPage.getMemoName(), fProject.getName(), fPage.getMemoFile());
 			
-			fMemo = Facade.getInstance().createMemo(fPage.getMemoName(), fPage.getDate(), fPage.getAuthor(), 
-					fPage.getParticipants(), fProject);
-			
+			fMemo = Facade.getInstance().createMemo(fPage.getMemoName(), fPage.getDate(),
+					fPage.getAuthor(), fPage.getParticipants(), fProject);
 		}
 		catch(QualyzerException e)
 		{
-			MessageDialog.openError(getShell(),
-					Messages.getString("wizards.NewMemoWizard.memoError"), e.getMessage()); //$NON-NLS-1$
+			MessageDialog.openError(getShell(), "Memo Error", e.getMessage());
 			return false;
 		}
-		
-		return fMemo != null;
-	}
 
+		return true;
+	}
+	
 	/**
-	 * Get the memo created by this wizard.
+	 * Get the memo that was created by this wizard.
 	 * @return
 	 */
 	public Memo getMemo()
@@ -85,4 +83,6 @@ public class NewMemoWizard extends Wizard
 		return fMemo;
 	}
 	
+	
+
 }
