@@ -33,11 +33,14 @@ import org.slf4j.LoggerFactory;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.dialogs.TranscriptDeleteDialog;
+import ca.mcgill.cs.swevo.qualyzer.model.Code;
+import ca.mcgill.cs.swevo.qualyzer.model.CodeEntry;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
+import ca.mcgill.cs.swevo.qualyzer.model.Fragment;
+import ca.mcgill.cs.swevo.qualyzer.model.Memo;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
-import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
  * Hander for the delete transcript command.
@@ -131,15 +134,16 @@ public class DeleteTranscriptHandler extends AbstractHandler
 		Project project = transcript.getProject();
 		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(project.getName());
 		ArrayList<Participant> participants = null;
+		ArrayList<Code> codes = null;
 		
 		if(deleteParticipants)
 		{
-			participants = deleteParticipants(transcript, project);
+			participants = deleteParticipants(transcript);
 		}
 		
 		if(deleteCodes)
 		{
-			//TODO delete codes
+			codes = deleteCodes(transcript);
 		}
 		
 		if(deleteAudio && transcript.getAudioFile() != null)
@@ -165,10 +169,16 @@ public class DeleteTranscriptHandler extends AbstractHandler
 					"handlers.DeleteTranscriptHandler.fileAccess"), warningMessage); //$NON-NLS-1$
 		}
 		
-		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		ResourcesUtil.closeEditor(page, transcript.getFileName());
 		Facade.getInstance().deleteTranscript(transcript);
-		//TODO delete annotations?
+		deleteCodesAndParticipants(codes, participants);
+	}
+
+	/**
+	 * @param codes
+	 * @param participants
+	 */
+	private void deleteCodesAndParticipants(ArrayList<Code> codes, ArrayList<Participant> participants)
+	{
 		if(participants != null)
 		{
 			for(Participant p : participants)
@@ -176,6 +186,71 @@ public class DeleteTranscriptHandler extends AbstractHandler
 				Facade.getInstance().deleteParticipant(p);
 			}
 		}
+		
+		if(codes != null)
+		{
+			for(Code code : codes)
+			{
+				Facade.getInstance().deleteCode(code);
+			}
+		}
+		
+	}
+
+	/**
+	 * @param transcript
+	 * @return
+	 */
+	private ArrayList<Code> deleteCodes(Transcript transcript)
+	{
+		Project project = transcript.getProject();
+		ArrayList<Code> codes = new ArrayList<Code>();
+		Transcript lTranscript = Facade.getInstance().forceTranscriptLoad(transcript);
+		for(Fragment fragment : lTranscript.getFragments())
+		{
+			for(CodeEntry entry : fragment.getCodeEntries())
+			{
+				Code code = entry.getCode();
+				if(!codes.contains(code))
+				{
+					codes.add(code);
+				}
+			}
+		}
+		for(Transcript pTranscript : project.getTranscripts())
+		{
+			if(!pTranscript.equals(transcript))
+			{
+				Transcript lTrans = Facade.getInstance().forceTranscriptLoad(pTranscript);
+				for(Fragment fragment : lTrans.getFragments())
+				{
+					for(CodeEntry entry : fragment.getCodeEntries())
+					{
+						Code code = entry.getCode();
+						if(codes.contains(code))
+						{
+							codes.remove(code);
+						}
+					}
+				}
+			}
+		}
+		for(Memo memo : project.getMemos())
+		{
+			Memo lMemo = Facade.getInstance().forceMemoLoad(memo);
+			for(Fragment fragment : lMemo.getFragments())
+			{
+				for(CodeEntry entry : fragment.getCodeEntries())
+				{
+					Code code = entry.getCode();
+					if(codes.contains(code))
+					{
+						codes.remove(code);
+					}
+				}
+			}
+		}
+		return codes;
 	}
 
 	/**
@@ -183,8 +258,9 @@ public class DeleteTranscriptHandler extends AbstractHandler
 	 * @param project
 	 * @param manager 
 	 */
-	private ArrayList<Participant> deleteParticipants(Transcript transcript, Project project)
+	private ArrayList<Participant> deleteParticipants(Transcript transcript)
 	{
+		Project project = transcript.getProject();
 		ArrayList<Participant> toDelete = new ArrayList<Participant>();
 				
 		Transcript lTranscript = Facade.getInstance().forceTranscriptLoad(transcript);

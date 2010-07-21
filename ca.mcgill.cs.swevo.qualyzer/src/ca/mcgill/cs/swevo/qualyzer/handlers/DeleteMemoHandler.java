@@ -33,10 +33,13 @@ import org.slf4j.LoggerFactory;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.dialogs.MemoDeleteDialog;
+import ca.mcgill.cs.swevo.qualyzer.model.Code;
+import ca.mcgill.cs.swevo.qualyzer.model.CodeEntry;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
+import ca.mcgill.cs.swevo.qualyzer.model.Fragment;
 import ca.mcgill.cs.swevo.qualyzer.model.Memo;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
-import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
+import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 
 /**
  * 
@@ -104,7 +107,7 @@ public class DeleteMemoHandler extends AbstractHandler
 		{	
 			for(Memo memo : toDelete)
 			{
-				delete(memo, shell);
+				delete(memo, shell, dialog.deleteCodes());
 									
 				CommonNavigator view;
 				view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
@@ -118,7 +121,7 @@ public class DeleteMemoHandler extends AbstractHandler
 	 * @param memo
 	 * @param shell
 	 */
-	private void delete(Memo memo, Shell shell)
+	private void delete(Memo memo, Shell shell, boolean deleteCodes)
 	{
 		Project project = memo.getProject();
 		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(project.getName());
@@ -132,9 +135,77 @@ public class DeleteMemoHandler extends AbstractHandler
 					"handlers.DeleteMemoHandler.fileError"), warningMessage); //$NON-NLS-1$
 		}
 		
-		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		ResourcesUtil.closeEditor(page, memo.getFileName());
+		ArrayList<Code> codes = null;
+		if(deleteCodes)
+		{
+			codes = findCodesToDelete(memo);
+		}
+		
 		Facade.getInstance().deleteMemo(memo);
+		
+		if(codes != null)
+		{
+			for(Code code : codes)
+			{
+				Facade.getInstance().deleteCode(code);
+			}
+		}
+	}
+
+	/**
+	 * @param memo
+	 * @return
+	 */
+	private ArrayList<Code> findCodesToDelete(Memo memo)
+	{
+		Project project = memo.getProject();
+		ArrayList<Code> codes = new ArrayList<Code>();
+		Memo lMemo = Facade.getInstance().forceMemoLoad(memo);
+		for(Fragment fragment : lMemo.getFragments())
+		{
+			for(CodeEntry entry : fragment.getCodeEntries())
+			{
+				Code code = entry.getCode();
+				if(!codes.contains(code))
+				{
+					codes.add(code);
+				}
+			}
+		}
+		for(Transcript transcript : project.getTranscripts())
+		{
+			Transcript lTrans = Facade.getInstance().forceTranscriptLoad(transcript);
+			for(Fragment fragment : lTrans.getFragments())
+			{
+				for(CodeEntry entry : fragment.getCodeEntries())
+				{
+					Code code = entry.getCode();
+					if(codes.contains(code))
+					{
+						codes.remove(code);
+					}
+				}
+			}
+		}
+		for(Memo pMemo : project.getMemos())
+		{
+			if(!pMemo.equals(memo))
+			{
+				Memo lMem = Facade.getInstance().forceMemoLoad(pMemo);
+				for(Fragment fragment : lMem.getFragments())
+				{
+					for(CodeEntry entry : fragment.getCodeEntries())
+					{
+						Code code = entry.getCode();
+						if(codes.contains(code))
+						{
+							codes.remove(code);
+						}
+					}
+				}
+			}
+		}
+		return codes;
 	}
 
 }
