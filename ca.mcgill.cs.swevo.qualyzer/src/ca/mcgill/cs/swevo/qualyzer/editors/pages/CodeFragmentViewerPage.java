@@ -23,9 +23,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
@@ -38,6 +37,7 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
+import ca.mcgill.cs.swevo.qualyzer.editors.ColorManager;
 import ca.mcgill.cs.swevo.qualyzer.editors.RTFDocumentProvider;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.RTFEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.model.Code;
@@ -54,6 +54,7 @@ public class CodeFragmentViewerPage extends FormPage
 {
 	private Code fCode;
 	private ScrolledForm fForm;
+	private ColorManager fManager;
 	
 	/**
 	 * 
@@ -62,6 +63,7 @@ public class CodeFragmentViewerPage extends FormPage
 	{
 		super(editor, "View Fragments", "View Fragments");
 		fCode = code;
+		fManager = new ColorManager();
 	}
 	
 	/* (non-Javadoc)
@@ -71,7 +73,7 @@ public class CodeFragmentViewerPage extends FormPage
 	protected void createFormContent(IManagedForm managedForm)
 	{
 		fForm = managedForm.getForm();
-		fForm.setText("View all fragments associated with " + fCode.getCodeName());
+		fForm.setText("View all fragments associated with code: " + fCode.getCodeName());
 		Composite body = fForm.getBody();
 		FormToolkit toolkit = managedForm.getToolkit();
 		
@@ -80,6 +82,7 @@ public class CodeFragmentViewerPage extends FormPage
 		body.setLayout(layout);
 		
 		Project project = fCode.getProject();
+		Collections.sort(project.getTranscripts());
 		for(Transcript transcript : project.getTranscripts())
 		{
 			ArrayList<Fragment> contents = findFragments(transcript);
@@ -113,8 +116,8 @@ public class CodeFragmentViewerPage extends FormPage
 		});
 		
 		Composite sectionClient = toolkit.createComposite(section);
-		sectionClient.setLayout(new GridLayout());
-		sectionClient.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		sectionClient.setLayout(new TableWrapLayout());
+		sectionClient.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 		
 		RTFDocumentProvider provider = new RTFDocumentProvider();
 		
@@ -129,24 +132,44 @@ public class CodeFragmentViewerPage extends FormPage
 		
 		for(Fragment fragment : contents)
 		{
-			int start = fragment.getOffset();
-			while(start > 0 && text.charAt(start-1) != '\n' && text.charAt(start-1) != '.')
-			{
-				start--;
-			}
-			
-			int end = fragment.getOffset() + fragment.getLength();
-			while(end < text.length() && text.charAt(end) != '\n' && text.charAt(end) != '.')
-			{
-				end++;
-			}
-			String fragText = text.substring(start, end);
-			StyledText style = new StyledText(sectionClient, SWT.READ_ONLY | SWT.WRAP | SWT.MULTI | SWT.BORDER);
-			style.setText(fragText);
-			style.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
+			createTextBox(sectionClient, text, fragment);
 		}
 		
 		section.setClient(sectionClient);
+	}
+
+	/**
+	 * @param sectionClient
+	 * @param text
+	 * @param fragment
+	 */
+	private void createTextBox(Composite sectionClient, String text, Fragment fragment)
+	{
+		int start = fragment.getOffset();
+		while(start > 0 && text.charAt(start-1) != '\n' && text.charAt(start-1) != '.' && text.charAt(start-1) != '\t')
+		{
+			start--;
+		}
+		
+		int end = fragment.getOffset() + fragment.getLength();
+		while(end < text.length() && text.charAt(end) != '\n' && text.charAt(end) != '.' && text.charAt(end) != '\t')
+		{
+			end++;
+		}
+		
+		String fragText = text.substring(start, end);
+		StyledText style = new StyledText(sectionClient, SWT.READ_ONLY | SWT.WRAP | SWT.MULTI | SWT.BORDER);
+		style.setText(fragText);
+		style.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+		
+		StyleRange range = new StyleRange();
+		range.start = fragment.getOffset() - start;
+		range.length = fragment.getLength();
+		range.underline = true;
+		range.underlineStyle = SWT.UNDERLINE_SINGLE;
+		range.underlineColor = fManager.getColor(ColorManager.TAG);
+		range.foreground = fManager.getColor(ColorManager.TAG);
+		style.setStyleRange(range);
 	}
 
 	/**
@@ -185,5 +208,15 @@ public class CodeFragmentViewerPage extends FormPage
 			}
 		}
 		return toReturn;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.forms.editor.FormPage#dispose()
+	 */
+	@Override
+	public void dispose()
+	{
+		fManager.dispose();
+		super.dispose();
 	}
 }
