@@ -64,9 +64,8 @@ public class TranscriptDeleteDialog extends TitleAreaDialog
 		Composite composite = new Composite(parent, SWT.NULL);
 		
 		GridLayout layout = new GridLayout();
-		layout.numColumns = 2;
+		layout.numColumns = 1;
 		GridData gd = new GridData(SWT.FILL, SWT.NULL, true, false);
-		gd.horizontalSpan = 2;
 		composite.setLayout(layout);
 		parent.setLayout(layout);
 		composite.setLayoutData(gd);
@@ -76,21 +75,15 @@ public class TranscriptDeleteDialog extends TitleAreaDialog
 		
 		label.setLayoutData(gd);
 		
-		gd = new GridData(SWT.FILL, SWT.NULL, true, false);
 		fAudioButton = new Button(composite, SWT.CHECK);
-		label = new Label(composite, SWT.NULL);
-		label.setText(Messages.getString("dialogs.TranscriptDeleteDialog.deleteAudio")); //$NON-NLS-1$
-		label.setLayoutData(gd);
+		fAudioButton.setText(Messages.getString("dialogs.TranscriptDeleteDialog.deleteAudio")); //$NON-NLS-1$
 		
 		fCodeButton = new Button(composite, SWT.CHECK);
-		label = new Label(composite, SWT.NULL);
-		label.setText(Messages.getString("dialogs.TranscriptDeleteDialog.deleteCodes")); //$NON-NLS-1$
-		label.setLayoutData(gd);
+		fCodeButton.setText(Messages.getString("dialogs.TranscriptDeleteDialog.deleteCodes")); //$NON-NLS-1$
 		
 		fParticipantButton = new Button(composite, SWT.CHECK);
-		label = new Label(composite, SWT.NULL);
-		label.setText(Messages.getString("dialogs.TranscriptDeleteDialog.deleteParticipants")); //$NON-NLS-1$
-		label.setLayoutData(gd);
+		fParticipantButton.setText(Messages.getString(
+				"dialogs.TranscriptDeleteDialog.deleteParticipants")); //$NON-NLS-1$
 		
 		return parent;
 	}
