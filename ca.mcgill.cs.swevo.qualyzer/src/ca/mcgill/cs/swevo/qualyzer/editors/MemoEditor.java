@@ -47,10 +47,10 @@ public class MemoEditor extends RTFEditor implements MemoListener
 
 	private static final int NUM_COLS = 4;
 	
-	private static final String BOLD_IMG = "BOLD_IMG";
-	private static final String ITALIC_IMG = "ITALIC_IMG";
-	private static final String UNDERLINE_IMG = "UNDERLINE_IMG";
-	private static final String CODE_IMG = "CODE_IMG";
+	private static final String BOLD_IMG = "BOLD_IMG"; //$NON-NLS-1$
+	private static final String ITALIC_IMG = "ITALIC_IMG"; //$NON-NLS-1$
+	private static final String UNDERLINE_IMG = "UNDERLINE_IMG"; //$NON-NLS-1$
+	private static final String CODE_IMG = "CODE_IMG"; //$NON-NLS-1$
 
 	private Button fBoldButton;
 
@@ -65,10 +65,10 @@ public class MemoEditor extends RTFEditor implements MemoListener
 	 */
 	public MemoEditor()
 	{
-		addImage(BOLD_IMG, QualyzerActivator.PLUGIN_ID, "icons/text_bold.png");
-		addImage(ITALIC_IMG, QualyzerActivator.PLUGIN_ID, "icons/text_italic.png");
-		addImage(UNDERLINE_IMG, QualyzerActivator.PLUGIN_ID, "icons/text_underline.png");
-		addImage(CODE_IMG, QualyzerActivator.PLUGIN_ID, "icons/code_obj.gif");
+		addImage(BOLD_IMG, QualyzerActivator.PLUGIN_ID, "icons/text_bold.png"); //$NON-NLS-1$
+		addImage(ITALIC_IMG, QualyzerActivator.PLUGIN_ID, "icons/text_italic.png"); //$NON-NLS-1$
+		addImage(UNDERLINE_IMG, QualyzerActivator.PLUGIN_ID, "icons/text_underline.png"); //$NON-NLS-1$
+		addImage(CODE_IMG, QualyzerActivator.PLUGIN_ID, "icons/code_obj.gif"); //$NON-NLS-1$
 	}
 	
 	/* (non-Javadoc)

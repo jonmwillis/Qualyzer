@@ -79,7 +79,7 @@ public class RTFEditorInput extends FileEditorInput
 	@Override
 	public String getName()
 	{
-		return fDocument.getClass().getSimpleName() + "." + super.getName();
+		return fDocument.getClass().getSimpleName() + "." + super.getName(); //$NON-NLS-1$
 	}
 	
 }

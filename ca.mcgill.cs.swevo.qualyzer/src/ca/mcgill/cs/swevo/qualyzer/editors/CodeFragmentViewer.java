@@ -28,7 +28,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Code;
 public class CodeFragmentViewer extends FormEditor
 {
 
-	public static final String ID = "ca.mcgill.cs.swevo.qualyzer.editors.codeFragmentViewer";
+	public static final String ID = "ca.mcgill.cs.swevo.qualyzer.editors.codeFragmentViewer"; //$NON-NLS-1$
 	private Code fCode;
 	private CodeFragmentViewerPage fPage;
 	

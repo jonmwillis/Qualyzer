@@ -304,12 +304,12 @@ public final class FileUtil
 			File fileOrig = new File(fileName);
 			if(file.exists())
 			{
-				throw new QualyzerException("An memo file already exists at the destination"); 
+				throw new QualyzerException(Messages.getString("util.FileUtil.memoAlreadyExists"));  //$NON-NLS-1$
 			}
 			
 			if(!fileOrig.exists())
 			{
-				throw new QualyzerException("Unable to find the file to copy"); 
+				throw new QualyzerException(Messages.getString("util.FileUtil.cannotFindMemo"));  //$NON-NLS-1$
 			}
 			
 			try
@@ -318,7 +318,7 @@ public final class FileUtil
 			}
 			catch (IOException e)
 			{
-				throw new QualyzerException("Failed to copy the memo", e); 
+				throw new QualyzerException(Messages.getString("util.FileUtil.memoCopyFailed"), e);  //$NON-NLS-1$
 			}
 		}
 	}

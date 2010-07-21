@@ -48,8 +48,8 @@ public class ImportMemoPage extends NewMemoPage
 	public ImportMemoPage(Project project)
 	{
 		super(project);
-		setTitle("Import Memo Wizard");
-		setDescription("Please choose a file to import.");
+		setTitle(Messages.getString("wizards.pages.ImportMemoPage.importWizard")); //$NON-NLS-1$
+		setDescription(Messages.getString("wizards.pages.ImportMemoPage.chooseFile")); //$NON-NLS-1$
 	}
 	
 	/* (non-Javadoc)

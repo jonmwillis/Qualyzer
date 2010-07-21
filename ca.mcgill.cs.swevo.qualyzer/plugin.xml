@@ -942,7 +942,7 @@
             default="false"
             icon="icons/code_obj.png"
             id="ca.mcgill.cs.swevo.qualyzer.editors.codeFragmentViewer"
-            name="Code Fragment Viewer">
+            name="%editor.name.codeFragmentViewer">
       </editor>
    </extension>
    <extension

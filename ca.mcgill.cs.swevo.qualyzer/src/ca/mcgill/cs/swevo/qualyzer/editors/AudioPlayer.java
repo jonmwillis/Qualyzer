@@ -81,7 +81,7 @@ public class AudioPlayer
 		}
 		catch(BasicPlayerException e)
 		{
-			fLogger.error("AudioPlayer: Could not open", e);
+			fLogger.error("AudioPlayer: Could not open", e); //$NON-NLS-1$
 		}
 	}
 	
@@ -96,21 +96,21 @@ public class AudioPlayer
 			@Override
 			public void opened(Object arg0, Map arg1)
 			{
-				fLength = ((Integer) arg1.get("audio.length.frames")) / ((Float) arg1.get("audio.framerate.fps"));
+				fLength = ((Integer) arg1.get("audio.length.frames")) / //$NON-NLS-1$
+					((Float) arg1.get("audio.framerate.fps")); //$NON-NLS-1$ 
 				updateTimeLabel();
 				
-				if(arg1.get("audio.type").equals("WAVE"))
+				if(arg1.get("audio.type").equals("WAVE")) //$NON-NLS-1$ //$NON-NLS-2$
 				{
 					fIsWAV = true;
 //					double lengthMicSec = fLength * MICROSECONDS;
 //					fMicSecondsPerByte = lengthMicSec / (Integer)arg1.get("audio.length.bytes");
 				}
-				else if(arg1.get("audio.type").equals("MP3"))
+				else if(arg1.get("audio.type").equals("MP3")) //$NON-NLS-1$ //$NON-NLS-2$
 				{
 					fIsMP3 = true;
 				}
 			}
-
 			@SuppressWarnings("unchecked")
 			@Override
 			public void progress(int arg0, long arg1, byte[] arg2, Map arg3)
@@ -118,7 +118,7 @@ public class AudioPlayer
 				if(fIsMP3)
 				{
 //					fByteNumber = (Long) arg3.get("mp3.position.byte");
-					fMicroSecondsPos = Long.valueOf((Long) arg3.get("mp3.position.microseconds"));
+					fMicroSecondsPos = Long.valueOf((Long) arg3.get("mp3.position.microseconds")); //$NON-NLS-1$
 				}
 				else if(fIsWAV)
 				{
@@ -168,8 +168,8 @@ public class AudioPlayer
 		}
 		catch(BasicPlayerException e)
 		{
-			fLogger.error("AudioPlayer: Could not play audio", e);
-			throw new QualyzerException("Unable to play audio", e);
+			fLogger.error("AudioPlayer: Could not play audio", e); //$NON-NLS-1$
+			throw new QualyzerException(Messages.getString("editors.AudioPlayer.playFailed"), e); //$NON-NLS-1$
 		}
 	}
 	
@@ -187,8 +187,8 @@ public class AudioPlayer
 		}
 		catch(BasicPlayerException e)
 		{
-			fLogger.error("AudioPlayer: Could not pause", e);
-			throw new QualyzerException("Unable to pause audio", e);
+			fLogger.error("AudioPlayer: Could not pause", e); //$NON-NLS-1$
+			throw new QualyzerException(Messages.getString("editors.AudioPlayer.pauseFailed"), e); //$NON-NLS-1$
 		}
 	}
 	
@@ -203,8 +203,8 @@ public class AudioPlayer
 		}
 		catch(BasicPlayerException e)
 		{
-			fLogger.error("AudioPlayer: Could not stop.", e);
-			throw new QualyzerException("Unable to stop audio", e);
+			fLogger.error("AudioPlayer: Could not stop.", e); //$NON-NLS-1$
+			throw new QualyzerException(Messages.getString("editors.AudioPlayer.stopFailed"), e); //$NON-NLS-1$
 		}
 	}
 	
