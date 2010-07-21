@@ -66,6 +66,7 @@ public class FacadeTest
 		fListenerManager.registerParticipantListener(fProject, fListener);
 		fListenerManager.registerProjectListener(fProject, fListener);
 		fListenerManager.registerTranscriptListener(fProject, fListener);
+		fListenerManager.registerMemoListener(fProject, fListener);
 	}
 
 	/**
@@ -79,6 +80,7 @@ public class FacadeTest
 		fListenerManager.unregisterParticipantListener(fProject, fListener);
 		fListenerManager.unregisterProjectListener(fProject, fListener);
 		fListenerManager.unregisterTranscriptListener(fProject, fListener);
+		fListenerManager.unregisterMemoListener(fProject, fListener);
 		fFacade.deleteProject(fProject);
 	}
 
@@ -145,6 +147,31 @@ public class FacadeTest
 		assertArrayEquals(new Transcript[] { transcript }, (Object[]) event.getObject());
 	}
 
+	/**
+	 * Verifies db state and listeners.
+	 */
+	@Test
+	public void testCreateMemo()
+	{
+		String pId = "p1";
+		String pName = "Toto";
+		String memoName = "m1";
+		Participant participant = fFacade.createParticipant(pId, pName, fProject);
+		List<Participant> participants = new ArrayList<Participant>();
+		participants.add(participant);
+		Investigator investigator = fProject.getInvestigators().get(0);
+
+		Memo memo = fFacade.createMemo(memoName, "6/26/2010", investigator, participants, fProject);
+		ListenerEvent event = fListener.getEvents().get(1);
+
+		// Test DB
+		assertNotNull(memo);
+		assertEquals(1, PersistenceManager.getInstance().getProject(TEST_PROJECT_NAME).getMemos().size());
+		// Test event
+		assertEquals(ChangeType.ADD, event.getChangeType());
+		assertArrayEquals(new Memo[] { memo }, (Object[]) event.getObject());
+	}
+	
 	/**
 	 * 
 	 * Verifies if a fragment can be created on an initialized and uninitialized transcript
@@ -331,6 +358,49 @@ public class FacadeTest
 			HibernateUtil.quietClose(session);
 		}
 	}
+	
+	/**
+	 * 
+	 * Verifies that a memo can be deleted.
+	 * 
+	 */
+	@Test
+	public void testDeleteMemo()
+	{
+		String pId = "p1";
+		String pName = "Toto";
+		String memoName = "t1";
+		Participant participant = fFacade.createParticipant(pId, pName, fProject);
+		List<Participant> participants = new ArrayList<Participant>();
+		participants.add(participant);
+		Investigator inves = fProject.getInvestigators().get(0);
+		Memo memo = fFacade.createMemo(memoName, "6/26/2010", inves, participants, fProject);
+		Fragment fragment = fFacade.createFragment(memo, 1, 1);
+		fFacade.saveMemo(memo);
+		long id = fragment.getPersistenceId();
+
+		fFacade.deleteMemo(PersistenceManager.getInstance().getProject(fProject.getName()).getMemos()
+				.get(0));
+
+		// event 0: create part, 1: create memo, 2: create fr., 3: modify memo, 4: delete memo.
+		ListenerEvent event = fListener.getEvents().get(4);
+		assertEquals(ChangeType.DELETE, event.getChangeType());
+		assertArrayEquals(new Memo[] { memo }, (Object[]) event.getObject());
+		assertEquals(0, PersistenceManager.getInstance().getProject(fProject.getName()).getMemos().size());
+
+		// Test Fragment
+		HibernateDBManager dbManager = QualyzerActivator.getDefault().getHibernateDBManagers().get(TEST_PROJECT_NAME);
+		Session session = dbManager.openSession();
+		// It should be impossible to retrieve the fragment.
+		try
+		{
+			assertNull(session.get(Fragment.class, id));
+		}
+		finally
+		{
+			HibernateUtil.quietClose(session);
+		}
+	}
 
 	/**
 	 * 
@@ -363,6 +433,91 @@ public class FacadeTest
 
 		Transcript newTempTranscript = fFacade.forceTranscriptLoad(tempTranscript);
 		assertEquals(0, newTempTranscript.getFragments().size());
+	}
+	
+	/**
+	 * 
+	 * Verifies that memoload() really loads the various lists.
+	 * 
+	 */
+	@Test
+	public void testForceMemoLoad()
+	{
+		String pId = "p1";
+		String pName = "Toto";
+		String memoName = "t1";
+		Participant participant = fFacade.createParticipant(pId, pName, fProject);
+		List<Participant> participants = new ArrayList<Participant>();
+		participants.add(participant);
+		Investigator inves = fProject.getInvestigators().get(0);
+		fFacade.createMemo(memoName, "6/26/2010", inves, participants, fProject);
+
+		Memo tempMemo = PersistenceManager.getInstance().getProject(fProject.getName()).getMemos()
+				.get(0);
+
+		try
+		{
+			tempMemo.getFragments().size();
+			fail();
+		}
+		catch (HibernateException he)
+		{
+			assertTrue(true);
+		}
+
+		Memo newTempMemo = fFacade.forceMemoLoad(tempMemo);
+		assertEquals(0, newTempMemo.getFragments().size());
+	}
+	
+	/**
+	 * 
+	 * Verifies that transcriptload() really loads the various lists.
+	 * 
+	 */
+	@Test
+	public void testForceDocumentLoad()
+	{
+		String pId = "p1";
+		String pName = "Toto";
+		String transcriptName = "t1";
+		Participant participant = fFacade.createParticipant(pId, pName, fProject);
+		List<Participant> participants = new ArrayList<Participant>();
+		participants.add(participant);
+		Investigator inves = fProject.getInvestigators().get(0);
+		fFacade.createTranscript(transcriptName, "6/26/2010", "", participants, fProject);
+		fFacade.createMemo(transcriptName, "6/26/2010", inves, participants, fProject);
+
+		Transcript tempTranscript = PersistenceManager.getInstance().getProject(fProject.getName()).getTranscripts()
+				.get(0);
+		
+		Memo tempMemo = PersistenceManager.getInstance().getProject(fProject.getName()).getMemos()
+			.get(0);
+
+		try
+		{
+			tempTranscript.getFragments().size();
+			fail();
+		}
+		catch (HibernateException he)
+		{
+			assertTrue(true);
+		}
+
+		IAnnotatedDocument newTempTranscript = fFacade.forceDocumentLoad(tempTranscript);
+		assertEquals(0, newTempTranscript.getFragments().size());
+		
+		try
+		{
+			tempMemo.getFragments().size();
+			fail();
+		}
+		catch (HibernateException he)
+		{
+			assertTrue(true);
+		}
+
+		IAnnotatedDocument newTempMemo = fFacade.forceDocumentLoad(tempMemo);
+		assertEquals(0, newTempMemo.getFragments().size());
 	}
 
 	/**

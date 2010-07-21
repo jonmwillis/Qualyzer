@@ -20,7 +20,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
  * 
  */
 public class DebugListener implements CodeListener, InvestigatorListener, ParticipantListener, ProjectListener,
-		TranscriptListener
+		TranscriptListener, MemoListener
 {
 
 	private List<ListenerEvent> fEvents = new ArrayList<ListenerEvent>();
@@ -62,6 +62,15 @@ public class DebugListener implements CodeListener, InvestigatorListener, Partic
 	public void transcriptChanged(ChangeType cType, Transcript[] transcripts, Facade facade)
 	{
 		fEvents.add(new ListenerEvent(cType, transcripts));
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.model.MemoListener#memoChanged(ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType, ca.mcgill.cs.swevo.qualyzer.model.Memo[], ca.mcgill.cs.swevo.qualyzer.model.Facade)
+	 */
+	@Override
+	public void memoChanged(ChangeType cType, Memo[] memos, Facade facade)
+	{
+		fEvents.add(new ListenerEvent(cType, memos));
 	}
 
 }

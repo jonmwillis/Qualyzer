@@ -275,6 +275,7 @@ public class EqualityTest
 		
 		assertEquals(m1, m2);
 		assertEquals(m1.hashCode(), m2.hashCode());
+		assertEquals(m1.compareTo(m2), 0);
 		
 		assertEquals(m1, m1);
 		assertFalse(m1.equals(null));
@@ -283,6 +284,7 @@ public class EqualityTest
 		m2.setName(OTHER_NAME);
 		assertFalse(m1.equals(m2));
 		assertFalse(m1.hashCode() == m2.hashCode());
+		assertFalse(m1.compareTo(m2) == 0);
 		
 		m2.setName(name);
 		m2.setFileName(OTHER_NAME);
