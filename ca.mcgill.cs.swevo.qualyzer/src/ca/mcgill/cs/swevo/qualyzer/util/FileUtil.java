@@ -271,32 +271,55 @@ public final class FileUtil
 	 * @param memoName
 	 * @param name
 	 */
-	public static void setupMemoFiles(String memoName, String projectName)
+	public static void setupMemoFiles(String memoName, String projectName, String fileName)
 	{
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		IProject wProject = root.getProject(projectName);
 		String workspacePath = wProject.getLocation().toString();
-		
 		String path = workspacePath+File.separator+MEMOS+File.separator+memoName+".rtf"; //$NON-NLS-1$
 		File file = new File(path);
-		
-		try
+		if(fileName == null || fileName.isEmpty())
 		{
-			if(!file.createNewFile())
+			try
 			{
-				throw new QualyzerException(Messages.getString("util.FileUtil.memoFailed")); //$NON-NLS-1$
+				if(!file.createNewFile())
+				{
+					throw new QualyzerException(Messages.getString("util.FileUtil.memoFailed")); //$NON-NLS-1$
+				}
+				else
+				{
+					FileWriter writer = new FileWriter(file);
+					writer.write("{\\rtf1\\ansi\\deff0\n\n\n}\n\0"); //$NON-NLS-1$
+					writer.close();
+				}
 			}
-			else
+			catch (IOException e)
 			{
-				FileWriter writer = new FileWriter(file);
-				writer.write("{\\rtf1\\ansi\\deff0\n\n\n}\n\0"); //$NON-NLS-1$
-				writer.close();
+				gLogger.error("Failed to create new File", e);  //$NON-NLS-1$
+				throw new QualyzerException(Messages.getString("util.FileUtil.memoCreationFailed"), e);  //$NON-NLS-1$
 			}
 		}
-		catch (IOException e)
+		else
 		{
-			gLogger.error("Failed to create new File", e);  //$NON-NLS-1$
-			throw new QualyzerException(Messages.getString("util.FileUtil.memoCreationFailed"), e);  //$NON-NLS-1$
+			File fileOrig = new File(fileName);
+			if(file.exists())
+			{
+				throw new QualyzerException("An memo file already exists at the destination"); 
+			}
+			
+			if(!fileOrig.exists())
+			{
+				throw new QualyzerException("Unable to find the file to copy"); 
+			}
+			
+			try
+			{
+				FileUtil.copyFile(fileOrig, file);
+			}
+			catch (IOException e)
+			{
+				throw new QualyzerException("Failed to copy the memo", e); 
+			}
 		}
 	}
 }

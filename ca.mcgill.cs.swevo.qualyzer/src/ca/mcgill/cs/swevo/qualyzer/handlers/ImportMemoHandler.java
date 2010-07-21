@@ -13,6 +13,19 @@ package ca.mcgill.cs.swevo.qualyzer.handlers;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.navigator.CommonNavigator;
+
+import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
+import ca.mcgill.cs.swevo.qualyzer.model.Project;
+import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
+import ca.mcgill.cs.swevo.qualyzer.wizards.ImportMemoWizard;
 
 /**
  * 
@@ -24,7 +37,27 @@ public class ImportMemoHandler extends AbstractHandler
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
 	{
-		// TODO Auto-generated method stub
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		ISelection selection = page.getSelection();
+		
+		if(selection != null && selection instanceof IStructuredSelection)
+		{
+			Object element = ((IStructuredSelection) selection).getFirstElement();
+			Project project = ResourcesUtil.getProject(element);
+			
+			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+			ImportMemoWizard wizard = new ImportMemoWizard(project);
+			WizardDialog dialog = new WizardDialog(shell, wizard);
+			
+			dialog.create();
+			if(dialog.open() == Window.OK)
+			{
+				CommonNavigator view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+				view.getCommonViewer().refresh();
+								
+				ResourcesUtil.openEditor(page, wizard.getMemo());
+			}
+		}
 		return null;
 	}
 
