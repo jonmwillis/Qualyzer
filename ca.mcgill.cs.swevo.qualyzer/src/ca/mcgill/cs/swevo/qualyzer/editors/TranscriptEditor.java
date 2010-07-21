@@ -136,7 +136,7 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 		
 		Control buttonBar = createFormatButtonBar(topBar);
 		buttonBar.setLayoutData(new GridData(SWT.FILL, SWT.NULL, false, false));
-		Control musicBar = createMusicBar(topBar);
+		Composite musicBar = createMusicBar(topBar);
 		musicBar.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 		
 		super.createPartControl(parent);
@@ -145,7 +145,7 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 		
 		if(((Transcript) getDocument()).getAudioFile() == null)
 		{
-			musicBar.setEnabled(false);
+			disable(musicBar);
 		}
 		else
 		{
@@ -161,6 +161,26 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 		Facade.getInstance().getListenerManager().registerTranscriptListener(getDocument().getProject(), this);
 	}
 	
+	/**
+	 * @param musicBar
+	 */
+	private void disable(Composite container)
+	{
+		container.setEnabled(false);
+		for(Control child : container.getChildren())
+		{
+			if(child instanceof Composite)
+			{
+				disable((Composite) child);
+			}
+			else
+			{
+				child.setEnabled(false);
+			}
+		}
+		
+	}
+
 	/**
 	 * 
 	 */
@@ -221,7 +241,7 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 	 * @param topBar
 	 * @return
 	 */
-	private Control createMusicBar(Composite parent)
+	private Composite createMusicBar(Composite parent)
 	{
 		Composite musicBar = new Composite(parent, SWT.BORDER);
 		musicBar.setLayout(new GridLayout(NUM_COLS, false));
