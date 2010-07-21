@@ -67,7 +67,8 @@ public class ImportMemoWizard extends Wizard
 		}
 		catch(QualyzerException e)
 		{
-			MessageDialog.openError(getShell(), "Memo Error", e.getMessage());
+			MessageDialog.openError(getShell(), Messages.getString("wizards.ImportMemoWizard.memoError"), //$NON-NLS-1$
+					e.getMessage()); 
 			return false;
 		}
 

@@ -52,6 +52,9 @@ import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
  */
 public class CodeFragmentViewerPage extends FormPage
 {
+	
+	private static final String VIEW_FRAGMENTS = Messages.getString(
+			"editors.pages.CodeFragmentViewerPage.viewFragments"); //$NON-NLS-1$
 	private Code fCode;
 	private ScrolledForm fForm;
 	private ColorManager fManager;
@@ -61,7 +64,7 @@ public class CodeFragmentViewerPage extends FormPage
 	 */
 	public CodeFragmentViewerPage(FormEditor editor, Code code)
 	{
-		super(editor, "View Fragments", "View Fragments");
+		super(editor, VIEW_FRAGMENTS, VIEW_FRAGMENTS); 
 		fCode = code;
 		fManager = new ColorManager();
 	}
@@ -73,7 +76,8 @@ public class CodeFragmentViewerPage extends FormPage
 	protected void createFormContent(IManagedForm managedForm)
 	{
 		fForm = managedForm.getForm();
-		fForm.setText("View all fragments associated with code: " + fCode.getCodeName());
+		fForm.setText(Messages.getString("editors.pages.CodeFragmentViewerPage.viewAllFragments") + //$NON-NLS-1$
+				fCode.getCodeName()); 
 		Composite body = fForm.getBody();
 		FormToolkit toolkit = managedForm.getToolkit();
 		
@@ -122,7 +126,9 @@ public class CodeFragmentViewerPage extends FormPage
 		RTFDocumentProvider provider = new RTFDocumentProvider();
 		
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(transcript.getProject().getName());
-		IFile file = project.getFile("transcripts" + File.separator + transcript.getFileName());
+		IFile file = project.getFile(Messages.getString(
+				"editors.pages.CodeFragmentViewerPage.transcripts") + //$NON-NLS-1$
+				File.separator + transcript.getFileName()); 
 		RTFEditorInput input = new RTFEditorInput(file, Facade.getInstance().forceDocumentLoad(transcript));
 		IDocument document = provider.getCreatedDocument(input);
 		

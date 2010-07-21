@@ -60,11 +60,8 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
  */
 public class CodeEditorPage extends FormPage implements CodeListener, ProjectListener
 {
-	
-	/**
-	 * 
-	 */
-	private static final String DELETE_CODE_KEY = "editors.pages.CodeEditorPage.deleteCode"; //$NON-NLS-1$
+	private static final String DELETE_CODE = Messages.getString(
+			"editors.pages.CodeEditorPage.deleteCode"); //$NON-NLS-1$
 
 	private Project fProject;
 	
@@ -191,11 +188,11 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		item.addSelectionListener(newCodeSelected()); 
 		
 		item = new MenuItem(menu, SWT.PUSH);
-		item.setText(Messages.getString(DELETE_CODE_KEY));
+		item.setText(DELETE_CODE);
 		item.addSelectionListener(deleteCodeSelected());
 		
 		item = new MenuItem(menu, SWT.PUSH);
-		item.setText("View Associated Fragments");
+		item.setText(Messages.getString("editors.pages.CodeEditorPage.viewFragments")); //$NON-NLS-1$
 		item.addSelectionListener(viewFragmentsSelected());
 		
 		fTable.setMenu(menu);
@@ -247,12 +244,12 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 				boolean check = false;
 				if(conflicts.size() == 0)
 				{
-					check = MessageDialog.openConfirm(getSite().getShell(), Messages.getString(DELETE_CODE_KEY),
+					check = MessageDialog.openConfirm(getSite().getShell(), DELETE_CODE,
 					Messages.getString("editors.pages.CodeEditorPage.confirm")); //$NON-NLS-1$
 				}
 				else
 				{
-					check = MessageDialog.openConfirm(getSite().getShell(), Messages.getString(DELETE_CODE_KEY), 
+					check = MessageDialog.openConfirm(getSite().getShell(), DELETE_CODE, 
 							Messages.getString("editors.pages.CodeEditorPage.confirmMany") + //$NON-NLS-1$
 							conflicts.size() + Messages.getString(
 									"editors.pages.CodeEditorPage.confirmMany2")); //$NON-NLS-1$

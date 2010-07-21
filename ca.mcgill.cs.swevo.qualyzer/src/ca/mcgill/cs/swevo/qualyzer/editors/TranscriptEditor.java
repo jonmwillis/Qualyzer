@@ -56,13 +56,13 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 	
 	private static final int NUM_COLS = 4;
 	
-	private static final String PLAY_IMG = "PLAY_IMG";
-	private static final String PAUSE_IMG = "PAUSE_IMG";
-	private static final String STOP_IMG = "STOP_IMG";
-	private static final String BOLD_IMG = "BOLD_IMG";
-	private static final String ITALIC_IMG = "ITALIC_IMG";
-	private static final String UNDERLINE_IMG = "UNDERLINE_IMG";
-	private static final String CODE_IMG = "CODE_IMG";
+	private static final String PLAY_IMG = "PLAY_IMG"; //$NON-NLS-1$
+	private static final String PAUSE_IMG = "PAUSE_IMG"; //$NON-NLS-1$
+	private static final String STOP_IMG = "STOP_IMG"; //$NON-NLS-1$
+	private static final String BOLD_IMG = "BOLD_IMG"; //$NON-NLS-1$
+	private static final String ITALIC_IMG = "ITALIC_IMG"; //$NON-NLS-1$
+	private static final String UNDERLINE_IMG = "UNDERLINE_IMG"; //$NON-NLS-1$
+	private static final String CODE_IMG = "CODE_IMG"; //$NON-NLS-1$
 
 	private Button fBoldButton;
 	private Button fUnderlineButton;
@@ -80,13 +80,13 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 	 */
 	public TranscriptEditor()
 	{
-		addImage(PLAY_IMG, QualyzerActivator.PLUGIN_ID, "icons/play.png");
-		addImage(PAUSE_IMG, QualyzerActivator.PLUGIN_ID, "icons/pause.png");
-		addImage(STOP_IMG, QualyzerActivator.PLUGIN_ID, "icons/stop.png");
-		addImage(BOLD_IMG, QualyzerActivator.PLUGIN_ID, "icons/text_bold.png");
-		addImage(ITALIC_IMG, QualyzerActivator.PLUGIN_ID, "icons/text_italic.png");
-		addImage(UNDERLINE_IMG, QualyzerActivator.PLUGIN_ID, "icons/text_underline.png");
-		addImage(CODE_IMG, QualyzerActivator.PLUGIN_ID, "icons/code_obj.gif");
+		addImage(PLAY_IMG, QualyzerActivator.PLUGIN_ID, "icons/play.png"); //$NON-NLS-1$
+		addImage(PAUSE_IMG, QualyzerActivator.PLUGIN_ID, "icons/pause.png"); //$NON-NLS-1$
+		addImage(STOP_IMG, QualyzerActivator.PLUGIN_ID, "icons/stop.png"); //$NON-NLS-1$
+		addImage(BOLD_IMG, QualyzerActivator.PLUGIN_ID, "icons/text_bold.png"); //$NON-NLS-1$
+		addImage(ITALIC_IMG, QualyzerActivator.PLUGIN_ID, "icons/text_italic.png"); //$NON-NLS-1$
+		addImage(UNDERLINE_IMG, QualyzerActivator.PLUGIN_ID, "icons/text_underline.png"); //$NON-NLS-1$
+		addImage(CODE_IMG, QualyzerActivator.PLUGIN_ID, "icons/code_obj.gif"); //$NON-NLS-1$
 		
 	}
 	
@@ -257,7 +257,7 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 		
 		fTimeLabel = new Label(musicBar, SWT.NULL);
 		fTimeLabel.setLayoutData(new GridData(SWT.NULL, SWT.FILL, false, false));
-		fTimeLabel.setText("0:00/0:00");
+		fTimeLabel.setText("0:00/0:00"); //$NON-NLS-1$
 	
 		return musicBar;
 	}

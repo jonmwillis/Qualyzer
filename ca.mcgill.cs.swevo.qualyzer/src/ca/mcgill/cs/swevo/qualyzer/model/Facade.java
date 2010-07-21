@@ -477,7 +477,7 @@ public final class Facade
 		catch (HibernateException e)
 		{
 			HibernateUtil.quietRollback(t);
-			String key = "model.Facade.Transcript.cannotDelete"; //$NON-NLS-1$
+			String key = "model.Facade.Memo.cannotDelete"; //$NON-NLS-1$
 			String errorMessage = Messages.getString(key);
 			fLogger.error(key, e);
 			throw new QualyzerException(errorMessage, e);

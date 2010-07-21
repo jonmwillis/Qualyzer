@@ -48,8 +48,8 @@ public class MemoDeleteDialog extends TitleAreaDialog
 	public void create()
 	{
 		super.create();
-		setTitle("Delete Memo");
-		setMessage("Deleting this memo will remove it from the disk, along with all associated annotations", 
+		setTitle(Messages.getString("dialogs.MemoDeleteDialog.deleteMemo")); //$NON-NLS-1$
+		setMessage(Messages.getString("dialogs.MemoDeleteDialog.warning"),  //$NON-NLS-1$
 				IMessageProvider.WARNING);
 	}
 	
@@ -65,13 +65,13 @@ public class MemoDeleteDialog extends TitleAreaDialog
 		container.setLayout(layout);
 		
 		Label label = new Label(container, SWT.NULL);
-		label.setText("Are you sure you want to delete this memo?");
+		label.setText(Messages.getString("dialogs.MemoDeleteDialog.confirm")); //$NON-NLS-1$
 		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, false);
 		label.setLayoutData(gd);
 		
 		fButton = new Button(container, SWT.CHECK);
 		fButton.setSelection(false);
-		fButton.setText("Delete all codes that are only associated with this memo.");
+		fButton.setText(Messages.getString("dialogs.MemoDeleteDialog.deleteCodes")); //$NON-NLS-1$
 		
 		return parent;
 	}
