@@ -488,7 +488,7 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 		listenerManager.registerCodeListener(fDocument.getProject(), this);
 		ColorerPlugin.getDefault().setPropertyWordWrap(getTextColorer().getFileType(), 1);
 		
-		setPartName(fDocument.getFileName());
+		setPartName(fDocument.getName());
 	}
 	
 	/* (non-Javadoc)
