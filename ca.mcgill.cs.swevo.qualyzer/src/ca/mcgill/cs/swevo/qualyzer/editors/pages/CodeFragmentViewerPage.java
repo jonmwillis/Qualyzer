@@ -172,31 +172,39 @@ public class CodeFragmentViewerPage extends FormPage
 	private void createTextBox(Composite sectionClient, String text, Fragment fragment)
 	{
 		int start = fragment.getOffset();
-		boolean isPunctuation = text.charAt(start-1) == '!' && text.charAt(start-1) == '?' && 
+		boolean isPunctuation = text.charAt(start-1) == '!' || text.charAt(start-1) == '?' || 
 			text.charAt(start-1) == '.';
 		
 		while(start > 0 && text.charAt(start-1) != '\n' && text.charAt(start-1) != '\t' && !isPunctuation)
 		{
 			start--;
-			isPunctuation = text.charAt(start-1) == '!' && text.charAt(start-1) == '?' && text.charAt(start-1) == '.';
+			if(start > 0)
+			{
+				isPunctuation = text.charAt(start-1) == '!' || text.charAt(start-1) == '?' || 
+					text.charAt(start-1) == '.';
+			}
 		}
 		
 		int end = fragment.getOffset() + fragment.getLength();
-		isPunctuation = text.charAt(end) == '!' && text.charAt(end) == '?' && text.charAt(end) == '.';
+		isPunctuation = text.charAt(end) == '!' || text.charAt(end) == '?' || text.charAt(end) == '.';
 		
 		while(end < text.length() && text.charAt(end) != '\n' && !isPunctuation && text.charAt(end) != '\t')
 		{
 			end++;
-			isPunctuation = text.charAt(end) == '!' && text.charAt(end) == '?' && text.charAt(end) == '.';
+			if(end < text.length())
+			{
+				isPunctuation = text.charAt(end) == '!' || text.charAt(end) == '?' || text.charAt(end) == '.';
+			}
 		}
 		
 		String fragText = text.substring(start, end);
+		String newText = fragText.trim();
 		StyledText style = new StyledText(sectionClient, SWT.READ_ONLY | SWT.WRAP | SWT.MULTI | SWT.BORDER);
-		style.setText(fragText.trim());
+		style.setText(newText);
 		style.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 		
 		StyleRange range = new StyleRange();
-		range.start = fragment.getOffset() - start;
+		range.start = fragment.getOffset() - start - (fragText.length() - newText.length());
 		range.length = fragment.getLength();
 		range.underline = true;
 		range.underlineStyle = SWT.UNDERLINE_SINGLE;
