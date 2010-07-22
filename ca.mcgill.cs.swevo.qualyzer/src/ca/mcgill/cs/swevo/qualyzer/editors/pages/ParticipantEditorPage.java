@@ -116,11 +116,11 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 				
 //		createLongLabel(toolkit, body, "Notes");
 //		createNotesArea(toolkit, body);
-		
-		//TODO add +/- buttons
+	
 		buildTranscriptSection(body);
 		buildMemoSection(body);
 		
+		//Are we even doing this anymore? - JF
 		//buildCodesSection(form, toolkit, body);
 		
 		fToolkit.paintBordersFor(body);

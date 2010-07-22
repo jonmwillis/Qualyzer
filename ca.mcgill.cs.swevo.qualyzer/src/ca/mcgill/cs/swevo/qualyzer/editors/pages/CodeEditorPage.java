@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPage;
@@ -48,6 +49,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.CodeEntry;
 import ca.mcgill.cs.swevo.qualyzer.model.CodeListener;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Fragment;
+import ca.mcgill.cs.swevo.qualyzer.model.Memo;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.ProjectListener;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
@@ -67,6 +69,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	
 	private ArrayList<Code> fCodes;
 	private Code[] fModified;
+	private int[] fFrequency;
 
 	private Table fTable;
 
@@ -100,10 +103,57 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		fModified = new Code[fCodes.size()];
 		clearModified();
 		
+		fFrequency = new int[fCodes.size()];
+		countFrequency();
+		
 		Facade.getInstance().getListenerManager().registerCodeListener(fProject, this);
 		Facade.getInstance().getListenerManager().registerProjectListener(fProject, this);
 	}
 	
+	/**
+	 * 
+	 */
+	private void countFrequency()
+	{
+		for(int i = 0; i < fFrequency.length; i++)
+		{
+			fFrequency[i] = 0;
+		}
+		
+		for(Transcript transcript : fProject.getTranscripts())
+		{
+			Transcript lTranscript = Facade.getInstance().forceTranscriptLoad(transcript);
+			for(Fragment fragment : lTranscript.getFragments())
+			{
+				for(CodeEntry entry : fragment.getCodeEntries())
+				{
+					int index = fCodes.indexOf(entry.getCode());
+					if(index != -1)
+					{
+						fFrequency[index]++;
+					}
+				}
+			}
+		}
+		
+		for(Memo memo : fProject.getMemos())
+		{
+			Memo lMemo = Facade.getInstance().forceMemoLoad(memo);
+			for(Fragment fragment : lMemo.getFragments())
+			{
+				for(CodeEntry entry : fragment.getCodeEntries())
+				{
+					int index = fCodes.indexOf(entry.getCode());
+					if(index != -1)
+					{
+						fFrequency[index]++;
+					}
+				}
+			}
+		}
+		
+	}
+
 	@Override
 	protected void createFormContent(IManagedForm managedForm)
 	{
@@ -118,6 +168,12 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		body.setLayout(layout);
 		
 		fTable = toolkit.createTable(body, SWT.BORDER | SWT.SINGLE);
+		fTable.setLinesVisible(true);
+		fTable.setHeaderVisible(true);
+		TableColumn col = new TableColumn(fTable, SWT.NONE);
+		col.setText("Code Name");
+		col = new TableColumn(fTable, SWT.NONE);
+		col.setText("Frequency");
 		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		fTable.setLayoutData(gd);
 		
@@ -415,12 +471,18 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	private void buildFormTable()
 	{
 		Collections.sort(fCodes);
+		countFrequency();
 		
-		for(Code code : fCodes)
+		for(int i = 0; i < fCodes.size(); i++)
 		{
+			Code code = fCodes.get(i);
 			TableItem item = new TableItem(fTable, SWT.NULL);
-			item.setText(code.getCodeName());
+			item.setText(0, code.getCodeName());
+			item.setText(1, ""+fFrequency[i]);
 		}
+		
+		fTable.getColumn(0).pack();
+		fTable.getColumn(1).pack();
 	}
 	
 	@Override
