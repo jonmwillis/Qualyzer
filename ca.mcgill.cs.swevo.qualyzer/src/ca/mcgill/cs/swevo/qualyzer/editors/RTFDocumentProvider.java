@@ -30,6 +30,8 @@ import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.ui.editors.text.FileDocumentProvider;
 import org.eclipse.ui.part.FileEditorInput;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.RTFEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
@@ -46,6 +48,9 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	private static final String STAR_SLASH = "*\\"; //$NON-NLS-1$
 	private static final String EMPTY = "";  //$NON-NLS-1$
 	private static final String SPACE = " "; //$NON-NLS-1$
+	
+	private static Logger gLogger = LoggerFactory.getLogger(RTFDocumentProvider.class);
+	
 	private int fBoldTag;
 	private int fItalicTag;
 	private int fUnderlineTag;
@@ -92,8 +97,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		}
 		catch (CoreException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			gLogger.error("DocumentProvider: Failed to create document.", e);
 		}
 		return null;
 	}
