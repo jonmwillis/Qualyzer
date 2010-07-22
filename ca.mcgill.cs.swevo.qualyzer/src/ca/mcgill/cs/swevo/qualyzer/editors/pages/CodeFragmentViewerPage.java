@@ -44,6 +44,8 @@ import ca.mcgill.cs.swevo.qualyzer.model.Code;
 import ca.mcgill.cs.swevo.qualyzer.model.CodeEntry;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Fragment;
+import ca.mcgill.cs.swevo.qualyzer.model.IAnnotatedDocument;
+import ca.mcgill.cs.swevo.qualyzer.model.Memo;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 
@@ -96,20 +98,31 @@ public class CodeFragmentViewerPage extends FormPage
 				buildSection(transcript, contents, toolkit, body);
 			}
 		}
+		
+		for(Memo memo : project.getMemos())
+		{
+			ArrayList<Fragment> contents = findFragments(memo);
+			
+			if(!contents.isEmpty())
+			{
+				buildSection(memo, contents, toolkit, body);
+			}
+		}
 	}
 
 	/**
-	 * @param transcript
+	 * @param document
 	 * @param contents
 	 * @param toolkit
 	 * @param body
 	 */
-	private void buildSection(Transcript transcript, ArrayList<Fragment> contents, FormToolkit toolkit, Composite body)
+	private void buildSection(IAnnotatedDocument document, ArrayList<Fragment> contents, FormToolkit toolkit,
+			Composite body)
 	{
 		Section section = toolkit.createSection(body, Section.EXPANDED | Section.TITLE_BAR | Section.TWISTIE);
 		section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 		
-		section.setText(transcript.getName());
+		section.setText(document.getClass().getSimpleName() + ": " + document.getName());
 		section.addExpansionListener(new ExpansionAdapter(){
 
 			@Override
@@ -125,14 +138,21 @@ public class CodeFragmentViewerPage extends FormPage
 		
 		RTFDocumentProvider provider = new RTFDocumentProvider();
 		
-		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(transcript.getProject().getName());
-		IFile file = project.getFile(Messages.getString(
-				"editors.pages.CodeFragmentViewerPage.transcripts") + //$NON-NLS-1$
-				File.separator + transcript.getFileName()); 
-		RTFEditorInput input = new RTFEditorInput(file, Facade.getInstance().forceDocumentLoad(transcript));
-		IDocument document = provider.getCreatedDocument(input);
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(document.getProject().getName());
+		IFile file;
+		if(document instanceof Transcript)
+		{
+			file = project.getFile("transcripts" + File.separator + document.getFileName()); //$NON-NLS-1$
+		}
+		else
+		{
+			file = project.getFile("memos" + File.separator + document.getFileName()); //$NON-NLS-1$
+		}
 		
-		String text = document.get();
+		RTFEditorInput input = new RTFEditorInput(file, Facade.getInstance().forceDocumentLoad(document));
+		IDocument createdDocument = provider.getCreatedDocument(input);
+		
+		String text = createdDocument.get();
 		
 		sort(contents);
 		
@@ -152,20 +172,27 @@ public class CodeFragmentViewerPage extends FormPage
 	private void createTextBox(Composite sectionClient, String text, Fragment fragment)
 	{
 		int start = fragment.getOffset();
-		while(start > 0 && text.charAt(start-1) != '\n' && text.charAt(start-1) != '.' && text.charAt(start-1) != '\t')
+		boolean isPunctuation = text.charAt(start-1) == '!' && text.charAt(start-1) == '?' && 
+			text.charAt(start-1) == '.';
+		
+		while(start > 0 && text.charAt(start-1) != '\n' && text.charAt(start-1) != '\t' && !isPunctuation)
 		{
 			start--;
+			isPunctuation = text.charAt(start-1) == '!' && text.charAt(start-1) == '?' && text.charAt(start-1) == '.';
 		}
 		
 		int end = fragment.getOffset() + fragment.getLength();
-		while(end < text.length() && text.charAt(end) != '\n' && text.charAt(end) != '.' && text.charAt(end) != '\t')
+		isPunctuation = text.charAt(end) == '!' && text.charAt(end) == '?' && text.charAt(end) == '.';
+		
+		while(end < text.length() && text.charAt(end) != '\n' && !isPunctuation && text.charAt(end) != '\t')
 		{
 			end++;
+			isPunctuation = text.charAt(end) == '!' && text.charAt(end) == '?' && text.charAt(end) == '.';
 		}
 		
 		String fragText = text.substring(start, end);
 		StyledText style = new StyledText(sectionClient, SWT.READ_ONLY | SWT.WRAP | SWT.MULTI | SWT.BORDER);
-		style.setText(fragText);
+		style.setText(fragText.trim());
 		style.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 		
 		StyleRange range = new StyleRange();
@@ -195,15 +222,15 @@ public class CodeFragmentViewerPage extends FormPage
 	}
 
 	/**
-	 * @param transcript
+	 * @param document
 	 * @return
 	 */
-	private ArrayList<Fragment> findFragments(Transcript transcript)
+	private ArrayList<Fragment> findFragments(IAnnotatedDocument document)
 	{
-		Transcript lTranscript = Facade.getInstance().forceTranscriptLoad(transcript);
+		IAnnotatedDocument lDocument = Facade.getInstance().forceDocumentLoad(document);
 		ArrayList<Fragment> toReturn = new ArrayList<Fragment>();
 		
-		for(Fragment fragment : lTranscript.getFragments())
+		for(Fragment fragment : lDocument.getFragments())
 		{
 			for(CodeEntry entry : fragment.getCodeEntries())
 			{
