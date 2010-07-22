@@ -22,15 +22,16 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.StyleRange;
-import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
@@ -39,6 +40,7 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
 import ca.mcgill.cs.swevo.qualyzer.editors.ColorManager;
 import ca.mcgill.cs.swevo.qualyzer.editors.RTFDocumentProvider;
+import ca.mcgill.cs.swevo.qualyzer.editors.RTFEditor;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.RTFEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.model.Code;
 import ca.mcgill.cs.swevo.qualyzer.model.CodeEntry;
@@ -48,6 +50,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.IAnnotatedDocument;
 import ca.mcgill.cs.swevo.qualyzer.model.Memo;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
+import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
  *
@@ -158,10 +161,11 @@ public class CodeFragmentViewerPage extends FormPage
 		
 		for(Fragment fragment : contents)
 		{
-			createTextBox(sectionClient, text, fragment);
+			createTextBox(sectionClient, text, fragment, toolkit);
 		}
 		
 		section.setClient(sectionClient);
+		toolkit.paintBordersFor(sectionClient);
 	}
 
 	/**
@@ -169,7 +173,94 @@ public class CodeFragmentViewerPage extends FormPage
 	 * @param text
 	 * @param fragment
 	 */
-	private void createTextBox(Composite sectionClient, String text, Fragment fragment)
+	private void createTextBox(Composite sectionClient, String text, Fragment fragment, FormToolkit toolkit)
+	{
+		int start = findStart(text, fragment);		
+		int end = findEnd(text, fragment);
+		
+		String fragText = text.substring(start, end);
+		String newText = fragText.trim();
+		
+		FormText formText = toolkit.createFormText(sectionClient, true);
+		
+		StringBuffer buffer = new StringBuffer();
+		buffer.append("<form>");
+		buffer.append("<p>");
+		
+		int fragStart = fragment.getOffset() - start - (fragText.length() - newText.length());
+		int fragEnd = fragStart + fragment.getLength();
+		
+		buffer.append(newText.substring(0, fragStart));
+		
+		buffer.append("<a href=\" key \">");
+		buffer.append(newText.substring(fragStart, fragEnd));
+		buffer.append("</a>");
+		
+		buffer.append(newText.substring(fragEnd, newText.length()));
+		
+		buffer.append("</p>");
+		buffer.append("</form>");
+		
+		formText.setText(buffer.toString(), true, false);
+		formText.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+		formText.addHyperlinkListener(createHyperlinkListener(fragment));
+		
+		formText.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+	}
+
+	/**
+	 * @param fragment
+	 * @return
+	 */
+	private HyperlinkAdapter createHyperlinkListener(final Fragment fragment)
+	{
+		return new HyperlinkAdapter(){
+			private Fragment fFragment = fragment;
+			@Override
+			public void linkActivated(HyperlinkEvent e)
+			{
+				IEditorPart editor = ResourcesUtil.openEditor(getSite().getPage(), fFragment.getDocument());
+				if(editor instanceof RTFEditor)
+				{
+					((RTFEditor) editor).selectAndReveal(fFragment.getOffset(), fFragment.getLength());
+				}
+			}
+		};
+	}
+
+	/**
+	 * @param text
+	 * @param fragment
+	 * @return
+	 */
+	private int findEnd(String text, Fragment fragment)
+	{
+		boolean isPunctuation;
+		int end = fragment.getOffset() + fragment.getLength();
+		isPunctuation = text.charAt(end) == '!' || text.charAt(end) == '?' || text.charAt(end) == '.';
+		
+		while(end < text.length() && text.charAt(end) != '\n' && !isPunctuation && text.charAt(end) != '\t')
+		{
+			end++;
+			if(end < text.length())
+			{
+				isPunctuation = text.charAt(end) == '!' || text.charAt(end) == '?' || text.charAt(end) == '.';
+			}
+		}
+		
+		if(isPunctuation)
+		{
+			end++;
+		}
+		return end;
+	}
+
+	/**
+	 * @param text
+	 * @param fragment
+	 * @return
+	 */
+	private int findStart(String text, Fragment fragment)
 	{
 		int start = fragment.getOffset();
 		boolean isPunctuation = text.charAt(start-1) == '!' || text.charAt(start-1) == '?' || 
@@ -184,33 +275,7 @@ public class CodeFragmentViewerPage extends FormPage
 					text.charAt(start-1) == '.';
 			}
 		}
-		
-		int end = fragment.getOffset() + fragment.getLength();
-		isPunctuation = text.charAt(end) == '!' || text.charAt(end) == '?' || text.charAt(end) == '.';
-		
-		while(end < text.length() && text.charAt(end) != '\n' && !isPunctuation && text.charAt(end) != '\t')
-		{
-			end++;
-			if(end < text.length())
-			{
-				isPunctuation = text.charAt(end) == '!' || text.charAt(end) == '?' || text.charAt(end) == '.';
-			}
-		}
-		
-		String fragText = text.substring(start, end);
-		String newText = fragText.trim();
-		StyledText style = new StyledText(sectionClient, SWT.READ_ONLY | SWT.WRAP | SWT.MULTI | SWT.BORDER);
-		style.setText(newText);
-		style.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
-		
-		StyleRange range = new StyleRange();
-		range.start = fragment.getOffset() - start - (fragText.length() - newText.length());
-		range.length = fragment.getLength();
-		range.underline = true;
-		range.underlineStyle = SWT.UNDERLINE_SINGLE;
-		range.underlineColor = fManager.getColor(ColorManager.TAG);
-		range.foreground = fManager.getColor(ColorManager.TAG);
-		style.setStyleRange(range);
+		return start;
 	}
 
 	/**
