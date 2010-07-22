@@ -29,6 +29,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbenchPage;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
@@ -45,7 +46,7 @@ public class MemoEditor extends RTFEditor implements MemoListener
 {
 	public static final String ID = "ca.mcgill.cs.swevo.qualyzer.editors.memoEditor"; //$NON-NLS-1$
 
-	private static final int NUM_COLS = 4;
+	private static final int NUM_COLS = 5;
 	
 	private static final String BOLD_IMG = "BOLD_IMG"; //$NON-NLS-1$
 	private static final String ITALIC_IMG = "ITALIC_IMG"; //$NON-NLS-1$
@@ -131,10 +132,9 @@ public class MemoEditor extends RTFEditor implements MemoListener
 		
 		Composite topBar = new Composite(parent, SWT.BORDER);
 		topBar.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
-		topBar.setLayout(new GridLayout(1, false));
+		topBar.setLayout(new GridLayout(NUM_COLS, false));
 		
-		Control buttonBar = createFormatButtonBar(topBar);
-		buttonBar.setLayoutData(new GridData(SWT.FILL, SWT.NULL, false, false));
+		createFormatButtonBar(topBar);
 		
 		super.createPartControl(parent);
 		
@@ -145,28 +145,27 @@ public class MemoEditor extends RTFEditor implements MemoListener
 	}
 	
 	private Control createFormatButtonBar(Composite parent)
-	{
-		Composite composite = new Composite(parent, SWT.BORDER);
-		GridLayout layout = new GridLayout(NUM_COLS, true);
-		composite.setLayout(layout);
-		
-		fBoldButton = new Button(composite, SWT.TOGGLE);
+	{	
+		fBoldButton = new Button(parent, SWT.TOGGLE);
 		fBoldButton.setImage(getImage(BOLD_IMG, QualyzerActivator.PLUGIN_ID));
 		fBoldButton.setEnabled(false);
 		
-		fUnderlineButton = new Button(composite, SWT.TOGGLE);
+		fUnderlineButton = new Button(parent, SWT.TOGGLE);
 		fUnderlineButton.setImage(getImage(UNDERLINE_IMG, QualyzerActivator.PLUGIN_ID));
 		fUnderlineButton.setEnabled(false);
 		
-		fItalicButton = new Button(composite, SWT.TOGGLE);
+		fItalicButton = new Button(parent, SWT.TOGGLE);
 		fItalicButton.setImage(getImage(ITALIC_IMG, QualyzerActivator.PLUGIN_ID));
 		fItalicButton.setEnabled(false);
 		
-		fCodeButton = new Button(composite, SWT.TOGGLE);
+		fCodeButton = new Button(parent, SWT.PUSH);
 		fCodeButton.setImage(getImage(CODE_IMG, QualyzerActivator.PLUGIN_ID));
 		fCodeButton.setEnabled(false);
 		
-		return composite;
+		Label label = new Label(parent, SWT.NULL);
+		label.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
+		
+		return parent;
 	}
 	
 	private void hookupButtonActions()
