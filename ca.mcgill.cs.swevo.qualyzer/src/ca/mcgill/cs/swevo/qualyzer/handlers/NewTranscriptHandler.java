@@ -53,7 +53,6 @@ public class NewTranscriptHandler extends AbstractHandler
 				view.getCommonViewer().refresh();
 								
 				ResourcesUtil.openEditor(page, wizard.getTranscript());
-				view.getCommonViewer().refresh();
 			}
 		}
 

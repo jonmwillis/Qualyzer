@@ -230,6 +230,10 @@ public class NavigatorContentProvider extends WorkbenchContentProvider
 
 		// Get the affected resource
 		final IResource resource = delta.getResource();
+		if(resource instanceof IProject) //This fixes the phantom label bug!
+		{
+			return;
+		}
 
 		// If any children have changed type, just do a full refresh of this
 		// parent,
