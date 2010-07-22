@@ -55,7 +55,6 @@ public class NewMemoHandler extends AbstractHandler
 				view.getCommonViewer().refresh();
 				
 				ResourcesUtil.openEditor(page, wizard.getMemo());
-				view.getCommonViewer().refresh();
 			}
 			
 			
