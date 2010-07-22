@@ -1127,7 +1127,7 @@
       <specification
             annotationType="RTFEditor.annotation.fragment"
             colorPreferenceKey="color.grey"
-            colorPreferenceValue="128,128,128"
+            colorPreferenceValue="213,213,213"
             highlightPreferenceKey="highlight.true"
             highlightPreferenceValue="true"
             includeOnPreferencePage="false"
