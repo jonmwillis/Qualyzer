@@ -22,7 +22,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.FormPage;
@@ -39,7 +38,9 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.ParticipantEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
+import ca.mcgill.cs.swevo.qualyzer.model.IAnnotatedDocument;
 import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager;
+import ca.mcgill.cs.swevo.qualyzer.model.Memo;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 import ca.mcgill.cs.swevo.qualyzer.model.ParticipantListener;
 import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
@@ -118,6 +119,7 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 		
 		//TODO add +/- buttons
 		buildTranscriptSection(body);
+		buildMemoSection(body);
 		
 		//buildCodesSection(form, toolkit, body);
 		
@@ -222,6 +224,29 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 		fSectionClient.setLayoutData(td);
 		section.setClient(fSectionClient);
 	}
+	
+	/**
+	 * @param form
+	 * @param toolkit
+	 * @param body
+	 */
+	private void buildMemoSection(Composite body)
+	{
+		TableWrapData td;
+		Section section = fToolkit.createSection(body, Section.EXPANDED | Section.TITLE_BAR | Section.TWISTIE);
+		td = new TableWrapData(TableWrapData.FILL_GRAB);
+		td.colspan = 2;
+		section.setLayoutData(td);
+		section.addExpansionListener(createExpansionListener(fForm));
+		section.setText("Memos");
+		fSectionClient = fToolkit.createComposite(section);
+		GridLayout gridLayout = new GridLayout();
+		gridLayout.numColumns = 1;
+		fSectionClient.setLayout(gridLayout);
+		buildMemos();
+		fSectionClient.setLayoutData(td);
+		section.setClient(fSectionClient);
+	}
 
 	/**
 	 * @param toolkit
@@ -238,6 +263,27 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 //		label.setLayoutData(td);
 //		return label;
 //	}
+
+	/**
+	 * 
+	 */
+	private void buildMemos()
+	{
+		for(Memo memo : fParticipant.getProject().getMemos())		
+		{
+			Memo loadedMemo = Facade.getInstance().forceMemoLoad(memo);
+			if(loadedMemo.getParticipants().contains(fParticipant))
+			{
+				GridData gd = new GridData(SWT.FILL, SWT.NULL, true, false);
+				Hyperlink link = fToolkit.createHyperlink(fSectionClient, memo.getName(), SWT.WRAP);
+				link.addHyperlinkListener(createHyperlinkListener(memo));
+				link.setLayoutData(gd);
+			}
+		}
+		
+		fForm.reflow(true);
+		
+	}
 
 	/**
 	 * @param toolkit 
@@ -270,16 +316,16 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 	 * @param transcript
 	 * @return
 	 */
-	private HyperlinkAdapter createHyperlinkListener(final Transcript transcript)
+	private HyperlinkAdapter createHyperlinkListener(final IAnnotatedDocument document)
 	{
 		return new HyperlinkAdapter(){
-			private Transcript fTrans = transcript;
+			private IAnnotatedDocument fDoc = document;
 
 			@Override
 			public void linkActivated(HyperlinkEvent e)
 			{
-				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-				ResourcesUtil.openEditor(page, fTrans);
+				IWorkbenchPage page = getSite().getPage();
+				ResourcesUtil.openEditor(page, fDoc);
 			}
 
 
