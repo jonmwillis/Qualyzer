@@ -43,6 +43,7 @@ import ca.mcgill.cs.swevo.qualyzer.editors.inputs.ParticipantEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.RTFEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.model.Code;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
+import ca.mcgill.cs.swevo.qualyzer.model.IAnnotatedDocument;
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
 import ca.mcgill.cs.swevo.qualyzer.model.Memo;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
@@ -214,6 +215,26 @@ public final class ResourcesUtil
 		}
 		
 		return editorPart;
+	}
+	
+	/**
+	 * Tries to open the right Document Editor.
+	 * @param page
+	 * @param document
+	 * @return
+	 */
+	public static IEditorPart openEditor(IWorkbenchPage page, IAnnotatedDocument document)
+	{
+		if(document instanceof Transcript)
+		{
+			return openEditor(page, (Transcript) document);
+		}
+		else if(document instanceof Memo)
+		{
+			return openEditor(page, (Memo) document);
+		}
+		
+		return null;
 	}
 	
 	/**
