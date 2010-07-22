@@ -54,7 +54,7 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 
 	public static final String ID = "ca.mcgill.cs.swevo.qualyzer.editors.transcriptEditor"; //$NON-NLS-1$
 	
-	private static final int NUM_COLS = 4;
+	private static final int NUM_COLS = 8;
 	
 	private static final String PLAY_IMG = "PLAY_IMG"; //$NON-NLS-1$
 	private static final String PAUSE_IMG = "PAUSE_IMG"; //$NON-NLS-1$
@@ -132,12 +132,12 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 		
 		Composite topBar = new Composite(parent, SWT.BORDER);
 		topBar.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
-		topBar.setLayout(new GridLayout(2, false));
+		topBar.setLayout(new GridLayout(NUM_COLS, false));
 		
-		Control buttonBar = createFormatButtonBar(topBar);
-		buttonBar.setLayoutData(new GridData(SWT.FILL, SWT.NULL, false, false));
-		Composite musicBar = createMusicBar(topBar);
-		musicBar.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
+		createFormatButtonBar(topBar);
+		//buttonBar.setLayoutData(new GridData(SWT.FILL, SWT.NULL, false, false));
+		createMusicBar(topBar);
+		//musicBar.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 		
 		super.createPartControl(parent);
 		
@@ -145,7 +145,7 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 		
 		if(((Transcript) getDocument()).getAudioFile() == null)
 		{
-			disable(musicBar);
+			disable(topBar);
 		}
 		else
 		{
@@ -166,19 +166,11 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 	 */
 	private void disable(Composite container)
 	{
-		container.setEnabled(false);
-		for(Control child : container.getChildren())
+		Control[] children = container.getChildren();
+		for(int i = 0; i < children.length/2; i++)
 		{
-			if(child instanceof Composite)
-			{
-				disable((Composite) child);
-			}
-			else
-			{
-				child.setEnabled(false);
-			}
+			children[children.length - (i+1)].setEnabled(false);
 		}
-		
 	}
 
 	/**
@@ -242,49 +234,42 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 	 * @return
 	 */
 	private Composite createMusicBar(Composite parent)
-	{
-		Composite musicBar = new Composite(parent, SWT.BORDER);
-		musicBar.setLayout(new GridLayout(NUM_COLS, false));
-		
-		fPlayButton = new Button(musicBar, SWT.PUSH);
+	{	
+		fPlayButton = new Button(parent, SWT.PUSH);
 		fPlayButton.setImage(getImage(PLAY_IMG, QualyzerActivator.PLUGIN_ID));
 		
-		fStopButton = new Button(musicBar, SWT.PUSH);
+		fStopButton = new Button(parent, SWT.PUSH);
 		fStopButton.setImage(getImage(STOP_IMG, QualyzerActivator.PLUGIN_ID));
 		
-		Scale scale = new Scale(musicBar, SWT.HORIZONTAL);
+		Scale scale = new Scale(parent, SWT.HORIZONTAL);
 		scale.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		
-		fTimeLabel = new Label(musicBar, SWT.NULL);
+		fTimeLabel = new Label(parent, SWT.NULL);
 		fTimeLabel.setLayoutData(new GridData(SWT.NULL, SWT.FILL, false, false));
 		fTimeLabel.setText("0:00/0:00"); //$NON-NLS-1$
 	
-		return musicBar;
+		return parent;
 	}
 
 	private Control createFormatButtonBar(Composite parent)
-	{
-		Composite composite = new Composite(parent, SWT.BORDER);
-		GridLayout layout = new GridLayout(NUM_COLS, true);
-		composite.setLayout(layout);
-		
-		fBoldButton = new Button(composite, SWT.TOGGLE);
+	{	
+		fBoldButton = new Button(parent, SWT.TOGGLE);
 		fBoldButton.setImage(getImage(BOLD_IMG, QualyzerActivator.PLUGIN_ID));
 		fBoldButton.setEnabled(false);
 		
-		fUnderlineButton = new Button(composite, SWT.TOGGLE);
+		fUnderlineButton = new Button(parent, SWT.TOGGLE);
 		fUnderlineButton.setImage(getImage(UNDERLINE_IMG, QualyzerActivator.PLUGIN_ID));
 		fUnderlineButton.setEnabled(false);
 		
-		fItalicButton = new Button(composite, SWT.TOGGLE);
+		fItalicButton = new Button(parent, SWT.TOGGLE);
 		fItalicButton.setImage(getImage(ITALIC_IMG, QualyzerActivator.PLUGIN_ID));
 		fItalicButton.setEnabled(false);
 		
-		fCodeButton = new Button(composite, SWT.PUSH);
+		fCodeButton = new Button(parent, SWT.PUSH);
 		fCodeButton.setImage(getImage(CODE_IMG, QualyzerActivator.PLUGIN_ID));
 		fCodeButton.setEnabled(false);
 		
-		return composite;
+		return parent;
 	}
 	
 	/**
