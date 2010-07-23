@@ -33,6 +33,7 @@ public final class RTFConstants
 	public static final String FRAGMENT_ACTION_ID = "action.markFragment"; //$NON-NLS-1$
 	public static final String REMOVE_ALL_CODES_ACTION_ID = "action.removeAllCodes"; //$NON-NLS-1$
 	public static final String REMOVE_CODE_ACTION_ID = "action.removeCode"; //$NON-NLS-1$
+	public static final String VIEW_FRAGMENTS_ACTION_ID = "action.viewFragments"; //$NON-NLS-1$
 	
 	private RTFConstants(){}
 }
