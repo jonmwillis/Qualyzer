@@ -772,7 +772,7 @@ public final class Facade
 	 * @return
 	 */
 	public Memo createMemo(String memoName, String date, Investigator author, List<Participant> participants,
-			Project project)
+			Project project, Code code, Transcript transcript)
 	{
 		Memo memo = new Memo();
 		memo.setName(memoName);
@@ -780,6 +780,8 @@ public final class Facade
 		memo.setDate(date);
 		memo.setAuthor(author);
 		memo.setParticipants(participants);
+		memo.setCode(code);
+		memo.setTranscript(transcript);
 
 		project.getMemos().add(memo);
 		memo.setProject(project);

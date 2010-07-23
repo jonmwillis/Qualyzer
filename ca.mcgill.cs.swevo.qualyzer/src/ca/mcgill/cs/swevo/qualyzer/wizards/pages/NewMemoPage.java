@@ -30,9 +30,11 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
+import ca.mcgill.cs.swevo.qualyzer.model.Code;
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
+import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 import ca.mcgill.cs.swevo.qualyzer.model.validation.MemoValidator;
 
 /**
@@ -54,6 +56,10 @@ public class NewMemoPage extends WizardPage
 	private Combo fAuthorName;
 	private Table fTable;
 	private DateTime fDate;
+
+	private Combo fCodeCombo;
+
+	private Combo fTranscriptCombo;
 
 	/**
 	 * Constructor.
@@ -106,8 +112,40 @@ public class NewMemoPage extends WizardPage
 		createLongLabel();
 		createTable();
 		
+		createCodeCombo();
+		
+		createLabel(fContainer, "Transcript");
+		fTranscriptCombo = new Combo(fContainer, SWT.READ_ONLY);
+		fTranscriptCombo.setToolTipText("Choose a transcript for the memo to be about");
+		fTranscriptCombo.add("No transcript");
+		
+		for(Transcript transcript : fProject.getTranscripts())
+		{
+			fTranscriptCombo.add(transcript.getName());
+		}
+		fTranscriptCombo.select(0);
+		fTranscriptCombo.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
+		
 		setControl(fContainer);
 		setPageComplete(false);
+	}
+
+	/**
+	 * 
+	 */
+	private void createCodeCombo()
+	{
+		createLabel(fContainer, "Code");
+		fCodeCombo = new Combo(fContainer, SWT.READ_ONLY);
+		fCodeCombo.setToolTipText("Choose a code for the memo to be about");
+		fCodeCombo.add("No code");
+		
+		for(Code code : fProject.getCodes())
+		{
+			fCodeCombo.add(code.getCodeName());
+		}
+		fCodeCombo.select(0);
+		fCodeCombo.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 	}
 
 	/**
@@ -272,5 +310,35 @@ public class NewMemoPage extends WizardPage
 	public String getDate()
 	{
 		return (fDate.getMonth() + 1) + SLASH + fDate.getDay() + SLASH + fDate.getYear();
+	}
+	
+	/**
+	 * Return the code that was selected.
+	 * @return
+	 */
+	public Code getCode()
+	{
+		int index = fCodeCombo.getSelectionIndex();
+		if(index > 0)
+		{
+			return fProject.getCodes().get(index - 1);
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Transcript getTranscript()
+	{
+		int index = fTranscriptCombo.getSelectionIndex();
+		if(index > 0)
+		{
+			return fProject.getTranscripts().get(index - 1);
+		}
+		
+		return null;
 	}
 }

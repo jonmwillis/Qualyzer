@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Barthelemy Dagenais (bart@cs.mcgill.ca)
+ *     Jonathan Faubert
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.model;
 
@@ -27,6 +28,8 @@ public class Memo extends AnnotatedDocument implements Comparable<Memo>
 	private static final int NUM2 = 1651;
 
 	private Investigator fAuthor;
+	private Code fCode;
+	private Transcript fTranscript;
 
 	/**
 	 * @return
@@ -43,6 +46,44 @@ public class Memo extends AnnotatedDocument implements Comparable<Memo>
 	public void setAuthor(Investigator author)
 	{
 		this.fAuthor = author;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	@ManyToOne
+	public Code getCode()
+	{
+		return fCode;
+	}
+	
+	/**
+	 * 
+	 * @param code
+	 */
+	public void setCode(Code code)
+	{
+		this.fCode = code;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	@ManyToOne
+	public Transcript getTranscript()
+	{
+		return fTranscript;
+	}
+	
+	/**
+	 * 
+	 * @param transcript
+	 */
+	public void setTranscript(Transcript transcript)
+	{
+		this.fTranscript = transcript;
 	}
 
 	@Override
