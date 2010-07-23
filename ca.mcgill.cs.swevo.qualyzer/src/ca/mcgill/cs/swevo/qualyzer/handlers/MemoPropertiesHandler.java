@@ -55,6 +55,8 @@ public class MemoPropertiesHandler extends AbstractHandler
 					memo.setDate(dialog.getDate());
 					memo.setAuthor(dialog.getAuthor());
 					memo.setParticipants(dialog.getParticipants());
+					memo.setCode(dialog.getCode());
+					memo.setTranscript(dialog.getTranscript());
 					
 					Facade.getInstance().saveMemo(memo);
 					

@@ -40,10 +40,12 @@ import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
+import ca.mcgill.cs.swevo.qualyzer.model.Code;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
 import ca.mcgill.cs.swevo.qualyzer.model.Memo;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
+import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 
 /**
  *
@@ -60,10 +62,15 @@ public class MemoPropertiesDialog extends TitleAreaDialog
 	private DateTime fDate;
 	private Combo fAuthor;
 	private Table fTable;
+	private Combo fCodeCombo;
+	private Combo fTranscriptCombo;
 	
 	private List<Participant> fParticipants;
 	private Investigator fInvestigator;
 	private String fDateString;
+	private Code fCode;
+	private Transcript fTranscript;
+	
 	
 	/**
 	 * Constructor.
@@ -146,7 +153,51 @@ public class MemoPropertiesDialog extends TitleAreaDialog
 		fTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		buildParticipants();
 		
+		createCodeCombo(container);
+		
+		createTranscriptCombo(container);
+		
 		return parent;
+	}
+
+	/**
+	 * 
+	 */
+	private void createTranscriptCombo(Composite container)
+	{
+		createSimpleLabel(container, "Transcript");
+		fTranscriptCombo = new Combo(container, SWT.READ_ONLY);
+		fTranscriptCombo.setToolTipText("Choose a transcript for the memo to be about");
+		fTranscriptCombo.add("No transcript");
+		
+		for(Transcript transcript : fMemo.getProject().getTranscripts())
+		{
+			fTranscriptCombo.add(transcript.getName());
+		}
+		
+		int index = fMemo.getProject().getTranscripts().indexOf(fMemo.getTranscript());
+		fTranscriptCombo.select(index + 1);
+		fTranscriptCombo.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
+	}
+
+	/**
+	 * 
+	 */
+	private void createCodeCombo(Composite container)
+	{
+		createSimpleLabel(container, "Code ");
+		fCodeCombo = new Combo(container, SWT.READ_ONLY);
+		fCodeCombo.setToolTipText("Choose a code for the memo to be about");
+		fCodeCombo.add("No code");
+		
+		for(Code code : fMemo.getProject().getCodes())
+		{
+			fCodeCombo.add(code.getCodeName());
+		}
+		
+		int index = fMemo.getProject().getCodes().indexOf(fMemo.getCode());
+		fCodeCombo.select(index + 1);
+		fCodeCombo.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 	}
 
 	/**
@@ -357,7 +408,53 @@ public class MemoPropertiesDialog extends TitleAreaDialog
 		fDateString = (fDate.getMonth() + 1)+SLASH+fDate.getDay()+SLASH+fDate.getYear();
 		fParticipants = retrieveParticipants();
 		fInvestigator = retrieveAuthor();
+		fCode = retrieveCode();
+		fTranscript = retrieveTranscript();
 		
 		super.okPressed();
+	}
+
+	/**
+	 * @return
+	 */
+	private Transcript retrieveTranscript()
+	{
+		int index = fTranscriptCombo.getSelectionIndex();
+		if(index > 0)
+		{
+			return fMemo.getProject().getTranscripts().get(index-1);
+		}
+		return null;
+	}
+
+	/**
+	 * @return
+	 */
+	private Code retrieveCode()
+	{
+		int index = fCodeCombo.getSelectionIndex();
+		if(index > 0)
+		{
+			return fMemo.getProject().getCodes().get(index-1);
+		}
+		return null;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Transcript getTranscript()
+	{
+		return fTranscript;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Code getCode()
+	{
+		return fCode;
 	}
 }
