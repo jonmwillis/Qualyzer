@@ -63,7 +63,7 @@ public class NewMemoWizard extends Wizard
 			FileUtil.setupMemoFiles(fPage.getMemoName(), fProject.getName(), ""); //$NON-NLS-1$
 			
 			fMemo = Facade.getInstance().createMemo(fPage.getMemoName(), fPage.getDate(), fPage.getAuthor(), 
-					fPage.getParticipants(), fProject);
+					fPage.getParticipants(), fProject, fPage.getCode(), fPage.getTranscript());
 			
 		}
 		catch(QualyzerException e)
