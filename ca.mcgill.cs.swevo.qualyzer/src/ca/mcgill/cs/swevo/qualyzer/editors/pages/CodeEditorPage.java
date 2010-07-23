@@ -365,6 +365,9 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 				{
 					Facade.getInstance().createCode(dialog.getName(), dialog.getDescription(), fProject);
 					fTable.setSelection(fCurrentSelection);
+					CommonNavigator view = (CommonNavigator) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+					.getActivePage().findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+					view.getCommonViewer().refresh();
 				}
 			}
 		};
