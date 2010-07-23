@@ -161,7 +161,7 @@ public class FacadeTest
 		participants.add(participant);
 		Investigator investigator = fProject.getInvestigators().get(0);
 
-		Memo memo = fFacade.createMemo(memoName, "6/26/2010", investigator, participants, fProject);
+		Memo memo = fFacade.createMemo(memoName, "6/26/2010", investigator, participants, fProject, null, null);
 		ListenerEvent event = fListener.getEvents().get(1);
 
 		// Test DB
@@ -374,7 +374,7 @@ public class FacadeTest
 		List<Participant> participants = new ArrayList<Participant>();
 		participants.add(participant);
 		Investigator inves = fProject.getInvestigators().get(0);
-		Memo memo = fFacade.createMemo(memoName, "6/26/2010", inves, participants, fProject);
+		Memo memo = fFacade.createMemo(memoName, "6/26/2010", inves, participants, fProject, null, null);
 		Fragment fragment = fFacade.createFragment(memo, 1, 1);
 		fFacade.saveMemo(memo);
 		long id = fragment.getPersistenceId();
@@ -450,7 +450,7 @@ public class FacadeTest
 		List<Participant> participants = new ArrayList<Participant>();
 		participants.add(participant);
 		Investigator inves = fProject.getInvestigators().get(0);
-		fFacade.createMemo(memoName, "6/26/2010", inves, participants, fProject);
+		fFacade.createMemo(memoName, "6/26/2010", inves, participants, fProject, null, null);
 
 		Memo tempMemo = PersistenceManager.getInstance().getProject(fProject.getName()).getMemos()
 				.get(0);
@@ -485,7 +485,7 @@ public class FacadeTest
 		participants.add(participant);
 		Investigator inves = fProject.getInvestigators().get(0);
 		fFacade.createTranscript(transcriptName, "6/26/2010", "", participants, fProject);
-		fFacade.createMemo(transcriptName, "6/26/2010", inves, participants, fProject);
+		fFacade.createMemo(transcriptName, "6/26/2010", inves, participants, fProject, null, null);
 
 		Transcript tempTranscript = PersistenceManager.getInstance().getProject(fProject.getName()).getTranscripts()
 				.get(0);
