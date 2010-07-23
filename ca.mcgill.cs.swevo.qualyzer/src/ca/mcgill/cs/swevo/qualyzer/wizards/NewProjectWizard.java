@@ -101,7 +101,7 @@ public class NewProjectWizard extends Wizard
 			return false;
 		}
 
-		return fProject.exists();
+		return fProject != null && fProject.exists();
 	}
 	
 	/**
