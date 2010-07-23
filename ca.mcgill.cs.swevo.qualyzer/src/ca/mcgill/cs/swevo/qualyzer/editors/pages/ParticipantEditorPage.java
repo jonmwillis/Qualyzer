@@ -238,7 +238,7 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 		td.colspan = 2;
 		section.setLayoutData(td);
 		section.addExpansionListener(createExpansionListener(fForm));
-		section.setText("Memos");
+		section.setText(Messages.getString("editors.pages.ParticipantEditorPage.memos")); //$NON-NLS-1$
 		fSectionClient = fToolkit.createComposite(section);
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 1;

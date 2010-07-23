@@ -125,7 +125,7 @@ public class CodeFragmentViewerPage extends FormPage
 		Section section = toolkit.createSection(body, Section.EXPANDED | Section.TITLE_BAR | Section.TWISTIE);
 		section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 		
-		section.setText(document.getClass().getSimpleName() + ": " + document.getName());
+		section.setText(document.getClass().getSimpleName() + ": " + document.getName()); //$NON-NLS-1$
 		section.addExpansionListener(new ExpansionAdapter(){
 
 			@Override
@@ -184,22 +184,22 @@ public class CodeFragmentViewerPage extends FormPage
 		FormText formText = toolkit.createFormText(sectionClient, true);
 		
 		StringBuffer buffer = new StringBuffer();
-		buffer.append("<form>");
-		buffer.append("<p>");
+		buffer.append("<form>"); //$NON-NLS-1$
+		buffer.append("<p>"); //$NON-NLS-1$
 		
 		int fragStart = fragment.getOffset() - start - (fragText.length() - newText.length());
 		int fragEnd = fragStart + fragment.getLength();
 		
 		buffer.append(newText.substring(0, fragStart));
 		
-		buffer.append("<a href=\" key \">");
+		buffer.append("<a href=\" key \">"); //$NON-NLS-1$
 		buffer.append(newText.substring(fragStart, fragEnd));
-		buffer.append("</a>");
+		buffer.append("</a>"); //$NON-NLS-1$
 		
 		buffer.append(newText.substring(fragEnd, newText.length()));
 		
-		buffer.append("</p>");
-		buffer.append("</form>");
+		buffer.append("</p>"); //$NON-NLS-1$
+		buffer.append("</form>"); //$NON-NLS-1$
 		
 		formText.setText(buffer.toString(), true, false);
 		formText.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
