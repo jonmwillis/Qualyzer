@@ -49,10 +49,14 @@ import ca.mcgill.cs.swevo.qualyzer.model.CodeEntry;
 import ca.mcgill.cs.swevo.qualyzer.model.CodeListener;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Fragment;
+import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Memo;
+import ca.mcgill.cs.swevo.qualyzer.model.MemoListener;
+import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.ProjectListener;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
+import ca.mcgill.cs.swevo.qualyzer.model.TranscriptListener;
 import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
 import ca.mcgill.cs.swevo.qualyzer.model.validation.CodeValidator;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
@@ -60,7 +64,7 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 /**
  * The page for the code editor.
  */
-public class CodeEditorPage extends FormPage implements CodeListener, ProjectListener
+public class CodeEditorPage extends FormPage implements CodeListener, ProjectListener, TranscriptListener, MemoListener
 {
 	private static final String DELETE_CODE = Messages.getString(
 			"editors.pages.CodeEditorPage.deleteCode"); //$NON-NLS-1$
@@ -100,14 +104,15 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		fIsDirty = false;
 		fCurrentSelection = -1;
 		
-		fModified = new Code[fCodes.size()];
 		clearModified();
 		
-		fFrequency = new int[fCodes.size()];
 		countFrequency();
 		
-		Facade.getInstance().getListenerManager().registerCodeListener(fProject, this);
-		Facade.getInstance().getListenerManager().registerProjectListener(fProject, this);
+		ListenerManager listenerManager = Facade.getInstance().getListenerManager();
+		listenerManager.registerCodeListener(fProject, this);
+		listenerManager.registerProjectListener(fProject, this);
+		listenerManager.registerTranscriptListener(fProject, this);
+		listenerManager.registerMemoListener(fProject, this);
 	}
 	
 	/**
@@ -115,6 +120,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	 */
 	private void countFrequency()
 	{
+		fFrequency = new int[fCodes.size()];
 		for(int i = 0; i < fFrequency.length; i++)
 		{
 			fFrequency[i] = 0;
@@ -172,7 +178,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		fTable.setHeaderVisible(true);
 		TableColumn col = new TableColumn(fTable, SWT.NONE);
 		col.setText("Code Name");
-		col = new TableColumn(fTable, SWT.NONE);
+		col = new TableColumn(fTable, SWT.RIGHT);
 		col.setText("Frequency");
 		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		fTable.setLayoutData(gd);
@@ -519,27 +525,18 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	@Override
 	public void codeChanged(ChangeType cType, Code[] codes, Facade facade)
 	{
-		if(cType == ChangeType.ADD || cType == ChangeType.DELETE)
+		fProject = PersistenceManager.getInstance().getProject(fProject.getName());
+		fTable.removeAll();
+		fCodes.clear();
+		for(Code code : fProject.getCodes())
 		{
-			fProject = codes[0].getProject();
-			fTable.removeAll();
-			fCodes.clear();
-			for(Code code : fProject.getCodes())
-			{
-				fCodes.add(code);
-			}
-			clearModified();
-			
-			buildFormTable();
+			fCodes.add(code);
 		}
-		else if(cType == ChangeType.MODIFY)
-		{
-			for(Code code : codes)
-			{
-				int index = fCodes.indexOf(code);
-				fTable.getItem(index).setText(code.getCodeName());
-			}
-		}
+		clearModified();
+		
+		buildFormTable();
+		
+		fCurrentSelection = fTable.getSelectionIndex();
 	}
 
 	/**
@@ -569,8 +566,60 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	@Override
 	public void dispose()
 	{
-		Facade.getInstance().getListenerManager().unregisterCodeListener(fProject, this);
-		Facade.getInstance().getListenerManager().unregisterProjectListener(fProject, this);
+		ListenerManager listenerManager = Facade.getInstance().getListenerManager();
+		listenerManager.unregisterCodeListener(fProject, this);
+		listenerManager.unregisterProjectListener(fProject, this);
+		listenerManager.unregisterTranscriptListener(fProject, this);
+		listenerManager.unregisterMemoListener(fProject, this);
 		super.dispose();
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.model.TranscriptListener#transcriptChanged(
+	 * ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType, 
+	 * ca.mcgill.cs.swevo.qualyzer.model.Transcript[], ca.mcgill.cs.swevo.qualyzer.model.Facade)
+	 */
+	@Override
+	public void transcriptChanged(ChangeType cType, Transcript[] transcripts, Facade facade)
+	{
+		if(cType == ChangeType.MODIFY || cType == ChangeType.DELETE)
+		{
+			fProject = PersistenceManager.getInstance().getProject(fProject.getName());
+			fTable.removeAll();
+			fCodes.clear();
+			for(Code code : fProject.getCodes())
+			{
+				fCodes.add(code);
+			}
+			clearModified();
+			
+			buildFormTable();
+			fCurrentSelection = fTable.getSelectionIndex();
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.model.MemoListener#memoChanged(
+	 * ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType, ca.mcgill.cs.swevo.qualyzer.model.Memo[],
+	 *  ca.mcgill.cs.swevo.qualyzer.model.Facade)
+	 */
+	@Override
+	public void memoChanged(ChangeType cType, Memo[] memos, Facade facade)
+	{
+		if(cType == ChangeType.MODIFY || cType == ChangeType.DELETE)
+		{
+			fProject = PersistenceManager.getInstance().getProject(fProject.getName());
+			fTable.removeAll();
+			fCodes.clear();
+			for(Code code : fProject.getCodes())
+			{
+				fCodes.add(code);
+			}
+			clearModified();
+			
+			buildFormTable();
+			fCurrentSelection = fTable.getSelectionIndex();
+		}
+		
 	}
 }
