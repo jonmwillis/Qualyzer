@@ -40,7 +40,7 @@ public class CodeFragmentViewer extends FormEditor
 	protected void addPages()
 	{
 		fCode = ((CodeFragmentViewerInput) getEditorInput()).getCode();
-		setPartName(fCode.getCodeName() + " fragments");
+		setPartName(fCode.getCodeName() + Messages.getString("editors.CodeFragmentViewer.fragments")); //$NON-NLS-1$
 		fPage = new CodeFragmentViewerPage(this, fCode);
 		try
 		{

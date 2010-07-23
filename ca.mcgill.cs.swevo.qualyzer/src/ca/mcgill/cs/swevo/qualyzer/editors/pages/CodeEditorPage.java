@@ -177,9 +177,9 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		fTable.setLinesVisible(true);
 		fTable.setHeaderVisible(true);
 		TableColumn col = new TableColumn(fTable, SWT.NONE);
-		col.setText("Code Name");
+		col.setText(Messages.getString("editors.pages.CodeEditorPage.codeName")); //$NON-NLS-1$
 		col = new TableColumn(fTable, SWT.RIGHT);
-		col.setText("Frequency");
+		col.setText(Messages.getString("editors.pages.CodeEditorPage.frequency")); //$NON-NLS-1$
 		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		fTable.setLayoutData(gd);
 		
@@ -484,7 +484,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 			Code code = fCodes.get(i);
 			TableItem item = new TableItem(fTable, SWT.NULL);
 			item.setText(0, code.getCodeName());
-			item.setText(1, ""+fFrequency[i]);
+			item.setText(1, ""+fFrequency[i]); //$NON-NLS-1$
 		}
 		
 		fTable.getColumn(0).pack();

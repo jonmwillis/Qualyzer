@@ -97,7 +97,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		}
 		catch (CoreException e)
 		{
-			gLogger.error("DocumentProvider: Failed to create document.", e);
+			gLogger.error("DocumentProvider: Failed to create document.", e); //$NON-NLS-1$
 		}
 		return null;
 	}
