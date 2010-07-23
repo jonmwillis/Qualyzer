@@ -35,7 +35,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Scale;
+import org.eclipse.swt.widgets.Slider;
 import org.eclipse.ui.IWorkbenchPage;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
@@ -241,8 +241,8 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 		fStopButton = new Button(parent, SWT.PUSH);
 		fStopButton.setImage(getImage(STOP_IMG, QualyzerActivator.PLUGIN_ID));
 		
-		Scale scale = new Scale(parent, SWT.HORIZONTAL);
-		scale.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		Slider slider = new Slider(parent, SWT.HORIZONTAL);
+		slider.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		
 		fTimeLabel = new Label(parent, SWT.NULL);
 		fTimeLabel.setLayoutData(new GridData(SWT.NULL, SWT.FILL, false, false));
