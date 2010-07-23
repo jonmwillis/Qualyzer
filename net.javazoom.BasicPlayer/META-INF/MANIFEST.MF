@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: BasicPlayer
+Bundle-SymbolicName: net.javazoom.BasicPlayer
+Bundle-Version: 3.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: javazoom.jlgui.basicplayer
+Bundle-ClassPath: lib/basicplayer3.0.jar,
+ lib/commons-logging-api.jar,
+ lib/jl1.0.jar,
+ lib/mp3spi1.9.4.jar,
+ lib/tritonus_share.jar,
+ .
