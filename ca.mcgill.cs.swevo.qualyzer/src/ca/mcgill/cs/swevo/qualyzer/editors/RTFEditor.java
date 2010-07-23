@@ -78,6 +78,7 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 	private Action fMarkTextAction;
 	private Action fRemoveCodeAction;
 	private Action fRemoveAllCodesAction;
+	private Action fViewFragmentsAction;
 	
 	private boolean fIsDirty;
 	private IAnnotatedDocument fDocument;
@@ -443,6 +444,7 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 		fMarkTextAction = new MarkTextAction(this, sourceViewer);
 		fRemoveCodeAction = new RemoveCodeAction(this, sourceViewer);
 		fRemoveAllCodesAction = new RemoveAllCodesAction(this, sourceViewer);
+		fViewFragmentsAction = new ViewFragmentsAction(this, sourceViewer);
 		
 		setAction(RTFConstants.BOLD_ACTION_ID, fBoldAction);
 		setAction(RTFConstants.UNDERLINE_ACTION_ID, fUnderlineAction);
@@ -450,6 +452,7 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 		setAction(RTFConstants.FRAGMENT_ACTION_ID, fMarkTextAction);
 		setAction(RTFConstants.REMOVE_ALL_CODES_ACTION_ID, fRemoveAllCodesAction);
 		setAction(RTFConstants.REMOVE_CODE_ACTION_ID, fRemoveCodeAction);
+		setAction(RTFConstants.VIEW_FRAGMENTS_ACTION_ID, fViewFragmentsAction);
 		
 		setActionActivationCode(RTFConstants.BOLD_ACTION_ID, BOLD_CHAR, 'b', SWT.CONTROL);
 		setActionActivationCode(RTFConstants.ITALIC_ACTION_ID, ITALIC_CHAR, 'i', SWT.CONTROL);
@@ -537,6 +540,7 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 		
 		if(isRemoveVisible())
 		{
+			addAction(menu, ITextEditorActionConstants.GROUP_EDIT, RTFConstants.VIEW_FRAGMENTS_ACTION_ID);
 			addAction(menu, ITextEditorActionConstants.GROUP_EDIT, RTFConstants.REMOVE_CODE_ACTION_ID);
 			addAction(menu, ITextEditorActionConstants.GROUP_EDIT, RTFConstants.REMOVE_ALL_CODES_ACTION_ID);
 		}
