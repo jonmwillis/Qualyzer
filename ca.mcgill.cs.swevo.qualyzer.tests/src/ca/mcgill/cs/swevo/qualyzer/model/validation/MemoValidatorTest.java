@@ -53,7 +53,7 @@ public class MemoValidatorTest
 		Participant lBob = fFacade.createParticipant(TEST_PARTICIPANT_ID, TEST_PARTICIPANT_NAME, fProject);
 		List<Participant> lParticipants = new ArrayList<Participant>();
 		lParticipants.add(lBob);
-		fFacade.createMemo(TEST_MEMO_NAME, "", fInvestigator, lParticipants, fProject);
+		fFacade.createMemo(TEST_MEMO_NAME, "", fInvestigator, lParticipants, fProject, null, null);
 	}
 
 	@After
