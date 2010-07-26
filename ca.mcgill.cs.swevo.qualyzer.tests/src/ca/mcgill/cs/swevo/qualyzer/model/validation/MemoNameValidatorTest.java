@@ -32,7 +32,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Project;
 /**
  *
  */
-public class RenameMemoValidatorTest
+public class MemoNameValidatorTest
 {
 	private static final String TEST_PROJECT_NAME = "TestProject";
 	private static final String TEST_INVESTIGATOR_NAME = "Bob";
@@ -40,6 +40,12 @@ public class RenameMemoValidatorTest
 	private static final String TEST_PARTICIPANT_ID = "P01";
 	private static final String TEST_MEMO_NAME = "Transcript1";
 	private static final String TEST_MEMO_NAME2 = "Transcript2";
+	
+	private static final String LONG_NAME = "AAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBB"+
+	"AAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBB"+
+	"AAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBB"+
+	"AAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBB"+
+	"AAAAAAAAAABBBBBB";
 	
 	private Facade fFacade;
 	private Project fProject;
@@ -69,9 +75,9 @@ public class RenameMemoValidatorTest
 	@Test
 	public void testEmptyName()
 	{
-		RenameMemoValidator lValidator = new RenameMemoValidator("", TEST_MEMO_NAME, fProject);
+		MemoNameValidator lValidator = new MemoNameValidator("", TEST_MEMO_NAME, fProject);
 		assertFalse(lValidator.isValid());
-		assertEquals(Messages.getString("model.validation.RenameMemoValidator.emptyName"),lValidator.getErrorMessage());
+		assertEquals("Memo name " + Messages.getString("model.validation.BasicNameValidator.empty"),lValidator.getErrorMessage());
 	}
 	
 	/**
@@ -80,9 +86,9 @@ public class RenameMemoValidatorTest
 	@Test
 	public void testNameFormat()
 	{
-		RenameMemoValidator lValidator = new RenameMemoValidator("Mickey Mouse!!", TEST_MEMO_NAME, fProject);
+		MemoNameValidator lValidator = new MemoNameValidator("Mickey Mouse!!", TEST_MEMO_NAME, fProject);
 		assertFalse(lValidator.isValid());
-		assertEquals(Messages.getString("model.validation.RenameMemoValidator.invalidName"),lValidator.getErrorMessage());
+		assertEquals("Memo name " + Messages.getString("model.validation.BasicNameValidator.invalid"),lValidator.getErrorMessage());
 	}
 	
 	/**
@@ -102,9 +108,9 @@ public class RenameMemoValidatorTest
 	@Test
 	public void testMemoUniqueName2()
 	{
-		RenameMemoValidator lValidator = new RenameMemoValidator(TEST_MEMO_NAME2, TEST_MEMO_NAME, fProject);
+		MemoNameValidator lValidator = new MemoNameValidator(TEST_MEMO_NAME2, TEST_MEMO_NAME, fProject);
 		assertFalse(lValidator.isValid());
-		assertEquals(Messages.getString("model.validation.RenameMemoValidator.nameTaken"),lValidator.getErrorMessage());
+		assertEquals("Memo name " + Messages.getString("model.validation.BasicNameValidator.taken"),lValidator.getErrorMessage());
 	}
 	
 	/**
@@ -113,8 +119,19 @@ public class RenameMemoValidatorTest
 	@Test
 	public void testValid()
 	{
-		RenameMemoValidator lValidator = new RenameMemoValidator("NewMemo", TEST_MEMO_NAME, fProject);
+		MemoNameValidator lValidator = new MemoNameValidator("NewMemo", TEST_MEMO_NAME, fProject);
 		assertTrue(lValidator.isValid());
 		assertEquals(null,lValidator.getErrorMessage());
+	}
+	
+	/**
+	 * Verifies that the name is not tooLong.
+	 */
+	@Test
+	public void testTooLong()
+	{
+		MemoNameValidator lValidator = new MemoNameValidator(LONG_NAME, null, fProject);
+		assertFalse(lValidator.isValid());
+		assertEquals("Memo name " + Messages.getString("model.validation.BasicNameValidator.tooLong"),lValidator.getErrorMessage());
 	}
 }
