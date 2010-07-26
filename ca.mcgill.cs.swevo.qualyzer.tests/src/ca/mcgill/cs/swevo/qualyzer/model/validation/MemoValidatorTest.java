@@ -70,7 +70,7 @@ public class MemoValidatorTest
 	{
 		MemoValidator lValidator = new MemoValidator("", fInvestigator, fProject);
 		assertFalse(lValidator.isValid());
-		assertEquals(Messages.getString("model.validation.MemoValidator.emptyName"),lValidator.getErrorMessage());
+		assertEquals("Memo name " + Messages.getString("model.validation.BasicNameValidator.empty"),lValidator.getErrorMessage());
 	}
 	
 	/**
@@ -81,7 +81,7 @@ public class MemoValidatorTest
 	{
 		MemoValidator lValidator = new MemoValidator("Bing! Crosby", fInvestigator, fProject);
 		assertFalse(lValidator.isValid());
-		assertEquals(Messages.getString("model.validation.MemoValidator.invalidName"),lValidator.getErrorMessage());
+		assertEquals("Memo name " + Messages.getString("model.validation.BasicNameValidator.invalid"),lValidator.getErrorMessage());
 	}
 	
 	/**
@@ -92,7 +92,7 @@ public class MemoValidatorTest
 	{
 		MemoValidator lValidator = new MemoValidator(TEST_MEMO_NAME, fInvestigator, fProject);
 		assertFalse(lValidator.isValid());
-		assertEquals(Messages.getString("model.validation.MemoValidator.nameTaken"),lValidator.getErrorMessage());
+		assertEquals("Memo name " + Messages.getString("model.validation.BasicNameValidator.taken"),lValidator.getErrorMessage());
 	}
 	
 	/**
