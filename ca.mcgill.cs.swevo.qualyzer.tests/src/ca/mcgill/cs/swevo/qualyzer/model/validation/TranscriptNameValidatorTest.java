@@ -25,7 +25,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 
-public class RenameTranscriptValidatorTest
+public class TranscriptNameValidatorTest
 {
 	private static final String TEST_PROJECT_NAME = "TestProject";
 	private static final String TEST_INVESTIGATOR_NAME = "Bob";
@@ -34,6 +34,12 @@ public class RenameTranscriptValidatorTest
 	private static final String TEST_AUDIO_FILE_NAME1 = "Test.mp3";
 	private static final String TEST_TRANSCRIPT_NAME = "Transcript1";
 	private static final String TEST_TRANSCRIPT_NAME2 = "Transcript2";
+	
+	private static final String LONG_NAME = "AAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBB"+
+	"AAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBB"+
+	"AAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBB"+
+	"AAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBB"+
+	"AAAAAAAAAABBBBBB";
 	
 	private Facade fFacade;
 	private Project fProject;
@@ -62,9 +68,9 @@ public class RenameTranscriptValidatorTest
 	@Test
 	public void testEmptyName()
 	{
-		RenameTranscriptValidator lValidator = new RenameTranscriptValidator("", TEST_TRANSCRIPT_NAME, fProject);
+		TranscriptNameValidator lValidator = new TranscriptNameValidator("", TEST_TRANSCRIPT_NAME, fProject);
 		assertFalse(lValidator.isValid());
-		assertEquals(Messages.getString("model.validation.RenameTranscriptValidator.nameEmpty"),lValidator.getErrorMessage());
+		assertEquals("Transcript name " + Messages.getString("model.validation.BasicNameValidator.empty"),lValidator.getErrorMessage());
 	}
 	
 	/**
@@ -73,9 +79,9 @@ public class RenameTranscriptValidatorTest
 	@Test
 	public void testNameFormat()
 	{
-		RenameTranscriptValidator lValidator = new RenameTranscriptValidator("Mickey Mouse!!", TEST_TRANSCRIPT_NAME, fProject);
+		TranscriptNameValidator lValidator = new TranscriptNameValidator("Mickey Mouse!!", TEST_TRANSCRIPT_NAME, fProject);
 		assertFalse(lValidator.isValid());
-		assertEquals(Messages.getString("model.validation.RenameTranscriptValidator.invalidID"),lValidator.getErrorMessage());
+		assertEquals("Transcript name " + Messages.getString("model.validation.BasicNameValidator.invalid"),lValidator.getErrorMessage());
 	}
 	
 	/**
@@ -84,7 +90,7 @@ public class RenameTranscriptValidatorTest
 	@Test
 	public void testInvestigatorUniqueName1()
 	{
-		RenameTranscriptValidator lValidator = new RenameTranscriptValidator(TEST_TRANSCRIPT_NAME, TEST_TRANSCRIPT_NAME, fProject);
+		TranscriptNameValidator lValidator = new TranscriptNameValidator(TEST_TRANSCRIPT_NAME, TEST_TRANSCRIPT_NAME, fProject);
 		assertTrue(lValidator.isValid());
 	}
 	
@@ -94,9 +100,20 @@ public class RenameTranscriptValidatorTest
 	@Test
 	public void testInvestigatorUniqueName2()
 	{
-		RenameTranscriptValidator lValidator = new RenameTranscriptValidator(TEST_TRANSCRIPT_NAME2, TEST_TRANSCRIPT_NAME, fProject);
+		TranscriptNameValidator lValidator = new TranscriptNameValidator(TEST_TRANSCRIPT_NAME2, TEST_TRANSCRIPT_NAME, fProject);
 		assertFalse(lValidator.isValid());
-		assertEquals(Messages.getString("model.validation.RenameTranscriptValidator.nameInUse"),lValidator.getErrorMessage());
+		assertEquals("Transcript name " + Messages.getString("model.validation.BasicNameValidator.taken"),lValidator.getErrorMessage());
+	}
+	
+	/**
+	 * Tests with a null old name.
+	 */
+	@Test
+	public void testInvestigatorUniqueName3()
+	{
+		TranscriptNameValidator lValidator = new TranscriptNameValidator("Ziggy", null, fProject);
+		assertTrue(lValidator.isValid());
+		assertEquals(null,lValidator.getErrorMessage());
 	}
 	
 	/**
@@ -105,8 +122,19 @@ public class RenameTranscriptValidatorTest
 	@Test
 	public void testValid()
 	{
-		RenameTranscriptValidator lValidator = new RenameTranscriptValidator("NewTranscript", TEST_TRANSCRIPT_NAME, fProject);
+		TranscriptNameValidator lValidator = new TranscriptNameValidator("NewTranscript", TEST_TRANSCRIPT_NAME, fProject);
 		assertTrue(lValidator.isValid());
 		assertEquals(null,lValidator.getErrorMessage());
+	}
+	
+	/**
+	 * Verifies that the name is not tooLong.
+	 */
+	@Test
+	public void testTooLong()
+	{
+		TranscriptNameValidator lValidator = new TranscriptNameValidator(LONG_NAME, null, fProject);
+		assertFalse(lValidator.isValid());
+		assertEquals("Transcript name " + Messages.getString("model.validation.BasicNameValidator.tooLong"),lValidator.getErrorMessage());
 	}
 }
