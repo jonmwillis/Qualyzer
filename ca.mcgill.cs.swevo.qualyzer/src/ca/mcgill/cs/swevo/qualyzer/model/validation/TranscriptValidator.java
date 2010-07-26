@@ -14,7 +14,6 @@ package ca.mcgill.cs.swevo.qualyzer.model.validation;
 import java.io.File;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
-import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 
 /**
  * Validates the business rules when a new transcript is created:
@@ -24,10 +23,8 @@ import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
  * - At least one participant is associated with the transcript
  * - The name of the audio file is not empty but does not refer to an existing file
  */
-public class TranscriptValidator extends AbstractValidator
+public class TranscriptValidator extends TranscriptNameValidator
 {
-	private final String fName;
-	private final Project fProject;
 	private final int fNumberOfParticipants;
 	private final String fAudioFileName;
 	
@@ -38,8 +35,7 @@ public class TranscriptValidator extends AbstractValidator
 	 */
 	public TranscriptValidator(String pName, Project pProject, int pNumberOfParticipants, String pAudioFileName)
 	{
-		fName = pName;
-		fProject = pProject;
+		super(pName, null, pProject);
 		fNumberOfParticipants = pNumberOfParticipants;
 		fAudioFileName = pAudioFileName;
 	}
@@ -47,53 +43,26 @@ public class TranscriptValidator extends AbstractValidator
 	@Override
 	public boolean isValid() 
 	{
-		boolean lReturn = true;
+		boolean lReturn = super.isValid();
 		
-		if(fName.length() == 0)
+		// Additional conditions tested only if the name passed all validation.
+		if(lReturn)
 		{
-			fMessage = Messages.getString("model.validation.TranscriptValidator.enterName"); //$NON-NLS-1$
-			lReturn = false;
-		}
-		else if(!ValidationUtils.verifyID(fName))
-		{
-			fMessage = Messages.getString("model.validation.TranscriptValidator.invalidName"); //$NON-NLS-1$
-			lReturn = false;
-		}
-		else if(transcriptExists())
-		{
-			fMessage = Messages.getString("model.validation.TranscriptValidator.nameInUse"); //$NON-NLS-1$
-			lReturn = false;
-		}
-		else if(fNumberOfParticipants <= 0)
-		{
-			fMessage = Messages.getString("model.validation.TranscriptValidator.selectOne"); //$NON-NLS-1$
-			lReturn = false;
-		}
-		else
-		{
-			File file = new File(fAudioFileName);
-			if((fAudioFileName.length() != 0) && !file.exists())
+			if(fNumberOfParticipants <= 0)
 			{
-				fMessage = Messages.getString("model.validation.TranscriptValidator.enterAudioName"); //$NON-NLS-1$
+				fMessage = Messages.getString("model.validation.TranscriptValidator.selectOne"); 
 				lReturn = false;
 			}
-		}
-	
-		return lReturn;
-	}
-	
-	/**
-	 * @return true if the transcript name refers to a transcript in the project.
-	 */
-	protected boolean transcriptExists()
-	{
-		for(Transcript transcript : fProject.getTranscripts())
-		{
-			if(transcript.getName().equals(fName))
+			else
 			{
-				return true;
+				File file = new File(fAudioFileName);
+				if((fAudioFileName.length() != 0) && !file.exists())
+				{
+					fMessage = Messages.getString("model.validation.TranscriptValidator.enterAudioName"); 
+					lReturn = false;
+				}
 			}
 		}
-		return false;
+		return lReturn;
 	}
 }
