@@ -373,11 +373,11 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 	{
 		fAudioLength = (int) length;
 		fAudioSlider.setMaximum(fAudioLength);
-		String label = "0:00/" + getMinuteSecondsString(fAudioLength); //$NON-NLS-1$
+		String label = "0:00/" + getTimeString(fAudioLength); //$NON-NLS-1$
 		fTimeLabel.setText(label);
 	}
 	
-	private String getMinuteSecondsString(int seconds)
+	private String getTimeString(int seconds)
 	{
 		int minutes = seconds / SECONDS_PER_MINUTE;
 		int secondsRemaining = seconds % SECONDS_PER_MINUTE;
@@ -396,8 +396,7 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 			@Override
 			public void run()
 			{
-				String label = getMinuteSecondsString(seconds) +
-					"/" + getMinuteSecondsString(fAudioLength); //$NON-NLS-1$
+				String label = getTimeString(seconds) +	"/" + getTimeString(fAudioLength); //$NON-NLS-1$
 				fTimeLabel.setText(label);
 				fAudioSlider.setSelection(seconds);
 			}

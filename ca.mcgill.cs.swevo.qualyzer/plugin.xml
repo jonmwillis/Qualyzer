@@ -762,7 +762,7 @@
             </command>
             <command
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.addInvestigator"
-                  icon="icons/participant.png"
+                  icon="icons/investigator_obj.png"
                   label="%command.label.investigator"
                   style="push"
                   tooltip="%command.tooltip.createInvestigator">
