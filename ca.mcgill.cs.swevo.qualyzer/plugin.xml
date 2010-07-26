@@ -1153,13 +1153,5 @@
             sequence="M1+K">
       </key>
    </extension>
-   <extension
-         point="org.eclipse.ui.contexts">
-      <context
-            id="ca.mcgill.cs.swevo.qualyzer.context.rtfEditor"
-            name="%context.name.rtfContext"
-            parentId="org.eclipse.ui.contexts.window">
-      </context>
-   </extension>
 
 </plugin>
