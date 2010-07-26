@@ -20,6 +20,7 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPage;
@@ -37,11 +38,14 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
+import ca.mcgill.cs.swevo.qualyzer.editors.inputs.InvestigatorEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
 import ca.mcgill.cs.swevo.qualyzer.model.InvestigatorListener;
 import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Memo;
+import ca.mcgill.cs.swevo.qualyzer.model.MemoListener;
+import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.ProjectListener;
 import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
@@ -52,7 +56,7 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
  * The main page of the Investigator editor.
  *
  */
-public class InvestigatorEditorPage extends FormPage implements ProjectListener, InvestigatorListener
+public class InvestigatorEditorPage extends FormPage implements ProjectListener, InvestigatorListener, MemoListener
 {
 	/**
 	 * 
@@ -62,9 +66,12 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 	private Text fNickname;
 	private Text fFullname;
 	private Text fInstitution;
+	private FormToolkit fToolkit;
+	private Composite fMemoSectionClient;
 	
 	private Investigator fInvestigator;
 	private boolean fIsDirty;
+	private ScrolledForm fForm;
 	/**
 	 * @param editor
 	 * @param investigator 
@@ -78,42 +85,43 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 		ListenerManager listenerManager = Facade.getInstance().getListenerManager();
 		listenerManager.registerProjectListener(fInvestigator.getProject(), this);
 		listenerManager.registerInvestigatorListener(fInvestigator.getProject(), this);
+		listenerManager.registerMemoListener(fInvestigator.getProject(), this);
 	}
 
 	@Override
 	public void createFormContent(IManagedForm managed)
 	{
-		final ScrolledForm form = managed.getForm();
-		FormToolkit toolkit = managed.getToolkit();
-		form.setText(INVESTIGATOR);
+		fForm = managed.getForm();
+		fToolkit = managed.getToolkit();
+		fForm.setText(INVESTIGATOR);
 		
 		TableWrapLayout layout = new TableWrapLayout();
 		layout.numColumns = 2;
-		Composite body = form.getBody();
+		Composite body = fForm.getBody();
 		body.setLayout(layout);
 		
 		@SuppressWarnings("unused")
-		Label label = toolkit.createLabel(body, 
+		Label label = fToolkit.createLabel(body, 
 				Messages.getString("editors.pages.InvestigatorEditorPage.nickname")); //$NON-NLS-1$
-		fNickname = createText(toolkit, fInvestigator.getNickName(), body);
+		fNickname = createText(fInvestigator.getNickName(), body);
 		
-		label = toolkit.createLabel(body, 
+		label = fToolkit.createLabel(body, 
 				Messages.getString("editors.pages.InvestigatorEditorPage.fullName")); //$NON-NLS-1$
-		fFullname = createText(toolkit, fInvestigator.getFullName(), body);
-		fNickname.addKeyListener(createKeyAdapter(form));
+		fFullname = createText(fInvestigator.getFullName(), body);
+		fNickname.addKeyListener(createKeyAdapter(fForm));
 
-		label = toolkit.createLabel(body, 
+		label = fToolkit.createLabel(body, 
 				Messages.getString("editors.pages.InvestigatorEditorPage.institution")); //$NON-NLS-1$
-		fInstitution = createText(toolkit, fInvestigator.getInstitution(), body);
+		fInstitution = createText(fInvestigator.getInstitution(), body);
 		
 		//Removing placeholders until they are used - JF
 //		createInterviewSection(form, toolkit, body);
 //		
 //		createCodedSection(form, toolkit, body);
 //		
-		createMemoSection(form, toolkit, body);
+		createMemoSection(fForm, body);
 	
-		toolkit.paintBordersFor(body);
+		fToolkit.paintBordersFor(body);
 	}
 
 	/**
@@ -149,24 +157,23 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 	 * @param toolkit
 	 * @param body
 	 */
-	private void createMemoSection(final ScrolledForm form, FormToolkit toolkit, Composite body)
+	private void createMemoSection(final ScrolledForm form, Composite body)
 	{
 		TableWrapData td;
 		Section section;
-		Composite sectionClient;
 		GridLayout grid;
-		section = toolkit.createSection(body, Section.EXPANDED | Section.TITLE_BAR | Section.TWISTIE);
+		section = fToolkit.createSection(body, Section.EXPANDED | Section.TITLE_BAR | Section.TWISTIE);
 		td = new TableWrapData(TableWrapData.FILL_GRAB);
 		td.colspan = 2;
 		section.setLayoutData(td);
 		section.setText(Messages.getString("editors.pages.InvestigatorEditorPage.memos")); //$NON-NLS-1$
 		section.addExpansionListener(createExpansionListener(form));
-		sectionClient = toolkit.createComposite(section);
+		fMemoSectionClient = fToolkit.createComposite(section);
 		grid = new GridLayout();
 		grid.numColumns = 1;
-		sectionClient.setLayout(grid);
-		buildMemos(sectionClient, toolkit);
-		section.setClient(sectionClient);
+		fMemoSectionClient.setLayout(grid);
+		buildMemos();
+		section.setClient(fMemoSectionClient);
 	}
 
 	
@@ -174,16 +181,23 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 	 * @param sectionClient
 	 * @param toolkit
 	 */
-	private void buildMemos(Composite sectionClient, FormToolkit toolkit)
+	private void buildMemos()
 	{
+		for(Control control : fMemoSectionClient.getChildren())
+		{
+			control.dispose();
+		}
+		
 		for(Memo memo : fInvestigator.getProject().getMemos())
 		{
 			if(fInvestigator.equals(memo.getAuthor()))
 			{
-				Hyperlink link = toolkit.createHyperlink(sectionClient, memo.getName(), SWT.NULL);
+				Hyperlink link = fToolkit.createHyperlink(fMemoSectionClient, memo.getName(), SWT.NULL);
 				link.addHyperlinkListener(openMemoListener(memo));
 			}
 		}
+		
+		fForm.reflow(true);
 		
 	}
 
@@ -279,9 +293,9 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 		};
 	}
 	
-	private Text createText(FormToolkit toolkit, String data, Composite parent)
+	private Text createText(String data, Composite parent)
 	{
-		Text text = toolkit.createText(parent, data);
+		Text text = fToolkit.createText(parent, data);
 		TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB);
 		text.setLayoutData(td);
 		text.addKeyListener(createKeyListener());
@@ -393,6 +407,7 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 		ListenerManager listenerManager = Facade.getInstance().getListenerManager();
 		listenerManager.unregisterProjectListener(fInvestigator.getProject(), this);
 		listenerManager.unregisterInvestigatorListener(fInvestigator.getProject(), this);
+		listenerManager.unregisterMemoListener(fInvestigator.getProject(), this);
 		super.dispose();
 	}
 
@@ -416,6 +431,39 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 				}
 			}
 		}
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.model.MemoListener#memoChanged(
+	 * ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType, 
+	 * ca.mcgill.cs.swevo.qualyzer.model.Memo[], ca.mcgill.cs.swevo.qualyzer.model.Facade)
+	 */
+	@Override
+	public void memoChanged(ChangeType cType, Memo[] memos, Facade facade)
+	{
+		Project project;
+		if(ChangeType.DELETE == cType)
+		{
+			project = PersistenceManager.getInstance().getProject(fInvestigator.getProject().getName());
+		}
+		else
+		{
+			project = memos[0].getProject();
+		}
+		
+		for(Investigator investigator : project.getInvestigators())
+		{
+			if(fInvestigator.equals(investigator))
+			{
+				setInput(new InvestigatorEditorInput(investigator));
+				break;
+			}
+		}
+		
+		fInvestigator = ((InvestigatorEditorInput) getEditorInput()).getInvestigator();
+		
+		buildMemos();
 		
 	}
 }
