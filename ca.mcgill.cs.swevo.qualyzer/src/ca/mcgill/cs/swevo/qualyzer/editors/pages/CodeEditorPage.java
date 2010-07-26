@@ -325,7 +325,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 								if(entry.getCode().equals(toDelete))
 								{
 									fragment.getCodeEntries().remove(i);
-									Facade.getInstance().saveTranscript((Transcript)fragment.getDocument());
+									Facade.getInstance().saveDocument(fragment.getDocument());
 									break;
 								}
 							}
@@ -385,6 +385,21 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		{
 			Transcript lTranscript = Facade.getInstance().forceTranscriptLoad(transcript);
 			for(Fragment fragment : lTranscript.getFragments())
+			{
+				for(CodeEntry entry : fragment.getCodeEntries())
+				{
+					if(entry.getCode().equals(toDelete))
+					{
+						conflicts.add(fragment);
+					}
+				}
+			}
+		}
+		
+		for(Memo memo : fProject.getMemos())
+		{
+			Memo lMemo = Facade.getInstance().forceMemoLoad(memo);
+			for(Fragment fragment : lMemo.getFragments())
 			{
 				for(CodeEntry entry : fragment.getCodeEntries())
 				{
