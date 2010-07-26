@@ -18,6 +18,7 @@ import java.io.File;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.IVerticalRuler;
@@ -203,7 +204,7 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 				}
 				catch(QualyzerException ex)
 				{
-					System.out.println(ex.getMessage());
+					openErrorDialog(ex.getMessage());
 				}
 			}
 		});
@@ -238,7 +239,7 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 				}
 				catch(QualyzerException ex)
 				{
-					System.out.println(ex.getMessage());
+					openErrorDialog(ex.getMessage());
 				}
 			}
 		};
@@ -275,7 +276,7 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 				}
 				catch(QualyzerException ex)
 				{
-					ex.printStackTrace();
+					openErrorDialog(ex.getMessage());
 				}
 			}
 		});
@@ -403,8 +404,12 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 		};
 		
 		Display.getDefault().asyncExec(run);
-		
-		
+	}
+	
+	private void openErrorDialog(String errorMessage)
+	{
+		MessageDialog.openError(getSite().getShell(), Messages.getString(
+				"editors.TranscriptEditor.audioError"), errorMessage); //$NON-NLS-1$
 	}
 
 }
