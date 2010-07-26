@@ -91,7 +91,7 @@ public class RenameMemoValidatorTest
 	@Test
 	public void testMemoUniqueName1()
 	{
-		RenameTranscriptValidator lValidator = new RenameTranscriptValidator(TEST_MEMO_NAME, TEST_MEMO_NAME, fProject);
+		TranscriptNameValidator lValidator = new TranscriptNameValidator(TEST_MEMO_NAME, TEST_MEMO_NAME, fProject);
 		assertTrue(lValidator.isValid());
 		assertEquals(null,lValidator.getErrorMessage());
 	}

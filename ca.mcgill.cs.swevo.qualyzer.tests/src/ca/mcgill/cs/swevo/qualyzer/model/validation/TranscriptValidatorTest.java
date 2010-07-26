@@ -63,7 +63,7 @@ public class TranscriptValidatorTest
 	{
 		TranscriptValidator lValidator = new TranscriptValidator("", fProject,1,TEST_AUDIO_FILE_NAME2);
 		assertFalse(lValidator.isValid());
-		assertEquals(Messages.getString("model.validation.TranscriptValidator.enterName"),lValidator.getErrorMessage());
+		assertEquals("Transcript name " + Messages.getString("model.validation.BasicNameValidator.empty"),lValidator.getErrorMessage());
 	}
 	
 	/**
@@ -74,7 +74,7 @@ public class TranscriptValidatorTest
 	{
 		TranscriptValidator lValidator = new TranscriptValidator("Bing! Crosby", fProject,1,TEST_AUDIO_FILE_NAME2);
 		assertFalse(lValidator.isValid());
-		assertEquals(Messages.getString("model.validation.TranscriptValidator.invalidName"),lValidator.getErrorMessage());
+		assertEquals("Transcript name " + Messages.getString("model.validation.BasicNameValidator.invalid"),lValidator.getErrorMessage());
 	}
 	
 	/**
@@ -85,7 +85,7 @@ public class TranscriptValidatorTest
 	{
 		TranscriptValidator lValidator = new TranscriptValidator(TEST_TRANSCRIPT_NAME, fProject,1,TEST_AUDIO_FILE_NAME2);
 		assertFalse(lValidator.isValid());
-		assertEquals(Messages.getString("model.validation.TranscriptValidator.nameInUse"),lValidator.getErrorMessage());
+		assertEquals("Transcript name " + Messages.getString("model.validation.BasicNameValidator.taken"),lValidator.getErrorMessage());
 	}
 	
 	/**
