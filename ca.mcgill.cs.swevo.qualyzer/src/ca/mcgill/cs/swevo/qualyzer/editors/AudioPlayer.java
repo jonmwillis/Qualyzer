@@ -50,7 +50,7 @@ public class AudioPlayer
 	//WAV only
 //	private long fJumpSizeMicSeconds;
 	private long fMicSecondPosAfterSeek;
-//	private double fMicSecondsPerByte;
+	private double fMicSecondsPerByte;
 	
 	/**
 	 * 
@@ -97,13 +97,14 @@ public class AudioPlayer
 			{
 				fLength = ((Integer) arg1.get("audio.length.frames")) / //$NON-NLS-1$
 					((Float) arg1.get("audio.framerate.fps")); //$NON-NLS-1$ 
+				
+				double lengthMicSec = fLength * MICROSECONDS;
+				fMicSecondsPerByte = lengthMicSec / (Integer)arg1.get("audio.length.bytes");
 				fEditor.setLength(fLength);
 				
 				if(arg1.get("audio.type").equals("WAVE")) //$NON-NLS-1$ //$NON-NLS-2$
 				{
 					fIsWAV = true;
-//					double lengthMicSec = fLength * MICROSECONDS;
-//					fMicSecondsPerByte = lengthMicSec / (Integer)arg1.get("audio.length.bytes");
 				}
 				else if(arg1.get("audio.type").equals("MP3")) //$NON-NLS-1$ //$NON-NLS-2$
 				{
@@ -116,13 +117,11 @@ public class AudioPlayer
 			{
 				if(fIsMP3)
 				{
-//					fByteNumber = (Long) arg3.get("mp3.position.byte");
 					fMicroSecondsPos = Long.valueOf((Long) arg3.get("mp3.position.microseconds")); //$NON-NLS-1$
 				}
 				else if(fIsWAV)
 				{
 					fMicroSecondsPos = fMicSecondPosAfterSeek + arg1;
-//					fByteNumber = (long) (fMicroSecondsPos / fMicSecondsPerByte);
 				}
 				
 				if(fSecondsPos != fMicroSecondsPos / MICROSECONDS)
@@ -172,6 +171,7 @@ public class AudioPlayer
 			if(fPlayer.getStatus() == BasicPlayer.PLAYING)
 			{
 				fPlayer.pause();
+				
 			}
 		}
 		catch(BasicPlayerException e)
@@ -189,12 +189,35 @@ public class AudioPlayer
 		try
 		{
 			fPlayer.stop();
+			fSecondsPos = 0;
+			fMicroSecondsPos = 0;
+			fMicSecondPosAfterSeek = 0;
 		}
 		catch(BasicPlayerException e)
 		{
 			fLogger.error("AudioPlayer: Could not stop.", e); //$NON-NLS-1$
 			throw new QualyzerException(Messages.getString("editors.AudioPlayer.stopFailed"), e); //$NON-NLS-1$
 		}
+	}
+
+	/**
+	 * @param selection
+	 */
+	public void jumpToTime(int selection)
+	{
+		long bytes = (long) (selection * MICROSECONDS / fMicSecondsPerByte);
+		try
+		{
+			fMicSecondPosAfterSeek = selection * MICROSECONDS;
+			fPlayer.seek(bytes);
+			fEditor.setSeconds(selection);
+		}
+		catch (BasicPlayerException e)
+		{
+			fLogger.error("Audio Player: Could not seek", e);
+			throw new QualyzerException("Unable to seek", e);
+		}
+		
 	}
 	
 }
