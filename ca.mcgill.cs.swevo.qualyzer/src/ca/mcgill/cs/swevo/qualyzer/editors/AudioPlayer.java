@@ -99,7 +99,7 @@ public class AudioPlayer
 					((Float) arg1.get("audio.framerate.fps")); //$NON-NLS-1$ 
 				
 				double lengthMicSec = fLength * MICROSECONDS;
-				fMicSecondsPerByte = lengthMicSec / (Integer)arg1.get("audio.length.bytes");
+				fMicSecondsPerByte = lengthMicSec / (Integer)arg1.get("audio.length.bytes"); //$NON-NLS-1$
 				fEditor.setLength(fLength);
 				
 				if(arg1.get("audio.type").equals("WAVE")) //$NON-NLS-1$ //$NON-NLS-2$
@@ -214,8 +214,8 @@ public class AudioPlayer
 		}
 		catch (BasicPlayerException e)
 		{
-			fLogger.error("Audio Player: Could not seek", e);
-			throw new QualyzerException("Unable to seek", e);
+			fLogger.error("Audio Player: Could not seek", e); //$NON-NLS-1$
+			throw new QualyzerException(Messages.getString("editors.AudioPlayer.seekFailed"), e); //$NON-NLS-1$
 		}
 		
 	}

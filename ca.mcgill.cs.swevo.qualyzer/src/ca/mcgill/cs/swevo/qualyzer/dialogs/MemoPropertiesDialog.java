@@ -165,10 +165,11 @@ public class MemoPropertiesDialog extends TitleAreaDialog
 	 */
 	private void createTranscriptCombo(Composite container)
 	{
-		createSimpleLabel(container, "Transcript");
+		createSimpleLabel(container, Messages.getString("dialogs.MemoPropertiesDialog.transcript")); //$NON-NLS-1$
 		fTranscriptCombo = new Combo(container, SWT.READ_ONLY);
-		fTranscriptCombo.setToolTipText("Choose a transcript for the memo to be about");
-		fTranscriptCombo.add("No transcript");
+		fTranscriptCombo.setToolTipText(Messages.getString(
+				"dialogs.MemoPropertiesDialog.chooseTranscript")); //$NON-NLS-1$
+		fTranscriptCombo.add(Messages.getString("dialogs.MemoPropertiesDialog.noTranscript")); //$NON-NLS-1$
 		
 		for(Transcript transcript : fMemo.getProject().getTranscripts())
 		{
@@ -185,10 +186,10 @@ public class MemoPropertiesDialog extends TitleAreaDialog
 	 */
 	private void createCodeCombo(Composite container)
 	{
-		createSimpleLabel(container, "Code ");
+		createSimpleLabel(container, Messages.getString("dialogs.MemoPropertiesDialog.code")); //$NON-NLS-1$
 		fCodeCombo = new Combo(container, SWT.READ_ONLY);
-		fCodeCombo.setToolTipText("Choose a code for the memo to be about");
-		fCodeCombo.add("No code");
+		fCodeCombo.setToolTipText(Messages.getString("dialogs.MemoPropertiesDialog.chooseCode")); //$NON-NLS-1$
+		fCodeCombo.add(Messages.getString("dialogs.MemoPropertiesDialog.noCode")); //$NON-NLS-1$
 		
 		for(Code code : fMemo.getProject().getCodes())
 		{
