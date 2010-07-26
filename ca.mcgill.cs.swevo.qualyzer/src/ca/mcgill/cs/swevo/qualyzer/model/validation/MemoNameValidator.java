@@ -19,7 +19,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Project;
 /**
  *
  */
-public class RenameMemoValidator extends AbstractValidator
+public class MemoNameValidator extends AbstractValidator
 {
 	private Project fProject;
 	private String fNewName;
@@ -31,7 +31,7 @@ public class RenameMemoValidator extends AbstractValidator
 	 * @param oldName
 	 * @param project
 	 */
-	public RenameMemoValidator(String newName, String oldName, Project project)
+	public MemoNameValidator(String newName, String oldName, Project project)
 	{
 		fNewName = newName;
 		fOldName = oldName;
