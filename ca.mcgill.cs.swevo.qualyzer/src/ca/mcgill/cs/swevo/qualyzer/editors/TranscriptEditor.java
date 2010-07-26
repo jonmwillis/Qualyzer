@@ -25,6 +25,8 @@ import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
@@ -34,6 +36,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Slider;
 import org.eclipse.ui.IWorkbenchPage;
@@ -50,12 +53,13 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
  *
  */
 public class TranscriptEditor extends RTFEditor implements TranscriptListener
-{
+{	
 
 	public static final String ID = "ca.mcgill.cs.swevo.qualyzer.editors.transcriptEditor"; //$NON-NLS-1$
 	
 	private static final int NUM_COLS = 8;
 	private static final int SECONDS_PER_MINUTE = 60;
+	private static final int TEN = 10;
 	
 	private static final String PLAY_IMG = "PLAY_IMG"; //$NON-NLS-1$
 	private static final String PAUSE_IMG = "PAUSE_IMG"; //$NON-NLS-1$
@@ -186,7 +190,31 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 		fItalicButton.addSelectionListener(createButtonSelectionListener(getItalicAction()));
 		fCodeButton.addSelectionListener(createButtonSelectionListener(getMarkTextAction()));
 		
-		fPlayButton.addSelectionListener(new SelectionAdapter(){
+		fPlayButton.addSelectionListener(playPushedListener());
+		fStopButton.addSelectionListener(new SelectionAdapter(){
+			@Override
+			public void widgetSelected(SelectionEvent e)
+			{
+				try
+				{
+					fPlayButton.setImage(getImage(PLAY_IMG, QualyzerActivator.PLUGIN_ID));
+					fAudioPlayer.stop();
+					setSeconds(0);
+				}
+				catch(QualyzerException ex)
+				{
+					System.out.println(ex.getMessage());
+				}
+			}
+		});
+	}
+
+	/**
+	 * @return
+	 */
+	private SelectionAdapter playPushedListener()
+	{
+		return new SelectionAdapter(){
 			private final Image fPLAY = getImage(PLAY_IMG, QualyzerActivator.PLUGIN_ID);
 			private final Image fPAUSE = getImage(PAUSE_IMG, QualyzerActivator.PLUGIN_ID);
 			private boolean fPlaying = false;
@@ -213,22 +241,7 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 					System.out.println(ex.getMessage());
 				}
 			}
-		});
-		fStopButton.addSelectionListener(new SelectionAdapter(){
-			@Override
-			public void widgetSelected(SelectionEvent e)
-			{
-				try
-				{
-					fPlayButton.setImage(getImage(PLAY_IMG, QualyzerActivator.PLUGIN_ID));
-					fAudioPlayer.stop();
-				}
-				catch(QualyzerException ex)
-				{
-					System.out.println(ex.getMessage());
-				}
-			}
-		});
+		};
 	}
 
 	//these create the top button bar.
@@ -245,7 +258,28 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 		fStopButton.setImage(getImage(STOP_IMG, QualyzerActivator.PLUGIN_ID));
 		
 		fAudioSlider = new Slider(parent, SWT.HORIZONTAL);
+		fAudioSlider.setMinimum(0);
+		fAudioSlider.setSelection(0);
 		fAudioSlider.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		fAudioSlider.addMouseListener(new MouseAdapter()
+		{
+			/* (non-Javadoc)
+			 * @see org.eclipse.swt.events.MouseAdapter#mouseUp(org.eclipse.swt.events.MouseEvent)
+			 */
+			@Override
+			public void mouseUp(MouseEvent e)
+			{
+				try
+				{
+					fAudioPlayer.jumpToTime(fAudioSlider.getSelection());
+				}
+				catch(QualyzerException ex)
+				{
+					ex.printStackTrace();
+				}
+			}
+		});
+		
 		
 		fTimeLabel = new Label(parent, SWT.NULL);
 		fTimeLabel.setLayoutData(new GridData(SWT.NULL, SWT.FILL, false, false));
@@ -337,6 +371,7 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 	protected void setLength(double length)
 	{
 		fAudioLength = (int) length;
+		fAudioSlider.setMaximum(fAudioLength);
 		String label = "0:00/" + getMinuteSecondsString(fAudioLength);
 		fTimeLabel.setText(label);
 	}
@@ -345,17 +380,30 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 	{
 		int minutes = seconds / SECONDS_PER_MINUTE;
 		int secondsRemaining = seconds % SECONDS_PER_MINUTE;
-		return minutes + ":" + secondsRemaining;
+		String secs = (secondsRemaining < TEN) ? "0"+secondsRemaining : ""+secondsRemaining;
+		return minutes + ":" + secs;
 	}
 	
 	/**
 	 * Called by the AudioPlayer to set the current time of the audio stream.
 	 * @param seconds
 	 */
-	protected void setSeconds(int seconds)
+	protected void setSeconds(final int seconds)
 	{
-		String label = getMinuteSecondsString(seconds) + "/" + getMinuteSecondsString(fAudioLength);
-		fTimeLabel.setText(label);
+		Runnable run = new Runnable(){
+
+			@Override
+			public void run()
+			{
+				String label = getMinuteSecondsString(seconds) + "/" + getMinuteSecondsString(fAudioLength);
+				fTimeLabel.setText(label);
+				fAudioSlider.setSelection(seconds);
+			}
+		};
+		
+		Display.getDefault().asyncExec(run);
+		
+		
 	}
 
 }
