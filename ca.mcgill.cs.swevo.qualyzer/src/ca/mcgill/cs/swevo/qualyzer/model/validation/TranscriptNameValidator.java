@@ -39,7 +39,7 @@ public class TranscriptNameValidator extends BasicNameValidator
 	{
 		for(Transcript transcript : fProject.getTranscripts())
 		{
-			if(!fOldName.equals(fName) && transcript.getName().equals(fName))
+			if(transcript.getName().equals(fName))
 			{
 				return true;
 			}
