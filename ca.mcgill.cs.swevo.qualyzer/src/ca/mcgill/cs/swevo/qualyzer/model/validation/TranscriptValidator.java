@@ -29,7 +29,7 @@ public class TranscriptValidator extends TranscriptNameValidator
 	private final String fAudioFileName;
 	
 	/**
-	 * Constructs a new ParticipantValidator.
+	 * Constructs a new TranscriptValidator.
 	 * @param pName The name chosen for the new transcript.
 	 * @param pProject The Project in which the transcript is to be created.
 	 */
