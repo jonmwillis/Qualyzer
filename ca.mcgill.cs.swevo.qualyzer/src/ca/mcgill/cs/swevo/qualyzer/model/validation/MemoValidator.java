@@ -7,83 +7,47 @@
  *
  * Contributors:
  *     Jonathan Faubert
+ *     Martin Robillard
  *******************************************************************************/
-/**
- * 
- */
 package ca.mcgill.cs.swevo.qualyzer.model.validation;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
-import ca.mcgill.cs.swevo.qualyzer.model.Memo;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 
 /**
- *
+ * Validates the creation of a new memo.
  */
-public class MemoValidator extends AbstractValidator
+public class MemoValidator extends MemoNameValidator
 {
-	private Project fProject;
-	private String fName;
 	private Investigator fAuthor;
 	
 	/**
-	 * 
-	 * @param pName
-	 * @param investigator
-	 * @param project
+	 * Creates a new validator.
+	 * @param pName The name chosen for the new transcript.
+	 * @param investigator The author of the memo.
+	 * @param project The Project in which the transcript is to be created.
 	 */
 	public MemoValidator(String pName, Investigator investigator, Project project)
 	{
-		fName = pName;
+		super(pName, null, project);
 		fAuthor = investigator;
-		fProject = project;
 	}
 
-	/* (non-Javadoc)
-	 * @see ca.mcgill.cs.swevo.qualyzer.model.validation.IValidator#isValid()
-	 */
 	@Override
 	public boolean isValid()
 	{
-		boolean valid = true;
+		boolean lReturn = super.isValid();
 		
-		if(fName.isEmpty())
+		// Additional conditions tested only if the name passed all validation.
+		if(lReturn)
 		{
-			valid = false;
-			fMessage = Messages.getString("model.validation.MemoValidator.emptyName"); //$NON-NLS-1$
-		}
-		else if(!ValidationUtils.verifyID(fName))
-		{
-			valid = false;
-			fMessage = Messages.getString("model.validation.MemoValidator.invalidName"); //$NON-NLS-1$
-		}
-		else if(nameIsTaken())
-		{
-			valid = false;
-			fMessage = Messages.getString("model.validation.MemoValidator.nameTaken"); //$NON-NLS-1$
-		}
-		else if(fAuthor == null)
-		{
-			valid = false;
-			fMessage = Messages.getString("model.validation.MemoValidator.chooseAuthor"); //$NON-NLS-1$
-		}
-		
-		return valid;
-	}
-
-	/**
-	 * @return
-	 */
-	private boolean nameIsTaken()
-	{
-		for(Memo memo : fProject.getMemos())
-		{
-			if(memo.getName().equals(fName))
+			if(fAuthor == null)
 			{
-				return true;
+				lReturn = false;
+				fMessage = Messages.getString("model.validation.MemoValidator.chooseAuthor"); 
 			}
 		}
-		return false;
+		return lReturn;
 	}
 
 }
