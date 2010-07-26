@@ -55,6 +55,7 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 	public static final String ID = "ca.mcgill.cs.swevo.qualyzer.editors.transcriptEditor"; //$NON-NLS-1$
 	
 	private static final int NUM_COLS = 8;
+	private static final int SECONDS_PER_MINUTE = 60;
 	
 	private static final String PLAY_IMG = "PLAY_IMG"; //$NON-NLS-1$
 	private static final String PAUSE_IMG = "PAUSE_IMG"; //$NON-NLS-1$
@@ -73,6 +74,8 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 	private AudioPlayer fAudioPlayer;
 
 	private Label fTimeLabel;
+	private Slider fAudioSlider;
+	private int fAudioLength;
 
 	
 	/**
@@ -153,7 +156,7 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(trans.getProject().getName());
 			String audioFile = project.getLocation() + File.separator + trans.getAudioFile().getRelativePath();
 			
-			fAudioPlayer = new AudioPlayer(audioFile, fTimeLabel);
+			fAudioPlayer = new AudioPlayer(audioFile, this);
 		}
 		
 		hookupButtonActions();
@@ -241,8 +244,8 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 		fStopButton = new Button(parent, SWT.PUSH);
 		fStopButton.setImage(getImage(STOP_IMG, QualyzerActivator.PLUGIN_ID));
 		
-		Slider slider = new Slider(parent, SWT.HORIZONTAL);
-		slider.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		fAudioSlider = new Slider(parent, SWT.HORIZONTAL);
+		fAudioSlider.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		
 		fTimeLabel = new Label(parent, SWT.NULL);
 		fTimeLabel.setLayoutData(new GridData(SWT.NULL, SWT.FILL, false, false));
@@ -325,6 +328,34 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 	{
 		Facade.getInstance().getListenerManager().unregisterTranscriptListener(getDocument().getProject(), this);
 		super.dispose();
+	}
+	
+	/**
+	 * Called by the AudioPlayer to set the length of the audio file.
+	 * @param length
+	 */
+	protected void setLength(double length)
+	{
+		fAudioLength = (int) length;
+		String label = "0:00/" + getMinuteSecondsString(fAudioLength);
+		fTimeLabel.setText(label);
+	}
+	
+	private String getMinuteSecondsString(int seconds)
+	{
+		int minutes = seconds / SECONDS_PER_MINUTE;
+		int secondsRemaining = seconds % SECONDS_PER_MINUTE;
+		return minutes + ":" + secondsRemaining;
+	}
+	
+	/**
+	 * Called by the AudioPlayer to set the current time of the audio stream.
+	 * @param seconds
+	 */
+	protected void setSeconds(int seconds)
+	{
+		String label = getMinuteSecondsString(seconds) + "/" + getMinuteSecondsString(fAudioLength);
+		fTimeLabel.setText(label);
 	}
 
 }

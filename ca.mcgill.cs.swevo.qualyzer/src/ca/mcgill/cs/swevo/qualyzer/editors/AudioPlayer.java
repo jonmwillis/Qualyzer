@@ -20,7 +20,6 @@ import javazoom.jlgui.basicplayer.BasicPlayerEvent;
 import javazoom.jlgui.basicplayer.BasicPlayerException;
 import javazoom.jlgui.basicplayer.BasicPlayerListener;
 
-import org.eclipse.swt.widgets.Label;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +41,7 @@ public class AudioPlayer
 	private int fSecondsPos;
 	private double fLength;
 	
-	//private Label fTimeLabel;
+	private TranscriptEditor fEditor;
 	
 	private String fAudioFile;
 	private boolean fIsMP3;
@@ -56,12 +55,12 @@ public class AudioPlayer
 	/**
 	 * 
 	 */
-	public AudioPlayer(String audioFile, Label timeLabel)
+	public AudioPlayer(String audioFile, TranscriptEditor editor)
 	{
 		fLogger = LoggerFactory.getLogger(AudioPlayer.class);
 		
 		fPlayer = new BasicPlayer();
-		//fTimeLabel = timeLabel;
+		fEditor = editor;
 		fAudioFile = audioFile;
 		
 //		fByteNumber = 0;
@@ -98,7 +97,7 @@ public class AudioPlayer
 			{
 				fLength = ((Integer) arg1.get("audio.length.frames")) / //$NON-NLS-1$
 					((Float) arg1.get("audio.framerate.fps")); //$NON-NLS-1$ 
-				updateTimeLabel();
+				fEditor.setLength(fLength);
 				
 				if(arg1.get("audio.type").equals("WAVE")) //$NON-NLS-1$ //$NON-NLS-2$
 				{
@@ -129,7 +128,7 @@ public class AudioPlayer
 				if(fSecondsPos != fMicroSecondsPos / MICROSECONDS)
 				{
 					fSecondsPos = (int) fMicroSecondsPos / MICROSECONDS;
-					updateTimeLabel();
+					fEditor.setSeconds(fSecondsPos);
 				}
 			}
 
@@ -138,16 +137,6 @@ public class AudioPlayer
 			@Override
 			public void stateUpdated(BasicPlayerEvent arg0){}			
 		};
-	}
-
-	/**
-	 * 
-	 */
-	protected void updateTimeLabel()
-	{
-		//TODO convert to mm:ss
-		//fTimeLabel.setText(fSecondsPos + "/" + (int) fLength);
-		
 	}
 
 	/**
