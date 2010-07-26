@@ -20,7 +20,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
  * - New name not already in use (except if it refers to the current transcript)
  * - New name in alphanumerical+ format.
  */
-public class RenameTranscriptValidator extends AbstractValidator
+public class TranscriptNameValidator extends AbstractValidator
 {
 	private final String fName;
 	private final Project fProject;
@@ -31,7 +31,7 @@ public class RenameTranscriptValidator extends AbstractValidator
 	 * @param pOldName The current name of the transcript.
 	 * @param pProject The Project in which the transcript exists.
 	 */
-	public RenameTranscriptValidator(String pName, String pOldName, Project pProject)
+	public TranscriptNameValidator(String pName, String pOldName, Project pProject)
 	{
 		fName = pName;
 		fOldName = pOldName;

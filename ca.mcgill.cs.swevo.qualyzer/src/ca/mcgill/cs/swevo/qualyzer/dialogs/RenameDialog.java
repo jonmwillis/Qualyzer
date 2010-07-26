@@ -28,7 +28,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
-import ca.mcgill.cs.swevo.qualyzer.model.validation.RenameTranscriptValidator;
+import ca.mcgill.cs.swevo.qualyzer.model.validation.TranscriptNameValidator;
 
 /**
  * Dialog to rename transcripts. 
@@ -132,8 +132,8 @@ public class RenameDialog extends TitleAreaDialog
 			@Override
 			public void keyReleased(KeyEvent e)
 			{
-				RenameTranscriptValidator lValidator = 
-					new RenameTranscriptValidator(fNewName.getText(), fOldName, fProject);
+				TranscriptNameValidator lValidator = 
+					new TranscriptNameValidator(fNewName.getText(), fOldName, fProject);
 				
 				if(!lValidator.isValid())
 				{
