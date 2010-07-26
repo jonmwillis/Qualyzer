@@ -152,6 +152,12 @@ public class RTFDocumentProvider extends FileDocumentProvider
 									groupTag.equals(STAR_SLASH);
 							}while(!stop && groupTag.length() > 1 && groupTag.charAt(groupTag.length() - 1) == '\\');
 						}
+						else if((!Character.isWhitespace(ch) && ch != '\0') || ch == ' ')
+						{
+							pushState((RTFDocument) document, text, contentStream);
+							push = false;
+							text += ch;
+						}
 					}
 					else if(ch == '}')
 					{
@@ -175,11 +181,6 @@ public class RTFDocumentProvider extends FileDocumentProvider
 					text += ch;
 				}
 			}
-		
-			//It seems that some editors (wordpad) don't put ending tags if the style reaches the EOF
-			text += handleTag(RTFTags.BOLD_END, (RTFDocument)document, text, contentStream); 
-			text += handleTag(RTFTags.ITALIC_END, (RTFDocument)document, text, contentStream); 
-			text += handleTag(RTFTags.UNDERLINE_END, (RTFDocument)document, text, contentStream); 
 		}
 		catch(IOException e)
 		{
@@ -187,7 +188,6 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		}
 		
 		document.set(text);
-
 	}
 	
 	/**
@@ -212,58 +212,81 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		String string = escape.trim();
 		String toReturn = EMPTY;
 		
-		if(string.isEmpty())
+		if(!string.isEmpty())
 		{
-			return toReturn;
-		}
-		
-		if(string.charAt(string.length() - 1) == '\\')
-		{
-			string = string.substring(0, string.length() - 1);
-		}
-		string = string.trim();
-		
-		if(isIgnoredGroup(string))
-		{
-			int count = string.equals(RTFTags.IGNORE) || string.equals(RTFTags.COLOR_TABLE) ? 1 : 2;
-			while(count > 0)
+			if(string.charAt(string.length() - 1) == '\\')
 			{
-				char c = (char) stream.read();
-				if(c == '{')
-				{
-					count++;
-				}
-				else if(c == '}')
-				{
-					count--;
-				}
+				string = string.substring(0, string.length() - 1);
 			}
-			return toReturn;
+			string = string.trim();
+			
+			if(isIgnoredGroup(string))
+			{
+				skipGroup(stream, string);
+				return toReturn;
+			}
+			
+			if(string.isEmpty())
+			{
+				toReturn = RTFTags.BACKSLASH; 
+			}
+			else if(string.equals(RTFTags.RIGHT_BRACE) || string.equals(RTFTags.LEFT_BRACE))  
+			{
+				toReturn = string;
+			}
+			else if(string.equals(RTFTags.NEW_LINE)) 
+			{
+				toReturn = "\n";  //$NON-NLS-1$
+			}
+			else if(string.equals(RTFTags.PAR_DEFAULT) || string.equals(RTFTags.PLAIN)) 
+			{
+				endBold(document, currentText);
+				endItalic(document, currentText);
+				endUnderline(document, currentText);
+			}
+			else if(string.equals(RTFTags.TAB)) 
+			{
+				toReturn = "\t";  //$NON-NLS-1$
+			}
+			else
+			{
+				handleFormatTag(document, currentText, string);
+			}
 		}
-		
-		if(string.isEmpty())
+
+		return toReturn;
+	}
+
+	/**
+	 * @param stream
+	 * @param string
+	 * @throws IOException
+	 */
+	private void skipGroup(InputStream stream, String string) throws IOException
+	{
+		int count = string.equals(RTFTags.IGNORE) || string.equals(RTFTags.COLOR_TABLE) ? 1 : 2;
+		while(count > 0)
 		{
-			toReturn = RTFTags.BACKSLASH; 
+			char c = (char) stream.read();
+			if(c == '{')
+			{
+				count++;
+			}
+			else if(c == '}')
+			{
+				count--;
+			}
 		}
-		else if(string.equals(RTFTags.RIGHT_BRACE) || string.equals(RTFTags.LEFT_BRACE))  
-		{
-			toReturn = string;
-		}
-		else if(string.equals(RTFTags.NEW_LINE)) 
-		{
-			toReturn = "\n";  //$NON-NLS-1$
-		}
-		else if(string.equals(RTFTags.PAR_DEFAULT) || string.equals(RTFTags.PLAIN)) 
-		{
-			endBold(document, currentText);
-			endItalic(document, currentText);
-			endUnderline(document, currentText);
-		}
-		else if(string.equals(RTFTags.TAB)) 
-		{
-			toReturn = "\t";  //$NON-NLS-1$
-		}
-		else if(string.equals(RTFTags.BOLD_START)) 
+	}
+
+	/**
+	 * @param document
+	 * @param currentText
+	 * @param string
+	 */
+	private void handleFormatTag(RTFDocument document, String currentText, String string)
+	{
+		if(string.equals(RTFTags.BOLD_START)) 
 		{
 			startBold(document, currentText);
 		}
@@ -287,8 +310,6 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		{
 			endUnderline(document, currentText);
 		}
-		
-		return toReturn;
 	}
 
 	/**
@@ -633,10 +654,8 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	private String buildRTFString(String contents, IAnnotationModel model)
 	{
 		String output = RTFTags.HEADER; 
-		
 		ArrayList<Position> positions = new ArrayList<Position>();
 		ArrayList<Annotation> annotations = new ArrayList<Annotation>();
-		
 		Iterator<Annotation> iter = model.getAnnotationIterator();
 		while(iter.hasNext())
 		{
@@ -661,7 +680,6 @@ public class RTFDocumentProvider extends FileDocumentProvider
 						break;
 					}
 				}
-				
 				if(position != null)
 				{
 					output += getStartTagFromAnnotation(annotation);
@@ -669,15 +687,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 			}
 			
 			char c = contents.charAt(i);
-			
-			if(c != '\n' && c != '\t' && c!= '\0')
-			{
-				if(c == '{' || c == '}' || c =='\\')
-				{
-					output += RTFTags.BACKSLASH;
-				}
-				output += c;
-			}
+			output += getMiddleChar(c);
 			
 			if(position != null && i == position.offset + position.length - 1)
 			{
@@ -687,18 +697,38 @@ public class RTFDocumentProvider extends FileDocumentProvider
 				annotation = null;
 			}
 			
-			if(c == '\n')
-			{
-				output += RTFTags.NEW_LINE_TAG; 
-			}
-			else if(c == '\t')
-			{
-				output += RTFTags.TAB_TAG; 
-			}
-			
+			output += getEndChar(c);
 		}
 					
 		return output + RTFTags.FOOTER; 
+	}
+	
+	private String getEndChar(char c)
+	{
+		String output = EMPTY;
+		if(c == '\n')
+		{
+			output += RTFTags.NEW_LINE_TAG; 
+		}
+		else if(c == '\t')
+		{
+			output += RTFTags.TAB_TAG; 
+		}
+		return output;
+	}
+	
+	private String getMiddleChar(char c)
+	{
+		String output = EMPTY;
+		if(c != '\n' && c != '\t' && c!= '\0')
+		{
+			if(c == '{' || c == '}' || c =='\\')
+			{
+				output += RTFTags.BACKSLASH;
+			}
+			output += c;
+		}
+		return output;
 	}
 
 	/**
