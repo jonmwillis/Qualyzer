@@ -41,6 +41,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.IAnnotatedDocument;
 import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Memo;
+import ca.mcgill.cs.swevo.qualyzer.model.MemoListener;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 import ca.mcgill.cs.swevo.qualyzer.model.ParticipantListener;
 import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
@@ -55,7 +56,8 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 /**
  * The form used to edit participant data.
  */
-public class ParticipantEditorPage extends FormPage implements ProjectListener, TranscriptListener, ParticipantListener
+public class ParticipantEditorPage extends FormPage implements ProjectListener, TranscriptListener,
+	ParticipantListener, MemoListener
 {
 	private static final String LABEL_PARTICIPANT_NAME = Messages.getString(
 			"editors.pages.ParticipantEditorPage.participantName"); //$NON-NLS-1$
@@ -71,7 +73,8 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 	private Text fNotes;
 	private boolean fIsDirty;
 	private FormToolkit fToolkit;
-	private Composite fSectionClient;
+	private Composite fTranscriptSectionClient;
+	private Composite fMemoSectionClient;
 	private ScrolledForm fForm;
 
 	/**
@@ -89,6 +92,7 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 		listenerManager.registerProjectListener(participant.getProject(), this);
 		listenerManager.registerTranscriptListener(participant.getProject(), this);
 		listenerManager.registerParticipantListener(participant.getProject(), this);
+		listenerManager.registerMemoListener(participant.getProject(), this);
 	}
 	
 	@Override
@@ -216,13 +220,13 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 		section.setLayoutData(td);
 		section.addExpansionListener(createExpansionListener(fForm));
 		section.setText(Messages.getString("editors.pages.ParticipantEditorPage.transcripts")); //$NON-NLS-1$
-		fSectionClient = fToolkit.createComposite(section);
+		fTranscriptSectionClient = fToolkit.createComposite(section);
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 1;
-		fSectionClient.setLayout(gridLayout);
+		fTranscriptSectionClient.setLayout(gridLayout);
 		buildInterviews();
-		fSectionClient.setLayoutData(td);
-		section.setClient(fSectionClient);
+		fTranscriptSectionClient.setLayoutData(td);
+		section.setClient(fTranscriptSectionClient);
 	}
 	
 	/**
@@ -239,13 +243,13 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 		section.setLayoutData(td);
 		section.addExpansionListener(createExpansionListener(fForm));
 		section.setText(Messages.getString("editors.pages.ParticipantEditorPage.memos")); //$NON-NLS-1$
-		fSectionClient = fToolkit.createComposite(section);
+		fMemoSectionClient = fToolkit.createComposite(section);
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 1;
-		fSectionClient.setLayout(gridLayout);
+		fMemoSectionClient.setLayout(gridLayout);
 		buildMemos();
-		fSectionClient.setLayoutData(td);
-		section.setClient(fSectionClient);
+		fMemoSectionClient.setLayoutData(td);
+		section.setClient(fMemoSectionClient);
 	}
 
 	/**
@@ -269,13 +273,18 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 	 */
 	private void buildMemos()
 	{
+		for(Control control : fMemoSectionClient.getChildren())
+		{
+			control.dispose();
+		}
+		
 		for(Memo memo : fParticipant.getProject().getMemos())		
 		{
 			Memo loadedMemo = Facade.getInstance().forceMemoLoad(memo);
 			if(loadedMemo.getParticipants().contains(fParticipant))
 			{
 				GridData gd = new GridData(SWT.FILL, SWT.NULL, true, false);
-				Hyperlink link = fToolkit.createHyperlink(fSectionClient, memo.getName(), SWT.WRAP);
+				Hyperlink link = fToolkit.createHyperlink(fMemoSectionClient, memo.getName(), SWT.WRAP);
 				link.addHyperlinkListener(createHyperlinkListener(memo));
 				link.setLayoutData(gd);
 			}
@@ -292,7 +301,7 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 	 */
 	private void buildInterviews()
 	{
-		for(Control control : fSectionClient.getChildren())
+		for(Control control : fTranscriptSectionClient.getChildren())
 		{
 			control.dispose();
 		}
@@ -303,7 +312,7 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 			if(loadedTranscript.getParticipants().contains(fParticipant))
 			{
 				GridData gd = new GridData(SWT.FILL, SWT.NULL, true, false);
-				Hyperlink link = fToolkit.createHyperlink(fSectionClient, transcript.getName(), SWT.WRAP);
+				Hyperlink link = fToolkit.createHyperlink(fTranscriptSectionClient, transcript.getName(), SWT.WRAP);
 				link.addHyperlinkListener(createHyperlinkListener(transcript));
 				link.setLayoutData(gd);
 			}
@@ -495,6 +504,7 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 		listenerManager.unregisterProjectListener(fParticipant.getProject(), this);
 		listenerManager.unregisterTranscriptListener(fParticipant.getProject(), this);
 		listenerManager.unregisterParticipantListener(fParticipant.getProject(), this);
+		listenerManager.unregisterMemoListener(fParticipant.getProject(), this);
 		super.dispose();
 	}
 
@@ -518,5 +528,38 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 				}
 			}
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.model.MemoListener#memoChanged(
+	 * ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType,
+	 *  ca.mcgill.cs.swevo.qualyzer.model.Memo[], ca.mcgill.cs.swevo.qualyzer.model.Facade)
+	 */
+	@Override
+	public void memoChanged(ChangeType cType, Memo[] memos, Facade facade)
+	{
+		Project project;
+		if(ChangeType.DELETE == cType)
+		{
+			project = PersistenceManager.getInstance().getProject(fParticipant.getProject().getName());
+		}
+		else
+		{
+			project = memos[0].getProject();
+		}
+		
+		for(Participant participant : project.getParticipants())
+		{
+			if(fParticipant.equals(participant))
+			{
+				setInput(new ParticipantEditorInput(participant));
+				break;
+			}
+		}
+		
+		fParticipant = ((ParticipantEditorInput) getEditorInput()).getParticipant();
+		
+		buildMemos();
+		
 	}
 }
