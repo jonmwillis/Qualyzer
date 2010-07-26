@@ -114,10 +114,10 @@ public class NewMemoPage extends WizardPage
 		
 		createCodeCombo();
 		
-		createLabel(fContainer, "Transcript");
+		createLabel(fContainer, Messages.getString("wizards.pages.NewMemoPage.transcript")); //$NON-NLS-1$
 		fTranscriptCombo = new Combo(fContainer, SWT.READ_ONLY);
-		fTranscriptCombo.setToolTipText("Choose a transcript for the memo to be about");
-		fTranscriptCombo.add("No transcript");
+		fTranscriptCombo.setToolTipText(Messages.getString("wizards.pages.NewMemoPage.chooseTranscript")); //$NON-NLS-1$
+		fTranscriptCombo.add(Messages.getString("wizards.pages.NewMemoPage.noTranscript")); //$NON-NLS-1$
 		
 		for(Transcript transcript : fProject.getTranscripts())
 		{
@@ -135,10 +135,10 @@ public class NewMemoPage extends WizardPage
 	 */
 	private void createCodeCombo()
 	{
-		createLabel(fContainer, "Code");
+		createLabel(fContainer, Messages.getString("wizards.pages.NewMemoPage.code")); //$NON-NLS-1$
 		fCodeCombo = new Combo(fContainer, SWT.READ_ONLY);
-		fCodeCombo.setToolTipText("Choose a code for the memo to be about");
-		fCodeCombo.add("No code");
+		fCodeCombo.setToolTipText(Messages.getString("wizards.pages.NewMemoPage.chooseCode")); //$NON-NLS-1$
+		fCodeCombo.add(Messages.getString("wizards.pages.NewMemoPage.noCode")); //$NON-NLS-1$
 		
 		for(Code code : fProject.getCodes())
 		{
