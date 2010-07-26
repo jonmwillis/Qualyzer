@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
-import ca.mcgill.cs.swevo.qualyzer.model.validation.RenameMemoValidator;
+import ca.mcgill.cs.swevo.qualyzer.model.validation.MemoNameValidator;
 
 /**
  *
@@ -89,7 +89,7 @@ public class RenameMemoDialog extends TitleAreaDialog
 			@Override
 			public void modifyText(ModifyEvent e)
 			{
-				RenameMemoValidator validator = new RenameMemoValidator(fNewName.getText(), fOldName, fProject);
+				MemoNameValidator validator = new MemoNameValidator(fNewName.getText(), fOldName, fProject);
 				if(validator.isValid())
 				{
 					setErrorMessage(null);
