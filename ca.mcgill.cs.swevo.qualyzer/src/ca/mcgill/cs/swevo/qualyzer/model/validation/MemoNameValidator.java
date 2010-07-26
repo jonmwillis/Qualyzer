@@ -7,69 +7,36 @@
  *
  * Contributors:
  *     Jonathan Faubert
+ *     Martin Robillard
  *******************************************************************************/
-/**
- * 
- */
 package ca.mcgill.cs.swevo.qualyzer.model.validation;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Memo;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 
 /**
- *
+ * Validates memo names.
  */
-public class MemoNameValidator extends AbstractValidator
+public class MemoNameValidator extends BasicNameValidator
 {
-	private Project fProject;
-	private String fNewName;
-	private String fOldName;
-
 	/**
-	 * Constructor.
-	 * @param newName
-	 * @param oldName
-	 * @param project
+	 * Constructs a new Validator.
+	 * @param pNewName The name chosen for the new transcript.
+	 * @param pOldName The current name of the transcript.
+	 * @param pProject The Project in which the transcript exists.
 	 */
-	public MemoNameValidator(String newName, String oldName, Project project)
+	public MemoNameValidator(String pNewName, String pOldName, Project pProject)
 	{
-		fNewName = newName;
-		fOldName = oldName;
-		fProject = project;
+		super(Messages.getString("model.validation.MemoNameValidator.label"),
+				pNewName, pOldName, pProject); 
 	}
 	
-	/* (non-Javadoc)
-	 * @see ca.mcgill.cs.swevo.qualyzer.model.validation.IValidator#isValid()
-	 */
 	@Override
-	public boolean isValid()
-	{
-		boolean valid = true;
-		
-		if(fNewName.isEmpty())
-		{
-			valid = false;
-			fMessage = Messages.getString("model.validation.RenameMemoValidator.emptyName"); //$NON-NLS-1$
-		}
-		else if(!ValidationUtils.verifyID(fNewName))
-		{
-			valid = false;
-			fMessage = Messages.getString("model.validation.RenameMemoValidator.invalidName"); //$NON-NLS-1$
-		}
-		else if(memoExists())
-		{
-			valid = false;
-			fMessage = Messages.getString("model.validation.RenameMemoValidator.nameTaken"); //$NON-NLS-1$
-		}
-		
-		return valid;
-	}
-	
-	private boolean memoExists()
+	protected boolean nameInUse()
 	{
 		for(Memo memo : fProject.getMemos())
 		{
-			if(!fOldName.equals(fNewName) && memo.getName().equals(fNewName))
+			if(memo.getName().equals(fName))
 			{
 				return true;
 			}
