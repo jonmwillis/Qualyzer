@@ -24,6 +24,7 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -178,9 +179,11 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		fTable.setHeaderVisible(true);
 		TableColumn col = new TableColumn(fTable, SWT.NONE);
 		col.setText(Messages.getString("editors.pages.CodeEditorPage.codeName")); //$NON-NLS-1$
+		col.setMoveable(false);
 		col = new TableColumn(fTable, SWT.RIGHT);
 		col.setText(Messages.getString("editors.pages.CodeEditorPage.frequency")); //$NON-NLS-1$
-		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
+		col.setMoveable(false);
+		GridData gd = new GridData(SWT.FILL, SWT.NULL, true, false);
 		fTable.setLayoutData(gd);
 		
 		Composite composite = toolkit.createComposite(body, SWT.BORDER);
@@ -507,6 +510,14 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		
 		fTable.getColumn(0).pack();
 		fTable.getColumn(1).pack();
+		Rectangle rect = fTable.getBounds();
+		Rectangle newRect = new Rectangle(rect.x, rect.y, rect.width, rect.height);
+		fTable.pack();
+		newRect.height = fTable.getBounds().height;
+		fTable.setBounds(newRect);
+		
+		fForm.getBody().redraw();
+		fForm.update();
 	}
 	
 	@Override
