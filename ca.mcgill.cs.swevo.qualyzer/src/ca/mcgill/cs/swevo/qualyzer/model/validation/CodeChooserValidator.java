@@ -7,10 +7,8 @@
  *
  * Contributors:
  *     Jonathan Faubert
+ *     Martin Robillard
  *******************************************************************************/
-/**
- * 
- */
 package ca.mcgill.cs.swevo.qualyzer.model.validation;
 
 import ca.mcgill.cs.swevo.qualyzer.model.CodeEntry;
@@ -18,7 +16,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Fragment;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 
 /**
- *
+ * Validator for the code chooser attached to fragments.
  */
 public class CodeChooserValidator extends CodeValidator
 {
@@ -26,9 +24,9 @@ public class CodeChooserValidator extends CodeValidator
 
 	/**
 	 * Constructor.
-	 * @param pName
-	 * @param pProject
-	 * @param pFragment
+	 * @param pName The name for the code.
+	 * @param pProject The project.
+	 * @param pFragment The fragment to attach the code to.
 	 */
 	public CodeChooserValidator(String pName, Project pProject, Fragment pFragment)
 	{
@@ -36,27 +34,22 @@ public class CodeChooserValidator extends CodeValidator
 		fFragment = pFragment;
 	}
 	
-	/* (non-Javadoc)
-	 * @see ca.mcgill.cs.swevo.qualyzer.model.validation.CodeValidator#isValid()
-	 */
 	@Override
 	public boolean isValid()
 	{
 		boolean valid = super.isValid();
 		
+		// Must test even if valid because an already used fragment could be 
+		// already set in the fragment.
 		if(fFragment != null && codeInUse(fName))
 		{
-			fMessage = Messages.getString("model.validator.CodeChooserValidator.codeAttached"); //$NON-NLS-1$
-			return false;
+			fMessage = Messages.getString("model.validator.CodeChooserValidator.codeAttached"); 
+			valid = false;
 		}
-		
+				
 		return valid;
 	}
 
-	/**
-	 * @param name
-	 * @return
-	 */
 	private boolean codeInUse(String name)
 	{
 		for(CodeEntry entry : fFragment.getCodeEntries())
