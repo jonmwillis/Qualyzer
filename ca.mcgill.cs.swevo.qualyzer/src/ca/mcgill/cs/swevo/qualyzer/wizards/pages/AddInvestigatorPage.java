@@ -125,9 +125,7 @@ public class AddInvestigatorPage extends WizardPage
 			@Override
 			public void keyReleased(KeyEvent e)
 			{
-				InvestigatorValidator lValidator = new InvestigatorValidator(fNickname.getText(), 
-						fFullname.getText(), fInstitution.getText(), fProject);
-				
+				InvestigatorValidator lValidator = new InvestigatorValidator(fNickname.getText(), fProject);
 				if(lValidator.isValid())
 				{
 					setPageComplete(true);

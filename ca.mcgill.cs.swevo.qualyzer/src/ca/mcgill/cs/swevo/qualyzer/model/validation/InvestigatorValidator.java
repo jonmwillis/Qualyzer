@@ -19,59 +19,26 @@ import ca.mcgill.cs.swevo.qualyzer.model.Project;
  */
 public class InvestigatorValidator extends BasicNameValidator
 {
-	private static final int MAX_LENGTH = 255;
-	
-	private String fFullName;
-	private String fInstitution;
-	
 	/**
 	 * Constructs a new InvestigatorValidator.
 	 * @param pName The ID chosen for the new investigator.
 	 * @param pOldName The current ID of the investigator (if applicable). Null if there are none.
-	 * @param pFullName The full name of the investigator.
-	 * @param pInstitution The institution of the investigator.
 	 * @param pProject The Project in which the investigator is to be created.
 	 */
-	public InvestigatorValidator(String pName, String pOldName, String pFullName, 
-			String pInstitution, Project pProject)
+	public InvestigatorValidator(String pName, String pOldName, Project pProject)
 	{
 		super(Messages.getString("model.validation.InvestigatorValidator.label"), //$NON-NLS-1$
 				pName, pOldName, pProject); 
-		fFullName = pFullName;
-		fInstitution = pInstitution;
 	}
 	
 	/**
 	 * Constructs a new InvestigatorValidator with a null old name.
 	 * @param pName The ID chosen for the new investigator.
-	 * @param pFullName The full name of the investigator.
-	 * @param pInstitution The institution of the investigator.
 	 * @param pProject The Project in which the investigator is to be created.
 	 */
-	public InvestigatorValidator(String pName, String pFullName, String pInstitution, Project pProject)
+	public InvestigatorValidator(String pName, Project pProject)
 	{
-		this(pName, null, pFullName, pInstitution, pProject);
-	}
-	
-	@Override
-	public boolean isValid()
-	{
-		boolean valid = super.isValid();
-		
-		if(valid)
-		{
-			if(fFullName.length() > MAX_LENGTH)
-			{
-				fMessage = Messages.getString("model.validation.InvestigatorValidator.fullNameTooLong"); 
-				valid = false;
-			}
-			else if(fInstitution.length() > MAX_LENGTH)
-			{
-				fMessage = Messages.getString("model.validation.InvestigatorValidator.institutionTooLong"); 
-				valid = false;
-			}
-		}
-		return valid;
+		this(pName, null, pProject);
 	}
 	
 	@Override
