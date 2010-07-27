@@ -27,6 +27,9 @@ public class InvestigatorValidatorTest
 	private static final String TEST_PROJECT_NAME = "TestProject";
 
 	private static final String TEST_INVESTIGATOR_NAME = "Bob";
+	private static final String TEST_INVESTIGATOR_FULL = "Mickey Mouse";
+	private static final String TEST_INVESTIGATOR_INST = "McGill University";
+	
 	
 	private static final String SAME_INVESTIGATOR_NAME = "Bob";
 	
@@ -65,7 +68,7 @@ public class InvestigatorValidatorTest
 	@Test
 	public void testEmptyInvestigatorName()
 	{
-		InvestigatorValidator lValidator = new InvestigatorValidator("", fProject);
+		InvestigatorValidator lValidator = new InvestigatorValidator("", TEST_INVESTIGATOR_FULL, TEST_INVESTIGATOR_INST, fProject);
 		assertFalse(lValidator.isValid());
 		assertEquals("Investigator nickname " + Messages.getString("model.validation.BasicNameValidator.empty"),lValidator.getErrorMessage());
 	}
@@ -76,7 +79,7 @@ public class InvestigatorValidatorTest
 	@Test
 	public void testInvestigatorNameFormat()
 	{
-		InvestigatorValidator lValidator = new InvestigatorValidator("Mickey Mouse!!", fProject);
+		InvestigatorValidator lValidator = new InvestigatorValidator("Mickey Mouse!!", TEST_INVESTIGATOR_FULL, TEST_INVESTIGATOR_INST, fProject);
 		assertFalse(lValidator.isValid());
 		assertEquals("Investigator nickname " + Messages.getString("model.validation.BasicNameValidator.invalid"),lValidator.getErrorMessage());
 	}
@@ -87,7 +90,7 @@ public class InvestigatorValidatorTest
 	@Test
 	public void testInvestigatorUniqueName()
 	{
-		InvestigatorValidator lValidator = new InvestigatorValidator(TEST_INVESTIGATOR_NAME, fProject);
+		InvestigatorValidator lValidator = new InvestigatorValidator(TEST_INVESTIGATOR_NAME, TEST_INVESTIGATOR_FULL, TEST_INVESTIGATOR_INST, fProject);
 		assertFalse(lValidator.isValid());
 		assertEquals("Investigator nickname " + Messages.getString("model.validation.BasicNameValidator.taken"),lValidator.getErrorMessage());
 	}
@@ -98,7 +101,7 @@ public class InvestigatorValidatorTest
 	@Test
 	public void testInvestigatorUniqueName2()
 	{
-		InvestigatorValidator lValidator = new InvestigatorValidator(TEST_INVESTIGATOR_NAME, TEST_INVESTIGATOR_NAME + "Foo",fProject);
+		InvestigatorValidator lValidator = new InvestigatorValidator(TEST_INVESTIGATOR_NAME, TEST_INVESTIGATOR_NAME + "Foo",TEST_INVESTIGATOR_FULL, TEST_INVESTIGATOR_INST, fProject);
 		assertFalse(lValidator.isValid());
 		assertEquals("Investigator nickname " + Messages.getString("model.validation.BasicNameValidator.taken"),lValidator.getErrorMessage());
 	}
@@ -109,7 +112,7 @@ public class InvestigatorValidatorTest
 	@Test
 	public void testTooLong()
 	{
-		InvestigatorValidator lValidator = new InvestigatorValidator(LONG_NAME, fProject);
+		InvestigatorValidator lValidator = new InvestigatorValidator(LONG_NAME, TEST_INVESTIGATOR_FULL, TEST_INVESTIGATOR_INST, fProject);
 		assertFalse(lValidator.isValid());
 		assertEquals("Investigator nickname " + Messages.getString("model.validation.BasicNameValidator.tooLong"),lValidator.getErrorMessage());
 	}
@@ -120,9 +123,33 @@ public class InvestigatorValidatorTest
 	@Test
 	public void testInvestigatorUniqueName3()
 	{
-		InvestigatorValidator lValidator = new InvestigatorValidator(TEST_INVESTIGATOR_NAME, SAME_INVESTIGATOR_NAME,fProject);
+		InvestigatorValidator lValidator = new InvestigatorValidator(TEST_INVESTIGATOR_NAME, SAME_INVESTIGATOR_NAME,TEST_INVESTIGATOR_FULL, TEST_INVESTIGATOR_INST, fProject);
 		assertTrue(lValidator.isValid());
 		assertNull(lValidator.getErrorMessage());
+	}
+	
+	/**
+	 * Tests a too long full name.
+	 */
+	@Test
+	public void testFullName()
+	{
+		InvestigatorValidator lValidator = new InvestigatorValidator(TEST_INVESTIGATOR_NAME, SAME_INVESTIGATOR_NAME,
+				LONG_NAME, TEST_INVESTIGATOR_INST, fProject);
+		assertFalse(lValidator.isValid());
+		assertEquals(Messages.getString("model.validation.InvestigatorValidator.fullNameTooLong"),lValidator.getErrorMessage());
+	}
+	
+	/**
+	 * Tests a too long full name.
+	 */
+	@Test
+	public void testInstitution()
+	{
+		InvestigatorValidator lValidator = new InvestigatorValidator(TEST_INVESTIGATOR_NAME, SAME_INVESTIGATOR_NAME,
+				TEST_INVESTIGATOR_FULL, LONG_NAME, fProject);
+		assertFalse(lValidator.isValid());
+		assertEquals(Messages.getString("model.validation.InvestigatorValidator.institutionTooLong"),lValidator.getErrorMessage());
 	}
 	
 	/**
@@ -131,7 +158,7 @@ public class InvestigatorValidatorTest
 	@Test
 	public void testValidInvestigator()
 	{
-		InvestigatorValidator lValidator = new InvestigatorValidator("Martin", fProject);
+		InvestigatorValidator lValidator = new InvestigatorValidator("Martin", TEST_INVESTIGATOR_FULL, TEST_INVESTIGATOR_INST, fProject);
 		assertTrue(lValidator.isValid());
 		assertEquals(null,lValidator.getErrorMessage());
 	}
