@@ -152,7 +152,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 									groupTag.equals(STAR_SLASH);
 							}while(!stop && groupTag.length() > 1 && groupTag.charAt(groupTag.length() - 1) == '\\');
 						}
-						else if((!Character.isWhitespace(ch) && ch != '\0') || ch == ' ')
+						else if((!Character.isWhitespace(ch) && ch != '\0') || ch == ' ' || ch == '\n')
 						{
 							pushState((RTFDocument) document, text, contentStream);
 							push = false;
@@ -173,6 +173,8 @@ public class RTFDocumentProvider extends FileDocumentProvider
 						escape = nextTag(contentStream);
 						text += handleTag(escape, (RTFDocument) document, text, contentStream);
 						stop = escape.equals(RTFTags.IGNORE) || escape.equals(STAR_SLASH);
+						char lastChar = escape.charAt(escape.length() - 1);
+						stop = stop || lastChar == ' ' || lastChar == '\n';
 					}while(escape.length() > 1 && escape.charAt(escape.length() - 1) == '\\' && !stop);
 					
 				}
@@ -580,7 +582,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		{
 			escape += RTFTags.BACKSLASH; 
 		}
-		else if(ch2 != '{')
+		else if(ch2 != '{' || escape.isEmpty())
 		{
 			escape += ch2;
 		}
