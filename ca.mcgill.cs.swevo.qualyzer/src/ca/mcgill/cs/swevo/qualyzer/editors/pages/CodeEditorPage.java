@@ -183,6 +183,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		col = new TableColumn(fTable, SWT.RIGHT);
 		col.setText(Messages.getString("editors.pages.CodeEditorPage.frequency")); //$NON-NLS-1$
 		col.setMoveable(false);
+		col.setResizable(false);
 		GridData gd = new GridData(SWT.FILL, SWT.NULL, true, false);
 		fTable.setLayoutData(gd);
 		
