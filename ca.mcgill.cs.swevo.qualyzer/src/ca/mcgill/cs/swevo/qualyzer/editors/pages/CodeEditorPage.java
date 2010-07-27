@@ -28,6 +28,8 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
@@ -174,16 +176,22 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		layout.makeColumnsEqualWidth = true;
 		body.setLayout(layout);
 		
-		fTable = toolkit.createTable(body, SWT.BORDER | SWT.SINGLE);
+		fTable = toolkit.createTable(body, SWT.BORDER | SWT.SINGLE | SWT.NO_SCROLL);
 		fTable.setLinesVisible(true);
 		fTable.setHeaderVisible(true);
-		TableColumn col = new TableColumn(fTable, SWT.NONE);
-		col.setText(Messages.getString("editors.pages.CodeEditorPage.codeName")); //$NON-NLS-1$
-		col.setMoveable(false);
-		col = new TableColumn(fTable, SWT.RIGHT);
-		col.setText(Messages.getString("editors.pages.CodeEditorPage.frequency")); //$NON-NLS-1$
-		col.setMoveable(false);
-		col.setResizable(false);
+		TableColumn col1 = new TableColumn(fTable, SWT.NONE);
+		col1.setText(Messages.getString("editors.pages.CodeEditorPage.codeName")); //$NON-NLS-1$
+		col1.setMoveable(false);
+		TableColumn col2 = new TableColumn(fTable, SWT.LEFT);
+		col2.setText(Messages.getString("editors.pages.CodeEditorPage.frequency")); //$NON-NLS-1$
+		col2.setMoveable(false);
+		col2.setResizable(false);
+		fTable.addListener(SWT.MeasureItem, new Listener(){
+			@Override
+			public void handleEvent(Event event) {
+				event.width = (int) (fTable.getBounds().width / 2.1);
+			}
+		});
 		GridData gd = new GridData(SWT.FILL, SWT.NULL, true, false);
 		fTable.setLayoutData(gd);
 		
@@ -207,12 +215,22 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		toolkit.paintBordersFor(composite);
 		toolkit.paintBordersFor(body);
 		
+		fTable.removeAll();
 		buildFormTable();
 		fTable.addSelectionListener(createTableSelectionListener());
 		createTableContextMenu();
+		col1.setWidth(col1.getWidth() * 2);
+		col2.setWidth(col2.getWidth() * 2);
 		
 		fCurrentSelection = fTable.getSelectionIndex();
 	}
+	
+	@Override
+	public void createPartControl(Composite parent)
+	{
+		super.createPartControl(parent);
+		
+	}	
 
 	/**
 	 * @return A keyadapter that acts as a validator for the new code name.
