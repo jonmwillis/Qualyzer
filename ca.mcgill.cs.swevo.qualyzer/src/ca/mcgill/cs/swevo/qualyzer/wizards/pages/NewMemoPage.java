@@ -107,7 +107,7 @@ public class NewMemoPage extends WizardPage
 		{
 			fAuthorName.add(investigator.getNickName());
 		}
-		fAuthorName.select(0);	//TODO choose deault investigator.
+		fAuthorName.select(0);	//TODO select default investigator.
 		fAuthorName.addModifyListener(createModifyListener());
 		
 		createLongLabel();
