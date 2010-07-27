@@ -137,8 +137,7 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 			public void keyReleased(KeyEvent event)
 			{
 				InvestigatorValidator lValidator = new InvestigatorValidator(fNickname.getText(),
-						fInvestigator.getNickName(), fFullname.getText(), fInstitution.getText(), 
-						fInvestigator.getProject());
+						fInvestigator.getNickName(), fInvestigator.getProject());
 				
 				if(!lValidator.isValid())
 				{
