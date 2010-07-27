@@ -50,6 +50,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.ProjectListener;
 import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
 import ca.mcgill.cs.swevo.qualyzer.model.validation.InvestigatorValidator;
+import ca.mcgill.cs.swevo.qualyzer.model.validation.StringLengthValidator;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
@@ -108,11 +109,16 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 		label = fToolkit.createLabel(body, 
 				Messages.getString("editors.pages.InvestigatorEditorPage.fullName")); //$NON-NLS-1$
 		fFullname = createText(fInvestigator.getFullName(), body);
+		fFullname.addKeyListener(createStringLengthValidator(fForm, 
+				Messages.getString("editors.pages.InvestigatorEditorPage.fullName"), fFullname));
+		
 		fNickname.addKeyListener(createKeyAdapter(fForm));
 
 		label = fToolkit.createLabel(body, 
 				Messages.getString("editors.pages.InvestigatorEditorPage.institution")); //$NON-NLS-1$
 		fInstitution = createText(fInvestigator.getInstitution(), body);
+		fInstitution.addKeyListener(createStringLengthValidator(fForm, 
+				Messages.getString("editors.pages.InvestigatorEditorPage.institution"), fInstitution));
 		
 		//Removing placeholders until they are used - JF
 //		createInterviewSection(form, toolkit, body);
@@ -147,6 +153,28 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 				else
 				{
 					fForm.setMessage(null, IMessageProvider.NONE);
+				}
+			}
+		};
+	}
+	
+	private KeyAdapter createStringLengthValidator(final ScrolledForm form, final String pLabel, final Text pText)
+	{
+		return new KeyAdapter(){
+						
+			@Override
+			public void keyReleased(KeyEvent event)
+			{
+				StringLengthValidator lValidator = new StringLengthValidator(pLabel, pText.getText());
+				
+				if(!lValidator.isValid())
+				{
+					form.setMessage(lValidator.getErrorMessage(), IMessageProvider.ERROR);
+					notDirty();
+				}
+				else
+				{
+					form.setMessage(null, IMessageProvider.NONE);
 				}
 			}
 		};
