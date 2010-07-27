@@ -13,6 +13,7 @@
 package ca.mcgill.cs.swevo.qualyzer.dialogs;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
@@ -193,6 +194,7 @@ public class CodeChooserDialog extends TitleAreaDialog
 				}
 			}
 		}
+		Collections.sort(proposals);
 		
 		return proposals.toArray(new String[0]);
 	}
