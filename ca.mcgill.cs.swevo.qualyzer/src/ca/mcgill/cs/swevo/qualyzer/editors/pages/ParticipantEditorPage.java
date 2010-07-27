@@ -51,6 +51,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 import ca.mcgill.cs.swevo.qualyzer.model.TranscriptListener;
 import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
 import ca.mcgill.cs.swevo.qualyzer.model.validation.ParticipantValidator;
+import ca.mcgill.cs.swevo.qualyzer.model.validation.StringLengthValidator;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
@@ -113,6 +114,8 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 		
 		fToolkit.createLabel(body, LABEL_PARTICIPANT_NAME);
 		fFullname = createText(fParticipant.getFullName(), body);
+		fFullname.addKeyListener(createStringLengthValidator(
+				Messages.getString("editors.pages.ParticipantEditorPage.participantName"), fFullname));
 		
 		// MPR: removed to simplify the UI for 0.1
 //		toolkit.createLabel(body, "Contact Info:");
@@ -154,6 +157,28 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 				}
 			}
 			
+		};
+	}
+	
+	private KeyAdapter createStringLengthValidator(final String pLabel, final Text pText)
+	{
+		return new KeyAdapter(){
+						
+			@Override
+			public void keyReleased(KeyEvent event)
+			{
+				StringLengthValidator lValidator = new StringLengthValidator(pLabel, pText.getText());
+				
+				if(!lValidator.isValid())
+				{
+					fForm.setMessage(lValidator.getErrorMessage(), IMessageProvider.ERROR);
+					notDirty();
+				}
+				else
+				{
+					fForm.setMessage(null, IMessageProvider.NONE);
+				}
+			}
 		};
 	}
 
