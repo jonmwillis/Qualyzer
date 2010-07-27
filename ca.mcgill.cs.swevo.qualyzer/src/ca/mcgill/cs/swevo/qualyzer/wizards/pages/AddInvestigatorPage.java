@@ -12,6 +12,7 @@ package ca.mcgill.cs.swevo.qualyzer.wizards.pages;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.layout.GridData;
@@ -23,6 +24,7 @@ import org.eclipse.swt.widgets.Text;
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.validation.InvestigatorValidator;
+import ca.mcgill.cs.swevo.qualyzer.model.validation.StringLengthValidator;
 
 /**
  * Page to add an investigator.
@@ -72,12 +74,16 @@ public class AddInvestigatorPage extends WizardPage
 		
 		fFullname = new Text(fContainer, SWT.BORDER | SWT.SINGLE);
 		fFullname.setText(""); //$NON-NLS-1$
+		fFullname.addKeyListener(createStringLengthValidator(
+				Messages.getString("wizards.pages.AddInvestigatorPage.fullName"), fFullname));
 		
 		label = new Label(fContainer, SWT.NULL);
 		label.setText(Messages.getString("wizards.pages.AddInvestigatorPage.insitution")); //$NON-NLS-1$
 		
 		fInstitution = new Text(fContainer, SWT.BORDER | SWT.SINGLE);
-		fInstitution.setText(""); //$NON-NLS-1$
+		fInstitution.setText(""); 
+		fInstitution.addKeyListener(createStringLengthValidator(
+				Messages.getString("wizards.pages.AddInvestigatorPage.insitution"), fInstitution));
 		
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		fNickname.setLayoutData(gd);
@@ -126,6 +132,29 @@ public class AddInvestigatorPage extends WizardPage
 			public void keyReleased(KeyEvent e)
 			{
 				InvestigatorValidator lValidator = new InvestigatorValidator(fNickname.getText(), fProject);
+				if(lValidator.isValid())
+				{
+					setPageComplete(true);
+					setErrorMessage(null);
+				}
+				else
+				{
+					setPageComplete(false);
+					setErrorMessage(lValidator.getErrorMessage());
+				}
+			}
+		};
+	}
+	
+	private KeyAdapter createStringLengthValidator(final String pLabel, final Text pText)
+	{
+		return new KeyAdapter(){
+						
+			@Override
+			public void keyReleased(KeyEvent event)
+			{
+				StringLengthValidator lValidator = new StringLengthValidator(pLabel, pText.getText());
+				
 				if(lValidator.isValid())
 				{
 					setPageComplete(true);
