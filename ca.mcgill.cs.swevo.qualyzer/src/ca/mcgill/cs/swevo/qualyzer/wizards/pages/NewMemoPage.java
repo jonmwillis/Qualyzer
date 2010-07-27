@@ -102,12 +102,13 @@ public class NewMemoPage extends WizardPage
 		createLabel(fContainer, Messages.getString("wizards.pages.NewMemoPage.author")); //$NON-NLS-1$
 		fAuthorName = new Combo(fContainer, SWT.DROP_DOWN | SWT.READ_ONLY);
 		fAuthorName.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
-		fAuthorName.addModifyListener(createModifyListener());
 		
 		for(Investigator investigator : fProject.getInvestigators())
 		{
 			fAuthorName.add(investigator.getNickName());
 		}
+		fAuthorName.select(0);	//TODO choose deault investigator.
+		fAuthorName.addModifyListener(createModifyListener());
 		
 		createLongLabel();
 		createTable();
