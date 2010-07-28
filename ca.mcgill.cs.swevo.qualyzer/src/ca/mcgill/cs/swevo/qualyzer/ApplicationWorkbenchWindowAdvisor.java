@@ -10,7 +10,9 @@
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer;
 
+import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
@@ -47,5 +49,22 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor
 		configurer.setInitialSize(new Point(DEFAULT_WIDTH, DEFAULT_HEIGHT));
 		configurer.setShowCoolBar(false);
 		configurer.setShowStatusLine(false);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.application.WorkbenchWindowAdvisor#postWindowCreate()
+	 */
+	@Override
+	public void postWindowCreate()
+	{
+		PreferenceManager pm = PlatformUI.getWorkbench().getPreferenceManager();
+		
+		pm.remove("net.sf.colorer.eclipse.PreferencePage");
+		
+//		IPreferenceNode[] arr = pm.getRootSubNodes();
+//		for(IPreferenceNode pn:arr)
+//		{
+//		    System.out.println("Label:" + pn.getLabelText() + " ID:" + pn.getId());
+//		}
 	}
 }

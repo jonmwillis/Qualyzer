@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.validation.InvestigatorValidator;
@@ -38,6 +39,8 @@ public class AddInvestigatorPage extends WizardPage
 	private Text fFullname;
 	private Text fInstitution;
 	
+	private final String fDefaultInvestigator;
+	
 	/**
 	 * Constructor.
 	 * @param project
@@ -48,6 +51,7 @@ public class AddInvestigatorPage extends WizardPage
 		setTitle(Messages.getString("wizards.pages.AddInvestigatorPage.addInvestigator")); //$NON-NLS-1$
 		setDescription(Messages.getString("wizards.pages.AddInvestigatorPage.enterInfo")); //$NON-NLS-1$
 		fProject = project;
+		fDefaultInvestigator = QualyzerActivator.getDefault().getPreferenceStore().getString("DefaultInvestigator");
 	}
 	
 	@Override
@@ -61,7 +65,7 @@ public class AddInvestigatorPage extends WizardPage
 		label.setText(Messages.getString("wizards.pages.AddInvestigatorPage.nickname")); //$NON-NLS-1$
 
 		fNickname = new Text(fContainer, SWT.BORDER | SWT.SINGLE);
-		fNickname.setText(System.getProperty("user.name")); //$NON-NLS-1$
+		fNickname.setText(fDefaultInvestigator); //$NON-NLS-1$
 		if(idInUse())
 		{
 			fNickname.setText(""); //$NON-NLS-1$
