@@ -28,8 +28,6 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
@@ -69,6 +67,11 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
  */
 public class CodeEditorPage extends FormPage implements CodeListener, ProjectListener, TranscriptListener, MemoListener
 {
+	/**
+	 * 
+	 */
+	private static final int BORDER_SIZE = 10;
+
 	private static final String DELETE_CODE = Messages.getString(
 			"editors.pages.CodeEditorPage.deleteCode"); //$NON-NLS-1$
 
@@ -171,12 +174,10 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		Composite body = fForm.getBody();
 		fForm.setText(Messages.getString("editors.pages.CodeEditorPage.codes")); //$NON-NLS-1$
 		
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 2;
-		layout.makeColumnsEqualWidth = true;
+		GridLayout layout = new GridLayout(2, true);
 		body.setLayout(layout);
 		
-		fTable = toolkit.createTable(body, SWT.BORDER | SWT.SINGLE | SWT.NO_SCROLL);
+		fTable = toolkit.createTable(body, SWT.BORDER | SWT.SINGLE);
 		fTable.setLinesVisible(true);
 		fTable.setHeaderVisible(true);
 		TableColumn col1 = new TableColumn(fTable, SWT.NONE);
@@ -186,13 +187,8 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		col2.setText(Messages.getString("editors.pages.CodeEditorPage.frequency")); //$NON-NLS-1$
 		col2.setMoveable(false);
 		col2.setResizable(false);
-		fTable.addListener(SWT.MeasureItem, new Listener(){
-			@Override
-			public void handleEvent(Event event) {
-				event.width = (int) (fTable.getBounds().width / 2.1);
-			}
-		});
-		GridData gd = new GridData(SWT.FILL, SWT.NULL, true, false);
+
+		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		fTable.setLayoutData(gd);
 		
 		Composite composite = toolkit.createComposite(body, SWT.BORDER);
@@ -212,15 +208,14 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		fDescription.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		fDescription.addKeyListener(createKeyAdapter());
 		
+		body.pack();
+		
 		toolkit.paintBordersFor(composite);
 		toolkit.paintBordersFor(body);
 		
-		fTable.removeAll();
 		buildFormTable();
 		fTable.addSelectionListener(createTableSelectionListener());
 		createTableContextMenu();
-		col1.setWidth(col1.getWidth() * 2);
-		col2.setWidth(col2.getWidth() * 2);
 		
 		fCurrentSelection = fTable.getSelectionIndex();
 	}
@@ -533,8 +528,22 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		Rectangle newRect = new Rectangle(rect.x, rect.y, rect.width, rect.height);
 		fTable.pack();
 		newRect.height = fTable.getBounds().height;
-		fTable.setBounds(newRect);
+		newRect.width = rect.width > fTable.getBounds().width ? rect.width : fTable.getBounds().width;
+
+		if(newRect.height + BORDER_SIZE <= fTable.getParent().getBounds().height)
+		{
+			fTable.setBounds(newRect);
+		}
+		else
+		{
+			newRect.height = fTable.getParent().getBounds().height - BORDER_SIZE;
+			fTable.setBounds(newRect);
+		}
 		
+		int width = fTable.getBounds().width - 2;
+		fTable.getColumn(0).setWidth(width -width/2);
+		fTable.getColumn(1).setWidth(width/2);
+
 		fForm.getBody().redraw();
 		fForm.update();
 	}
