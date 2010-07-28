@@ -17,6 +17,8 @@ import org.eclipse.jface.text.source.IOverviewRuler;
 import org.eclipse.jface.text.source.ISharedTextColors;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.AnnotationPainter.ITextStyleStrategy;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
@@ -29,7 +31,7 @@ import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
  * Defines all the painting strategies for our annotations.
  *
  */
-public class RTFDecorationSupport extends SourceViewerDecorationSupport
+public class RTFDecorationSupport extends SourceViewerDecorationSupport implements IPropertyChangeListener
 {
 	private static ColorManager gManager = new ColorManager();
 	private static final Color BLACK = gManager.getColor(ColorManager.DEFAULT);
@@ -40,8 +42,6 @@ public class RTFDecorationSupport extends SourceViewerDecorationSupport
 	private static final String BOLD_ITALIC = "BOLDITALIC"; //$NON-NLS-1$
 	private static final String ITALIC_UNDERLINE = "ITALICUNDERLINE"; //$NON-NLS-1$
 	private static final String BOLD_ITALIC_UNDERLINE = "BOLDITALICUNDERLINE"; //$NON-NLS-1$
-	private static final String MARK_FRAGMENT = "MARK_FRAGMENT";
-
 	
 	private static ITextStyleStrategy gBoldStrategy = new ITextStyleStrategy()
 	{
@@ -109,19 +109,7 @@ public class RTFDecorationSupport extends SourceViewerDecorationSupport
 		}
 	};
 	
-	private static ITextStyleStrategy gMarkFragmentStrategy = new ITextStyleStrategy()
-	{
-
-		@Override
-		public void applyTextStyle(StyleRange styleRange, Color annotationColor)
-		{
-			String rgbString = QualyzerActivator.getDefault().getPreferenceStore().getString("FragmentColor");
-			String[] parts = rgbString.split(",");
-			RGB rgb = new RGB(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
-			Color color = gManager.getColor(rgb);
-			styleRange.background = color;
-		}
-	};
+	private AnnotationPainter fPainter;
 
 	/**
 	 * @param sourceViewer
@@ -141,33 +129,48 @@ public class RTFDecorationSupport extends SourceViewerDecorationSupport
 	@Override
 	protected AnnotationPainter createAnnotationPainter()
 	{
-		AnnotationPainter painter =  super.createAnnotationPainter();
+		fPainter =  super.createAnnotationPainter();
 		
-		painter.addTextStyleStrategy(BOLD, gBoldStrategy);
-		painter.addTextStyleStrategy(ITALIC, gItalicStrategy);
-		painter.addTextStyleStrategy(BOLD_ITALIC, gBoldItalicStrategy);
-		painter.addTextStyleStrategy(BOLD_UNDERLINE, gBoldUnderlineStrategy);
-		painter.addTextStyleStrategy(ITALIC_UNDERLINE, gItalicUnderlineStrategy);
-		painter.addTextStyleStrategy(BOLD_ITALIC_UNDERLINE, gBoldItalicUnderlineStrategy);
-		painter.addTextStyleStrategy(MARK_FRAGMENT, gMarkFragmentStrategy);
+		fPainter.addTextStyleStrategy(BOLD, gBoldStrategy);
+		fPainter.addTextStyleStrategy(ITALIC, gItalicStrategy);
+		fPainter.addTextStyleStrategy(BOLD_ITALIC, gBoldItalicStrategy);
+		fPainter.addTextStyleStrategy(BOLD_UNDERLINE, gBoldUnderlineStrategy);
+		fPainter.addTextStyleStrategy(ITALIC_UNDERLINE, gItalicUnderlineStrategy);
+		fPainter.addTextStyleStrategy(BOLD_ITALIC_UNDERLINE, gBoldItalicUnderlineStrategy);
+		//painter.addTextStyleStrategy(MARK_FRAGMENT, gMarkFragmentStrategy);
 		
-		painter.addAnnotationType(RTFConstants.BOLD_TYPE, BOLD);
-		painter.addAnnotationType(RTFConstants.ITALIC_TYPE, ITALIC);
-		painter.addAnnotationType(RTFConstants.BOLD_ITALIC_TYPE, BOLD_ITALIC);
-		painter.addAnnotationType(RTFConstants.BOLD_UNDERLINE_TYPE, BOLD_UNDERLINE);
-		painter.addAnnotationType(RTFConstants.ITALIC_UNDERLINE_TYPE, ITALIC_UNDERLINE);
-		painter.addAnnotationType(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE, BOLD_ITALIC_UNDERLINE);
-		painter.addAnnotationType(RTFConstants.FRAGMENT_TYPE, MARK_FRAGMENT);
+		fPainter.addAnnotationType(RTFConstants.BOLD_TYPE, BOLD);
+		fPainter.addAnnotationType(RTFConstants.ITALIC_TYPE, ITALIC);
+		fPainter.addAnnotationType(RTFConstants.BOLD_ITALIC_TYPE, BOLD_ITALIC);
+		fPainter.addAnnotationType(RTFConstants.BOLD_UNDERLINE_TYPE, BOLD_UNDERLINE);
+		fPainter.addAnnotationType(RTFConstants.ITALIC_UNDERLINE_TYPE, ITALIC_UNDERLINE);
+		fPainter.addAnnotationType(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE, BOLD_ITALIC_UNDERLINE);
+		fPainter.addHighlightAnnotationType(RTFConstants.FRAGMENT_TYPE);
 		
-		painter.setAnnotationTypeColor(RTFConstants.BOLD_TYPE, BLACK);
-		painter.setAnnotationTypeColor(RTFConstants.ITALIC_TYPE, BLACK);
-		painter.setAnnotationTypeColor(RTFConstants.BOLD_ITALIC_TYPE, BLACK);
-		painter.setAnnotationTypeColor(RTFConstants.BOLD_UNDERLINE_TYPE, BLACK);
-		painter.setAnnotationTypeColor(RTFConstants.ITALIC_UNDERLINE_TYPE, BLACK);
-		painter.setAnnotationTypeColor(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE, BLACK);
-		painter.setAnnotationTypeColor(RTFConstants.FRAGMENT_TYPE, BLACK);
+		fPainter.setAnnotationTypeColor(RTFConstants.BOLD_TYPE, BLACK);
+		fPainter.setAnnotationTypeColor(RTFConstants.ITALIC_TYPE, BLACK);
+		fPainter.setAnnotationTypeColor(RTFConstants.BOLD_ITALIC_TYPE, BLACK);
+		fPainter.setAnnotationTypeColor(RTFConstants.BOLD_UNDERLINE_TYPE, BLACK);
+		fPainter.setAnnotationTypeColor(RTFConstants.ITALIC_UNDERLINE_TYPE, BLACK);
+		fPainter.setAnnotationTypeColor(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE, BLACK);
+		
+		Color color = getFragmentColor();
+		fPainter.setAnnotationTypeColor(RTFConstants.FRAGMENT_TYPE, color);
+		
+		QualyzerActivator.getDefault().getPreferenceStore().addPropertyChangeListener(this);
+		return fPainter;
+	}
 
-		return painter;
+	/**
+	 * @return
+	 */
+	private Color getFragmentColor()
+	{
+		String rgbString = QualyzerActivator.getDefault().getPreferenceStore().getString("FragmentColor");
+		String[] parts = rgbString.split(",");
+		RGB rgb = new RGB(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
+		Color color = gManager.getColor(rgb);
+		return color;
 	}
 	
 	/* (non-Javadoc)
@@ -176,8 +179,25 @@ public class RTFDecorationSupport extends SourceViewerDecorationSupport
 	@Override
 	public void dispose()
 	{
+		QualyzerActivator.getDefault().getPreferenceStore().removePropertyChangeListener(this);
 		gManager.dispose();
 		super.dispose();
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
+	 */
+	@Override
+	public void propertyChange(PropertyChangeEvent event)
+	{
+		if(event.getProperty().equals("FragmentColor"))
+		{
+			Color color = getFragmentColor();
+			
+			fPainter.setAnnotationTypeColor(RTFConstants.FRAGMENT_TYPE, color);
+			fPainter.paint(AnnotationPainter.CONFIGURATION);
+		}
+		
 	}
 
 }
