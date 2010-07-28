@@ -272,6 +272,15 @@
             </command>
          </menu>
          <menu
+               id="windowMenu"
+               label="Window">
+            <command
+                  commandId="org.eclipse.ui.window.preferences"
+                  label="Preferences"
+                  style="push">
+            </command>
+         </menu>
+         <menu
                id="helpMenu"
                label="%menu.label.help"
                tooltip="%menu.tooltip.help">
@@ -1152,6 +1161,14 @@
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M1+K">
       </key>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="ca.mcgill.cs.swevo.qualyzer.QualyzerPreferencePage"
+            id="ca.mcgill.cs.swevo.qualyzer.preferencePage"
+            name="Qualyzer Preferences">
+      </page>
    </extension>
 
 </plugin>

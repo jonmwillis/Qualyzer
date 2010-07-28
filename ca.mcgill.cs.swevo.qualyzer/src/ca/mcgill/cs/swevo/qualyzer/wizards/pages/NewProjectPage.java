@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.model.validation.ProjectValidator;
 
 /**
@@ -29,6 +30,8 @@ import ca.mcgill.cs.swevo.qualyzer.model.validation.ProjectValidator;
  */
 public class NewProjectPage extends WizardPage
 {
+	private final String fDefaultInvName;
+	
 	private Composite fContainer;
 	private Text fProjectName;
 	private Text fNickname;
@@ -47,6 +50,8 @@ public class NewProjectPage extends WizardPage
 		super(Messages.getString("wizards.pages.NewProjectPage.newProject")); //$NON-NLS-1$
 		setTitle(Messages.getString("wizards.pages.NewProjectPage.newProject")); //$NON-NLS-1$
 		setDescription(Messages.getString("wizards.pages.NewProjectPage.enterName")); //$NON-NLS-1$
+		
+		fDefaultInvName = QualyzerActivator.getDefault().getPreferenceStore().getString("DefaultInvestigator");
 	}
 	
 	@Override
@@ -74,7 +79,7 @@ public class NewProjectPage extends WizardPage
 		label.setText(Messages.getString("wizards.pages.NewProjectPage.nickname")); //$NON-NLS-1$
 
 		fNickname = new Text(group, SWT.BORDER | SWT.SINGLE);
-		fNickname.setText(System.getProperty("user.name")); //$NON-NLS-1$
+		fNickname.setText(fDefaultInvName); //$NON-NLS-1$
 		
 		fNickname.addKeyListener(createKeyListener());
 		
