@@ -173,8 +173,6 @@ public class RTFDocumentProvider extends FileDocumentProvider
 						escape = nextTag(contentStream);
 						text += handleTag(escape, (RTFDocument) document, text, contentStream);
 						stop = escape.equals(RTFTags.IGNORE) || escape.equals(STAR_SLASH);
-						char lastChar = escape.charAt(escape.length() - 1);
-						stop = stop || lastChar == ' ' || lastChar == '\n';
 					}while(escape.length() > 1 && escape.charAt(escape.length() - 1) == '\\' && !stop);
 					
 				}
@@ -200,7 +198,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	{
 		for(String tag : RTFTags.IGNORE_GROUPS)
 		{
-			if(tag.equals(groupTag))
+			if(groupTag.contains(tag))
 			{
 				return true;
 			}
