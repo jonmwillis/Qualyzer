@@ -188,8 +188,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		col2.setMoveable(false);
 		col2.setResizable(false);
 
-		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
-		fTable.setLayoutData(gd);
+		fTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
 		Composite composite = toolkit.createComposite(body, SWT.BORDER);
 		layout = new GridLayout();
