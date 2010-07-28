@@ -1133,21 +1133,6 @@
             verticalRulerPreferenceKey="vertical.false"
             verticalRulerPreferenceValue="false">
       </specification>
-      <specification
-            annotationType="RTFEditor.annotation.fragment"
-            colorPreferenceKey="color.grey"
-            colorPreferenceValue="213,213,213"
-            highlightPreferenceKey="highlight.true"
-            highlightPreferenceValue="true"
-            includeOnPreferencePage="false"
-            label="%specification.label.fragment"
-            overviewRulerPreferenceKey="overview.show"
-            overviewRulerPreferenceValue="true"
-            textPreferenceKey="text.key"
-            textPreferenceValue="true"
-            verticalRulerPreferenceKey="vertical.show"
-            verticalRulerPreferenceValue="true">
-      </specification>
    </extension>
    <extension
          point="org.eclipse.ui.bindings">
