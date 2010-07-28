@@ -21,8 +21,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
+
+import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 
 /**
  * Defines all the painting strategies for our annotations.
@@ -30,8 +31,8 @@ import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
  */
 public class RTFDecorationSupport extends SourceViewerDecorationSupport
 {
-	
-	private static final Color BLACK = new Color(Display.getDefault(), new RGB(0, 0, 0));
+	private static ColorManager gManager = new ColorManager();
+	private static final Color BLACK = gManager.getColor(ColorManager.DEFAULT);
 	
 	private static final String BOLD = "BOLD"; //$NON-NLS-1$
 	private static final String ITALIC = "ITALIC"; //$NON-NLS-1$
@@ -39,6 +40,7 @@ public class RTFDecorationSupport extends SourceViewerDecorationSupport
 	private static final String BOLD_ITALIC = "BOLDITALIC"; //$NON-NLS-1$
 	private static final String ITALIC_UNDERLINE = "ITALICUNDERLINE"; //$NON-NLS-1$
 	private static final String BOLD_ITALIC_UNDERLINE = "BOLDITALICUNDERLINE"; //$NON-NLS-1$
+	private static final String MARK_FRAGMENT = "MARK_FRAGMENT";
 
 	
 	private static ITextStyleStrategy gBoldStrategy = new ITextStyleStrategy()
@@ -106,6 +108,20 @@ public class RTFDecorationSupport extends SourceViewerDecorationSupport
 			styleRange.underlineColor = annotationColor;
 		}
 	};
+	
+	private static ITextStyleStrategy gMarkFragmentStrategy = new ITextStyleStrategy()
+	{
+
+		@Override
+		public void applyTextStyle(StyleRange styleRange, Color annotationColor)
+		{
+			String rgbString = QualyzerActivator.getDefault().getPreferenceStore().getString("FragmentColor");
+			String[] parts = rgbString.split(",");
+			RGB rgb = new RGB(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
+			Color color = gManager.getColor(rgb);
+			styleRange.background = color;
+		}
+	};
 
 	/**
 	 * @param sourceViewer
@@ -133,6 +149,7 @@ public class RTFDecorationSupport extends SourceViewerDecorationSupport
 		painter.addTextStyleStrategy(BOLD_UNDERLINE, gBoldUnderlineStrategy);
 		painter.addTextStyleStrategy(ITALIC_UNDERLINE, gItalicUnderlineStrategy);
 		painter.addTextStyleStrategy(BOLD_ITALIC_UNDERLINE, gBoldItalicUnderlineStrategy);
+		painter.addTextStyleStrategy(MARK_FRAGMENT, gMarkFragmentStrategy);
 		
 		painter.addAnnotationType(RTFConstants.BOLD_TYPE, BOLD);
 		painter.addAnnotationType(RTFConstants.ITALIC_TYPE, ITALIC);
@@ -140,6 +157,7 @@ public class RTFDecorationSupport extends SourceViewerDecorationSupport
 		painter.addAnnotationType(RTFConstants.BOLD_UNDERLINE_TYPE, BOLD_UNDERLINE);
 		painter.addAnnotationType(RTFConstants.ITALIC_UNDERLINE_TYPE, ITALIC_UNDERLINE);
 		painter.addAnnotationType(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE, BOLD_ITALIC_UNDERLINE);
+		painter.addAnnotationType(RTFConstants.FRAGMENT_TYPE, MARK_FRAGMENT);
 		
 		painter.setAnnotationTypeColor(RTFConstants.BOLD_TYPE, BLACK);
 		painter.setAnnotationTypeColor(RTFConstants.ITALIC_TYPE, BLACK);
@@ -147,8 +165,19 @@ public class RTFDecorationSupport extends SourceViewerDecorationSupport
 		painter.setAnnotationTypeColor(RTFConstants.BOLD_UNDERLINE_TYPE, BLACK);
 		painter.setAnnotationTypeColor(RTFConstants.ITALIC_UNDERLINE_TYPE, BLACK);
 		painter.setAnnotationTypeColor(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE, BLACK);
+		painter.setAnnotationTypeColor(RTFConstants.FRAGMENT_TYPE, BLACK);
 
 		return painter;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.texteditor.SourceViewerDecorationSupport#dispose()
+	 */
+	@Override
+	public void dispose()
+	{
+		gManager.dispose();
+		super.dispose();
 	}
 
 }
