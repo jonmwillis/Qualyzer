@@ -73,13 +73,16 @@ public class NavigatorContentProvider extends WorkbenchContentProvider
 		{
 			Project proj = PersistenceManager.getInstance().getProject(((IProject) element).getName());
 			
-			WrapperTranscript transcript = new WrapperTranscript(proj);
-			WrapperInvestigator investigator = new WrapperInvestigator(proj);
-			WrapperCode code = new WrapperCode(proj);
-			WrapperMemo memo = new WrapperMemo(proj);
-			WrapperParticipant participant = new WrapperParticipant(proj);
-			
-			return new Object[]{participant, investigator, transcript, memo, code };
+			if(proj != null)
+			{
+				WrapperTranscript transcript = new WrapperTranscript(proj);
+				WrapperInvestigator investigator = new WrapperInvestigator(proj);
+				WrapperCode code = new WrapperCode(proj);
+				WrapperMemo memo = new WrapperMemo(proj);
+				WrapperParticipant participant = new WrapperParticipant(proj);
+				
+				return new Object[]{participant, investigator, transcript, memo, code };
+			}
 		}
 		else if(element instanceof ProjectWrapper && !(element instanceof WrapperCode))
 		{
