@@ -235,20 +235,23 @@ public class CodeFragmentViewerPage extends FormPage
 	 */
 	private int findEnd(String text, Fragment fragment)
 	{
-		boolean isPunctuation;
 		int end = fragment.getOffset() + fragment.getLength();
-		isPunctuation = text.charAt(end) == '!' || text.charAt(end) == '?' || text.charAt(end) == '.';
+		int numPunctuation = 0;
+		if(isPunctuation(text, end))
+		{
+			numPunctuation++;
+		}
 		
-		while(end < text.length() && text.charAt(end) != '\n' && !isPunctuation && text.charAt(end) != '\t')
+		while(end < text.length() && text.charAt(end) != '\n' && numPunctuation < 2 && text.charAt(end) != '\t')
 		{
 			end++;
-			if(end < text.length())
+			if(end < text.length() && isPunctuation(text, end))
 			{
-				isPunctuation = text.charAt(end) == '!' || text.charAt(end) == '?' || text.charAt(end) == '.';
+				numPunctuation++;
 			}
 		}
 		
-		if(isPunctuation)
+		if(end < text.length() && isPunctuation(text, end))
 		{
 			end++;
 		}
@@ -263,19 +266,37 @@ public class CodeFragmentViewerPage extends FormPage
 	private int findStart(String text, Fragment fragment)
 	{
 		int start = fragment.getOffset();
-		boolean isPunctuation = text.charAt(start-1) == '!' || text.charAt(start-1) == '?' || 
-			text.charAt(start-1) == '.';
+		int numPunctuation = 0;
 		
-		while(start > 0 && text.charAt(start-1) != '\n' && text.charAt(start-1) != '\t' && !isPunctuation)
+		if(isPunctuation(text, start -1))
+		{
+			numPunctuation++;
+		}
+		
+		while(start > 0 && text.charAt(start-1) != '\n' && text.charAt(start-1) != '\t' && numPunctuation < 2)
 		{
 			start--;
 			if(start > 0)
 			{
-				isPunctuation = text.charAt(start-1) == '!' || text.charAt(start-1) == '?' || 
-					text.charAt(start-1) == '.';
+				if(isPunctuation(text, start -1))
+				{
+					numPunctuation++;
+				}
 			}
 		}
 		return start;
+	}
+
+	/**
+	 * @param text
+	 * @param index
+	 * @return
+	 */
+	private boolean isPunctuation(String text, int index)
+	{
+		boolean isPunctuation = text.charAt(index) == '!' || text.charAt(index) == '?' || 
+			text.charAt(index) == '.';
+		return isPunctuation;
 	}
 
 	/**
