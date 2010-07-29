@@ -20,6 +20,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -113,39 +114,84 @@ public final class FileUtil
 	
 	private static void cleanUpFolders(IProject wProject)
 	{
-		String path = wProject.getLocation().toOSString();
-		File dir = new File(path+File.separator+AUDIO);
-		if(!dir.exists())
+		try
 		{
-			dir.delete();
+			wProject.getFolder(AUDIO).delete(true, new NullProgressMonitor());
 		}
-		dir = new File(path+File.separator+TRANSCRIPTS);
-		if(!dir.exists())
+		catch (CoreException e)
 		{
-			dir.delete();
+			
 		}
-		dir = new File(path+File.separator+MEMOS);
-		if(!dir.exists())
+		
+		try
 		{
-			dir.delete();
+			wProject.getFolder(TRANSCRIPTS).delete(true, new NullProgressMonitor());
+		}
+		catch (CoreException e)
+		{
+			
+		}
+		
+		try
+		{
+			wProject.getFolder(MEMOS).delete(true, new NullProgressMonitor());
+		}
+		catch (CoreException e)
+		{
+			
 		}
 	}
 	
 	private static boolean makeSubFolders(IProject wProject)
 	{
-		String path = wProject.getLocation().toOSString();
-		File dir = new File(path+File.separator+AUDIO);
-		if(!dir.mkdir())
+		try
 		{
+			wProject.getFolder(AUDIO).create(true, true, new NullProgressMonitor());
+			wProject.getFolder(TRANSCRIPTS).create(true, true, new NullProgressMonitor());
+			wProject.getFolder(MEMOS).create(true, true, new NullProgressMonitor());
+		}
+		catch (CoreException e)
+		{
+			gLogger.error("Failed to create sub-Folders", e); // $NON-NLS-1$
 			return false;
 		}
-		dir = new File(path+File.separator+TRANSCRIPTS); 
-		if(!dir.mkdir())
+		
+		return true;
+	}
+	
+	/**
+	 * Verify that a project contains the correct sub folders and create them if necessary.
+	 * For use when importing Projects.
+	 * @param project
+	 */
+	public static void refreshSubFolders(IProject project)
+	{
+		try
 		{
-			return false;
+			IFolder folder = project.getFolder(AUDIO);
+			if(!folder.exists())
+			{
+				folder.create(true, true, new NullProgressMonitor());
+			}
+			
+			folder = project.getFolder(TRANSCRIPTS);
+			if(!folder.exists())
+			{
+				folder.create(true, true, new NullProgressMonitor());
+			}
+			
+			folder = project.getFolder(MEMOS);
+			if(!folder.exists())
+			{
+				folder.create(true, true, new NullProgressMonitor());
+			}
 		}
-		dir = new File(path+File.separator+MEMOS); //$NON-NLS-1$
-		return dir.mkdir();
+		catch(CoreException e)
+		{
+			gLogger.error("Unable to create folders", e);
+			throw new QualyzerException("Unable to create folders for project: " + project.getName(), e);
+		}
+		
 	}
 	
 	/**

@@ -121,9 +121,14 @@ public final class PersistenceManager
 		try
 		{
 			HibernateDBManager dbManager;
-			dbManager = new HibernateDBManager(connectionString, DB_USERNAME, "", DB_DRIVER, DB_DIALECT); //$NON-NLS-1$
-			// Add DB Manager
-			fActivator.getHibernateDBManagers().put(project.getName(), dbManager);
+			dbManager = fActivator.getHibernateDBManagers().get(project.getName());
+			if(dbManager == null)
+			{
+				dbManager = new HibernateDBManager(connectionString, DB_USERNAME,
+						"", DB_DRIVER, DB_DIALECT); //$NON-NLS-1$
+				// Add DB Manager
+				fActivator.getHibernateDBManagers().put(project.getName(), dbManager);
+			}
 		}
 		catch(QualyzerException e)
 		{

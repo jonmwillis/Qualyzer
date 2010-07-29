@@ -617,6 +617,12 @@
                icon="icons/import.gif"
                label="%menu.label.import">
             <command
+                  commandId="org.eclipse.ui.file.import"
+                  icon="icons/prj_obj.gif"
+                  label="Project"
+                  style="push">
+            </command>
+            <command
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.importTranscript"
                   icon="icons/file_obj.gif"
                   label="%command.label.transcript"
@@ -693,6 +699,11 @@
                </visibleWhen>
             </command>
          </menu>
+         <command
+               commandId="org.eclipse.ui.file.export"
+               label="Export Project"
+               style="push">
+         </command>
       </menuContribution>
       <menuContribution
             locationURI="popup:ca.mcgill.cs.swevo.qualyzer.projectexplorer#PopupMenu?after=group.properties">
@@ -1079,6 +1090,14 @@
             activityId="ca.mcgill.cs.swevo.qualyzer.activity.hide"
             pattern="org\.eclipse\.compare/.*">
       </activityPatternBinding>
+      <activityPatternBinding
+            activityId="ca.mcgill.cs.swevo.qualyzer.activity.hide"
+            pattern="org\.eclipse\.ui\.ide/org\.eclipse\.ui\.wizards\.import.*">
+      </activityPatternBinding>
+      <activityPatternBinding
+            activityId="ca.mcgill.cs.swevo.qualyzer.activity.hide"
+            pattern="org\.eclipse\.ui\.ide/org\.eclipse\.ui\.wizards\.export.*">
+      </activityPatternBinding>
    </extension>
    <extension
          point="org.eclipse.ui.editors.annotationTypes">
@@ -1160,6 +1179,32 @@
       <initializer
             class="ca.mcgill.cs.swevo.qualyzer.QualyzerPreferenceInitializer">
       </initializer>
+   </extension>
+   <extension
+         point="org.eclipse.ui.importWizards">
+      <wizard
+            category="ca.mcgill.cs.swevo.qualyzer.category.qualyzerImportWizards"
+            class="ca.mcgill.cs.swevo.qualyzer.wizards.ProjectImportWizard"
+            id="ca.mcgill.cs.swevo.qualyzer.wizards.importProjectWizard"
+            name="Import a Project">
+      </wizard>
+      <category
+            id="ca.mcgill.cs.swevo.qualyzer.category.qualyzerImportWizards"
+            name="Qualyzer">
+      </category>
+   </extension>
+   <extension
+         point="org.eclipse.ui.exportWizards">
+      <wizard
+            category="ca.mcgill.cs.swevo.qualyzer.category.qualyzerExportWizards"
+            class="ca.mcgill.cs.swevo.qualyzer.wizards.ProjectExportWizard"
+            id="ca.mcgill.cs.swevo.qualyzer.wizards.exportProjectWizard"
+            name="Export a Project">
+      </wizard>
+      <category
+            id="ca.mcgill.cs.swevo.qualyzer.category.qualyzerExportWizards"
+            name="Qualyzer">
+      </category>
    </extension>
 
 </plugin>
