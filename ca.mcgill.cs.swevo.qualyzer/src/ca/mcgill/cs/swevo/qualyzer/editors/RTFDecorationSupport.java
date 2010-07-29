@@ -23,6 +23,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
@@ -33,8 +34,7 @@ import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
  */
 public class RTFDecorationSupport extends SourceViewerDecorationSupport implements IPropertyChangeListener
 {
-	private static ColorManager gManager = new ColorManager();
-	private static final Color BLACK = gManager.getColor(ColorManager.DEFAULT);
+	private static final Color BLACK = new Color(Display.getCurrent(), new RGB(0, 0, 0));
 	
 	private static final String BOLD = "BOLD"; //$NON-NLS-1$
 	private static final String ITALIC = "ITALIC"; //$NON-NLS-1$
@@ -110,6 +110,8 @@ public class RTFDecorationSupport extends SourceViewerDecorationSupport implemen
 	};
 	
 	private AnnotationPainter fPainter;
+	private ColorManager fManager;
+
 
 	/**
 	 * @param sourceViewer
@@ -121,6 +123,7 @@ public class RTFDecorationSupport extends SourceViewerDecorationSupport implemen
 			IAnnotationAccess annotationAccess, ISharedTextColors sharedTextColors)
 	{
 		super(sourceViewer, overviewRuler, annotationAccess, sharedTextColors);
+		fManager = new ColorManager();
 	}
 	
 	/* (non-Javadoc)
@@ -169,7 +172,7 @@ public class RTFDecorationSupport extends SourceViewerDecorationSupport implemen
 		String rgbString = QualyzerActivator.getDefault().getPreferenceStore().getString("FragmentColor");
 		String[] parts = rgbString.split(",");
 		RGB rgb = new RGB(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
-		Color color = gManager.getColor(rgb);
+		Color color = fManager.getColor(rgb);
 		return color;
 	}
 	
@@ -180,7 +183,7 @@ public class RTFDecorationSupport extends SourceViewerDecorationSupport implemen
 	public void dispose()
 	{
 		QualyzerActivator.getDefault().getPreferenceStore().removePropertyChangeListener(this);
-		gManager.dispose();
+		fManager.dispose();
 		super.dispose();
 	}
 
