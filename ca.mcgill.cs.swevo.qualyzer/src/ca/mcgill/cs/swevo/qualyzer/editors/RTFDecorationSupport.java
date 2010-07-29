@@ -26,6 +26,7 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 
+import ca.mcgill.cs.swevo.qualyzer.IQualyzerPreferenceConstants;
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 
 /**
@@ -169,7 +170,8 @@ public class RTFDecorationSupport extends SourceViewerDecorationSupport implemen
 	 */
 	private Color getFragmentColor()
 	{
-		String rgbString = QualyzerActivator.getDefault().getPreferenceStore().getString("FragmentColor");
+		String rgbString = QualyzerActivator.getDefault().getPreferenceStore().getString(
+				IQualyzerPreferenceConstants.FRAGMENT_COLOR);
 		String[] parts = rgbString.split(",");
 		RGB rgb = new RGB(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
 		Color color = fManager.getColor(rgb);
@@ -193,7 +195,7 @@ public class RTFDecorationSupport extends SourceViewerDecorationSupport implemen
 	@Override
 	public void propertyChange(PropertyChangeEvent event)
 	{
-		if(event.getProperty().equals("FragmentColor"))
+		if(event.getProperty().equals(IQualyzerPreferenceConstants.FRAGMENT_COLOR))
 		{
 			Color color = getFragmentColor();
 			

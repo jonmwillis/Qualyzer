@@ -17,7 +17,6 @@ import java.util.Map;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -71,10 +70,6 @@ public class QualyzerActivator extends AbstractUIPlugin
 		{
 			PersistenceManager.getInstance().refreshManager(project);
 		}
-		
-		IPreferenceStore preferenceStore = getPreferenceStore();
-		preferenceStore.setDefault("DefaultInvestigator", System.getProperty("user.name"));
-		preferenceStore.setDefault("FragmentColor", "218,218,218");
 		
 		fLogger.info("Qualyzer Started"); //$NON-NLS-1$
 	}

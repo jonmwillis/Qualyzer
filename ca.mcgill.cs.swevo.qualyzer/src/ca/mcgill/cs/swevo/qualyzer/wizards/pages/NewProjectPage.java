@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+import ca.mcgill.cs.swevo.qualyzer.IQualyzerPreferenceConstants;
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.model.validation.ProjectValidator;
 
@@ -51,7 +52,8 @@ public class NewProjectPage extends WizardPage
 		setTitle(Messages.getString("wizards.pages.NewProjectPage.newProject")); //$NON-NLS-1$
 		setDescription(Messages.getString("wizards.pages.NewProjectPage.enterName")); //$NON-NLS-1$
 		
-		fDefaultInvName = QualyzerActivator.getDefault().getPreferenceStore().getString("DefaultInvestigator");
+		fDefaultInvName = QualyzerActivator.getDefault().getPreferenceStore().getString(
+				IQualyzerPreferenceConstants.DEFAULT_INVESTIGATOR);
 	}
 	
 	@Override
