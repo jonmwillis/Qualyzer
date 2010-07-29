@@ -50,7 +50,6 @@ public class ProjectExportWizardPage extends WizardArchiveFileResourceExportPage
 		{
 			for(Object obj : resourcesToExport)
 			{
-				System.out.println(obj);
 				if(obj instanceof IResource)
 				{
 					((IResource) obj).refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
