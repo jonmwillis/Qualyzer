@@ -1155,5 +1155,11 @@
             name="Qualyzer Preferences">
       </page>
    </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="ca.mcgill.cs.swevo.qualyzer.QualyzerPreferenceInitializer">
+      </initializer>
+   </extension>
 
 </plugin>

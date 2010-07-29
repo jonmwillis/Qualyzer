@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+import ca.mcgill.cs.swevo.qualyzer.IQualyzerPreferenceConstants;
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
@@ -51,7 +52,8 @@ public class AddInvestigatorPage extends WizardPage
 		setTitle(Messages.getString("wizards.pages.AddInvestigatorPage.addInvestigator")); //$NON-NLS-1$
 		setDescription(Messages.getString("wizards.pages.AddInvestigatorPage.enterInfo")); //$NON-NLS-1$
 		fProject = project;
-		fDefaultInvestigator = QualyzerActivator.getDefault().getPreferenceStore().getString("DefaultInvestigator");
+		fDefaultInvestigator = QualyzerActivator.getDefault().getPreferenceStore().getString(
+				IQualyzerPreferenceConstants.DEFAULT_INVESTIGATOR);
 	}
 	
 	@Override

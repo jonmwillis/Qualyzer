@@ -34,10 +34,11 @@ public class QualyzerPreferencePage extends FieldEditorPreferencePage implements
 	@Override
 	protected void createFieldEditors()
 	{
-		addField(new StringFieldEditor("DefaultInvestigator", "Default Investigator Name", getFieldEditorParent()));
+		addField(new StringFieldEditor(IQualyzerPreferenceConstants.DEFAULT_INVESTIGATOR, 
+				"Default Investigator Name", getFieldEditorParent()));
 		
-		addField(new ColorFieldEditor("FragmentColor", "Marked Fragment Color", getFieldEditorParent()));
-		
+		addField(new ColorFieldEditor(IQualyzerPreferenceConstants.FRAGMENT_COLOR, 
+				"Marked Fragment Color", getFieldEditorParent()));
 		
 	}
 

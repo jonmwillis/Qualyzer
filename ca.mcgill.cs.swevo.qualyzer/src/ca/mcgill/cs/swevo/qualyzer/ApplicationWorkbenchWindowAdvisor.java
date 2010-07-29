@@ -60,11 +60,6 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor
 		PreferenceManager pm = PlatformUI.getWorkbench().getPreferenceManager();
 		
 		pm.remove("net.sf.colorer.eclipse.PreferencePage");
-		
-//		IPreferenceNode[] arr = pm.getRootSubNodes();
-//		for(IPreferenceNode pn:arr)
-//		{
-//		    System.out.println("Label:" + pn.getLabelText() + " ID:" + pn.getId());
-//		}
+		pm.remove("org.eclipse.ui.preferencePages.Workbench");
 	}
 }
