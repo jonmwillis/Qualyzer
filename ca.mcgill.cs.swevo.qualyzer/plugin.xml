@@ -261,6 +261,15 @@
                   tooltip="%command.tooltip.saveEditor">
             </command>
             <separator
+                  name="fileMenu/preferencesSeperator"
+                  visible="true">
+            </separator>
+            <command
+                  commandId="org.eclipse.ui.window.preferences"
+                  label="%command.label.preferences"
+                  style="push">
+            </command>
+            <separator
                   name="fileMenu/lastSeparator"
                   visible="true">
             </separator>
@@ -274,11 +283,6 @@
          <menu
                id="windowMenu"
                label="%menu.label.window">
-            <command
-                  commandId="org.eclipse.ui.window.preferences"
-                  label="%command.label.preferences"
-                  style="push">
-            </command>
          </menu>
          <menu
                id="helpMenu"
