@@ -115,7 +115,7 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 		fToolkit.createLabel(body, LABEL_PARTICIPANT_NAME);
 		fFullname = createText(fParticipant.getFullName(), body);
 		fFullname.addKeyListener(createStringLengthValidator(
-				Messages.getString("editors.pages.ParticipantEditorPage.participantName"), fFullname));
+				Messages.getString("editors.pages.ParticipantEditorPage.participantName"), fFullname)); //$NON-NLS-1$
 		
 		// MPR: removed to simplify the UI for 0.1
 //		toolkit.createLabel(body, "Contact Info:");

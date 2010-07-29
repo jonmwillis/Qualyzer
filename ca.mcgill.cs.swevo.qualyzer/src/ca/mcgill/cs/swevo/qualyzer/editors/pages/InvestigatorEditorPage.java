@@ -111,7 +111,7 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 				Messages.getString("editors.pages.InvestigatorEditorPage.fullName")); //$NON-NLS-1$
 		fFullname = createText(fInvestigator.getFullName(), body);
 		fFullname.addKeyListener(createStringLengthValidator(fForm, 
-				Messages.getString("editors.pages.InvestigatorEditorPage.fullName"), fFullname));
+				Messages.getString("editors.pages.InvestigatorEditorPage.fullName"), fFullname)); //$NON-NLS-1$
 		
 		fNickname.addKeyListener(createKeyAdapter(fForm));
 
@@ -119,7 +119,7 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 				Messages.getString("editors.pages.InvestigatorEditorPage.institution")); //$NON-NLS-1$
 		fInstitution = createText(fInvestigator.getInstitution(), body);
 		fInstitution.addKeyListener(createStringLengthValidator(fForm, 
-				Messages.getString("editors.pages.InvestigatorEditorPage.institution"), fInstitution));
+				Messages.getString("editors.pages.InvestigatorEditorPage.institution"), fInstitution)); //$NON-NLS-1$
 		
 		//Removing placeholders until they are used - JF
 //		createInterviewSection(form, toolkit, body);

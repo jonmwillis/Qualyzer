@@ -35,10 +35,10 @@ public class QualyzerPreferencePage extends FieldEditorPreferencePage implements
 	protected void createFieldEditors()
 	{
 		addField(new StringFieldEditor(IQualyzerPreferenceConstants.DEFAULT_INVESTIGATOR, 
-				"Default Investigator Name", getFieldEditorParent()));
+				Messages.getString("QualyzerPreferencePage.defaultName"), getFieldEditorParent())); //$NON-NLS-1$
 		
 		addField(new ColorFieldEditor(IQualyzerPreferenceConstants.FRAGMENT_COLOR, 
-				"Marked Fragment Color", getFieldEditorParent()));
+				Messages.getString("QualyzerPreferencePage.fragmentColor"), getFieldEditorParent())); //$NON-NLS-1$
 		
 	}
 
@@ -46,7 +46,7 @@ public class QualyzerPreferencePage extends FieldEditorPreferencePage implements
 	public void init(IWorkbench workbench)
 	{
 		setPreferenceStore(QualyzerActivator.getDefault().getPreferenceStore());
-		setDescription("Settings to use in Qualyzer");
+		setDescription(Messages.getString("QualyzerPreferencePage.settings")); //$NON-NLS-1$
 	}
 
 }

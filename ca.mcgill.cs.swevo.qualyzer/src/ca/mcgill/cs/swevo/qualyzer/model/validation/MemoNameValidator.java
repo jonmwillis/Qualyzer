@@ -27,7 +27,7 @@ public class MemoNameValidator extends BasicNameValidator
 	 */
 	public MemoNameValidator(String pNewName, String pOldName, Project pProject)
 	{
-		super(Messages.getString("model.validation.MemoNameValidator.label"),
+		super(Messages.getString("model.validation.MemoNameValidator.label"), //$NON-NLS-1$
 				pNewName, pOldName, pProject); 
 	}
 	

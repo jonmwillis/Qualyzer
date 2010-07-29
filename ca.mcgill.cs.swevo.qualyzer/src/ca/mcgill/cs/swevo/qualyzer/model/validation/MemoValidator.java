@@ -44,7 +44,7 @@ public class MemoValidator extends MemoNameValidator
 			if(fAuthor == null)
 			{
 				lReturn = false;
-				fMessage = Messages.getString("model.validation.MemoValidator.chooseAuthor"); 
+				fMessage = Messages.getString("model.validation.MemoValidator.chooseAuthor");  //$NON-NLS-1$
 			}
 		}
 		return lReturn;

@@ -30,8 +30,8 @@ public class QualyzerPreferenceInitializer extends AbstractPreferenceInitializer
 	public void initializeDefaultPreferences()
 	{
 		IEclipsePreferences node = new DefaultScope().getNode(QualyzerActivator.PLUGIN_ID);
-		node.put(IQualyzerPreferenceConstants.DEFAULT_INVESTIGATOR, System.getProperty("user.name"));
-		node.put(IQualyzerPreferenceConstants.FRAGMENT_COLOR, "218,218,218");
+		node.put(IQualyzerPreferenceConstants.DEFAULT_INVESTIGATOR, System.getProperty("user.name")); //$NON-NLS-1$
+		node.put(IQualyzerPreferenceConstants.FRAGMENT_COLOR, "218,218,218"); //$NON-NLS-1$
 
 	}
 

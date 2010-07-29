@@ -13,13 +13,36 @@
  */
 package ca.mcgill.cs.swevo.qualyzer;
 
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+
 /**
  *
  */
-// CSOFF:
-public interface IQualyzerPreferenceConstants
+public final class Messages
 {
-	String DEFAULT_INVESTIGATOR = "DEFAULT_INVESTIGATOR"; //$NON-NLS-1$
-	String FRAGMENT_COLOR = "FRAGMENT_COLOR"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "ca.mcgill.cs.swevo.qualyzer.messages"; //$NON-NLS-1$
+
+	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
+
+	private Messages()
+	{
+	}
+
+	/**
+	 * 
+	 * @param key
+	 * @return
+	 */
+	public static String getString(String key)
+	{
+		try
+		{
+			return RESOURCE_BUNDLE.getString(key);
+		}
+		catch (MissingResourceException e)
+		{
+			return '!' + key + '!';
+		}
+	}
 }
-// CSON:

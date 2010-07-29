@@ -30,7 +30,7 @@ public class TranscriptNameValidator extends BasicNameValidator
 	 */
 	public TranscriptNameValidator(String pName, String pOldName, Project pProject)
 	{
-		super(Messages.getString("model.validation.TranscriptNameValidator.label"),
+		super(Messages.getString("model.validation.TranscriptNameValidator.label"), //$NON-NLS-1$
 				pName, pOldName, pProject); 
 	}
 	
