@@ -71,9 +71,9 @@ public class AddParticipantPage extends WizardPage
 		label = new Label(fContainer, SWT.NULL);
 		label.setText(Messages.getString("wizards.pages.AddParticipantPage.fullName")); //$NON-NLS-1$
 		fFullNameText = new Text(fContainer, SWT.BORDER);
-		fFullNameText.setText(""); 
+		fFullNameText.setText("");  //$NON-NLS-1$
 		fFullNameText.addKeyListener(createStringLengthValidator(
-				Messages.getString("wizards.pages.AddParticipantPage.fullName"), fFullNameText));
+				Messages.getString("wizards.pages.AddParticipantPage.fullName"), fFullNameText)); //$NON-NLS-1$
 		
 		//JF: removing for 0.1 to be consistent with the editor
 //		label = new Label(fContainer, SWT.NULL);

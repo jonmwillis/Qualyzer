@@ -59,7 +59,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor
 	{
 		PreferenceManager pm = PlatformUI.getWorkbench().getPreferenceManager();
 		
-		pm.remove("net.sf.colorer.eclipse.PreferencePage");
-		pm.remove("org.eclipse.ui.preferencePages.Workbench");
+		pm.remove("net.sf.colorer.eclipse.PreferencePage"); //$NON-NLS-1$
+		pm.remove("org.eclipse.ui.preferencePages.Workbench"); //$NON-NLS-1$
 	}
 }

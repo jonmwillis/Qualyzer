@@ -39,7 +39,8 @@ public class StringLengthValidator extends AbstractValidator
 		if(fString.length() > MAX_LENGTH)
 		{
 			lReturn = false;
-			fMessage = fLabel + " " + Messages.getString("model.validation.StringLengthValidator.tooLong");
+			fMessage = fLabel + " " + Messages.getString(//$NON-NLS-1$
+					"model.validation.StringLengthValidator.tooLong"); //$NON-NLS-1$
 		}
 		return lReturn;
 	}

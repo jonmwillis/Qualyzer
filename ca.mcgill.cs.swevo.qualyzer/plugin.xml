@@ -273,10 +273,10 @@
          </menu>
          <menu
                id="windowMenu"
-               label="Window">
+               label="%menu.label.window">
             <command
                   commandId="org.eclipse.ui.window.preferences"
-                  label="Preferences"
+                  label="%command.label.preferences"
                   style="push">
             </command>
          </menu>
@@ -1152,7 +1152,7 @@
       <page
             class="ca.mcgill.cs.swevo.qualyzer.QualyzerPreferencePage"
             id="ca.mcgill.cs.swevo.qualyzer.preferencePage"
-            name="Qualyzer Preferences">
+            name="%page.name.qualyzerPreferences">
       </page>
    </extension>
    <extension

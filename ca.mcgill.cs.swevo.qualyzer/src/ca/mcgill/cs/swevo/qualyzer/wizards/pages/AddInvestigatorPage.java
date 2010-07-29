@@ -82,15 +82,15 @@ public class AddInvestigatorPage extends WizardPage
 		fFullname = new Text(fContainer, SWT.BORDER | SWT.SINGLE);
 		fFullname.setText(""); //$NON-NLS-1$
 		fFullname.addKeyListener(createStringLengthValidator(
-				Messages.getString("wizards.pages.AddInvestigatorPage.fullName"), fFullname));
+				Messages.getString("wizards.pages.AddInvestigatorPage.fullName"), fFullname)); //$NON-NLS-1$
 		
 		label = new Label(fContainer, SWT.NULL);
 		label.setText(Messages.getString("wizards.pages.AddInvestigatorPage.insitution")); //$NON-NLS-1$
 		
 		fInstitution = new Text(fContainer, SWT.BORDER | SWT.SINGLE);
-		fInstitution.setText(""); 
+		fInstitution.setText("");  //$NON-NLS-1$
 		fInstitution.addKeyListener(createStringLengthValidator(
-				Messages.getString("wizards.pages.AddInvestigatorPage.insitution"), fInstitution));
+				Messages.getString("wizards.pages.AddInvestigatorPage.insitution"), fInstitution)); //$NON-NLS-1$
 		
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		fNickname.setLayoutData(gd);

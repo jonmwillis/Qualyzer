@@ -172,7 +172,7 @@ public class RTFDecorationSupport extends SourceViewerDecorationSupport implemen
 	{
 		String rgbString = QualyzerActivator.getDefault().getPreferenceStore().getString(
 				IQualyzerPreferenceConstants.FRAGMENT_COLOR);
-		String[] parts = rgbString.split(",");
+		String[] parts = rgbString.split(","); //$NON-NLS-1$
 		RGB rgb = new RGB(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
 		Color color = fManager.getColor(rgb);
 		return color;

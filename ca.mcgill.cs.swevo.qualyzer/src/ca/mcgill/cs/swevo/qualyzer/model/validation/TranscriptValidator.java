@@ -50,7 +50,7 @@ public class TranscriptValidator extends TranscriptNameValidator
 		{
 			if(fNumberOfParticipants <= 0)
 			{
-				fMessage = Messages.getString("model.validation.TranscriptValidator.selectOne"); 
+				fMessage = Messages.getString("model.validation.TranscriptValidator.selectOne");  //$NON-NLS-1$
 				lReturn = false;
 			}
 			else
@@ -58,7 +58,7 @@ public class TranscriptValidator extends TranscriptNameValidator
 				File file = new File(fAudioFileName);
 				if((fAudioFileName.length() != 0) && !file.exists())
 				{
-					fMessage = Messages.getString("model.validation.TranscriptValidator.enterAudioName"); 
+					fMessage = Messages.getString("model.validation.TranscriptValidator.enterAudioName");  //$NON-NLS-1$
 					lReturn = false;
 				}
 			}
