@@ -67,9 +67,8 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
  */
 public class CodeEditorPage extends FormPage implements CodeListener, ProjectListener, TranscriptListener, MemoListener
 {
-	/**
-	 * 
-	 */
+
+	private static final int THRESHHOLD = 18;
 	private static final int BORDER_SIZE = 10;
 
 	private static final String DELETE_CODE = Messages.getString(
@@ -177,18 +176,17 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		GridLayout layout = new GridLayout(2, true);
 		body.setLayout(layout);
 		
-		fTable = toolkit.createTable(body, SWT.BORDER | SWT.SINGLE);
-		fTable.setLinesVisible(true);
-		fTable.setHeaderVisible(true);
-		TableColumn col1 = new TableColumn(fTable, SWT.NONE);
-		col1.setText(Messages.getString("editors.pages.CodeEditorPage.codeName")); //$NON-NLS-1$
-		col1.setMoveable(false);
-		TableColumn col2 = new TableColumn(fTable, SWT.LEFT);
-		col2.setText(Messages.getString("editors.pages.CodeEditorPage.frequency")); //$NON-NLS-1$
-		col2.setMoveable(false);
-		col2.setResizable(false);
+		initializeTable(toolkit, body);
 
-		fTable.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
+		if(fCodes.size() < THRESHHOLD)
+		{
+			fTable.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
+		}
+		else
+		{
+			fTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		}
+		
 		
 		Composite composite = toolkit.createComposite(body, SWT.BORDER);
 		layout = new GridLayout();
@@ -217,6 +215,24 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		createTableContextMenu();
 		
 		fCurrentSelection = fTable.getSelectionIndex();
+	}
+
+	/**
+	 * @param toolkit
+	 * @param body
+	 */
+	private void initializeTable(FormToolkit toolkit, Composite body)
+	{
+		fTable = toolkit.createTable(body, SWT.BORDER | SWT.SINGLE);
+		fTable.setLinesVisible(true);
+		fTable.setHeaderVisible(true);
+		TableColumn col1 = new TableColumn(fTable, SWT.NONE);
+		col1.setText(Messages.getString("editors.pages.CodeEditorPage.codeName")); //$NON-NLS-1$
+		col1.setMoveable(false);
+		TableColumn col2 = new TableColumn(fTable, SWT.LEFT);
+		col2.setText(Messages.getString("editors.pages.CodeEditorPage.frequency")); //$NON-NLS-1$
+		col2.setMoveable(false);
+		col2.setResizable(false);
 	}
 	
 	@Override
@@ -539,9 +555,19 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 			fTable.setBounds(newRect);
 		}
 		
-		int width = fTable.getBounds().width - 2;
+		int width;
+		if(fCodes.size() < THRESHHOLD)
+		{
+			width = fTable.getBounds().width - 2;
+		}
+		else
+		{
+			width = fTable.getBounds().width - THRESHHOLD;
+		}
+		
 		fTable.getColumn(0).setWidth(width -width/2);
 		fTable.getColumn(1).setWidth(width/2);
+		
 
 		fForm.getBody().redraw();
 		fForm.update();
