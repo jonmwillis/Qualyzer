@@ -237,7 +237,7 @@ public class CodeFragmentViewerPage extends FormPage
 	{
 		int end = fragment.getOffset() + fragment.getLength();
 		int numPunctuation = 0;
-		if(isPunctuation(text, end))
+		if(end < text.length() && isPunctuation(text, end))
 		{
 			numPunctuation++;
 		}
@@ -268,7 +268,7 @@ public class CodeFragmentViewerPage extends FormPage
 		int start = fragment.getOffset();
 		int numPunctuation = 0;
 		
-		if(isPunctuation(text, start -1))
+		if(start > 0 && isPunctuation(text, start -1))
 		{
 			numPunctuation++;
 		}
@@ -276,12 +276,9 @@ public class CodeFragmentViewerPage extends FormPage
 		while(start > 0 && text.charAt(start-1) != '\n' && text.charAt(start-1) != '\t' && numPunctuation < 2)
 		{
 			start--;
-			if(start > 0)
+			if(start > 0 && isPunctuation(text, start -1))
 			{
-				if(isPunctuation(text, start -1))
-				{
-					numPunctuation++;
-				}
+				numPunctuation++;
 			}
 		}
 		return start;
