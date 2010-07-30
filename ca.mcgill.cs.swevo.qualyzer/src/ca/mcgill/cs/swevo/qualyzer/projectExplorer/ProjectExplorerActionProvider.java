@@ -91,15 +91,15 @@ public class ProjectExplorerActionProvider extends CommonActionProvider
 		String commandId = ""; //$NON-NLS-1$
 		if(element instanceof Participant)
 		{
-			commandId = OPEN_ALL_COMMAND_ID; //$NON-NLS-1$
+			commandId = OPEN_ALL_COMMAND_ID;
 		}
 		else if(element instanceof Investigator)
 		{
-			commandId = OPEN_ALL_COMMAND_ID; //$NON-NLS-1$
+			commandId = OPEN_ALL_COMMAND_ID; 
 		}
 		else if(element instanceof Transcript)
 		{
-			commandId = OPEN_ALL_COMMAND_ID; //$NON-NLS-1$
+			commandId = OPEN_ALL_COMMAND_ID; 
 		}
 		else if(element instanceof WrapperCode)
 		{
@@ -109,6 +109,7 @@ public class ProjectExplorerActionProvider extends CommonActionProvider
 		{
 			commandId = OPEN_ALL_COMMAND_ID;
 		}
+		
 		return commandId;
 	}
 

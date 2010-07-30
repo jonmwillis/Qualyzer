@@ -24,6 +24,7 @@ import org.eclipse.ui.internal.wizards.datatransfer.WizardProjectsImportPage;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
 import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
+import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.util.FileUtil;
 
 /**
@@ -100,13 +101,18 @@ public class ProjectImportWizard extends Wizard implements IImportWizard
 		for(IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects())
 		{
 			PersistenceManager.getInstance().refreshManager(project);
-			try
+			Project qProject = PersistenceManager.getInstance().getProject(project.getName());
+			if(qProject != null)
 			{
-				FileUtil.refreshSubFolders(project);
-			}
-			catch(QualyzerException e)
-			{
-				MessageDialog.openError(getShell(), "Import Error", e.getMessage());
+				try
+				{
+					FileUtil.refreshSubFolders(project);
+				}
+				catch(QualyzerException e)
+				{
+					MessageDialog.openError(getShell(),	Messages.getString(
+							"wizards.ProjectImportWizard.importError"), e.getMessage()); //$NON-NLS-1$
+				}
 			}
 		}
 		return toReturn;
