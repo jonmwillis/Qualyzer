@@ -124,6 +124,12 @@ public class RTFDocumentProvider extends FileDocumentProvider
 			while((c = contentStream.read()) != -1)
 			{
 				char ch = (char) c;
+				
+				if(ch == '\0')
+				{
+					break;
+				}
+				
 				if(ch == '{' || ch == '}')
 				{
 					if(justStarted)
