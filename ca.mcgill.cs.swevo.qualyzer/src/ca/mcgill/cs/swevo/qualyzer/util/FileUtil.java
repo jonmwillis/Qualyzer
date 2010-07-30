@@ -152,7 +152,7 @@ public final class FileUtil
 		}
 		catch (CoreException e)
 		{
-			gLogger.error("Failed to create sub-Folders", e); // $NON-NLS-1$
+			gLogger.error("Failed to create sub-Folders", e); //$NON-NLS-1$
 			return false;
 		}
 		
@@ -188,8 +188,9 @@ public final class FileUtil
 		}
 		catch(CoreException e)
 		{
-			gLogger.error("Unable to create folders", e);
-			throw new QualyzerException("Unable to create folders for project: " + project.getName(), e);
+			gLogger.error("Unable to create folders", e); //$NON-NLS-1$
+			throw new QualyzerException(Messages.getString(
+					"util.FileUtil.folderCreationError") + project.getName(), e); //$NON-NLS-1$
 		}
 		
 	}
