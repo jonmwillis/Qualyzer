@@ -68,7 +68,7 @@ public final class TestUtil
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(outputStream));
 			bw
-					.write("{\\rtf1\\ansi\\deff0\n\n\n}\n\0\n"
+					.write("{\\rtf1\\ansi\\deff0\n\n\n"
 							+ "{\\*\\generator Msftedit 5.41.21.2500;}\\viewkind4\\uc1\\pard\\f0\\fs24 I want to test manually writing an rtf doc. If this works then I will be very happy. This is also written in MSWord so it is going to have lots of extra tags that will probably confuse things a little bit.\\par\n"
 							+ "\\par\n"
 							+ "\\tab Sadly, I don't think that the tab will show up without me adding it in myself.\\par\n"
@@ -80,7 +80,7 @@ public final class TestUtil
 							+ "\\b This should be underlined and bold.\\b0\\par\n" + "\\par\n"
 							+ "\\i This should be underlined and in italics.\\ulnone\\i0\\par\n" + "\\par\n"
 							+ "\\b\\i This should be bold and in italics.\\b0\\i0\\par\n" + "\\f1\\fs20\\par\n"
-							+ "})\n");
+							+ "}\n\0\n");
 			bw.close();
 			file.setContents(new ByteArrayInputStream(outputStream.toByteArray()), true, false,
 					new NullProgressMonitor());
