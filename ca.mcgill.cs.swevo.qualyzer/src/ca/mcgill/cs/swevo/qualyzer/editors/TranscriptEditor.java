@@ -194,7 +194,9 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 		fItalicButton.addSelectionListener(createButtonSelectionListener(getItalicAction()));
 		fCodeButton.addSelectionListener(createButtonSelectionListener(getMarkTextAction()));
 		
-		fPlayButton.addSelectionListener(playPushedListener());
+		final PlayPushedAdapter playAdapter = new PlayPushedAdapter();
+		
+		fPlayButton.addSelectionListener(playAdapter);
 		fStopButton.addSelectionListener(new SelectionAdapter(){
 			@Override
 			public void widgetSelected(SelectionEvent e)
@@ -202,6 +204,7 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 				try
 				{
 					fPlayButton.setImage(getImage(PLAY_IMG, QualyzerActivator.PLUGIN_ID));
+					playAdapter.stop();
 					fAudioPlayer.stop();
 					setSeconds(0);
 				}
@@ -211,41 +214,6 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 				}
 			}
 		});
-	}
-
-	/**
-	 * @return
-	 */
-	private SelectionAdapter playPushedListener()
-	{
-		return new SelectionAdapter(){
-			private final Image fPLAY = getImage(PLAY_IMG, QualyzerActivator.PLUGIN_ID);
-			private final Image fPAUSE = getImage(PAUSE_IMG, QualyzerActivator.PLUGIN_ID);
-			private boolean fPlaying = false;
-			@Override
-			public void widgetSelected(SelectionEvent e)
-			{
-				try
-				{
-					if(fPlaying)
-					{
-						fAudioPlayer.pause();
-						fPlayButton.setImage(fPLAY);
-						fPlaying = false;
-					}
-					else
-					{
-						fAudioPlayer.play();
-						fPlayButton.setImage(fPAUSE);
-						fPlaying = true;
-					}
-				}
-				catch(QualyzerException ex)
-				{
-					openErrorDialog(ex.getMessage());
-				}
-			}
-		};
 	}
 
 	//these create the top button bar.
@@ -448,6 +416,46 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 	{
 		MessageDialog.openError(getSite().getShell(), Messages.getString(
 				"editors.TranscriptEditor.audioError"), errorMessage); //$NON-NLS-1$
+	}
+	
+	/**
+	 * The selection adapter for the play button.
+	 *
+	 */
+	private class PlayPushedAdapter extends SelectionAdapter
+	{
+		private final Image fPLAY = getImage(PLAY_IMG, QualyzerActivator.PLUGIN_ID);
+		private final Image fPAUSE = getImage(PAUSE_IMG, QualyzerActivator.PLUGIN_ID);
+		private boolean fPlaying = false;
+		
+		@Override
+		public void widgetSelected(SelectionEvent e)
+		{
+			try
+			{
+				if(fPlaying)
+				{
+					fAudioPlayer.pause();
+					fPlayButton.setImage(fPLAY);
+					fPlaying = false;
+				}
+				else
+				{
+					fAudioPlayer.play();
+					fPlayButton.setImage(fPAUSE);
+					fPlaying = true;
+				}
+			}
+			catch(QualyzerException ex)
+			{
+				openErrorDialog(ex.getMessage());
+			}
+		}
+		
+		public void stop()
+		{
+			fPlaying = false;
+		}
 	}
 
 }
