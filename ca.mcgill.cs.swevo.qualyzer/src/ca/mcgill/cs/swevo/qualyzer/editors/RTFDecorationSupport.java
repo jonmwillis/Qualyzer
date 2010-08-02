@@ -11,6 +11,7 @@
 
 package ca.mcgill.cs.swevo.qualyzer.editors;
 
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.source.AnnotationPainter;
 import org.eclipse.jface.text.source.IAnnotationAccess;
 import org.eclipse.jface.text.source.IOverviewRuler;
@@ -24,6 +25,8 @@ import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.internal.editors.text.EditorsPlugin;
+import org.eclipse.ui.texteditor.AnnotationPreference;
 import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 
 import ca.mcgill.cs.swevo.qualyzer.IQualyzerPreferenceConstants;
@@ -33,6 +36,7 @@ import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
  * Defines all the painting strategies for our annotations.
  *
  */
+@SuppressWarnings("restriction")
 public class RTFDecorationSupport extends SourceViewerDecorationSupport implements IPropertyChangeListener
 {
 	private static final Color BLACK = new Color(Display.getCurrent(), new RGB(0, 0, 0));
@@ -112,6 +116,7 @@ public class RTFDecorationSupport extends SourceViewerDecorationSupport implemen
 	
 	private AnnotationPainter fPainter;
 	private ColorManager fManager;
+	private IPreferenceStore fStore;
 
 
 	/**
@@ -125,6 +130,7 @@ public class RTFDecorationSupport extends SourceViewerDecorationSupport implemen
 	{
 		super(sourceViewer, overviewRuler, annotationAccess, sharedTextColors);
 		fManager = new ColorManager();
+		fStore = EditorsPlugin.getDefault().getPreferenceStore();
 	}
 	
 	/* (non-Javadoc)
@@ -141,7 +147,6 @@ public class RTFDecorationSupport extends SourceViewerDecorationSupport implemen
 		fPainter.addTextStyleStrategy(BOLD_UNDERLINE, gBoldUnderlineStrategy);
 		fPainter.addTextStyleStrategy(ITALIC_UNDERLINE, gItalicUnderlineStrategy);
 		fPainter.addTextStyleStrategy(BOLD_ITALIC_UNDERLINE, gBoldItalicUnderlineStrategy);
-		//painter.addTextStyleStrategy(MARK_FRAGMENT, gMarkFragmentStrategy);
 		
 		fPainter.addAnnotationType(RTFConstants.BOLD_TYPE, BOLD);
 		fPainter.addAnnotationType(RTFConstants.ITALIC_TYPE, ITALIC);
@@ -149,7 +154,6 @@ public class RTFDecorationSupport extends SourceViewerDecorationSupport implemen
 		fPainter.addAnnotationType(RTFConstants.BOLD_UNDERLINE_TYPE, BOLD_UNDERLINE);
 		fPainter.addAnnotationType(RTFConstants.ITALIC_UNDERLINE_TYPE, ITALIC_UNDERLINE);
 		fPainter.addAnnotationType(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE, BOLD_ITALIC_UNDERLINE);
-		fPainter.addHighlightAnnotationType(RTFConstants.FRAGMENT_TYPE);
 		
 		fPainter.setAnnotationTypeColor(RTFConstants.BOLD_TYPE, BLACK);
 		fPainter.setAnnotationTypeColor(RTFConstants.ITALIC_TYPE, BLACK);
@@ -158,24 +162,8 @@ public class RTFDecorationSupport extends SourceViewerDecorationSupport implemen
 		fPainter.setAnnotationTypeColor(RTFConstants.ITALIC_UNDERLINE_TYPE, BLACK);
 		fPainter.setAnnotationTypeColor(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE, BLACK);
 		
-		Color color = getFragmentColor();
-		fPainter.setAnnotationTypeColor(RTFConstants.FRAGMENT_TYPE, color);
-		
 		QualyzerActivator.getDefault().getPreferenceStore().addPropertyChangeListener(this);
 		return fPainter;
-	}
-
-	/**
-	 * @return
-	 */
-	private Color getFragmentColor()
-	{
-		String rgbString = QualyzerActivator.getDefault().getPreferenceStore().getString(
-				IQualyzerPreferenceConstants.FRAGMENT_COLOR);
-		String[] parts = rgbString.split(","); //$NON-NLS-1$
-		RGB rgb = new RGB(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
-		Color color = fManager.getColor(rgb);
-		return color;
 	}
 	
 	/* (non-Javadoc)
@@ -197,12 +185,28 @@ public class RTFDecorationSupport extends SourceViewerDecorationSupport implemen
 	{
 		if(event.getProperty().equals(IQualyzerPreferenceConstants.FRAGMENT_COLOR))
 		{
-			Color color = getFragmentColor();
-			
-			fPainter.setAnnotationTypeColor(RTFConstants.FRAGMENT_TYPE, color);
-			fPainter.paint(AnnotationPainter.CONFIGURATION);
+			String color = QualyzerActivator.getDefault().getPreferenceStore().getString(
+					IQualyzerPreferenceConstants.FRAGMENT_COLOR);
+			fStore.setValue("fragment.color", color);
 		}
 		
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.texteditor.SourceViewerDecorationSupport#setAnnotationPreference(
+	 * org.eclipse.ui.texteditor.AnnotationPreference)
+	 */
+	@Override
+	public void setAnnotationPreference(AnnotationPreference info)
+	{
+		super.setAnnotationPreference(info);
+		
+		if(info.getAnnotationType().equals(RTFConstants.FRAGMENT_TYPE))
+		{
+			String color = QualyzerActivator.getDefault().getPreferenceStore().getString(
+					IQualyzerPreferenceConstants.FRAGMENT_COLOR);
+			fStore.setValue(info.getColorPreferenceKey(), color);
+		}
 	}
 
 }
