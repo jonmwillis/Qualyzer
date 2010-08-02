@@ -621,12 +621,6 @@
                icon="icons/import.gif"
                label="%menu.label.import">
             <command
-                  commandId="org.eclipse.ui.file.import"
-                  icon="icons/prj_obj.gif"
-                  label="Project"
-                  style="push">
-            </command>
-            <command
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.importTranscript"
                   icon="icons/file_obj.gif"
                   label="%command.label.transcript"
@@ -703,11 +697,6 @@
                </visibleWhen>
             </command>
          </menu>
-         <command
-               commandId="org.eclipse.ui.file.export"
-               label="Export Project"
-               style="push">
-         </command>
       </menuContribution>
       <menuContribution
             locationURI="popup:ca.mcgill.cs.swevo.qualyzer.projectexplorer#PopupMenu?after=group.properties">
