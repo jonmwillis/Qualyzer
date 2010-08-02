@@ -81,6 +81,8 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 	private Label fTimeLabel;
 	private Slider fAudioSlider;
 	private int fAudioLength;
+	
+	private Composite fTopBar;
 
 	
 	/**
@@ -138,13 +140,13 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 		//This controls displaying of the top button bar.
 		parent.setLayout(new GridLayout(1, true));
 		
-		Composite topBar = new Composite(parent, SWT.BORDER);
-		topBar.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
-		topBar.setLayout(new GridLayout(NUM_COLS, false));
+		fTopBar = new Composite(parent, SWT.BORDER);
+		fTopBar.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
+		fTopBar.setLayout(new GridLayout(NUM_COLS, false));
 		
-		createFormatButtonBar(topBar);
+		createFormatButtonBar(fTopBar);
 		//buttonBar.setLayoutData(new GridData(SWT.FILL, SWT.NULL, false, false));
-		createMusicBar(topBar);
+		createMusicBar(fTopBar);
 		//musicBar.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 		
 		super.createPartControl(parent);
@@ -153,7 +155,8 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 		
 		if(((Transcript) getDocument()).getAudioFile() == null)
 		{
-			disable(topBar);
+			setEnable(fTopBar, false);
+			fAudioPlayer = null;
 		}
 		else
 		{
@@ -172,12 +175,12 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 	/**
 	 * @param musicBar
 	 */
-	private void disable(Composite container)
+	private void setEnable(Composite container, boolean state)
 	{
 		Control[] children = container.getChildren();
 		for(int i = 0; i < children.length/2; i++)
 		{
-			children[children.length - (i+1)].setEnabled(false);
+			children[children.length - (i+1)].setEnabled(state);
 		}
 	}
 
@@ -350,6 +353,42 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 					IWorkbenchPage page = getSite().getPage();
 					ResourcesUtil.closeEditor(page, getEditorInput().getName());
 					break;
+				}
+			}
+		}
+		else if(cType == ChangeType.MODIFY)
+		{
+			for(Transcript transcript : transcripts)
+			{
+				if(transcript.equals(getDocument()))
+				{
+					if(fAudioPlayer == null && transcript.getAudioFile() != null)
+					{
+						setEnable(fTopBar, true);
+						Transcript editorTranscript = (Transcript) getDocument();
+						editorTranscript.setAudioFile(transcript.getAudioFile());
+						IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(
+								editorTranscript.getProject().getName());
+						String audioFile = project.getLocation() + File.separator + 
+							editorTranscript.getAudioFile().getRelativePath();
+						fAudioPlayer = new AudioPlayer(audioFile, this);
+					}
+					else if(fAudioPlayer != null && !((Transcript) getDocument()).getAudioFile().equals(
+							transcript.getAudioFile()))
+					{
+						fAudioPlayer.stop();
+						if(transcript.getAudioFile() == null)
+						{
+							setEnable(fTopBar, false);
+						}
+						Transcript editorTranscript = (Transcript) getDocument();
+						editorTranscript.setAudioFile(transcript.getAudioFile());
+						IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(
+								editorTranscript.getProject().getName());
+						String audioFile = project.getLocation() + File.separator + 
+							editorTranscript.getAudioFile().getRelativePath();
+						fAudioPlayer = new AudioPlayer(audioFile, this);
+					}
 				}
 			}
 		}
