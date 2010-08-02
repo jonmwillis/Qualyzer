@@ -11,8 +11,12 @@ Bundle-Vendor: %Bundle-Vendor
 Bundle-ClassPath: lib/log4j-1.2.16.jar,
  .,
  lib/slf4j-log4j12-1.5.8.jar,
- lib/slf4j-api-1.5.8.jar
-Export-Package: org.apache.log4j,
+ lib/slf4j-api-1.5.8.jar,
+ lib/commons-logging-api.jar,
+ lib/commons-logging-adapters-1.1.1.jar
+Export-Package: org.apache.commons.logging,
+ org.apache.commons.logging.impl,
+ org.apache.log4j,
  org.apache.log4j.chainsaw,
  org.apache.log4j.config,
  org.apache.log4j.helpers,
