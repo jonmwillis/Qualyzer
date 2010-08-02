@@ -145,11 +145,6 @@
             name="%command.name.importTranscript">
       </command>
       <command
-            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.ImportAudioFileHandler"
-            id="ca.mcgill.cs.swevo.qualyzer.commands.importAudioFile"
-            name="%command.name.importAudioFile">
-      </command>
-      <command
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.CloseProjectHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.closeProject"
             name="%command.name.closeProject">
@@ -1127,6 +1122,18 @@
             textStylePreferenceValue="UNDERLINE"
             verticalRulerPreferenceKey="vertical.false"
             verticalRulerPreferenceValue="false">
+      </specification>
+      <specification
+            annotationType="RTFEditor.annotation.fragment"
+            colorPreferenceKey="fragment.color"
+            colorPreferenceValue="191,191,191"
+            highlightPreferenceKey="fragment.highlight"
+            highlightPreferenceValue="true"
+            includeOnPreferencePage="true"
+            label="Fragment"
+            overviewRulerPreferenceKey="fragment.overview"
+            overviewRulerPreferenceValue="true"
+            textPreferenceKey="fragment.text">
       </specification>
    </extension>
    <extension
