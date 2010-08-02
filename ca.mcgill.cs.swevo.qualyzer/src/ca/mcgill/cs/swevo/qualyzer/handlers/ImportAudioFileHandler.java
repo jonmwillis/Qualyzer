@@ -100,17 +100,16 @@ public class ImportAudioFileHandler extends AbstractHandler
 	{
 		File file = new File(fileName);
 		File fileCpy = new File(path+((Transcript) element).getName()+ext);
-		if(!fileCpy.exists())
+		
+		try
 		{
-			try
-			{
-				FileUtil.copyFile(file, fileCpy);
-			}
-			catch (IOException e)
-			{
-				gLogger.error("Audio File copy failed", e); //$NON-NLS-1$
-			}
+			FileUtil.copyFile(file, fileCpy);
 		}
+		catch (IOException e)
+		{
+			gLogger.error("Audio File copy failed", e); //$NON-NLS-1$
+		}
+		
 	}
 
 }
