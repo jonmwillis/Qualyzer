@@ -651,23 +651,6 @@
                </visibleWhen>
             </command>
             <command
-                  commandId="ca.mcgill.cs.swevo.qualyzer.commands.importAudioFile"
-                  icon="icons/audio.png"
-                  label="%command.label.audioFile"
-                  style="push"
-                  tooltip="%command.tooltip.importAudioFile">
-               <visibleWhen
-                     checkEnabled="false">
-                  <iterate
-                        ifEmpty="false"
-                        operator="and">
-                     <instanceof
-                           value="ca.mcgill.cs.swevo.qualyzer.model.Transcript">
-                     </instanceof>
-                  </iterate>
-               </visibleWhen>
-            </command>
-            <command
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.importMemo"
                   icon="icons/memo_obj.png"
                   label="%command.label.memo"
