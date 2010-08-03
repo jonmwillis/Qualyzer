@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Stack;
 
+import org.apache.commons.lang.CharUtils;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -236,6 +237,10 @@ public class RTFDocumentProvider extends FileDocumentProvider
 			{
 				toReturn = RTFTags.BACKSLASH; 
 			}
+			else if(Character.isDigit(string.charAt(0)))
+			{
+				toReturn = getUnicodeCharacter(string);
+			}
 			else if(string.equals(RTFTags.RIGHT_BRACE) || string.equals(RTFTags.LEFT_BRACE))  
 			{
 				toReturn = string;
@@ -261,6 +266,17 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		}
 
 		return toReturn;
+	}
+
+	/**
+	 * @param string
+	 * @return
+	 */
+	private String getUnicodeCharacter(String string)
+	{
+		int unicode = Integer.parseInt(string);
+				
+		return EMPTY + (char) unicode;
 	}
 
 	/**
@@ -574,6 +590,36 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	{
 		String escape = EMPTY;
 		char ch2 = (char) ioStream.read();
+		if(ch2 == 'u')
+		{
+			escape += ch2;
+			ch2 = (char) ioStream.read();
+			String unicode = EMPTY;
+			while(Character.isDigit(ch2))
+			{
+				escape += ch2;
+				unicode += ch2;
+				ch2 = (char) ioStream.read();
+			}
+			
+			int letterCount = Character.isLetter(ch2) ? 1 : 0;
+			while(letterCount < 1)
+			{
+				ch2 = (char) ioStream.read();
+				if(Character.isLetter(ch2))
+				{
+					letterCount++;
+				}
+			}
+			if(!unicode.isEmpty())
+			{
+				return unicode;
+			}
+			else
+			{
+				escape += ch2;
+			}
+		}
 		boolean notBracket = ch2 != '{' && ch2 != '}';
 		while(ch2 != ' ' && notBracket && ch2 != '\\' && ch2 != '\n')
 		{
@@ -581,7 +627,6 @@ public class RTFDocumentProvider extends FileDocumentProvider
 			ch2 = (char) ioStream.read();
 			notBracket = ch2 != '{' && ch2 != '}';
 		}
-		
 		if(ch2 == '\\')
 		{
 			escape += RTFTags.BACKSLASH; 
@@ -590,7 +635,6 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		{
 			escape += ch2;
 		}
-		
 		return escape;
 	}
 	
@@ -732,7 +776,16 @@ public class RTFDocumentProvider extends FileDocumentProvider
 			{
 				output += RTFTags.BACKSLASH;
 			}
-			output += c;
+			
+			if(CharUtils.isAscii(c))
+			{
+				output += c;
+			}
+			else
+			{
+				int unicode = (int) c;
+				output = RTFTags.UNICODE_START_TAG + unicode + RTFTags.UNICODE_END_TAG;
+			}
 		}
 		return output;
 	}
