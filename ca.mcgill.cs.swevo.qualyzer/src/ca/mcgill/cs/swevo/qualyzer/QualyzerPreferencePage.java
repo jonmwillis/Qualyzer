@@ -13,6 +13,7 @@ package ca.mcgill.cs.swevo.qualyzer;
 
 import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -39,6 +40,8 @@ public class QualyzerPreferencePage extends FieldEditorPreferencePage implements
 		
 		addField(new ColorFieldEditor(IQualyzerPreferenceConstants.FRAGMENT_COLOR, 
 				Messages.getString("QualyzerPreferencePage.fragmentColor"), getFieldEditorParent())); //$NON-NLS-1$
+		
+		addField(new IntegerFieldEditor("SEEK_TIME", "Seek time", getFieldEditorParent()));
 		
 	}
 

@@ -23,6 +23,11 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 public class QualyzerPreferenceInitializer extends AbstractPreferenceInitializer
 {
 
+	/**
+	 * 
+	 */
+	private static final int DEFAULT_SEEK_TIME = 3;
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#initializeDefaultPreferences()
 	 */
@@ -32,6 +37,7 @@ public class QualyzerPreferenceInitializer extends AbstractPreferenceInitializer
 		IEclipsePreferences node = new DefaultScope().getNode(QualyzerActivator.PLUGIN_ID);
 		node.put(IQualyzerPreferenceConstants.DEFAULT_INVESTIGATOR, System.getProperty("user.name")); //$NON-NLS-1$
 		node.put(IQualyzerPreferenceConstants.FRAGMENT_COLOR, "191,191,191"); //$NON-NLS-1$
+		node.putInt(IQualyzerPreferenceConstants.SEEK_TIME, DEFAULT_SEEK_TIME);
 
 	}
 
