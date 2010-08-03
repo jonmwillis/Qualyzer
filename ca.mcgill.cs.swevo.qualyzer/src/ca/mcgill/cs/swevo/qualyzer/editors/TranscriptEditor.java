@@ -42,6 +42,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Scale;
 import org.eclipse.ui.IWorkbenchPage;
 
+import ca.mcgill.cs.swevo.qualyzer.IQualyzerPreferenceConstants;
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
@@ -58,7 +59,7 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 
 	public static final String ID = "ca.mcgill.cs.swevo.qualyzer.editors.transcriptEditor"; //$NON-NLS-1$
 	
-	private static final int NUM_COLS = 8;
+	private static final int NUM_COLS = 10;
 	private static final int SECONDS_PER_MINUTE = 60;
 	private static final int TEN = 10;
 	
@@ -76,6 +77,8 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 	private Button fCodeButton;
 	private Button fPlayButton;
 	private Button fStopButton;
+	private Button fBackButton;
+	private Button fForwardButton;
 	private AudioPlayer fAudioPlayer;
 
 	private Label fTimeLabel;
@@ -97,7 +100,7 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 		addImage(ITALIC_IMG, QualyzerActivator.PLUGIN_ID, "icons/text_italic.png"); //$NON-NLS-1$
 		addImage(UNDERLINE_IMG, QualyzerActivator.PLUGIN_ID, "icons/text_underline.png"); //$NON-NLS-1$
 		addImage(CODE_IMG, QualyzerActivator.PLUGIN_ID, "icons/code_obj.gif"); //$NON-NLS-1$
-		
+		//TODO add back and forward images
 	}
 	
 /* (non-Javadoc)
@@ -145,9 +148,7 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 		fTopBar.setLayout(new GridLayout(NUM_COLS, false));
 		
 		createFormatButtonBar(fTopBar);
-		//buttonBar.setLayoutData(new GridData(SWT.FILL, SWT.NULL, false, false));
 		createMusicBar(fTopBar);
-		//musicBar.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 		
 		super.createPartControl(parent);
 		
@@ -214,6 +215,28 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 				}
 			}
 		});
+		
+		fBackButton.addSelectionListener(new SelectionAdapter(){
+			@Override
+			public void widgetSelected(SelectionEvent e)
+			{
+				int selection = fAudioSlider.getSelection();
+				selection -= QualyzerActivator.getDefault().getPreferenceStore().getInt(
+						IQualyzerPreferenceConstants.SEEK_TIME);
+				fAudioPlayer.jumpToTime(selection >= 0 ? selection : 0);
+			}
+		});
+		
+		fForwardButton.addSelectionListener(new SelectionAdapter(){
+			@Override
+			public void widgetSelected(SelectionEvent e)
+			{
+				int selection = fAudioSlider.getSelection();
+				selection += QualyzerActivator.getDefault().getPreferenceStore().getInt(
+						IQualyzerPreferenceConstants.SEEK_TIME);
+				fAudioPlayer.jumpToTime(selection <= fAudioLength ? selection : fAudioLength);
+			}
+		});
 	}
 
 	//these create the top button bar.
@@ -228,6 +251,10 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 		
 		fStopButton = new Button(parent, SWT.PUSH);
 		fStopButton.setImage(getImage(STOP_IMG, QualyzerActivator.PLUGIN_ID));
+		
+		fBackButton = new Button(parent, SWT.PUSH);
+		fBackButton.setText("<<");
+		//TODO set image.
 		
 		fAudioSlider = new Scale(parent, SWT.HORIZONTAL);
 		fAudioSlider.setMinimum(0);
@@ -252,6 +279,9 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 			}
 		});
 		
+		fForwardButton = new Button(parent, SWT.PUSH);
+		fForwardButton.setText(">>");
+		//TODO set image
 		
 		fTimeLabel = new Label(parent, SWT.NULL);
 		fTimeLabel.setLayoutData(new GridData(SWT.NULL, SWT.FILL, false, false));
@@ -382,6 +412,7 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 	public void dispose()
 	{
 		Facade.getInstance().getListenerManager().unregisterTranscriptListener(getDocument().getProject(), this);
+		fAudioPlayer.stop();
 		super.dispose();
 	}
 	
