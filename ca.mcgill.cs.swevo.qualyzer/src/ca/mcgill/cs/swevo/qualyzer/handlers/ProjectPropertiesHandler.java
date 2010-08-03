@@ -13,6 +13,17 @@ package ca.mcgill.cs.swevo.qualyzer.handlers;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.window.Window;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
+
+import ca.mcgill.cs.swevo.qualyzer.dialogs.ProjectPropertiesDialog;
+import ca.mcgill.cs.swevo.qualyzer.model.Project;
+import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
  * 
@@ -24,7 +35,27 @@ public class ProjectPropertiesHandler extends AbstractHandler
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
 	{
-		// TODO Auto-generated method stub
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		ISelection selection = page.getSelection();
+		
+		if(selection != null && selection instanceof IStructuredSelection)
+		{
+			IStructuredSelection struct = (IStructuredSelection) selection;
+			Object element = struct.getFirstElement();
+			if(element instanceof IProject)
+			{
+				Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+				Project project = ResourcesUtil.getProject(element);
+				ProjectPropertiesDialog dialog = new ProjectPropertiesDialog(shell, project);
+				dialog.create();
+				if(dialog.open() == Window.OK)
+				{
+					
+				}
+			}
+		}
+		
+		
 		return null;
 	}
 
