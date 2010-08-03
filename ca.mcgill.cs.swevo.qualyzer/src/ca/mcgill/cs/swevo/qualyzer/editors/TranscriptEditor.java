@@ -70,6 +70,8 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 	private static final String ITALIC_IMG = "ITALIC_IMG"; //$NON-NLS-1$
 	private static final String UNDERLINE_IMG = "UNDERLINE_IMG"; //$NON-NLS-1$
 	private static final String CODE_IMG = "CODE_IMG"; //$NON-NLS-1$
+	private static final String BACK_IMG = "BACK_IMG"; //$NON-NLS-1$
+	private static final String FORWARD_IMG = "FORWARD_IMG"; //$NON-NLS-1$
 
 	private Button fBoldButton;
 	private Button fUnderlineButton;
@@ -100,7 +102,8 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 		addImage(ITALIC_IMG, QualyzerActivator.PLUGIN_ID, "icons/text_italic.png"); //$NON-NLS-1$
 		addImage(UNDERLINE_IMG, QualyzerActivator.PLUGIN_ID, "icons/text_underline.png"); //$NON-NLS-1$
 		addImage(CODE_IMG, QualyzerActivator.PLUGIN_ID, "icons/code_obj.gif"); //$NON-NLS-1$
-		//TODO add back and forward images
+		addImage(BACK_IMG, QualyzerActivator.PLUGIN_ID, "icons/seek-backward.png"); //$NON-NLS-1$
+		addImage(FORWARD_IMG, QualyzerActivator.PLUGIN_ID, "icons/seek-forward.png"); //$NON-NLS-1$
 	}
 	
 /* (non-Javadoc)
@@ -253,8 +256,7 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 		fStopButton.setImage(getImage(STOP_IMG, QualyzerActivator.PLUGIN_ID));
 		
 		fBackButton = new Button(parent, SWT.PUSH);
-		fBackButton.setText("<<");
-		//TODO set image.
+		fBackButton.setImage(getImage(BACK_IMG, QualyzerActivator.PLUGIN_ID));
 		
 		fAudioSlider = new Scale(parent, SWT.HORIZONTAL);
 		fAudioSlider.setMinimum(0);
@@ -280,8 +282,7 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 		});
 		
 		fForwardButton = new Button(parent, SWT.PUSH);
-		fForwardButton.setText(">>");
-		//TODO set image
+		fForwardButton.setImage(getImage(FORWARD_IMG, QualyzerActivator.PLUGIN_ID));
 		
 		fTimeLabel = new Label(parent, SWT.NULL);
 		fTimeLabel.setLayoutData(new GridData(SWT.NULL, SWT.FILL, false, false));
