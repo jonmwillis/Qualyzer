@@ -332,34 +332,47 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 				{
 					if(fAudioPlayer == null && transcript.getAudioFile() != null)
 					{
-						setEnable(fTopBar, true);
+						hookupNewAudioFile(transcript);
+					}
+					else if(fAudioPlayer != null && ((Transcript) getDocument()).getAudioFile().getPersistenceId() != 
+						transcript.getAudioFile().getPersistenceId())
+					{
 						Transcript editorTranscript = (Transcript) getDocument();
 						editorTranscript.setAudioFile(transcript.getAudioFile());
-						IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(
-								editorTranscript.getProject().getName());
-						String audioFile = project.getLocation() + File.separator + 
-							editorTranscript.getAudioFile().getRelativePath();
-						fAudioPlayer = new AudioPlayer(audioFile, this);
-					}
-					else if(fAudioPlayer != null && !((Transcript) getDocument()).getAudioFile().equals(
-							transcript.getAudioFile()))
-					{
-						fAudioPlayer.stop();
 						if(transcript.getAudioFile() == null)
 						{
 							setEnable(fTopBar, false);
+							fAudioPlayer = null;
+							setLength(0);
 						}
-						Transcript editorTranscript = (Transcript) getDocument();
-						editorTranscript.setAudioFile(transcript.getAudioFile());
-						IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(
-								editorTranscript.getProject().getName());
-						String audioFile = project.getLocation() + File.separator + 
-							editorTranscript.getAudioFile().getRelativePath();
-						fAudioPlayer = new AudioPlayer(audioFile, this);
+						else
+						{
+							IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(
+									editorTranscript.getProject().getName());
+							String audioFile = project.getLocation() + File.separator + 
+								editorTranscript.getAudioFile().getRelativePath();
+							fAudioPlayer.open(audioFile);
+						}
+						
 					}
 				}
 			}
 		}
+	}
+
+	/**
+	 * @param transcript
+	 */
+	private void hookupNewAudioFile(Transcript transcript)
+	{
+		setEnable(fTopBar, true);
+		Transcript editorTranscript = (Transcript) getDocument();
+		editorTranscript.setAudioFile(transcript.getAudioFile());
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(
+				editorTranscript.getProject().getName());
+		String audioFile = project.getLocation() + File.separator + 
+			editorTranscript.getAudioFile().getRelativePath();
+		fAudioPlayer = new AudioPlayer(audioFile, this);
 	}
 	
 	/* (non-Javadoc)
@@ -376,7 +389,7 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 	 * Called by the AudioPlayer to set the length of the audio file.
 	 * @param length
 	 */
-	protected void setLength(double length)
+	protected void setLength(final double length)
 	{
 		fAudioLength = (int) length;
 		fAudioSlider.setMaximum(fAudioLength);
