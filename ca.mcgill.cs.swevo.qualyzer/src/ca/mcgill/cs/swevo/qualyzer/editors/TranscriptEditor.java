@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Slider;
+import org.eclipse.swt.widgets.Scale;
 import org.eclipse.ui.IWorkbenchPage;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
@@ -79,7 +79,7 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 	private AudioPlayer fAudioPlayer;
 
 	private Label fTimeLabel;
-	private Slider fAudioSlider;
+	private Scale fAudioSlider;
 	private int fAudioLength;
 	
 	private Composite fTopBar;
@@ -229,7 +229,7 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 		fStopButton = new Button(parent, SWT.PUSH);
 		fStopButton.setImage(getImage(STOP_IMG, QualyzerActivator.PLUGIN_ID));
 		
-		fAudioSlider = new Slider(parent, SWT.HORIZONTAL);
+		fAudioSlider = new Scale(parent, SWT.HORIZONTAL);
 		fAudioSlider.setMinimum(0);
 		fAudioSlider.setSelection(0);
 		fAudioSlider.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
