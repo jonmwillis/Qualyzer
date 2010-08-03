@@ -219,5 +219,39 @@ public class AudioPlayer
 		}
 		
 	}
+
+	/**
+	 * @param audioFile
+	 */
+	public void open(String audioFile)
+	{
+		fAudioFile = audioFile;
+		File file = new File(fAudioFile);
+		try
+		{
+			reset();
+			fPlayer.open(file);			
+		}
+		catch(BasicPlayerException e)
+		{
+			fLogger.error("AudioPlayer: Could not open", e); //$NON-NLS-1$
+		}
+	}
+
+	/**
+	 * 
+	 */
+	private void reset()
+	{
+		fMicroSecondsPos = 0;
+		fSecondsPos = 0;
+		fLength = 0;
+		fAudioFile = "";
+		fIsMP3 = false;
+		fIsWAV = false;
+		fMicSecondPosAfterSeek = 0;
+		fMicSecondsPerByte = 0;
+		
+	}
 	
 }
