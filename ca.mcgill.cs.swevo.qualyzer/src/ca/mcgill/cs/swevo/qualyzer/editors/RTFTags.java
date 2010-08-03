@@ -43,6 +43,8 @@ public final class RTFTags
 	public static final String UNDERLINE_END_TAG = "\\ulnone"; //$NON-NLS-1$
 	public static final String NEW_LINE_TAG = "\\par \n"; //$NON-NLS-1$
 	public static final String TAB_TAG = "\\tab "; //$NON-NLS-1$
+	public static final String UNICODE_START_TAG = "\\u"; //$NON-NLS-1$
+	public static final String UNICODE_END_TAG = "\\'3f"; //$NON-NLS-1$
 	
 	public static final String FONT_TABLE = "fonttbl"; //$NON-NLS-1$
 	public static final String STYLESHEET = "stylesheet"; //$NON-NLS-1$
@@ -52,6 +54,7 @@ public final class RTFTags
 	public static final String COLOR_TABLE2 = "colortbl"; //$NON-NLS-1$
 	
 	public static final String[] IGNORE_GROUPS = {FONT_TABLE, STYLESHEET, INFO, IGNORE, COLOR_TABLE, COLOR_TABLE2};
+	
 	
 	private RTFTags()
 	{
