@@ -209,6 +209,11 @@
             id="ca.mcgill.cs.swevo.qualyzer.commands.deleteMemo"
             name="%command.name.deleteMemo">
       </command>
+      <command
+            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.ProjectPropertiesHandler"
+            id="ca.mcgill.cs.swevo.qualyzer.commands.editProjectProperties"
+            name="Edit Project Properties">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -705,6 +710,21 @@
                      operator="and">
                   <instanceof
                         value="ca.mcgill.cs.swevo.qualyzer.model.Memo">
+                  </instanceof>
+               </iterate>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="ca.mcgill.cs.swevo.qualyzer.commands.editProjectProperties"
+               label="%command.label.Properties"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <iterate
+                     ifEmpty="false"
+                     operator="and">
+                  <instanceof
+                        value="org.eclipse.core.resources.IProject">
                   </instanceof>
                </iterate>
             </visibleWhen>
