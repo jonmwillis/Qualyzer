@@ -14,6 +14,9 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
@@ -50,7 +53,18 @@ public class ProjectPropertiesHandler extends AbstractHandler
 				dialog.create();
 				if(dialog.open() == Window.OK)
 				{
-					
+					IProject wProject = (IProject) element;
+					try
+					{
+						IProjectDescription desc = wProject.getDescription();
+						desc.setComment(dialog.getInvestigator());
+						wProject.setDescription(desc, new NullProgressMonitor());
+					}
+					catch (CoreException e)
+					{
+						e.printStackTrace();
+						System.out.println("Could not change comment");
+					}
 				}
 			}
 		}

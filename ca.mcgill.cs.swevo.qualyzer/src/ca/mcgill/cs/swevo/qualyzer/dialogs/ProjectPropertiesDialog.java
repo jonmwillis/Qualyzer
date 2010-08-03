@@ -35,6 +35,8 @@ public class ProjectPropertiesDialog extends TitleAreaDialog
 	private Project fProject;
 	private Combo fInvestigator;
 	
+	private String fInvestigatorName;
+	
 	/**
 	 * Constructor.
 	 * @param shell
@@ -85,5 +87,24 @@ public class ProjectPropertiesDialog extends TitleAreaDialog
 		fInvestigator.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		
 		return parent;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.dialogs.Dialog#okPressed()
+	 */
+	@Override
+	protected void okPressed()
+	{
+		fInvestigatorName = fInvestigator.getText();
+		super.okPressed();
+	}
+	
+	/**
+	 * Get the investigator name that was chosen.
+	 * @return
+	 */
+	public String getInvestigator()
+	{
+		return fInvestigatorName;
 	}
 }
