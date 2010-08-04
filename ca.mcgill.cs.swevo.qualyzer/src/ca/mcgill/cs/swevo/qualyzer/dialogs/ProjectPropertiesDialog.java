@@ -13,7 +13,9 @@
  */
 package ca.mcgill.cs.swevo.qualyzer.dialogs;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -23,7 +25,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 
@@ -32,9 +37,12 @@ import ca.mcgill.cs.swevo.qualyzer.model.Project;
  */
 public class ProjectPropertiesDialog extends TitleAreaDialog
 {
+	private static Logger gLogger = LoggerFactory.getLogger(ProjectPropertiesDialog.class);
+	
 	private Project fProject;
 	private Combo fInvestigator;
 	
+	private String fCurrentName;
 	private String fInvestigatorName;
 	
 	/**
@@ -45,6 +53,17 @@ public class ProjectPropertiesDialog extends TitleAreaDialog
 	{
 		super(shell);
 		fProject = project;
+		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(fProject.getName());
+		try
+		{
+			fCurrentName = wProject.getDescription().getComment();
+		}
+		catch (CoreException e)
+		{
+			gLogger.error("Unable to read active investigator", e); //$NON-NLS-1$
+			throw new QualyzerException(Messages.getString(
+					"dialogs.ProjectPropertiesDialog.errorMessage"), e); //$NON-NLS-1$
+		}
 	}
 	
 	/* (non-Javadoc)
@@ -54,8 +73,9 @@ public class ProjectPropertiesDialog extends TitleAreaDialog
 	public void create()
 	{
 		super.create();
-		setTitle("Project Properties");
-		setMessage("Properties for Project: " + fProject.getName());
+		setTitle(Messages.getString("dialogs.ProjectPropertiesDialog.projectProperties")); //$NON-NLS-1$
+		setMessage(Messages.getString(
+				"dialogs.ProjectPropertiesDialog.propertiesForProject") + fProject.getName()); //$NON-NLS-1$
 	}
 	
 	/* (non-Javadoc)
@@ -68,7 +88,7 @@ public class ProjectPropertiesDialog extends TitleAreaDialog
 		composite.setLayout(new GridLayout(2, false));
 		
 		Label label = new Label(composite, SWT.NULL);
-		label.setText("Project Path: ");
+		label.setText(Messages.getString("dialogs.ProjectPropertiesDialog.projectPath")); //$NON-NLS-1$
 		
 		String path = ResourcesPlugin.getWorkspace().getRoot().getProject(fProject.getName()).getLocation().toString();
 		label = new Label(composite, SWT.BORDER);
@@ -76,14 +96,19 @@ public class ProjectPropertiesDialog extends TitleAreaDialog
 		label.setText(path);
 		
 		label = new Label(composite, SWT.NULL);
-		label.setText("Active Investigator: ");
+		label.setText(Messages.getString("dialogs.ProjectPropertiesDialog.activeInvestigator")); //$NON-NLS-1$
 		
 		fInvestigator = new Combo(composite, SWT.READ_ONLY);
+		int position = 0;
 		for(Investigator investigator : fProject.getInvestigators())
 		{
 			fInvestigator.add(investigator.getNickName());
+			if(fCurrentName.equals(investigator.getNickName()))
+			{
+				position = fInvestigator.getItemCount() - 1;
+			}
 		}
-		fInvestigator.select(0); //TODO change to currently selected one.
+		fInvestigator.select(position);
 		fInvestigator.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		
 		return parent;
