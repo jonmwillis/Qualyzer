@@ -10,6 +10,7 @@
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.editors;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -19,6 +20,7 @@ import java.util.List;
 import net.sf.colorer.eclipse.ColorerPlugin;
 import net.sf.colorer.eclipse.editors.ColorerEditor;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -58,6 +60,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
 import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.ProjectListener;
+import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
@@ -764,11 +767,35 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 		}
 		else if(ChangeType.MODIFY == cType)
 		{
+			fDocument.setProject(project);
+			refreshInput();
 			fActiveInvestigator = recoverActiveInvestigator();
 		}
 		
 	}
 	
+	/**
+	 * 
+	 */
+	private void refreshInput()
+	{
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(fDocument.getProject().getName());
+		IFile file;
+		if(fDocument instanceof Transcript)
+		{
+			file = project.getFile("transcripts" + File.separator + fDocument.getFileName());
+		}
+		else
+		{
+			file = project.getFile("memos" + File.separator + fDocument.getFileName());
+		}
+		RTFEditorInput input = new RTFEditorInput(file, fDocument);
+		
+		setInput(input);
+		setPartName(fDocument.getName());
+		
+	}
+
 	/* (non-Javadoc)
 	 * @see net.sf.colorer.eclipse.editors.ColorerEditor#dispose()
 	 */
