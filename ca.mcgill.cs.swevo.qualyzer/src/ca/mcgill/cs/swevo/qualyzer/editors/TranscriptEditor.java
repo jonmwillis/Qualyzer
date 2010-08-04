@@ -182,7 +182,7 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 	private void setEnable(Composite container, boolean state)
 	{
 		Control[] children = container.getChildren();
-		for(int i = 0; i < children.length/2; i++)
+		for(int i = 0; i <= children.length/2; i++)
 		{
 			children[children.length - (i+1)].setEnabled(state);
 		}
