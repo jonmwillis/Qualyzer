@@ -246,7 +246,7 @@ public class AudioPlayer
 		fMicroSecondsPos = 0;
 		fSecondsPos = 0;
 		fLength = 0;
-		fAudioFile = "";
+		fAudioFile = ""; //$NON-NLS-1$
 		fIsMP3 = false;
 		fIsWAV = false;
 		fMicSecondPosAfterSeek = 0;

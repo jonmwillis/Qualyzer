@@ -41,7 +41,8 @@ public class QualyzerPreferencePage extends FieldEditorPreferencePage implements
 		addField(new ColorFieldEditor(IQualyzerPreferenceConstants.FRAGMENT_COLOR, 
 				Messages.getString("QualyzerPreferencePage.fragmentColor"), getFieldEditorParent())); //$NON-NLS-1$
 		
-		addField(new IntegerFieldEditor("SEEK_TIME", "Seek time", getFieldEditorParent()));
+		addField(new IntegerFieldEditor(IQualyzerPreferenceConstants.SEEK_TIME, 
+				Messages.getString("QualyzerPreferencePage.seekTime"), getFieldEditorParent())); //$NON-NLS-1$ 
 		
 	}
 
