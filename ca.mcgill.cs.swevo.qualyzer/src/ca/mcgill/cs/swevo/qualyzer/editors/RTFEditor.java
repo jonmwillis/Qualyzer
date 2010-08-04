@@ -762,6 +762,10 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 			IWorkbenchPage page = getSite().getPage();
 			ResourcesUtil.closeEditor(page, getEditorInput().getName());
 		}
+		else if(ChangeType.MODIFY == cType)
+		{
+			fActiveInvestigator = recoverActiveInvestigator();
+		}
 		
 	}
 	
