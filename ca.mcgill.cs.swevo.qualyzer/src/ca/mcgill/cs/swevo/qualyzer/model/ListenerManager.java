@@ -414,4 +414,42 @@ public class ListenerManager
 			list.remove(listener);
 		}
 	}
+	
+	/**
+	 * Updates the listener Maps with the new project.
+	 * @param oldName
+	 * @param newProject
+	 */
+	public void handleProjectNameChange(String oldName, Project newProject)
+	{
+		updateMap(oldName, newProject, fProjectListeners);
+		
+		updateMap(oldName, newProject, fCodeListeners);
+		
+		updateMap(oldName, newProject, fInvestigatorListeners);
+		
+		updateMap(oldName, newProject, fParticipantListeners);
+		
+		updateMap(oldName, newProject, fTranscriptListeners);
+		
+		updateMap(oldName, newProject, fMemoListeners);
+	}
+
+	/**
+	 * @param <T>
+	 * @param oldName
+	 * @param newProject
+	 */
+	private <T> void updateMap(String oldName, Project newProject, HashMap<Project, ArrayList<T>> map)
+	{
+		for(Project project : map.keySet())
+		{
+			if(project.getName().equals(oldName))
+			{
+				ArrayList<T> list = map.remove(project);
+				map.put(newProject, list);
+				break;
+			}
+		}
+	}
 }
