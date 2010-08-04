@@ -525,6 +525,9 @@
                      <instanceof
                            value="ca.mcgill.cs.swevo.qualyzer.model.Memo">
                      </instanceof>
+                     <instanceof
+                           value="org.eclipse.core.resources.IProject">
+                     </instanceof>
                   </or>
                </iterate>
             </visibleWhen>
@@ -985,6 +988,27 @@
                      operator="and">
                   <instanceof
                         value="ca.mcgill.cs.swevo.qualyzer.model.Memo">
+                  </instanceof>
+               </iterate>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="ca.mcgill.cs.swevo.qualyzer.handlers.RenameProjectHandler"
+            commandId="org.eclipse.ui.edit.rename">
+         <activeWhen>
+            <and>
+               <with
+                     variable="activePartId">
+                  <equals
+                        value="ca.mcgill.cs.swevo.qualyzer.projectexplorer">
+                  </equals>
+               </with>
+               <iterate
+                     ifEmpty="false"
+                     operator="and">
+                  <instanceof
+                        value="org.eclipse.core.resources.IProject">
                   </instanceof>
                </iterate>
             </and>
