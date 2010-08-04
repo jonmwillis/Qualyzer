@@ -57,6 +57,10 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 public class ParticipantEditorPage extends FormPage implements ProjectListener, TranscriptListener,
 	ParticipantListener, MemoListener
 {
+	/**
+	 * 
+	 */
+	private static final String DELIMITER = ":"; //$NON-NLS-1$
 	private static final String LABEL_PARTICIPANT_NAME = Messages.getString(
 			"editors.pages.ParticipantEditorPage.participantName"); //$NON-NLS-1$
 	private static final String LABEL_PARTICIPANT_ID = Messages.getString(
@@ -215,7 +219,6 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 //		section.setLayoutData(td);
 //		section.addExpansionListener(createExpansionListener(form));
 //		sectionClient = toolkit.createComposite(section);
-//		//TODO get all codes related to participant
 //		gridLayout = new GridLayout();
 //		gridLayout.numColumns = 2;
 //		gridLayout.makeColumnsEqualWidth = true;
@@ -300,22 +303,24 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 	private void buildMemos()
 	{
 		StringBuffer buf = new StringBuffer();
-		buf.append("<form>");
-		buf.append("<p>");
+		buf.append(FormTextConstants.FORM_START);
+		buf.append(FormTextConstants.PARAGRAPH_START);
 		
 		for(Memo memo : fParticipant.getProject().getMemos())		
 		{
 			Memo loadedMemo = Facade.getInstance().forceMemoLoad(memo);
 			if(loadedMemo.getParticipants().contains(fParticipant))
 			{
-				buf.append("<a href=\"Memo:" + memo.getName() + "\">");
+				buf.append(FormTextConstants.LINK_START_HEAD + 
+						Messages.getString("editors.pages.ParticipantEditorPage.memoKey") + //$NON-NLS-1$
+						memo.getName() + FormTextConstants.LINK_START_TAIL); 
 				buf.append(memo.getName());
-				buf.append("</a> <br></br>");
+				buf.append(FormTextConstants.LINK_END + FormTextConstants.LINE_BREAK);
 			}
 		}
 		
-		buf.append("</p>");
-		buf.append("</form>");
+		buf.append(FormTextConstants.PARAGRAPH_END);
+		buf.append(FormTextConstants.FORM_END);
 		
 		fMemoText.setText(buf.toString(), true, false);
 		
@@ -330,22 +335,24 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 	private void buildInterviews()
 	{
 		StringBuffer buf = new StringBuffer();
-		buf.append("<form>");
-		buf.append("<p>");
+		buf.append(FormTextConstants.FORM_START);
+		buf.append(FormTextConstants.PARAGRAPH_START);
 		
 		for(Transcript transcript : fParticipant.getProject().getTranscripts())		
 		{
 			Transcript loadedTranscript = Facade.getInstance().forceTranscriptLoad(transcript);
 			if(loadedTranscript.getParticipants().contains(fParticipant))
 			{
-				buf.append("<a href=\"Transcript:" + transcript.getName() + "\">");
+				buf.append(FormTextConstants.LINK_START_HEAD + 
+						Messages.getString("editors.pages.ParticipantEditorPage.transcriptKey") + //$NON-NLS-1$
+						transcript.getName() + FormTextConstants.LINK_START_TAIL); 
 				buf.append(transcript.getName());
-				buf.append("</a> <br></br>");
+				buf.append(FormTextConstants.LINK_END + FormTextConstants.LINE_BREAK);
 			}
 		}
 		
-		buf.append("</p>");
-		buf.append("</form>");
+		buf.append(FormTextConstants.PARAGRAPH_END);
+		buf.append(FormTextConstants.PARAGRAPH_START);
 		
 		fTranscriptText.setText(buf.toString(), true, false);
 		
@@ -364,9 +371,10 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 			public void linkActivated(HyperlinkEvent e)
 			{
 				String key = (String) e.getHref();
-				String[] strings = key.split(":");
+				String[] strings = key.split(DELIMITER);
 				IAnnotatedDocument document = null;
-				if(strings[0].equals("Transcript"))
+				if(strings[0].equals(Messages.getString(
+						"editors.pages.ParticipantEditorPage.transcript"))) //$NON-NLS-1$
 				{
 					for(Transcript transcript : fParticipant.getProject().getTranscripts())
 					{
@@ -377,7 +385,7 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 						}
 					}
 				}
-				else if(strings[0].equals("Memo"))
+				else if(strings[0].equals(Messages.getString("editors.pages.ParticipantEditorPage.memo"))) //$NON-NLS-1$
 				{
 					for(Memo memo : fParticipant.getProject().getMemos())
 					{

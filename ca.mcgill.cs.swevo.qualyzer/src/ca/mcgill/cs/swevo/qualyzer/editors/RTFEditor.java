@@ -508,7 +508,7 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 	{
 		Project project = fDocument.getProject();
 		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(project.getName());
-		String name = "";
+		String name = ""; //$NON-NLS-1$
 		
 		try
 		{

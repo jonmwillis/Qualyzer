@@ -63,9 +63,8 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 public class InvestigatorEditorPage extends FormPage implements ProjectListener, InvestigatorListener, MemoListener, 
 	TranscriptListener
 {
-	/**
-	 * 
-	 */
+
+	private static final String DELIMITER = ":"; //$NON-NLS-1$
 	private static final String INVESTIGATOR = Messages.getString(
 			"editors.pages.InvestigatorEditorPage.investigator"); //$NON-NLS-1$
 	private Text fNickname;
@@ -219,16 +218,18 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 	private void buildMemos()
 	{
 		StringBuffer buf = new StringBuffer();
-		buf.append("<form>");
-		buf.append("<p>");
+		buf.append(FormTextConstants.FORM_START);
+		buf.append(FormTextConstants.PARAGRAPH_START);
 		
 		for(Memo memo : fInvestigator.getProject().getMemos())
 		{
 			if(fInvestigator.equals(memo.getAuthor()))
 			{
-				buf.append("<a href=\"Memo:" + memo.getName() + "\">");
+				buf.append(FormTextConstants.LINK_START_HEAD + 
+						Messages.getString("editos.pages.InvestigatorEditorPage.memoKey") + //$NON-NLS-1$
+						memo.getName() + FormTextConstants.LINK_START_TAIL);
 				buf.append(memo.getName());
-				buf.append("</a> <br></br>");
+				buf.append(FormTextConstants.LINK_END + FormTextConstants.LINE_BREAK);
 			}
 			else
 			{
@@ -240,9 +241,11 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 					{
 						if(fInvestigator.equals(entry.getInvestigator()))
 						{
-							buf.append("<a href=\"Memo:" + memo.getName() + "\">");
+							buf.append(FormTextConstants.LINK_START_HEAD + 
+									Messages.getString("editos.pages.InvestigatorEditorPage.memoKey") + //$NON-NLS-1$
+									memo.getName() + FormTextConstants.LINK_START_TAIL);
 							buf.append(memo.getName());
-							buf.append("</a> <br></br>");
+							buf.append(FormTextConstants.LINK_END + FormTextConstants.LINE_BREAK);
 							found = true;
 							break;
 						}
@@ -256,13 +259,12 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 			}
 		}
 		
-		buf.append("</p>");
-		buf.append("</form>");
+		buf.append(FormTextConstants.PARAGRAPH_END);
+		buf.append(FormTextConstants.FORM_END);
 		
 		fMemoText.setText(buf.toString(), true, false);
 		
 		fForm.reflow(true);
-		
 	}
 
 	/**
@@ -276,7 +278,7 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 			public void linkActivated(HyperlinkEvent e)
 			{
 				String key = (String) e.getHref();
-				String[] strings = key.split(":");
+				String[] strings = key.split(DELIMITER);
 				for(Memo memo : fInvestigator.getProject().getMemos())
 				{
 					if(memo.getName().equals(strings[1]))
@@ -317,8 +319,8 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 	private void buildTranscripts()
 	{
 		StringBuffer buf = new StringBuffer();
-		buf.append("<form>");
-		buf.append("<p>");
+		buf.append(FormTextConstants.FORM_START);
+		buf.append(FormTextConstants.PARAGRAPH_START);
 		
 		for(Transcript transcript : fInvestigator.getProject().getTranscripts())
 		{
@@ -330,9 +332,11 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 				{
 					if(fInvestigator.equals(entry.getInvestigator()))
 					{
-						buf.append("<a href=\"Transcript:" + transcript.getName() + "\">");
+						buf.append(FormTextConstants.LINK_START_HEAD + 
+								Messages.getString("editos.pages.InvestigatorEditorPage.transcriptKey") +  //$NON-NLS-1$
+								transcript.getName() + FormTextConstants.LINK_START_TAIL);
 						buf.append(transcript.getName());
-						buf.append("</a> <br></br>");
+						buf.append(FormTextConstants.LINK_END + FormTextConstants.LINE_BREAK);
 						found = true;
 						break;
 					}
@@ -345,8 +349,8 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 			}
 		}
 		
-		buf.append("</p>");
-		buf.append("</form>");
+		buf.append(FormTextConstants.PARAGRAPH_END);
+		buf.append(FormTextConstants.PARAGRAPH_END);
 		
 		fTranscriptText.setText(buf.toString(), true, false);
 		
@@ -365,7 +369,7 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 			public void linkActivated(HyperlinkEvent e)
 			{
 				String key = (String) e.getHref();
-				String[] strings = key.split(":");
+				String[] strings = key.split(DELIMITER);
 				for(Transcript transcript : fInvestigator.getProject().getTranscripts())
 				{
 					if(transcript.getName().equals(strings[1]))
