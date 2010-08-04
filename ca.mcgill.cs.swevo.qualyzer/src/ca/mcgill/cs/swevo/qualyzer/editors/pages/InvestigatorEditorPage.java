@@ -350,7 +350,7 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 		}
 		
 		buf.append(FormTextConstants.PARAGRAPH_END);
-		buf.append(FormTextConstants.PARAGRAPH_END);
+		buf.append(FormTextConstants.FORM_END);
 		
 		fTranscriptText.setText(buf.toString(), true, false);
 		
