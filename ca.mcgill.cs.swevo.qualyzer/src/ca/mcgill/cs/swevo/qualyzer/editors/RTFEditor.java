@@ -19,6 +19,9 @@ import java.util.List;
 import net.sf.colorer.eclipse.ColorerPlugin;
 import net.sf.colorer.eclipse.editors.ColorerEditor;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IContributionItem;
@@ -51,6 +54,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.CodeListener;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Fragment;
 import ca.mcgill.cs.swevo.qualyzer.model.IAnnotatedDocument;
+import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
 import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.ProjectListener;
@@ -82,6 +86,7 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 	
 	private boolean fIsDirty;
 	private IAnnotatedDocument fDocument;
+	private Investigator fActiveInvestigator;
 	
 	/**
 	 * Constructor.
@@ -485,6 +490,7 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 		super.createPartControl(parent);
 		
 		fDocument = ((RTFEditorInput) getEditorInput()).getDocument();
+		fActiveInvestigator = recoverActiveInvestigator();
 
 		ListenerManager listenerManager = Facade.getInstance().getListenerManager();
 		listenerManager.registerProjectListener(fDocument.getProject(), this);
@@ -494,6 +500,46 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 		setPartName(fDocument.getName());
 	}
 	
+	/**
+	 * @param fDocument2
+	 * @return
+	 */
+	private Investigator recoverActiveInvestigator()
+	{
+		Project project = fDocument.getProject();
+		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(project.getName());
+		String name = "";
+		
+		try
+		{
+			name = wProject.getDescription().getComment();
+		}
+		catch (CoreException e)
+		{
+			return project.getInvestigators().get(0);
+		}
+		
+		for(Investigator investigator : project.getInvestigators())
+		{
+			if(investigator.getNickName().equals(name))
+			{
+				return investigator;
+			}
+		}
+		
+		return project.getInvestigators().get(0);
+	}
+	
+	/**
+	 * Returns the current Active Investigator. Mainly for use by MarkTextAction.
+	 * @return
+	 */
+	protected Investigator getActiveInvestigator()
+	{
+		return fActiveInvestigator;
+	}
+	
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.texteditor.AbstractDecoratedTextEditor#overviewRulerContextMenuAboutToShow(
 	 * org.eclipse.jface.action.IMenuManager)

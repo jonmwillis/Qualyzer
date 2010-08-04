@@ -125,6 +125,7 @@ public class MarkTextAction extends Action implements ITestableAction
 		{
 			CodeEntry entry = new CodeEntry();
 			entry.setCode(dialog.getCode());
+			entry.setInvestigator(fEditor.getActiveInvestigator());
 
 			if (fragment == null)
 			{
