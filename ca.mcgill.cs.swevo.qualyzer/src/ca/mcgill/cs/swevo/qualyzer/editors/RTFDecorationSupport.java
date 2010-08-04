@@ -187,7 +187,7 @@ public class RTFDecorationSupport extends SourceViewerDecorationSupport implemen
 		{
 			String color = QualyzerActivator.getDefault().getPreferenceStore().getString(
 					IQualyzerPreferenceConstants.FRAGMENT_COLOR);
-			fStore.setValue("fragment.color", color);
+			fStore.setValue("fragment.color", color); //$NON-NLS-1$
 		}
 		
 	}
