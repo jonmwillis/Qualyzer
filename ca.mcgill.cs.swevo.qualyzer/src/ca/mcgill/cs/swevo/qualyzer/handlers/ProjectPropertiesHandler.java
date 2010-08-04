@@ -29,7 +29,9 @@ import org.slf4j.LoggerFactory;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
 import ca.mcgill.cs.swevo.qualyzer.dialogs.ProjectPropertiesDialog;
+import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
+import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
@@ -67,6 +69,9 @@ public class ProjectPropertiesHandler extends AbstractHandler
 							IProjectDescription desc = wProject.getDescription();
 							desc.setComment(dialog.getInvestigator());
 							wProject.setDescription(desc, new NullProgressMonitor());
+							
+							Facade facade = Facade.getInstance();
+							facade.getListenerManager().notifyProjectListeners(ChangeType.MODIFY, project, facade);
 						}
 						catch (CoreException e)
 						{
