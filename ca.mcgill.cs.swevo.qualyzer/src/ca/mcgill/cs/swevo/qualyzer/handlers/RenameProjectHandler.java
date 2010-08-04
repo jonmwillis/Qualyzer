@@ -22,6 +22,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 
 import ca.mcgill.cs.swevo.qualyzer.dialogs.RenameProjectDialog;
+import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
@@ -49,7 +50,7 @@ public class RenameProjectHandler extends AbstractHandler
 				dialog.create();
 				if(dialog.open() == Window.OK)
 				{
-					//TODO rename the project
+					Facade.getInstance().renameProject(project, dialog.getNewName());
 				}
 			}
 		}

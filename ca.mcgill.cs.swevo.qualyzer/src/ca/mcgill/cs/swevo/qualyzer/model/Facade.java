@@ -819,4 +819,39 @@ public final class Facade
 		fListenerManager.notifyMemoListeners(ChangeType.MODIFY, new Memo[] { memo }, this);
 		
 	}
+
+	/**
+	 * @param project
+	 * @param newName
+	 */
+	public void renameProject(Project project, String newName)
+	{
+		String oldName = project.getName();
+		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(oldName);
+		
+		try
+		{
+			IProjectDescription description = wProject.getDescription();
+			description.setName(newName);
+			wProject.move(description, true, new NullProgressMonitor());
+			wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(newName);
+		}
+		catch(CoreException e)
+		{
+			fLogger.error("Unable to rename project", e);
+			throw new QualyzerException("Failed to rename the project.", e);
+		}
+		
+		
+		QualyzerActivator.getDefault().getHibernateDBManagers().remove(oldName);
+		project.setName(newName);
+		PersistenceManager.getInstance().refreshManager(wProject);
+		
+		fListenerManager.handleProjectNameChange(oldName, project);
+		
+		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(newName);
+		HibernateUtil.quietSave(manager, project);
+		
+		fListenerManager.notifyProjectListeners(ChangeType.MODIFY, project, this);
+	}
 }
