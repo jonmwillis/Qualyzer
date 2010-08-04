@@ -15,13 +15,11 @@
 package ca.mcgill.cs.swevo.qualyzer.editors.pages;
 
 import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPage;
@@ -32,15 +30,17 @@ import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.InvestigatorEditorInput;
+import ca.mcgill.cs.swevo.qualyzer.model.CodeEntry;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
+import ca.mcgill.cs.swevo.qualyzer.model.Fragment;
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
 import ca.mcgill.cs.swevo.qualyzer.model.InvestigatorListener;
 import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager;
@@ -49,6 +49,8 @@ import ca.mcgill.cs.swevo.qualyzer.model.MemoListener;
 import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.ProjectListener;
+import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
+import ca.mcgill.cs.swevo.qualyzer.model.TranscriptListener;
 import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
 import ca.mcgill.cs.swevo.qualyzer.model.validation.InvestigatorValidator;
 import ca.mcgill.cs.swevo.qualyzer.model.validation.StringLengthValidator;
@@ -58,7 +60,8 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
  * The main page of the Investigator editor.
  *
  */
-public class InvestigatorEditorPage extends FormPage implements ProjectListener, InvestigatorListener, MemoListener
+public class InvestigatorEditorPage extends FormPage implements ProjectListener, InvestigatorListener, MemoListener, 
+	TranscriptListener
 {
 	/**
 	 * 
@@ -69,11 +72,12 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 	private Text fFullname;
 	private Text fInstitution;
 	private FormToolkit fToolkit;
-	private Composite fMemoSectionClient;
 	
 	private Investigator fInvestigator;
 	private boolean fIsDirty;
 	private ScrolledForm fForm;
+	private FormText fTranscriptText;
+	private FormText fMemoText;
 	/**
 	 * @param editor
 	 * @param investigator 
@@ -85,9 +89,11 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 		fIsDirty = false;
 		
 		ListenerManager listenerManager = Facade.getInstance().getListenerManager();
-		listenerManager.registerProjectListener(fInvestigator.getProject(), this);
-		listenerManager.registerInvestigatorListener(fInvestigator.getProject(), this);
-		listenerManager.registerMemoListener(fInvestigator.getProject(), this);
+		Project project = fInvestigator.getProject();
+		listenerManager.registerProjectListener(project, this);
+		listenerManager.registerInvestigatorListener(project, this);
+		listenerManager.registerMemoListener(project, this);
+		listenerManager.registerTranscriptListener(project, this);
 	}
 
 	@Override
@@ -121,16 +127,14 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 		fInstitution.addKeyListener(createStringLengthValidator(fForm, 
 				Messages.getString("editors.pages.InvestigatorEditorPage.institution"), fInstitution)); //$NON-NLS-1$
 		
-		//Removing placeholders until they are used - JF
-//		createInterviewSection(form, toolkit, body);
-//		
-//		createCodedSection(form, toolkit, body);
-//		
+		
+		createCodedSection(body);
+		
 		createMemoSection(fForm, body);
 	
 		fToolkit.paintBordersFor(body);
 	}
-
+	
 	/**
 	 * @param form 
 	 * @return
@@ -197,12 +201,14 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 		section.setLayoutData(td);
 		section.setText(Messages.getString("editors.pages.InvestigatorEditorPage.memos")); //$NON-NLS-1$
 		section.addExpansionListener(createExpansionListener(form));
-		fMemoSectionClient = fToolkit.createComposite(section);
+		Composite sectionClient = fToolkit.createComposite(section);
 		grid = new GridLayout();
 		grid.numColumns = 1;
-		fMemoSectionClient.setLayout(grid);
+		sectionClient.setLayout(grid);
+		fMemoText = fToolkit.createFormText(sectionClient, true);
+		fMemoText.addHyperlinkListener(openMemoListener());
 		buildMemos();
-		section.setClient(fMemoSectionClient);
+		section.setClient(sectionClient);
 	}
 
 	
@@ -212,102 +218,166 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 	 */
 	private void buildMemos()
 	{
-		for(Control control : fMemoSectionClient.getChildren())
-		{
-			control.dispose();
-		}
+		StringBuffer buf = new StringBuffer();
+		buf.append("<form>");
+		buf.append("<p>");
 		
 		for(Memo memo : fInvestigator.getProject().getMemos())
 		{
 			if(fInvestigator.equals(memo.getAuthor()))
 			{
-				Hyperlink link = fToolkit.createHyperlink(fMemoSectionClient, memo.getName(), SWT.NULL);
-				link.addHyperlinkListener(openMemoListener(memo));
+				buf.append("<a href=\"Memo:" + memo.getName() + "\">");
+				buf.append(memo.getName());
+				buf.append("</a> <br></br>");
+			}
+			else
+			{
+				Memo lMemo = Facade.getInstance().forceMemoLoad(memo);
+				for(Fragment fragment : lMemo.getFragments())
+				{
+					boolean found = false;
+					for(CodeEntry entry : fragment.getCodeEntries())
+					{
+						if(fInvestigator.equals(entry.getInvestigator()))
+						{
+							buf.append("<a href=\"Memo:" + memo.getName() + "\">");
+							buf.append(memo.getName());
+							buf.append("</a> <br></br>");
+							found = true;
+							break;
+						}
+					}
+					
+					if(found)
+					{
+						break;
+					}
+				}
 			}
 		}
+		
+		buf.append("</p>");
+		buf.append("</form>");
+		
+		fMemoText.setText(buf.toString(), true, false);
 		
 		fForm.reflow(true);
 		
 	}
 
 	/**
-	 * @param memo
 	 * @return
 	 */
-	private HyperlinkAdapter openMemoListener(final Memo memo)
+	private HyperlinkAdapter openMemoListener()
 	{
 		return new HyperlinkAdapter(){
 			
 			@Override
 			public void linkActivated(HyperlinkEvent e)
 			{
-				ResourcesUtil.openEditor(getSite().getPage(), memo);
+				String key = (String) e.getHref();
+				String[] strings = key.split(":");
+				for(Memo memo : fInvestigator.getProject().getMemos())
+				{
+					if(memo.getName().equals(strings[1]))
+					{
+						ResourcesUtil.openEditor(getSite().getPage(), memo);
+					}
+				}	
 			}
 		};
 	}
 
-	//Removing for 0.2 as they are not yet used - JF
-//	/**
-//	 * @param form
-//	 * @param toolkit
-//	 * @param body
-//	 */
-//	private void createCodedSection(final ScrolledForm form, FormToolkit toolkit, Composite body)
-//	{
-//		TableWrapData td;
-//		Label label;
-//		Section section;
-//		Composite sectionClient;
-//		GridLayout grid;
-//		GridData gd;
-//		section = toolkit.createSection(body, Section.EXPANDED | Section.TITLE_BAR | Section.TWISTIE);
-//		td = new TableWrapData(TableWrapData.FILL_GRAB);
-//		td.colspan = 2;
-//		section.setLayoutData(td);
-//		section.setText(Messages.getString("editors.pages.InvestigatorEditorPage.codedTranscripts")); //$NON-NLS-1$
-//		section.addExpansionListener(createExpansionListener(form));
-//		sectionClient = toolkit.createComposite(section);
-//		grid = new GridLayout();
-//		grid.numColumns = 1;
-//		sectionClient.setLayout(grid);
-//		//TODO generate the interview data
-//		//TODO make clickable
-//		gd = new GridData(SWT.FILL, SWT.NULL, true, false);
-//		label = toolkit.createLabel(sectionClient, "Example Interview"); //$NON-NLS-1$
-//		label.setLayoutData(gd);
-//		section.setClient(sectionClient);
-//	}
-
+	/**
+	 * @param form
+	 * @param toolkit
+	 * @param body
+	 */
+	private void createCodedSection(Composite body)
+	{
+		TableWrapData td;
+		Section section;
+		section = fToolkit.createSection(body, Section.EXPANDED | Section.TITLE_BAR | Section.TWISTIE);
+		td = new TableWrapData(TableWrapData.FILL_GRAB);
+		td.colspan = 2;
+		section.setLayoutData(td);
+		section.setText(Messages.getString("editors.pages.InvestigatorEditorPage.codedTranscripts")); //$NON-NLS-1$
+		section.addExpansionListener(createExpansionListener(fForm));
+		Composite sectionClient = fToolkit.createComposite(section);
+		sectionClient.setLayout(new TableWrapLayout());
+		fTranscriptText = fToolkit.createFormText(sectionClient, true);
+		fTranscriptText.addHyperlinkListener(openTranscriptListener());
+		buildTranscripts();
+		section.setClient(sectionClient);
+	}
 	
-	//Removing for 0.2 as NYI - JF
-//	/**
-//	 * @param form
-//	 * @param toolkit
-//	 * @param body
-//	 */
-//	private void createInterviewSection(final ScrolledForm form, FormToolkit toolkit, Composite body)
-//	{
-//		TableWrapData td;
-//		Label label;
-//		Section section = toolkit.createSection(body, Section.EXPANDED | Section.TITLE_BAR | Section.TWISTIE);
-//		td = new TableWrapData(TableWrapData.FILL_GRAB);
-//		td.colspan = 2;
-//		section.setLayoutData(td);
-//		section.setText(Messages.getString("editors.pages.InvestigatorEditorPage.transcriptsConducted")); //$NON-NLS-1$
-//		section.addExpansionListener(createExpansionListener(form));
-//		Composite sectionClient = toolkit.createComposite(section);
-//		GridLayout grid = new GridLayout();
-//		grid.numColumns = 1;
-//		sectionClient.setLayout(grid);
-//		//TODO generate the interview data
-//		//TODO make clickable
-//		GridData gd = new GridData(SWT.FILL, SWT.NULL, true, false);
-//		label = toolkit.createLabel(sectionClient, "Example Interview"); //$NON-NLS-1$
-//		label.setLayoutData(gd);
-//		section.setClient(sectionClient);
-//	}
+	/**
+	 * 
+	 */
+	private void buildTranscripts()
+	{
+		StringBuffer buf = new StringBuffer();
+		buf.append("<form>");
+		buf.append("<p>");
+		
+		for(Transcript transcript : fInvestigator.getProject().getTranscripts())
+		{
+			Transcript lTranscript = Facade.getInstance().forceTranscriptLoad(transcript);
+			for(Fragment fragment : lTranscript.getFragments())
+			{
+				boolean found = false;
+				for(CodeEntry entry : fragment.getCodeEntries())
+				{
+					if(fInvestigator.equals(entry.getInvestigator()))
+					{
+						buf.append("<a href=\"Transcript:" + transcript.getName() + "\">");
+						buf.append(transcript.getName());
+						buf.append("</a> <br></br>");
+						found = true;
+						break;
+					}
+				}
+				
+				if(found)
+				{
+					break;
+				}
+			}
+		}
+		
+		buf.append("</p>");
+		buf.append("</form>");
+		
+		fTranscriptText.setText(buf.toString(), true, false);
+		
+		fForm.reflow(true);
+	}
 
-	
+	/**
+	 * @param transcript
+	 * @return
+	 */
+	private HyperlinkAdapter openTranscriptListener()
+	{
+		return new HyperlinkAdapter(){
+			
+			@Override
+			public void linkActivated(HyperlinkEvent e)
+			{
+				String key = (String) e.getHref();
+				String[] strings = key.split(":");
+				for(Transcript transcript : fInvestigator.getProject().getTranscripts())
+				{
+					if(transcript.getName().equals(strings[1]))
+					{
+						ResourcesUtil.openEditor(getSite().getPage(), transcript);
+						break;
+					}
+				}
+			}
+		};
+	}
+
 	/**
 	 * @param form
 	 * @return
@@ -434,9 +504,11 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 	public void dispose()
 	{
 		ListenerManager listenerManager = Facade.getInstance().getListenerManager();
-		listenerManager.unregisterProjectListener(fInvestigator.getProject(), this);
-		listenerManager.unregisterInvestigatorListener(fInvestigator.getProject(), this);
-		listenerManager.unregisterMemoListener(fInvestigator.getProject(), this);
+		Project project = fInvestigator.getProject();
+		listenerManager.unregisterProjectListener(project, this);
+		listenerManager.unregisterInvestigatorListener(project, this);
+		listenerManager.unregisterMemoListener(project, this);
+		listenerManager.unregisterTranscriptListener(project, this);
 		super.dispose();
 	}
 
@@ -494,5 +566,40 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 		
 		buildMemos();
 		
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.model.TranscriptListener#transcriptChanged(
+	 * ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType, ca.mcgill.cs.swevo.qualyzer.model.Transcript[], 
+	 * ca.mcgill.cs.swevo.qualyzer.model.Facade)
+	 */
+	@Override
+	public void transcriptChanged(ChangeType cType, Transcript[] transcripts, Facade facade)
+	{
+		if(cType != ChangeType.ADD)
+		{
+			Project project;
+			if(ChangeType.DELETE == cType)
+			{
+				project = PersistenceManager.getInstance().getProject(fInvestigator.getProject().getName());
+			}
+			else
+			{
+				project = transcripts[0].getProject();
+			}
+			
+			for(Investigator investigator : project.getInvestigators())
+			{
+				if(fInvestigator.equals(investigator))
+				{
+					setInput(new InvestigatorEditorInput(investigator));
+					break;
+				}
+			}
+			
+			fInvestigator = ((InvestigatorEditorInput) getEditorInput()).getInvestigator();
+			
+			buildTranscripts();
+		}
 	}
 }
