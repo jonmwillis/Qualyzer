@@ -184,22 +184,22 @@ public class CodeFragmentViewerPage extends FormPage
 		FormText formText = toolkit.createFormText(sectionClient, true);
 		
 		StringBuffer buffer = new StringBuffer();
-		buffer.append("<form>"); //$NON-NLS-1$
-		buffer.append("<p>"); //$NON-NLS-1$
+		buffer.append(FormTextConstants.FORM_START); 
+		buffer.append(FormTextConstants.PARAGRAPH_START);
 		
 		int fragStart = fragment.getOffset() - start - (fragText.length() - newText.length());
 		int fragEnd = fragStart + fragment.getLength();
 		
 		buffer.append(newText.substring(0, fragStart));
 		
-		buffer.append("<a href=\" key \">"); //$NON-NLS-1$
+		buffer.append(FormTextConstants.LINK_START_HEAD + FormTextConstants.LINK_START_TAIL); 
 		buffer.append(newText.substring(fragStart, fragEnd));
-		buffer.append("</a>"); //$NON-NLS-1$
+		buffer.append(FormTextConstants.LINK_END); 
 		
 		buffer.append(newText.substring(fragEnd, newText.length()));
 		
-		buffer.append("</p>"); //$NON-NLS-1$
-		buffer.append("</form>"); //$NON-NLS-1$
+		buffer.append(FormTextConstants.PARAGRAPH_END); 
+		buffer.append(FormTextConstants.FORM_END); 
 		
 		formText.setText(buffer.toString(), true, false);
 		formText.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
