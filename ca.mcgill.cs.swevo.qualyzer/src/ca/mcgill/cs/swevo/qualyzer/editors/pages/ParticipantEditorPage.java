@@ -12,14 +12,11 @@
 package ca.mcgill.cs.swevo.qualyzer.editors.pages;
 
 import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.forms.IManagedForm;
@@ -29,8 +26,8 @@ import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
@@ -74,8 +71,8 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 	private Text fNotes;
 	private boolean fIsDirty;
 	private FormToolkit fToolkit;
-	private Composite fTranscriptSectionClient;
-	private Composite fMemoSectionClient;
+	private FormText fTranscriptText;
+	private FormText fMemoText;
 	private ScrolledForm fForm;
 
 	/**
@@ -245,13 +242,16 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 		section.setLayoutData(td);
 		section.addExpansionListener(createExpansionListener(fForm));
 		section.setText(Messages.getString("editors.pages.ParticipantEditorPage.transcripts")); //$NON-NLS-1$
-		fTranscriptSectionClient = fToolkit.createComposite(section);
+		Composite sectionClient = fToolkit.createComposite(section);
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 1;
-		fTranscriptSectionClient.setLayout(gridLayout);
+		sectionClient.setLayout(new TableWrapLayout());
+		fTranscriptText = fToolkit.createFormText(sectionClient, true);
+		fTranscriptText.addHyperlinkListener(createHyperlinkListener());
+		fTranscriptText.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 		buildInterviews();
-		fTranscriptSectionClient.setLayoutData(td);
-		section.setClient(fTranscriptSectionClient);
+		sectionClient.setLayoutData(td);
+		section.setClient(sectionClient);
 	}
 	
 	/**
@@ -268,13 +268,14 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 		section.setLayoutData(td);
 		section.addExpansionListener(createExpansionListener(fForm));
 		section.setText(Messages.getString("editors.pages.ParticipantEditorPage.memos")); //$NON-NLS-1$
-		fMemoSectionClient = fToolkit.createComposite(section);
-		GridLayout gridLayout = new GridLayout();
-		gridLayout.numColumns = 1;
-		fMemoSectionClient.setLayout(gridLayout);
+		Composite sectionClient = fToolkit.createComposite(section);
+		sectionClient.setLayout(new TableWrapLayout());
+		fMemoText = fToolkit.createFormText(sectionClient, true);
+		fMemoText.addHyperlinkListener(createHyperlinkListener());
+		fMemoText.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 		buildMemos();
-		fMemoSectionClient.setLayoutData(td);
-		section.setClient(fMemoSectionClient);
+		sectionClient.setLayoutData(td);
+		section.setClient(sectionClient);
 	}
 
 	/**
@@ -298,25 +299,27 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 	 */
 	private void buildMemos()
 	{
-		for(Control control : fMemoSectionClient.getChildren())
-		{
-			control.dispose();
-		}
+		StringBuffer buf = new StringBuffer();
+		buf.append("<form>");
+		buf.append("<p>");
 		
 		for(Memo memo : fParticipant.getProject().getMemos())		
 		{
 			Memo loadedMemo = Facade.getInstance().forceMemoLoad(memo);
 			if(loadedMemo.getParticipants().contains(fParticipant))
 			{
-				GridData gd = new GridData(SWT.FILL, SWT.NULL, true, false);
-				Hyperlink link = fToolkit.createHyperlink(fMemoSectionClient, memo.getName(), SWT.WRAP);
-				link.addHyperlinkListener(createHyperlinkListener(memo));
-				link.setLayoutData(gd);
+				buf.append("<a href=\"Memo:" + memo.getName() + "\">");
+				buf.append(memo.getName());
+				buf.append("</a> <br></br>");
 			}
 		}
 		
-		fForm.reflow(true);
+		buf.append("</p>");
+		buf.append("</form>");
 		
+		fMemoText.setText(buf.toString(), true, false);
+		
+		fForm.reflow(true);
 	}
 
 	/**
@@ -326,22 +329,25 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 	 */
 	private void buildInterviews()
 	{
-		for(Control control : fTranscriptSectionClient.getChildren())
-		{
-			control.dispose();
-		}
+		StringBuffer buf = new StringBuffer();
+		buf.append("<form>");
+		buf.append("<p>");
 		
 		for(Transcript transcript : fParticipant.getProject().getTranscripts())		
 		{
 			Transcript loadedTranscript = Facade.getInstance().forceTranscriptLoad(transcript);
 			if(loadedTranscript.getParticipants().contains(fParticipant))
 			{
-				GridData gd = new GridData(SWT.FILL, SWT.NULL, true, false);
-				Hyperlink link = fToolkit.createHyperlink(fTranscriptSectionClient, transcript.getName(), SWT.WRAP);
-				link.addHyperlinkListener(createHyperlinkListener(transcript));
-				link.setLayoutData(gd);
+				buf.append("<a href=\"Transcript:" + transcript.getName() + "\">");
+				buf.append(transcript.getName());
+				buf.append("</a> <br></br>");
 			}
 		}
+		
+		buf.append("</p>");
+		buf.append("</form>");
+		
+		fTranscriptText.setText(buf.toString(), true, false);
 		
 		fForm.reflow(true);
 	}
@@ -350,16 +356,44 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 	 * @param transcript
 	 * @return
 	 */
-	private HyperlinkAdapter createHyperlinkListener(final IAnnotatedDocument document)
+	private HyperlinkAdapter createHyperlinkListener()
 	{
 		return new HyperlinkAdapter(){
-			private IAnnotatedDocument fDoc = document;
 
 			@Override
 			public void linkActivated(HyperlinkEvent e)
 			{
-				IWorkbenchPage page = getSite().getPage();
-				ResourcesUtil.openEditor(page, fDoc);
+				String key = (String) e.getHref();
+				String[] strings = key.split(":");
+				IAnnotatedDocument document = null;
+				if(strings[0].equals("Transcript"))
+				{
+					for(Transcript transcript : fParticipant.getProject().getTranscripts())
+					{
+						if(transcript.getName().equals(strings[1]))
+						{
+							document = transcript;
+							break;
+						}
+					}
+				}
+				else if(strings[0].equals("Memo"))
+				{
+					for(Memo memo : fParticipant.getProject().getMemos())
+					{
+						if(memo.getName().equals(strings[1]))
+						{
+							document = memo;
+							break;
+						}
+					}
+				}
+				
+				if(document != null)
+				{
+					IWorkbenchPage page = getSite().getPage();
+					ResourcesUtil.openEditor(page, document);
+				}
 			}
 
 
