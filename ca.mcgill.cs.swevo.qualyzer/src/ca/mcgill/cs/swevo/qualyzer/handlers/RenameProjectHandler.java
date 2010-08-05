@@ -75,7 +75,8 @@ public class RenameProjectHandler extends AbstractHandler
 					}
 					catch(QualyzerException e)
 					{
-						MessageDialog.openError(shell, "Renaming Error", e.getMessage());
+						MessageDialog.openError(shell, Messages.getString(
+								"handlers.RenameProjectHandler.renameError"), e.getMessage()); //$NON-NLS-1$
 					}
 				}
 			}

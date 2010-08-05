@@ -783,11 +783,11 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 		IFile file;
 		if(fDocument instanceof Transcript)
 		{
-			file = project.getFile("transcripts" + File.separator + fDocument.getFileName());
+			file = project.getFile("transcripts" + File.separator + fDocument.getFileName()); //$NON-NLS-1$
 		}
 		else
 		{
-			file = project.getFile("memos" + File.separator + fDocument.getFileName());
+			file = project.getFile("memos" + File.separator + fDocument.getFileName()); //$NON-NLS-1$
 		}
 		RTFEditorInput input = new RTFEditorInput(file, fDocument);
 		

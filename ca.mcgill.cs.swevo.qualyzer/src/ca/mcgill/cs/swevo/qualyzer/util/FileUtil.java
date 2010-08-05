@@ -385,7 +385,7 @@ public final class FileUtil
 		manager.close();
 		
 		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(oldName);
-		IFile dbLock = wProject.getFile(".db/qualyzer_db.lock.db");
+		IFile dbLock = wProject.getFile(".db/qualyzer_db.lock.db"); //$NON-NLS-1$
 		
 		try
 		{
@@ -396,8 +396,8 @@ public final class FileUtil
 		}
 		catch(CoreException e)
 		{
-			gLogger.error("Unable to rename project", e);
-			throw new QualyzerException("Failed to rename the project.", e);
+			gLogger.error("Unable to rename project", e); //$NON-NLS-1$
+			throw new QualyzerException(Messages.getString("util.FileUtil.renameFailed"), e); //$NON-NLS-1$
 		}
 	}
 }
