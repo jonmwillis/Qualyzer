@@ -625,6 +625,7 @@
                label="%menu.label.import">
             <command
                   commandId="org.eclipse.ui.file.import"
+                  icon="icons/prj_obj.gif"
                   label="Project"
                   style="push">
             </command>
@@ -689,12 +690,24 @@
             </command>
          </menu>
          <menu
+               icon="icons/export.gif"
                id="exportMenu"
                label="Export">
             <command
                   commandId="org.eclipse.ui.file.export"
+                  icon="icons/prj_obj.gif"
                   label="Project"
                   style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <iterate
+                        ifEmpty="false"
+                        operator="and">
+                     <instanceof
+                           value="org.eclipse.core.resources.IProject">
+                     </instanceof>
+                  </iterate>
+               </visibleWhen>
             </command>
          </menu>
       </menuContribution>
