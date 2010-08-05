@@ -21,6 +21,7 @@ import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.fieldassist.AutoCompleteField;
 import org.eclipse.jface.fieldassist.ComboContentAdapter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
@@ -30,7 +31,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonNavigator;
 
@@ -50,7 +50,7 @@ public class CodeChooserDialog extends TitleAreaDialog
 
 	private Project fProject;
 	private Combo fCodeName;
-	private Text fDescription;
+	private StyledText fDescription;
 	private String[] fProposals;
 
 	private Code fCode;
@@ -100,7 +100,7 @@ public class CodeChooserDialog extends TitleAreaDialog
 		label = new Label(parent, SWT.NULL);
 		label.setText(Messages.getString("dialogs.CodeChooserDialog.description")); //$NON-NLS-1$
 		
-		fDescription = new Text(parent, SWT.MULTI | SWT.BORDER);
+		fDescription = new StyledText(parent, SWT.WRAP | SWT.BORDER);
 		fDescription.setText(""); //$NON-NLS-1$
 		fDescription.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
