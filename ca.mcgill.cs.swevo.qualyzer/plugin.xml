@@ -214,6 +214,16 @@
             id="ca.mcgill.cs.swevo.qualyzer.commands.editProjectProperties"
             name="Edit Project Properties">
       </command>
+      <command
+            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.SeekBackHandler"
+            id="ca.mcgill.cs.swevo.qualyzer.commands.seekBack"
+            name="Seek Back">
+      </command>
+      <command
+            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.SeekForwardHandler"
+            id="ca.mcgill.cs.swevo.qualyzer.commands.seekForward"
+            name="Seek Forward">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -1218,6 +1228,16 @@
             contextId="org.eclipse.ui.textEditorScope"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M1+K">
+      </key>
+      <key
+            commandId="ca.mcgill.cs.swevo.qualyzer.commands.seekBack"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="F7">
+      </key>
+      <key
+            commandId="ca.mcgill.cs.swevo.qualyzer.commands.seekForward"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="F8">
       </key>
    </extension>
    <extension

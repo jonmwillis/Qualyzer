@@ -223,10 +223,7 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 			@Override
 			public void widgetSelected(SelectionEvent e)
 			{
-				int selection = fAudioSlider.getSelection();
-				selection -= QualyzerActivator.getDefault().getPreferenceStore().getInt(
-						IQualyzerPreferenceConstants.SEEK_TIME);
-				fAudioPlayer.jumpToTime(selection >= 0 ? selection : 0);
+				seekBack();
 			}
 		});
 		
@@ -234,10 +231,7 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 			@Override
 			public void widgetSelected(SelectionEvent e)
 			{
-				int selection = fAudioSlider.getSelection();
-				selection += QualyzerActivator.getDefault().getPreferenceStore().getInt(
-						IQualyzerPreferenceConstants.SEEK_TIME);
-				fAudioPlayer.jumpToTime(selection <= fAudioLength ? selection : fAudioLength);
+				seekForward();
 			}
 		});
 	}
@@ -466,6 +460,34 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 				"editors.TranscriptEditor.audioError"), errorMessage); //$NON-NLS-1$
 	}
 	
+	/**
+	 * 
+	 */
+	public void seekBack()
+	{
+		if(fAudioPlayer != null)
+		{
+			int selection = fAudioSlider.getSelection();
+			selection -= QualyzerActivator.getDefault().getPreferenceStore().getInt(
+					IQualyzerPreferenceConstants.SEEK_TIME);
+			fAudioPlayer.jumpToTime(selection >= 0 ? selection : 0);
+		}
+	}
+
+	/**
+	 * 
+	 */
+	public void seekForward()
+	{
+		if(fAudioPlayer != null)
+		{
+			int selection = fAudioSlider.getSelection();
+			selection += QualyzerActivator.getDefault().getPreferenceStore().getInt(
+					IQualyzerPreferenceConstants.SEEK_TIME);
+			fAudioPlayer.jumpToTime(selection <= fAudioLength ? selection : fAudioLength);
+		}
+	}
+
 	/**
 	 * The selection adapter for the play button.
 	 *
