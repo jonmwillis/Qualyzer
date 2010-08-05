@@ -136,10 +136,6 @@ public class TranscriptWizardPage extends WizardPage
 		createLongLabel();
 		createTable();
 		
-//		label = createLabel(fContainer, 
-//				Messages.getString("wizards.pages.TranscriptWizardPage.description")); //$NON-NLS-1$
-//		fDescription = createText(fContainer);
-		
 		Composite composite = createComposite();
 		label = createLabel(composite, 
 				Messages.getString("wizards.pages.TranscriptWizardPage.audioFile")); //$NON-NLS-1$
@@ -413,15 +409,6 @@ public class TranscriptWizardPage extends WizardPage
 	{
 		return fAudioFile.getText();
 	}
-	
-//	/**
-//	 * 
-//	 * @return The Description field.
-//	 */
-//	public String getTranscriptDescription()
-//	{
-//		return fDescription.getText();
-//	}
 	
 	/**
 	 * 

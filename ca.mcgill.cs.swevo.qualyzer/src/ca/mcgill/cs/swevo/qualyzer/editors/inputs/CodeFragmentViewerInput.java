@@ -67,7 +67,8 @@ public class CodeFragmentViewerInput implements IEditorInput
 	@Override
 	public String getName()
 	{
-		return "fragmentViewer." + fCode.getCodeName(); //$NON-NLS-1$
+		String proj = fCode.getProject().getName();
+		return proj + ".fragmentViewer." + fCode.getCodeName(); //$NON-NLS-1$
 	}
 
 	/* (non-Javadoc)
