@@ -299,7 +299,7 @@ public final class Facade
 			HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(project.getName());
 
 			QualyzerActivator.getDefault().getHibernateDBManagers().remove(project.getName());
-			manager.shutdownDBServer();
+			//manager.shutdownDBServer();
 			manager.close();
 
 			wProject.delete(true, true, new NullProgressMonitor());
@@ -834,9 +834,6 @@ public final class Facade
 		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(oldName);
 		project.setName(newName);
 		HibernateUtil.quietSave(manager, project);
-
-		manager = QualyzerActivator.getDefault().getHibernateDBManagers().remove(oldName);
-		manager.shutdownDBServer();
 		
 		fListenerManager.handleProjectNameChange(oldName, project);
 	}
