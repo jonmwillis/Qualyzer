@@ -23,6 +23,10 @@ import ca.mcgill.cs.swevo.qualyzer.model.IAnnotatedDocument;
  */
 public class RTFEditorInput extends FileEditorInput
 {
+	/**
+	 * 
+	 */
+	private static final String DOT = "."; //$NON-NLS-1$
 	private static final int NUM1 = 39753;
 	private static final int NUM2 = 50071;
 	
@@ -79,7 +83,7 @@ public class RTFEditorInput extends FileEditorInput
 	@Override
 	public String getName()
 	{
-		return fDocument.getClass().getSimpleName() + "." + super.getName(); //$NON-NLS-1$
+		return fDocument.getProject() + DOT + fDocument.getClass().getSimpleName() + DOT + super.getName();
 	}
 	
 }

@@ -63,7 +63,8 @@ public class InvestigatorEditorInput implements IEditorInput
 	@Override
 	public String getName()
 	{
-		return "editor.investigator."+fInvestigator.getNickName(); //$NON-NLS-1$
+		String proj = fInvestigator.getProject().getName();
+		return proj + ".editor.investigator."+fInvestigator.getNickName(); //$NON-NLS-1$
 	}
 
 	/* (non-Javadoc)

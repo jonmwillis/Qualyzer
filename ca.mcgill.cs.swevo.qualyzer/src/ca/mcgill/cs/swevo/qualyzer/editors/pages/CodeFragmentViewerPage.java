@@ -38,31 +38,33 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
-import ca.mcgill.cs.swevo.qualyzer.editors.ColorManager;
 import ca.mcgill.cs.swevo.qualyzer.editors.RTFDocumentProvider;
 import ca.mcgill.cs.swevo.qualyzer.editors.RTFEditor;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.RTFEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.model.Code;
 import ca.mcgill.cs.swevo.qualyzer.model.CodeEntry;
+import ca.mcgill.cs.swevo.qualyzer.model.CodeListener;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Fragment;
 import ca.mcgill.cs.swevo.qualyzer.model.IAnnotatedDocument;
+import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Memo;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
+import ca.mcgill.cs.swevo.qualyzer.model.ProjectListener;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
+import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
  *
  */
-public class CodeFragmentViewerPage extends FormPage
+public class CodeFragmentViewerPage extends FormPage implements ProjectListener, CodeListener
 {
 	
 	private static final String VIEW_FRAGMENTS = Messages.getString(
 			"editors.pages.CodeFragmentViewerPage.viewFragments"); //$NON-NLS-1$
 	private Code fCode;
 	private ScrolledForm fForm;
-	private ColorManager fManager;
 	
 	/**
 	 * 
@@ -71,7 +73,9 @@ public class CodeFragmentViewerPage extends FormPage
 	{
 		super(editor, VIEW_FRAGMENTS, VIEW_FRAGMENTS); 
 		fCode = code;
-		fManager = new ColorManager();
+		ListenerManager listenerManager = Facade.getInstance().getListenerManager();
+		listenerManager.registerProjectListener(code.getProject(), this);
+		listenerManager.registerCodeListener(code.getProject(), this);
 	}
 	
 	/* (non-Javadoc)
@@ -340,7 +344,45 @@ public class CodeFragmentViewerPage extends FormPage
 	@Override
 	public void dispose()
 	{
-		fManager.dispose();
+		ListenerManager listenerManager = Facade.getInstance().getListenerManager();
+		listenerManager.unregisterProjectListener(fCode.getProject(), this);
+		listenerManager.unregisterCodeListener(fCode.getProject(), this);
 		super.dispose();
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.model.ProjectListener#projectChanged(
+	 * ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType, ca.mcgill.cs.swevo.qualyzer.model.Project, 
+	 * ca.mcgill.cs.swevo.qualyzer.model.Facade)
+	 */
+	@Override
+	public void projectChanged(ChangeType cType, Project project, Facade facade)
+	{
+		if(ChangeType.DELETE == cType)
+		{
+			ResourcesUtil.closeEditor(getSite().getPage(), getEditorInput().getName());
+		}
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.model.CodeListener#codeChanged(
+	 * ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType, ca.mcgill.cs.swevo.qualyzer.model.Code[], 
+	 * ca.mcgill.cs.swevo.qualyzer.model.Facade)
+	 */
+	@Override
+	public void codeChanged(ChangeType cType, Code[] codes, Facade facade)
+	{
+		if(cType == ChangeType.DELETE)
+		{
+			for(Code code : codes)
+			{
+				if(code.equals(fCode))
+				{
+					ResourcesUtil.closeEditor(getSite().getPage(), getEditorInput().getName());
+				}
+			}
+		}
+		
 	}
 }
