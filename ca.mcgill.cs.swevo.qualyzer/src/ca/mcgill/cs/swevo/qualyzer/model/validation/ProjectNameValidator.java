@@ -31,7 +31,8 @@ public class ProjectNameValidator extends BasicNameValidator
 	 */
 	public ProjectNameValidator(String pName, String pOldName, Project pProject)
 	{
-		super("Project name", pName, pOldName, pProject);
+		super(Messages.getString("model.validation.ProjectNameValidator.projectName"), //$NON-NLS-1$
+				pName, pOldName, pProject); 
 	}
 	
 	/* (non-Javadoc)

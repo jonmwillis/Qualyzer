@@ -54,8 +54,8 @@ public class RenameProjectDialog extends TitleAreaDialog
 	public void create()
 	{
 		super.create();
-		setTitle("Rename Project");
-		setMessage("Renaming this project will close all editors belonging to this project.", IMessageProvider.WARNING);
+		setTitle(Messages.getString("dialogs.RenameProjectDialog.renameProject")); //$NON-NLS-1$
+		setMessage(Messages.getString("dialogs.RenameProjectDialog.warning"), IMessageProvider.WARNING); //$NON-NLS-1$
 	}
 	
 	/* (non-Javadoc)
@@ -71,10 +71,10 @@ public class RenameProjectDialog extends TitleAreaDialog
 		body.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 		
 		Label label = new Label(body, SWT.NULL);
-		label.setText("New Name: ");
+		label.setText(Messages.getString("dialogs.RenameProjectDialog.newName")); //$NON-NLS-1$
 		
 		fNameText = new Text(body, SWT.BORDER);
-		fNameText.setText("");
+		fNameText.setText(""); //$NON-NLS-1$
 		fNameText.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 		fNameText.addModifyListener(new ModifyListener()
 		{
