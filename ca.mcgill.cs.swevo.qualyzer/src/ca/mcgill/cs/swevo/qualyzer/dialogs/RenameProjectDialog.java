@@ -12,6 +12,7 @@
 package ca.mcgill.cs.swevo.qualyzer.dialogs;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -54,7 +55,7 @@ public class RenameProjectDialog extends TitleAreaDialog
 	{
 		super.create();
 		setTitle("Rename Project");
-		setMessage("Please enter a new name for this project.");
+		setMessage("Renaming this project will close all editors belonging to this project.", IMessageProvider.WARNING);
 	}
 	
 	/* (non-Javadoc)

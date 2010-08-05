@@ -826,32 +826,18 @@ public final class Facade
 	 */
 	public void renameProject(Project project, String newName)
 	{
+		//Close related editors
+		fListenerManager.notifyProjectListeners(ChangeType.DELETE, project, this);
+		
 		String oldName = project.getName();
-		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(oldName);
 		
-		try
-		{
-			IProjectDescription description = wProject.getDescription();
-			description.setName(newName);
-			wProject.move(description, true, new NullProgressMonitor());
-			wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(newName);
-		}
-		catch(CoreException e)
-		{
-			fLogger.error("Unable to rename project", e);
-			throw new QualyzerException("Failed to rename the project.", e);
-		}
-		
-		
-		QualyzerActivator.getDefault().getHibernateDBManagers().remove(oldName);
+		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(oldName);
 		project.setName(newName);
-		PersistenceManager.getInstance().refreshManager(wProject);
+		HibernateUtil.quietSave(manager, project);
+
+		manager = QualyzerActivator.getDefault().getHibernateDBManagers().remove(oldName);
+		manager.shutdownDBServer();
 		
 		fListenerManager.handleProjectNameChange(oldName, project);
-		
-		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(newName);
-		HibernateUtil.quietSave(manager, project);
-		
-		fListenerManager.notifyProjectListeners(ChangeType.MODIFY, project, this);
 	}
 }
