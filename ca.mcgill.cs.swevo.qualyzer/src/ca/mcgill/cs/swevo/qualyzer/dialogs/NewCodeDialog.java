@@ -14,6 +14,7 @@ package ca.mcgill.cs.swevo.qualyzer.dialogs;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.layout.GridData;
@@ -35,7 +36,7 @@ public class NewCodeDialog extends TitleAreaDialog
 
 	private Project fProject;
 	private Text fNameText;
-	private Text fDescriptionText;
+	private StyledText fDescriptionText;
 	private String fName;
 	private String fDescription;
 	
@@ -77,7 +78,7 @@ public class NewCodeDialog extends TitleAreaDialog
 		
 		label = new Label(composite, SWT.NULL);
 		label.setText(Messages.getString("dialogs.NewCodeDialog.description")); //$NON-NLS-1$
-		fDescriptionText = new Text(composite, SWT.BORDER);
+		fDescriptionText = new StyledText(composite, SWT.WRAP | SWT.BORDER);
 		fDescriptionText.setText(""); //$NON-NLS-1$
 		fDescriptionText.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 	

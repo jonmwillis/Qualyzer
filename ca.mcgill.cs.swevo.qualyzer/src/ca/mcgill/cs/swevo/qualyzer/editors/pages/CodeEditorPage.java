@@ -19,6 +19,7 @@ import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -84,7 +85,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 
 	private int fCurrentSelection;
 	private Text fName;
-	private Text fDescription;
+	private StyledText fDescription;
 
 	private boolean fIsDirty;
 
@@ -201,7 +202,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		fName.addKeyListener(createValidator());
 		
 		toolkit.createLabel(composite, Messages.getString("editors.pages.CodeEditorPage.description")); //$NON-NLS-1$
-		fDescription = toolkit.createText(composite, "", SWT.MULTI); //$NON-NLS-1$
+		fDescription = new StyledText(composite, SWT.WRAP | SWT.BORDER); //$NON-NLS-1$
 		fDescription.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		fDescription.addKeyListener(createKeyAdapter());
 		
