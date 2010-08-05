@@ -20,7 +20,9 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.navigator.CommonNavigator;
 
+import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.dialogs.RenameProjectDialog;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
@@ -51,6 +53,8 @@ public class RenameProjectHandler extends AbstractHandler
 				if(dialog.open() == Window.OK)
 				{
 					Facade.getInstance().renameProject(project, dialog.getNewName());
+					CommonNavigator view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+					view.getCommonViewer().refresh();
 				}
 			}
 		}
