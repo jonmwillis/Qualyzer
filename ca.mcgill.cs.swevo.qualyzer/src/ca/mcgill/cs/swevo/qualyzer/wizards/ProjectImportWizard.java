@@ -10,8 +10,12 @@
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.wizards;
 
+import java.util.ArrayList;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -34,6 +38,9 @@ import ca.mcgill.cs.swevo.qualyzer.util.FileUtil;
 @SuppressWarnings("restriction")
 public class ProjectImportWizard extends Wizard implements IImportWizard
 {
+	
+	private static final String IMPORT_ERROR = Messages.getString(
+			"wizards.ProjectImportWizard.importError"); //$NON-NLS-1$
 	private static final String EXTERNAL_PROJECT_SECTION = "ProjectImportWizard"; //$NON-NLS-1$
 	private WizardProjectsImportPage fMainPage;
 	private IStructuredSelection fCurrentSelection = null;
@@ -98,6 +105,7 @@ public class ProjectImportWizard extends Wizard implements IImportWizard
 	public boolean performFinish()
 	{
 		boolean toReturn =  fMainPage.createProjects();
+		ArrayList<IProject> toDelete = new ArrayList<IProject>();
 		for(IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects())
 		{
 			PersistenceManager.getInstance().refreshManager(project);
@@ -110,9 +118,28 @@ public class ProjectImportWizard extends Wizard implements IImportWizard
 				}
 				catch(QualyzerException e)
 				{
-					MessageDialog.openError(getShell(),	Messages.getString(
-							"wizards.ProjectImportWizard.importError"), e.getMessage()); //$NON-NLS-1$
+					MessageDialog.openError(getShell(),	IMPORT_ERROR, e.getMessage()); 
 				}
+			}
+			else
+			{
+				MessageDialog.openError(getShell(), IMPORT_ERROR, Messages.getString(
+						"wizards.ProjectImportWizard.couldNotImport") + project.getName() + //$NON-NLS-1$
+						Messages.getString("wizards.ProjectImportWizard.invalidProject")); //$NON-NLS-1$
+				toDelete.add(project);
+			}
+		}
+		
+		for(IProject wProject : toDelete)
+		{
+			try
+			{
+				wProject.delete(true, new NullProgressMonitor());
+			}
+			catch(CoreException e)
+			{
+				MessageDialog.openError(getShell(), IMPORT_ERROR, 
+						Messages.getString("wizards.ProjectImportWizard.deleteFailed")); //$NON-NLS-1$
 			}
 		}
 		return toReturn;

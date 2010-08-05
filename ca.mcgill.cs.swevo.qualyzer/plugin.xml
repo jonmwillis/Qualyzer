@@ -624,6 +624,11 @@
                icon="icons/import.gif"
                label="%menu.label.import">
             <command
+                  commandId="org.eclipse.ui.file.import"
+                  label="Project"
+                  style="push">
+            </command>
+            <command
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.importTranscript"
                   icon="icons/file_obj.gif"
                   label="%command.label.transcript"
@@ -681,6 +686,15 @@
                      </or>
                   </iterate>
                </visibleWhen>
+            </command>
+         </menu>
+         <menu
+               id="exportMenu"
+               label="Export">
+            <command
+                  commandId="org.eclipse.ui.file.export"
+                  label="Project"
+                  style="push">
             </command>
          </menu>
       </menuContribution>
