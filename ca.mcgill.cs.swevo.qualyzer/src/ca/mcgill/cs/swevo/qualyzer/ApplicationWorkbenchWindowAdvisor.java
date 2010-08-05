@@ -10,6 +10,7 @@
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer;
 
+import org.eclipse.jface.preference.IPreferenceNode;
 import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.PlatformUI;
@@ -60,6 +61,13 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor
 		PreferenceManager pm = PlatformUI.getWorkbench().getPreferenceManager();
 		
 		pm.remove("net.sf.colorer.eclipse.PreferencePage"); //$NON-NLS-1$
-		pm.remove("org.eclipse.ui.preferencePages.Workbench"); //$NON-NLS-1$
+		IPreferenceNode node = pm.remove("org.eclipse.ui.preferencePages.Workbench"); //$NON-NLS-1$
+		for(IPreferenceNode sub : node.getSubNodes())
+		{
+			if(sub.getId().equals("org.eclipse.ui.preferencePages.Keys"))
+			{
+				pm.addToRoot(sub);
+			}
+		}
 	}
 }
