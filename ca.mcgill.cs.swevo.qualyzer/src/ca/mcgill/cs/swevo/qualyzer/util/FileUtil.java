@@ -31,7 +31,9 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
+import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
 
 /**
  *
@@ -379,6 +381,9 @@ public final class FileUtil
 	 */
 	public static void renameProject(String oldName, String newName)
 	{
+		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().remove(oldName);
+		manager.close();
+		
 		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(oldName);
 		IFile dbLock = wProject.getFile(".db/qualyzer_db.lock.db");
 		

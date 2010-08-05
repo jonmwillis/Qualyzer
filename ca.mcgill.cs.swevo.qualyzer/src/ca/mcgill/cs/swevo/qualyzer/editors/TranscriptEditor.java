@@ -413,7 +413,10 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 	public void dispose()
 	{
 		Facade.getInstance().getListenerManager().unregisterTranscriptListener(getDocument().getProject(), this);
-		fAudioPlayer.stop();
+		if(fAudioPlayer != null)
+		{
+			fAudioPlayer.stop();
+		}
 		super.dispose();
 	}
 	
