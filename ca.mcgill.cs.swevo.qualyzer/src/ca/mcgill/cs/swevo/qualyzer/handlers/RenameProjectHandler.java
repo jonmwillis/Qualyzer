@@ -14,6 +14,8 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
@@ -23,10 +25,13 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonNavigator;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
+import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
 import ca.mcgill.cs.swevo.qualyzer.dialogs.RenameProjectDialog;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
+import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
+import ca.mcgill.cs.swevo.qualyzer.util.FileUtil;
 
 /**
  * 
@@ -52,9 +57,23 @@ public class RenameProjectHandler extends AbstractHandler
 				dialog.create();
 				if(dialog.open() == Window.OK)
 				{
-					Facade.getInstance().renameProject(project, dialog.getNewName());
-					CommonNavigator view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
-					view.getCommonViewer().refresh();
+					try
+					{
+						String oldName = project.getName();
+						Facade.getInstance().renameProject(project, dialog.getNewName());
+						FileUtil.renameProject(oldName, dialog.getNewName());
+						
+						IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(dialog.getNewName());
+						PersistenceManager.getInstance().refreshManager(wProject);
+						
+						CommonNavigator view = (CommonNavigator) page.findView(
+								QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+						view.getCommonViewer().refresh();
+					}
+					catch(QualyzerException e)
+					{
+						MessageDialog.openError(shell, "Renaming Error", e.getMessage());
+					}
 				}
 			}
 		}

@@ -17,6 +17,7 @@ import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.cfg.Configuration;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
+import ca.mcgill.cs.swevo.qualyzer.util.HibernateUtil;
 
 /**
  * A HibernateDBManager manages the connections with a single database.
@@ -104,16 +105,16 @@ public class HibernateDBManager
 	public void shutdownDBServer() 
 	{
 		// This is not required for H2, but may be required for other databases like HSQLDB.
-//		Session session = null;
-//		try
-//		{
-//			session = openSession();
-//			session.createSQLQuery("SHUTDOWN IMMEDIATELY").executeUpdate(); //$NON-NLS-1$
-//		}
-//		finally
-//		{
-//			HibernateUtil.quietClose(session);
-//		}
+		Session session = null;
+		try
+		{
+			session = openSession();
+			session.createSQLQuery("SHUTDOWN IMMEDIATELY").executeUpdate(); //$NON-NLS-1$
+		}
+		finally
+		{
+			HibernateUtil.quietClose(session);
+		}
 	}
 	
 	/**

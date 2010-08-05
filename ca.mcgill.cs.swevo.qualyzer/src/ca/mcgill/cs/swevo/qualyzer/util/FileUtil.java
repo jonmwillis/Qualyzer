@@ -20,8 +20,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -367,6 +369,30 @@ public final class FileUtil
 			{
 				throw new QualyzerException(Messages.getString("util.FileUtil.memoCopyFailed"), e);  //$NON-NLS-1$
 			}
+		}
+	}
+	
+	/**
+	 * Handles the renaming on the Resource Side.
+	 * @param oldName
+	 * @param newName
+	 */
+	public static void renameProject(String oldName, String newName)
+	{
+		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(oldName);
+		IFile dbLock = wProject.getFile(".db/qualyzer_db.lock.db");
+		
+		try
+		{
+			dbLock.delete(true, new NullProgressMonitor());
+			IProjectDescription description = wProject.getDescription();
+			description.setName(newName);
+			wProject.move(description, true, new NullProgressMonitor());
+		}
+		catch(CoreException e)
+		{
+			gLogger.error("Unable to rename project", e);
+			throw new QualyzerException("Failed to rename the project.", e);
 		}
 	}
 }
