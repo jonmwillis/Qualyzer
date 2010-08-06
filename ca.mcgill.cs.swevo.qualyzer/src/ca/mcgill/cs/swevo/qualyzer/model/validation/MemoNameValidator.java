@@ -36,7 +36,7 @@ public class MemoNameValidator extends BasicNameValidator
 	{
 		for(Memo memo : fProject.getMemos())
 		{
-			if(memo.getName().equals(fName))
+			if(memo.getName().equalsIgnoreCase(fName))
 			{
 				return true;
 			}
