@@ -202,7 +202,8 @@ public final class Facade
 	{
 		Transcript transcript = new Transcript();
 		transcript.setName(name);
-		transcript.setFileName(name + ".rtf"); //$NON-NLS-1$
+		String fileName = name.replace(' ', '_') + ".rtf"; //$NON-NLS-1$
+		transcript.setFileName(fileName); 
 		transcript.setDate(date);
 		transcript.setParticipants(participants);
 
@@ -789,7 +790,8 @@ public final class Facade
 	{
 		Memo memo = new Memo();
 		memo.setName(memoName);
-		memo.setFileName(memoName + ".rtf"); //$NON-NLS-1$
+		String fileName = memoName.replace(' ', '_') + ".rtf"; //$NON-NLS-1$
+		memo.setFileName(fileName); 
 		memo.setDate(date);
 		memo.setAuthor(author);
 		memo.setParticipants(participants);
