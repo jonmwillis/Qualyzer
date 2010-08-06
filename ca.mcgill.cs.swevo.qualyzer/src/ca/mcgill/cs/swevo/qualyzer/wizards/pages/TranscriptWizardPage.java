@@ -17,6 +17,8 @@ import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
@@ -35,10 +37,15 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.navigator.CommonNavigator;
 
+import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
+import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.validation.TranscriptValidator;
+import ca.mcgill.cs.swevo.qualyzer.wizards.AddParticipantWizard;
 
 /**
  * The only page in the new Transcript Wizard.
@@ -214,13 +221,34 @@ public class TranscriptWizardPage extends WizardPage
 	 */
 	private void createLongLabel()
 	{
-		GridData gd;
-		Label label;
-		label = createLabel(fContainer, 
+		Composite composite = new Composite(fContainer, SWT.NULL);
+		composite.setLayout(new GridLayout(2, false));
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
+		
+		Label label = createLabel(composite, 
 				Messages.getString("wizards.pages.TranscriptWizardPage.selectParticipants")); //$NON-NLS-1$
-		gd = new GridData(SWT.FILL, SWT.NULL, true, false);
-		gd.horizontalSpan = 2;
-		label.setLayoutData(gd);
+		label.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
+		
+		Button button = new Button(composite, SWT.PUSH);
+		button.setText("Add...");
+		button.addSelectionListener(new SelectionAdapter(){
+			
+			@Override
+			public void widgetSelected(SelectionEvent e)
+			{
+				AddParticipantWizard wizard = new AddParticipantWizard(fProject);
+				WizardDialog dialog = new WizardDialog(getShell(), wizard);
+				if(dialog.open() == Window.OK)
+				{
+					CommonNavigator view = (CommonNavigator) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+						.getActivePage().findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+					view.getCommonViewer().refresh();
+					fProject = PersistenceManager.getInstance().getProject(fProject.getName());
+					fTable.removeAll();
+					populateTable();
+				}
+			}
+		});
 	}
 
 	/**
@@ -247,7 +275,7 @@ public class TranscriptWizardPage extends WizardPage
 	{
 		GridData gd;
 		fTable = new Table(fContainer, SWT.MULTI | SWT.BORDER);
-		gd = new GridData(SWT.FILL, SWT.FILL, true, false);
+		gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gd.horizontalSpan = 2;
 		fTable.setLayoutData(gd);
 		populateTable();
