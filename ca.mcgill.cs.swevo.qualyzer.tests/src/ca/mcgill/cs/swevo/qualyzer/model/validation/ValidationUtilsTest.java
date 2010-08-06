@@ -30,9 +30,9 @@ public class ValidationUtilsTest
 		assertTrue(ValidationUtils.verifyID("aasdl_sSDFA-3425"));
 		
 		assertFalse(ValidationUtils.verifyID(""));
-		assertFalse(ValidationUtils.verifyID(" "));
+		assertFalse(ValidationUtils.verifyID("\'"));
 		assertFalse(ValidationUtils.verifyID("!"));
 		assertFalse(ValidationUtils.verifyID("^"));
-		assertFalse(ValidationUtils.verifyID("ffffsadfsadfieurASDFSDF84375987 "));
+		assertFalse(ValidationUtils.verifyID("ffffsadfsadfieurASDFSDF84375987 ,"));
 	}
 }

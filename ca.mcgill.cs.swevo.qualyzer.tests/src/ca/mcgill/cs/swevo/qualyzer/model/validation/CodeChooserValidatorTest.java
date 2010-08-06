@@ -100,7 +100,7 @@ public class CodeChooserValidatorTest
 	@Test
 	public void testFormat()
 	{
-		CodeChooserValidator lValidator = new CodeChooserValidator("Moon Indigo", fProject, null);
+		CodeChooserValidator lValidator = new CodeChooserValidator("Moon \\Indigo", fProject, null);
 		assertFalse(lValidator.isValid());
 		assertEquals("Code name " + Messages.getString("model.validation.BasicNameValidator.invalid"),lValidator.getErrorMessage());
 	}
