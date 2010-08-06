@@ -38,6 +38,10 @@ public final class ValidationUtils
 			{
 				continue;
 			}
+			else if(c == ' ')
+			{
+				continue;
+			}
 			else
 			{
 				return false;
