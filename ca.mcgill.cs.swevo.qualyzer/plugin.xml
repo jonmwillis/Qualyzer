@@ -215,15 +215,24 @@
             name="Edit Project Properties">
       </command>
       <command
+            categoryId="ca.mcgill.cs.swevo.qualyzer.category.AudioCommands"
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.SeekBackHandler"
+            description="Seek back the amount of time specified in the &quot;Seek Time&quot; preference."
             id="ca.mcgill.cs.swevo.qualyzer.commands.seekBack"
             name="Seek Back">
       </command>
       <command
+            categoryId="ca.mcgill.cs.swevo.qualyzer.category.AudioCommands"
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.SeekForwardHandler"
+            description="Seek forward the amount of time specified in the &quot;Seek Time&quot; preference."
             id="ca.mcgill.cs.swevo.qualyzer.commands.seekForward"
             name="Seek Forward">
       </command>
+      <category
+            description="A set of commands to control the audio player in the Transcript Editor"
+            id="ca.mcgill.cs.swevo.qualyzer.category.AudioCommands"
+            name="Qualyzer Audio Commands">
+      </category>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
