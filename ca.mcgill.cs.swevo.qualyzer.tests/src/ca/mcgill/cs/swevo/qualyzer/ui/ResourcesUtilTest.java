@@ -124,7 +124,7 @@ public class ResourcesUtilTest
 		boolean found = false;
 		for(IEditorReference editor : page.getEditorReferences())
 		{
-			if(editor.getName().equals("editor.investigator."+i.getNickName()))
+			if(editor.getName().equals(fProject.getName() + ".editor.investigator."+i.getNickName()))
 			{
 				found = true;
 				break;
@@ -148,7 +148,7 @@ public class ResourcesUtilTest
 		boolean found = false;
 		for(IEditorReference editor : page.getEditorReferences())
 		{
-			if(editor.getName().equals("editor.participant."+p.getParticipantId()))
+			if(editor.getName().equals(fProject.getName() + ".editor.participant."+p.getParticipantId()))
 			{
 				found = true;
 				break;
@@ -192,7 +192,7 @@ public class ResourcesUtilTest
 		boolean found = false;
 		for(IEditorReference editor : page.getEditorReferences())
 		{
-			if(editor.getName().equals("fragmentViewer."+code.getCodeName()))
+			if(editor.getName().equals(fProject.getName() + ".fragmentViewer."+code.getCodeName()))
 			{
 				found = true;
 				break;
@@ -217,7 +217,9 @@ public class ResourcesUtilTest
 		{
 			try
 			{
-				if(editor.getEditorInput().getName().equals(Memo.class.getSimpleName()+"."+memo.getFileName()))
+				String one = editor.getEditorInput().getName();
+				String two = fProject.getName() + "." + memo.getClass().getSimpleName()+"."+memo.getFileName();
+				if(one.equals(two))
 				{
 					found = true;
 					break;
@@ -256,7 +258,7 @@ public class ResourcesUtilTest
 		{
 			try
 			{
-				if(editor.getEditorInput().getName().equals(Memo.class.getSimpleName()+"."+memo.getFileName()))
+				if(editor.getEditorInput().getName().equals(fProject.getName()+"."+memo.getClass().getSimpleName()+"."+memo.getFileName()))
 				{
 					found = true;
 					break;
@@ -279,7 +281,7 @@ public class ResourcesUtilTest
 		{
 			try
 			{
-				if(editor.getEditorInput().getName().equals(Transcript.class.getSimpleName()+"."+transcript.getFileName()))
+				if(editor.getEditorInput().getName().equals(fProject.getName()+"."+Transcript.class.getSimpleName()+"."+transcript.getFileName()))
 				{
 					found = true;
 					break;
