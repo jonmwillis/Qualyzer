@@ -212,26 +212,26 @@
       <command
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.ProjectPropertiesHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.editProjectProperties"
-            name="Edit Project Properties">
+            name="%command.name.projectProperties">
       </command>
       <command
             categoryId="ca.mcgill.cs.swevo.qualyzer.category.AudioCommands"
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.SeekBackHandler"
-            description="Seek back the amount of time specified in the &quot;Seek Time&quot; preference."
+            description="%command.description.seekBack"
             id="ca.mcgill.cs.swevo.qualyzer.commands.seekBack"
-            name="Seek Back">
+            name="%command.name.seekBack">
       </command>
       <command
             categoryId="ca.mcgill.cs.swevo.qualyzer.category.AudioCommands"
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.SeekForwardHandler"
-            description="Seek forward the amount of time specified in the &quot;Seek Time&quot; preference."
+            description="%command.description.seekForward"
             id="ca.mcgill.cs.swevo.qualyzer.commands.seekForward"
-            name="Seek Forward">
+            name="%command.name.seekforward">
       </command>
       <category
-            description="A set of commands to control the audio player in the Transcript Editor"
+            description="%category.description.audioCommands"
             id="ca.mcgill.cs.swevo.qualyzer.category.AudioCommands"
-            name="Qualyzer Audio Commands">
+            name="%category.name.audioCommands">
       </category>
    </extension>
    <extension
@@ -645,7 +645,7 @@
             <command
                   commandId="org.eclipse.ui.file.import"
                   icon="icons/prj_obj.gif"
-                  label="Project"
+                  label="%command.label.project"
                   style="push">
             </command>
             <command
@@ -711,11 +711,11 @@
          <menu
                icon="icons/export.gif"
                id="exportMenu"
-               label="Export">
+               label="%menu.label.export">
             <command
                   commandId="org.eclipse.ui.file.export"
                   icon="icons/prj_obj.gif"
-                  label="Project"
+                  label="%command.label.project"
                   style="push">
                <visibleWhen
                      checkEnabled="false">
@@ -1220,7 +1220,7 @@
             highlightPreferenceKey="fragment.highlight"
             highlightPreferenceValue="true"
             includeOnPreferencePage="true"
-            label="Fragment"
+            label="%specification.label.fragment"
             overviewRulerPreferenceKey="fragment.overview"
             overviewRulerPreferenceValue="true"
             textPreferenceKey="fragment.text">
@@ -1269,11 +1269,11 @@
             category="ca.mcgill.cs.swevo.qualyzer.category.qualyzerImportWizards"
             class="ca.mcgill.cs.swevo.qualyzer.wizards.ProjectImportWizard"
             id="ca.mcgill.cs.swevo.qualyzer.wizards.importProjectWizard"
-            name="Import a Project">
+            name="%wizard.name.importProject">
       </wizard>
       <category
             id="ca.mcgill.cs.swevo.qualyzer.category.qualyzerImportWizards"
-            name="Qualyzer">
+            name="%category.name.Qualyzer">
       </category>
    </extension>
    <extension
@@ -1282,11 +1282,11 @@
             category="ca.mcgill.cs.swevo.qualyzer.category.qualyzerExportWizards"
             class="ca.mcgill.cs.swevo.qualyzer.wizards.ProjectExportWizard"
             id="ca.mcgill.cs.swevo.qualyzer.wizards.exportProjectWizard"
-            name="Export a Project">
+            name="%wizard.name.exportProject">
       </wizard>
       <category
             id="ca.mcgill.cs.swevo.qualyzer.category.qualyzerExportWizards"
-            name="Qualyzer">
+            name="%category.name.Qualyzer">
       </category>
    </extension>
 

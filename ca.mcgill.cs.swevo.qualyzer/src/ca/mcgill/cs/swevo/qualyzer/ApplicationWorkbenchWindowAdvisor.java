@@ -64,7 +64,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor
 		IPreferenceNode node = pm.remove("org.eclipse.ui.preferencePages.Workbench"); //$NON-NLS-1$
 		for(IPreferenceNode sub : node.getSubNodes())
 		{
-			if(sub.getId().equals("org.eclipse.ui.preferencePages.Keys"))
+			if(sub.getId().equals("org.eclipse.ui.preferencePages.Keys")) //$NON-NLS-1$
 			{
 				pm.addToRoot(sub);
 			}
