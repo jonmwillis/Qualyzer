@@ -22,6 +22,10 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
@@ -49,6 +53,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Fragment;
 import ca.mcgill.cs.swevo.qualyzer.model.IAnnotatedDocument;
 import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Memo;
+import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.ProjectListener;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
@@ -94,6 +99,9 @@ public class CodeFragmentViewerPage extends FormPage implements ProjectListener,
 		layout.numColumns = 1;
 		body.setLayout(layout);
 		
+		Button refresh = toolkit.createButton(body, "Refresh", SWT.PUSH);
+		refresh.addSelectionListener(refreshSelectedListener());
+		
 		Project project = fCode.getProject();
 		Collections.sort(project.getTranscripts());
 		for(Transcript transcript : project.getTranscripts())
@@ -115,6 +123,32 @@ public class CodeFragmentViewerPage extends FormPage implements ProjectListener,
 				buildSection(memo, contents, toolkit, body);
 			}
 		}
+	}
+
+	/**
+	 * @return
+	 */
+	private SelectionAdapter refreshSelectedListener()
+	{
+		return new SelectionAdapter(){
+			
+			@Override
+			public void widgetSelected(SelectionEvent e)
+			{
+				Project proj = PersistenceManager.getInstance().getProject(fCode.getProject().getName());
+				Code code = null;
+				for(Code c : proj.getCodes())
+				{
+					if(c.equals(fCode))
+					{
+						code = c;
+						break;
+					}
+				}
+				ResourcesUtil.openEditor(getSite().getPage(), code);
+				getEditor().close(true);
+			}
+		};
 	}
 
 	/**
