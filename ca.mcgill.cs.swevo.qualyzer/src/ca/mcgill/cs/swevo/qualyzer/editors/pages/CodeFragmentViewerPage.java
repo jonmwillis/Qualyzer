@@ -102,6 +102,7 @@ public class CodeFragmentViewerPage extends FormPage implements ProjectListener,
 		Button refresh = toolkit.createButton(body, "Refresh", SWT.PUSH);
 		refresh.addSelectionListener(refreshSelectedListener());
 		
+		
 		Project project = fCode.getProject();
 		Collections.sort(project.getTranscripts());
 		for(Transcript transcript : project.getTranscripts())
