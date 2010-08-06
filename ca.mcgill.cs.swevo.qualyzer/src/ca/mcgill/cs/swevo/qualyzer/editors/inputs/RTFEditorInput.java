@@ -83,7 +83,7 @@ public class RTFEditorInput extends FileEditorInput
 	@Override
 	public String getName()
 	{
-		return fDocument.getProject() + DOT + fDocument.getClass().getSimpleName() + DOT + super.getName();
+		return fDocument.getProject().getName() + DOT + fDocument.getClass().getSimpleName() + DOT + super.getName();
 	}
 	
 }
