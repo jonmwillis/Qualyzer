@@ -182,7 +182,7 @@ public class NavigatorLabelProvider extends LabelProvider implements ILabelProvi
 
 		if (anElement instanceof IProject)
 		{
-			output = ((IProject) anElement).getName();
+			output = ((IProject) anElement).getName().replace('_', ' ');
 		}
 		else if(anElement instanceof Project)
 		{
