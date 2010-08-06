@@ -88,7 +88,7 @@ public class CodeValidatorTest
 	@Test
 	public void testFormat()
 	{
-		CodeValidator lValidator = new CodeValidator("Moon Indigo", fProject);
+		CodeValidator lValidator = new CodeValidator("Moon&Indigo", fProject);
 		assertFalse(lValidator.isValid());
 		assertEquals("Code name " + Messages.getString("model.validation.BasicNameValidator.invalid"),lValidator.getErrorMessage());
 	}
