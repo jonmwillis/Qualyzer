@@ -75,18 +75,19 @@ public final class Facade
 	public Project createProject(String name, String nickname, String fullName, String institution)
 			throws QualyzerException
 	{
-		IProject wProject = FileUtil.makeProjectFileSystem(name);
+		String finalName = name.replace(' ', '_');
+		IProject wProject = FileUtil.makeProjectFileSystem(finalName);
 
 		Project project;
 
 		project = new Project();
-		project.setName(name);
+		project.setName(finalName);
 
 		createInvestigator(nickname, fullName, institution, project, false);
 
 		PersistenceManager.getInstance().initDB(wProject);
 		HibernateDBManager manager;
-		manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(name);
+		manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(finalName);
 		HibernateUtil.quietSave(manager, project);
 		
 		try
