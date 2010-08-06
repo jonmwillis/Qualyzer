@@ -214,7 +214,8 @@ public final class FileUtil
 		String workspacePath = wProject.getLocation().toString();
 		hookupAudioFile(audioFilePath, workspacePath, transcriptName);
 		
-		createTranscriptFile(existingTranscript, projectName, transcriptName+".rtf"); //$NON-NLS-1$
+		String transcriptFileName = transcriptName.replace(' ', '_') + ".rtf"; //$NON-NLS-1$
+		createTranscriptFile(existingTranscript, projectName, transcriptFileName); 
 	}
 	
 	private static void hookupAudioFile(String audioFilePath, String workspacePath, String transcriptName)
@@ -324,10 +325,10 @@ public final class FileUtil
 	 */
 	public static void setupMemoFiles(String memoName, String projectName, String fileName)
 	{
-		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		IProject wProject = root.getProject(projectName);
+		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 		String workspacePath = wProject.getLocation().toString();
-		String path = workspacePath+File.separator+MEMOS+File.separator+memoName+".rtf"; //$NON-NLS-1$
+		String memoFileName = memoName.replace(' ', '_') + ".rtf"; //$NON-NLS-1$
+		String path = workspacePath+File.separator+MEMOS+File.separator+memoFileName;
 		File file = new File(path);
 		if(fileName == null || fileName.isEmpty())
 		{
