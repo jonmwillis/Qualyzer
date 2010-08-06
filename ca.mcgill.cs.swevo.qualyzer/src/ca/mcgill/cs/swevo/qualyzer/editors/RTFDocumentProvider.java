@@ -602,22 +602,18 @@ public class RTFDocumentProvider extends FileDocumentProvider
 				ch2 = (char) ioStream.read();
 			}
 			
-			int letterCount = Character.isLetter(ch2) ? 1 : 0;
-			while(letterCount < 1)
-			{
-				ch2 = (char) ioStream.read();
-				if(Character.isLetter(ch2))
-				{
-					letterCount++;
-				}
-			}
 			if(!unicode.isEmpty())
 			{
+				int letterCount = Character.isLetter(ch2) ? 1 : 0;
+				while(letterCount < 1)
+				{
+					ch2 = (char) ioStream.read();
+					if(Character.isLetter(ch2))
+					{
+						letterCount++;
+					}
+				}
 				return unicode;
-			}
-			else
-			{
-				escape += ch2;
 			}
 		}
 		boolean notBracket = ch2 != '{' && ch2 != '}';
