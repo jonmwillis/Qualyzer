@@ -44,12 +44,12 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
  */
 public class RenameHandler extends AbstractHandler
 {
-	/**
-	 * 
-	 */
+	
 	private static final String EXT = ".rtf"; //$NON-NLS-1$
 	private static final String TRANSCRIPT = File.separator+"transcripts"+File.separator; //$NON-NLS-1$
 	private static final String AUDIO = File.separator+"audio"+File.separator; //$NON-NLS-1$
+	
+	private boolean fClosed = false;
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
@@ -88,6 +88,11 @@ public class RenameHandler extends AbstractHandler
 						Facade.getInstance().saveTranscript((Transcript) element);	
 					}
 					view.getCommonViewer().refresh();
+					
+					if(fClosed)
+					{
+						ResourcesUtil.openEditor(page, (Transcript) element);
+					}
 				}
 			}
 		}
@@ -115,20 +120,19 @@ public class RenameHandler extends AbstractHandler
 	 */
 	private void rename(Transcript transcript, String name, boolean changeAudio)
 	{	
-		boolean closed = false;
 		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		IEditorReference[] editors = activePage.getEditorReferences();
 		for(IEditorReference editor : editors)
 		{
-			if(editor.getName().equals(transcript.getFileName()))
+			String editorName = transcript.getProject().getName() + "." + Transcript.class.getSimpleName() + ".";
+			if(editor.getName().equals(editorName + transcript.getFileName()))
 			{
 				activePage.closeEditor(editor.getEditor(true), true);
-				closed = true;
+				fClosed = true;
 			}
 		}
 		
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(transcript.getProject().getName());
-		
 		String projectPath = project.getLocation().toString();
 		File origFile = new File(projectPath + TRANSCRIPT + transcript.getFileName());
 		File newFile = new File(projectPath + TRANSCRIPT + name + EXT);
@@ -158,11 +162,6 @@ public class RenameHandler extends AbstractHandler
 		
 		transcript.setName(name);
 		transcript.setFileName(name+EXT);
-		
-		if(closed)
-		{
-			ResourcesUtil.openEditor(activePage, transcript);
-		}
 	}
 
 	/**
