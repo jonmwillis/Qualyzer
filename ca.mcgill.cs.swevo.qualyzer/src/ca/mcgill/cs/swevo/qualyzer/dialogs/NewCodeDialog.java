@@ -80,7 +80,7 @@ public class NewCodeDialog extends TitleAreaDialog
 		label.setText(Messages.getString("dialogs.NewCodeDialog.description")); //$NON-NLS-1$
 		fDescriptionText = new StyledText(composite, SWT.WRAP | SWT.BORDER);
 		fDescriptionText.setText(""); //$NON-NLS-1$
-		fDescriptionText.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
+		fDescriptionText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 	
 		return parent;
 	}
