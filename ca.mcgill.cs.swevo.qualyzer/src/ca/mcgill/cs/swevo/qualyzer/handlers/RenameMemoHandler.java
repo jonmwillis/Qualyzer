@@ -43,6 +43,7 @@ public class RenameMemoHandler extends AbstractHandler
 	
 	private static final String MEMO = File.separator + "memos" + File.separator; //$NON-NLS-1$
 	private static final String EXT = ".rtf"; //$NON-NLS-1$
+	private boolean fClosed = false;
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
@@ -70,6 +71,11 @@ public class RenameMemoHandler extends AbstractHandler
 					
 					((CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID))
 						.getCommonViewer().refresh();
+					
+					if(fClosed)
+					{
+						ResourcesUtil.openEditor(page, (Memo) element);
+					}
 				}
 			}
 		}
@@ -77,17 +83,16 @@ public class RenameMemoHandler extends AbstractHandler
 	}
 	
 	private void rename(Memo memo, String name)
-	{
-		boolean closed = false;
-		
+	{		
 		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		IEditorReference[] editors = activePage.getEditorReferences();
 		for(IEditorReference editor : editors)
 		{
-			if(editor.getName().equals(memo.getFileName()))
+			String editorName = memo.getProject().getName() + "." + Memo.class.getSimpleName() + ".";
+			if(editor.getName().equals(editorName + memo.getFileName()))
 			{
 				activePage.closeEditor(editor.getEditor(true), true);
-				closed = true;
+				fClosed  = true;
 			}
 		}
 		
@@ -101,11 +106,6 @@ public class RenameMemoHandler extends AbstractHandler
 		
 		memo.setName(name);
 		memo.setFileName(name+EXT);
-		
-		if(closed)
-		{
-			//TODO open the file.
-		}
 	}
 
 }
