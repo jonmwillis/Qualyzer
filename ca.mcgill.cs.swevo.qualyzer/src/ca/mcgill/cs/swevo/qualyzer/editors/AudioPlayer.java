@@ -81,7 +81,7 @@ public class AudioPlayer
 		catch(BasicPlayerException e)
 		{
 			fLogger.error("AudioPlayer: Could not open", e); //$NON-NLS-1$
-			throw new QualyzerException("Unable to open the attached audio file", e);
+			throw new QualyzerException(Messages.getString("editors.AudioPlayer.audioOpenFailed"), e); //$NON-NLS-1$
 		}
 	}
 	

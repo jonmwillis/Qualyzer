@@ -174,7 +174,8 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 			}
 			catch(QualyzerException e)
 			{
-				MessageDialog.openError(getSite().getShell(), "Audio Player Error", e.getMessage());
+				MessageDialog.openError(getSite().getShell(), Messages.getString(
+						"editors.TranscriptEditor.audioPlayerError"), e.getMessage()); //$NON-NLS-1$
 				setEnable(fTopBar, false);
 			}
 		}

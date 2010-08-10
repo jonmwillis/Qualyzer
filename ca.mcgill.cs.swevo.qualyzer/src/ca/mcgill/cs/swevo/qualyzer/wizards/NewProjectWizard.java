@@ -88,13 +88,11 @@ public class NewProjectWizard extends Wizard
 		}
 		catch (InvocationTargetException e)
 		{
-			System.out.println("invo");
-			e.printStackTrace();
+			
 		}
 		catch (InterruptedException e)
 		{
-			System.out.println("inter");
-			e.printStackTrace();
+			
 		}
 		catch(QualyzerException e) 
 		{
