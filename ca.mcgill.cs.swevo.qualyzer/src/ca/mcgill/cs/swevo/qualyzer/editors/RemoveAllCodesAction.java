@@ -16,6 +16,7 @@ package ca.mcgill.cs.swevo.qualyzer.editors;
 import java.util.Iterator;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.IAnnotationModel;
@@ -52,6 +53,15 @@ public class RemoveAllCodesAction extends Action
 	@Override
 	public void run()
 	{
+		boolean check = MessageDialog.openConfirm(fEditor.getSite().getShell(), 
+				Messages.getString("editors.RemoveAllCodesAction.removeAllCodes"), //$NON-NLS-1$
+				Messages.getString("editors.RemoveAllCodesAction.confirm")); //$NON-NLS-1$ 
+		
+		if(!check)
+		{
+			return;
+		}
+		
 		Point selection = fSourceViewer.getSelectedRange();
 		IAnnotationModel model = fSourceViewer.getAnnotationModel();
 		Iterator<Annotation> iter = model.getAnnotationIterator();
