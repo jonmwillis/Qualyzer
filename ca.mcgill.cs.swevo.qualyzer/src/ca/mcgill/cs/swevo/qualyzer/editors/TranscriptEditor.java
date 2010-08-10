@@ -168,7 +168,15 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(trans.getProject().getFolderName());
 			String audioFile = project.getLocation() + File.separator + trans.getAudioFile().getRelativePath();
 			
-			fAudioPlayer = new AudioPlayer(audioFile, this);
+			try
+			{
+				fAudioPlayer = new AudioPlayer(audioFile, this);
+			}
+			catch(QualyzerException e)
+			{
+				MessageDialog.openError(getSite().getShell(), "Audio Player Error", e.getMessage());
+				setEnable(fTopBar, false);
+			}
 		}
 		
 		hookupButtonActions();

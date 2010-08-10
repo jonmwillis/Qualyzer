@@ -89,7 +89,8 @@ public class TranscriptPropertiesHandler extends AbstractHandler
 			{
 				AudioFile aFile = new AudioFile();
 				String relativePath = File.separator+"audio"+File.separator; //$NON-NLS-1$
-				relativePath += transcript.getName() + audioFile.substring(audioFile.lastIndexOf('.'));
+				relativePath += transcript.getName().replace(' ', '_') + 
+					audioFile.substring(audioFile.lastIndexOf('.'));
 				aFile.setRelativePath(relativePath);
 				transcript.setAudioFile(aFile);
 						

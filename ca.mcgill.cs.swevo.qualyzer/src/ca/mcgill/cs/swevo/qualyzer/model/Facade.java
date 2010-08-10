@@ -244,7 +244,8 @@ public final class Facade
 		}
 
 		AudioFile audioFile = new AudioFile();
-		audioFile.setRelativePath(File.separator + "audio" + File.separator + transcriptName + fileExt); //$NON-NLS-1$
+		audioFile.setRelativePath(File.separator + "audio" + File.separator + 
+				transcriptName.replace(' ', '_') + fileExt); //$NON-NLS-1$
 
 		return audioFile;
 	}

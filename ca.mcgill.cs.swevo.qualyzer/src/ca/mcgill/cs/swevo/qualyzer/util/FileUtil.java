@@ -225,7 +225,7 @@ public final class FileUtil
 			//if the audio file is not in the workspace then copy it there.
 			int i = audioFilePath.lastIndexOf('.');
 			
-			String relativePath = transcriptName+audioFilePath.substring(i);
+			String relativePath = transcriptName.replace(' ', '_')+audioFilePath.substring(i);
 			
 			if(audioFilePath.indexOf(workspacePath) == -1 || namesAreDifferent(transcriptName, audioFilePath))
 			{
