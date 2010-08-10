@@ -159,6 +159,7 @@ public class PersistenceManagerTest
 	{
 		Project projectDB = new Project();
 		projectDB.setName(TEST_PROJECT_NAME);
+		projectDB.setFolderName(TEST_PROJECT_NAME.replace(' ', '_'));
 		Code code = new Code();
 		code.setCodeName(B_CODE);
 		projectDB.getCodes().add(code);
