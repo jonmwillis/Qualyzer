@@ -63,7 +63,7 @@ public class DeleteTranscriptHandler extends AbstractHandler
 		{
 			List<Transcript> toDelete = new ArrayList<Transcript>();
 			List<Project> projects = new ArrayList<Project>();
-			
+			List<String> conflicts = new ArrayList<String>();
 			for(Object element : ((IStructuredSelection) selection).toArray())
 			{
 				if(element instanceof Transcript)
@@ -75,6 +75,11 @@ public class DeleteTranscriptHandler extends AbstractHandler
 						projects.add(transcript.getProject());
 					}
 					
+					String conflict = checkForConflicts(transcript);
+					if(conflict != null)
+					{
+						conflicts.add(conflict);
+					}
 					toDelete.add(transcript);	
 				}
 			}
@@ -87,6 +92,11 @@ public class DeleteTranscriptHandler extends AbstractHandler
 				MessageDialog.openError(shell, Messages.getString(
 						"handlers.DeleteTranscriptHandler.deleteFailed"), warningMessage); //$NON-NLS-1$
 			}
+			else if(!conflicts.isEmpty())
+			{
+				String message = buildString(conflicts);
+				MessageDialog.openError(shell, "Unable to delete", message);
+			}
 			else
 			{
 				proceedWithDeletion(page, shell, toDelete);
@@ -95,6 +105,46 @@ public class DeleteTranscriptHandler extends AbstractHandler
 		return null;
 	}
 	
+	/**
+	 * @param conflicts
+	 * @return
+	 */
+	private String buildString(List<String> conflicts)
+	{
+		String message = "Unable to delete due to the following conflicts:\n";
+		
+		for(String string : conflicts)
+		{
+			message += string;
+		}
+		
+		return message;
+	}
+
+	/**
+	 * @param transcript
+	 * @return
+	 */
+	private String checkForConflicts(Transcript transcript)
+	{
+		String conflict = "";
+		
+		for(Memo memo : transcript.getProject().getMemos())
+		{
+			if(transcript.equals(memo.getTranscript()))
+			{
+				if(!conflict.isEmpty())
+				{
+					conflict += "\n";
+				}
+				conflict += "Transcript:"+transcript.getName();
+				conflict += " Memo:" + memo.getName();
+			}
+		}
+		
+		return conflict.isEmpty() ? null : conflict;
+	}
+
 	/**
 	 * @param page
 	 * @param shell
