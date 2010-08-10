@@ -155,29 +155,9 @@
             name="%command.name.openProject">
       </command>
       <command
-            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.DeleteParticipantHandler"
-            id="ca.mcgill.cs.swevo.qualyzer.commands.deleteParticipant"
-            name="%command.name.deleteParticipant">
-      </command>
-      <command
-            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.DeleteInvestigatorHandler"
-            id="ca.mcgill.cs.swevo.qualyzer.commands.deleteInvestigator"
-            name="%command.name.deleteInvestigator">
-      </command>
-      <command
-            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.DeleteTranscriptHandler"
-            id="ca.mcgill.cs.swevo.qualyzer.commands.deleteTranscript"
-            name="%command.name.deleteTranscript">
-      </command>
-      <command
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.AboutQualyzerHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.aboutQualyzer"
             name="%command.name.aboutQualyzer">
-      </command>
-      <command
-            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.DeleteProjectHandler"
-            id="ca.mcgill.cs.swevo.qualyzer.commands.deleteProject"
-            name="%command.name.deleteProject">
       </command>
       <command
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.OpenAllHandler"
@@ -203,11 +183,6 @@
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.ImportMemoHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.importMemo"
             name="%command.name.importMemo">
-      </command>
-      <command
-            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.DeleteMemoHandler"
-            id="ca.mcgill.cs.swevo.qualyzer.commands.deleteMemo"
-            name="%command.name.deleteMemo">
       </command>
       <command
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.ProjectPropertiesHandler"
@@ -552,88 +527,48 @@
             </visibleWhen>
          </command>
          <command
-               commandId="ca.mcgill.cs.swevo.qualyzer.commands.deleteParticipant"
-               icon="icons/delete.gif"
-               label="%command.label.delete"
-               style="push"
-               tooltip="%command.tooltip.deleteParticipant">
+               commandId="org.eclipse.ui.edit.delete"
+               id="Delete"
+               style="push">
             <visibleWhen
                   checkEnabled="false">
-               <iterate
-                     ifEmpty="false"
-                     operator="and">
-                  <instanceof
-                        value="ca.mcgill.cs.swevo.qualyzer.model.Participant">
-                  </instanceof>
-               </iterate>
-            </visibleWhen>
-         </command>
-         <command
-               commandId="ca.mcgill.cs.swevo.qualyzer.commands.deleteInvestigator"
-               icon="icons/delete.gif"
-               label="%command.label.delete"
-               style="push"
-               tooltip="%command.tooltip.deleteInvestigator">
-            <visibleWhen
-                  checkEnabled="false">
-               <iterate
-                     ifEmpty="false"
-                     operator="and">
-                  <instanceof
-                        value="ca.mcgill.cs.swevo.qualyzer.model.Investigator">
-                  </instanceof>
-               </iterate>
-            </visibleWhen>
-         </command>
-         <command
-               commandId="ca.mcgill.cs.swevo.qualyzer.commands.deleteTranscript"
-               icon="icons/delete.gif"
-               label="%command.label.delete"
-               style="push"
-               tooltip="%command.tooltip.deleteTranscript">
-            <visibleWhen
-                  checkEnabled="false">
-               <iterate
-                     ifEmpty="false"
-                     operator="and">
-                  <instanceof
-                        value="ca.mcgill.cs.swevo.qualyzer.model.Transcript">
-                  </instanceof>
-               </iterate>
-            </visibleWhen>
-         </command>
-         <command
-               commandId="ca.mcgill.cs.swevo.qualyzer.commands.deleteProject"
-               icon="icons/delete.gif"
-               label="%command.label.delete"
-               style="push"
-               tooltip="%command.tooltip.deleteProject">
-            <visibleWhen
-                  checkEnabled="false">
-               <iterate
-                     ifEmpty="false"
-                     operator="and">
-                  <instanceof
-                        value="org.eclipse.core.resources.IProject">
-                  </instanceof>
-               </iterate>
-            </visibleWhen>
-         </command>
-         <command
-               commandId="ca.mcgill.cs.swevo.qualyzer.commands.deleteMemo"
-               icon="icons/delete.gif"
-               label="%command.label.delete"
-               style="push"
-               tooltip="%command.tooltip.deleteMemo">
-            <visibleWhen
-                  checkEnabled="false">
-               <iterate
-                     ifEmpty="false"
-                     operator="and">
-                  <instanceof
-                        value="ca.mcgill.cs.swevo.qualyzer.model.Memo">
-                  </instanceof>
-               </iterate>
+               <or>
+                  <iterate
+                        ifEmpty="false"
+                        operator="and">
+                     <instanceof
+                           value="org.eclipse.core.resources.IProject">
+                     </instanceof>
+                  </iterate>
+                  <iterate
+                        ifEmpty="false"
+                        operator="and">
+                     <instanceof
+                           value="ca.mcgill.cs.swevo.qualyzer.model.Investigator">
+                     </instanceof>
+                  </iterate>
+                  <iterate
+                        ifEmpty="false"
+                        operator="and">
+                     <instanceof
+                           value="ca.mcgill.cs.swevo.qualyzer.model.Participant">
+                     </instanceof>
+                  </iterate>
+                  <iterate
+                        ifEmpty="false"
+                        operator="and">
+                     <instanceof
+                           value="ca.mcgill.cs.swevo.qualyzer.model.Transcript">
+                     </instanceof>
+                  </iterate>
+                  <iterate
+                        ifEmpty="false"
+                        operator="and">
+                     <instanceof
+                           value="ca.mcgill.cs.swevo.qualyzer.model.Memo">
+                     </instanceof>
+                  </iterate>
+               </or>
             </visibleWhen>
          </command>
       </menuContribution>
@@ -1055,6 +990,111 @@
                      operator="and">
                   <instanceof
                         value="org.eclipse.core.resources.IProject">
+                  </instanceof>
+               </iterate>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="ca.mcgill.cs.swevo.qualyzer.handlers.DeleteProjectHandler"
+            commandId="org.eclipse.ui.edit.delete">
+         <activeWhen>
+            <and>
+               <with
+                     variable="activePartId">
+                  <equals
+                        value="ca.mcgill.cs.swevo.qualyzer.projectexplorer">
+                  </equals>
+               </with>
+               <iterate
+                     ifEmpty="false"
+                     operator="and">
+                  <instanceof
+                        value="org.eclipse.core.resources.IProject">
+                  </instanceof>
+               </iterate>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="ca.mcgill.cs.swevo.qualyzer.handlers.DeleteInvestigatorHandler"
+            commandId="org.eclipse.ui.edit.delete">
+         <activeWhen>
+            <and>
+               <with
+                     variable="activePartId">
+                  <equals
+                        value="ca.mcgill.cs.swevo.qualyzer.projectexplorer">
+                  </equals>
+               </with>
+               <iterate
+                     ifEmpty="false"
+                     operator="and">
+                  <instanceof
+                        value="ca.mcgill.cs.swevo.qualyzer.model.Investigator">
+                  </instanceof>
+               </iterate>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="ca.mcgill.cs.swevo.qualyzer.handlers.DeleteParticipantHandler"
+            commandId="org.eclipse.ui.edit.delete">
+         <activeWhen>
+            <and>
+               <with
+                     variable="activePartId">
+                  <equals
+                        value="ca.mcgill.cs.swevo.qualyzer.projectexplorer">
+                  </equals>
+               </with>
+               <iterate
+                     ifEmpty="false"
+                     operator="and">
+                  <instanceof
+                        value="ca.mcgill.cs.swevo.qualyzer.model.Participant">
+                  </instanceof>
+               </iterate>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="ca.mcgill.cs.swevo.qualyzer.handlers.DeleteTranscriptHandler"
+            commandId="org.eclipse.ui.edit.delete">
+         <activeWhen>
+            <and>
+               <with
+                     variable="activePartId">
+                  <equals
+                        value="ca.mcgill.cs.swevo.qualyzer.projectexplorer">
+                  </equals>
+               </with>
+               <iterate
+                     ifEmpty="false"
+                     operator="and">
+                  <instanceof
+                        value="ca.mcgill.cs.swevo.qualyzer.model.Transcript">
+                  </instanceof>
+               </iterate>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="ca.mcgill.cs.swevo.qualyzer.handlers.DeleteMemoHandler"
+            commandId="org.eclipse.ui.edit.delete">
+         <activeWhen>
+            <and>
+               <with
+                     variable="activePartId">
+                  <equals
+                        value="ca.mcgill.cs.swevo.qualyzer.projectexplorer">
+                  </equals>
+               </with>
+               <iterate
+                     ifEmpty="false"
+                     operator="and">
+                  <instanceof
+                        value="ca.mcgill.cs.swevo.qualyzer.model.Memo">
                   </instanceof>
                </iterate>
             </and>
