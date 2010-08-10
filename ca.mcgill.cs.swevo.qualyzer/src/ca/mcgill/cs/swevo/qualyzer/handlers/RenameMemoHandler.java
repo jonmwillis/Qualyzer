@@ -41,6 +41,10 @@ public class RenameMemoHandler extends AbstractHandler
 {
 
 	
+	/**
+	 * 
+	 */
+	private static final String DOT = "."; //$NON-NLS-1$
 	private static final String MEMO = File.separator + "memos" + File.separator; //$NON-NLS-1$
 	private static final String EXT = ".rtf"; //$NON-NLS-1$
 	private boolean fClosed = false;
@@ -88,7 +92,7 @@ public class RenameMemoHandler extends AbstractHandler
 		IEditorReference[] editors = activePage.getEditorReferences();
 		for(IEditorReference editor : editors)
 		{
-			String editorName = memo.getProject().getName() + "." + Memo.class.getSimpleName() + ".";
+			String editorName = memo.getProject().getName() + DOT + Memo.class.getSimpleName() + DOT;
 			if(editor.getName().equals(editorName + memo.getFileName()))
 			{
 				activePage.closeEditor(editor.getEditor(true), true);

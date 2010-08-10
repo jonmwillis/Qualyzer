@@ -99,7 +99,8 @@ public class CodeFragmentViewerPage extends FormPage implements ProjectListener,
 		layout.numColumns = 1;
 		body.setLayout(layout);
 		
-		Button refresh = toolkit.createButton(body, "Refresh", SWT.PUSH);
+		Button refresh = toolkit.createButton(body, Messages.getString(
+				"editors.pages.CodeFragmentViewerPage.refresh"), SWT.PUSH); //$NON-NLS-1$
 		refresh.addSelectionListener(refreshSelectedListener());
 		
 		Project project = fCode.getProject();
