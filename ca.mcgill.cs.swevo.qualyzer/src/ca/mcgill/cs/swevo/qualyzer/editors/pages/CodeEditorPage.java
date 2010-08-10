@@ -340,7 +340,8 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 				if(!hardConflicts.isEmpty())
 				{
 					String message = buildErrorString(hardConflicts);
-					MessageDialog.openError(getSite().getShell(), "Unable to Delete", message);
+					MessageDialog.openError(getSite().getShell(), Messages.getString(
+							"editors.pages.CodeEditorPage.unableToDelete"), message); //$NON-NLS-1$
 					return;
 				}
 				
@@ -379,11 +380,11 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	 */
 	protected String buildErrorString(List<Memo> conflicts)
 	{
-		String message = "Unable to delete code due to the following conflicts:";
+		String message = Messages.getString("editors.pages.CodeEditorPage.conflicts"); //$NON-NLS-1$
 		
 		for(Memo memo : conflicts)
 		{
-			message += "\nMemo:" + memo.getName();
+			message += Messages.getString("editors.pages.CodeEditorPage.memo") + memo.getName(); //$NON-NLS-1$
 		}
 		
 		return message;
