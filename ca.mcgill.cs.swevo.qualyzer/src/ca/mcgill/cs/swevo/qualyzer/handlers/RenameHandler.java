@@ -83,7 +83,7 @@ public class RenameHandler extends AbstractHandler
 				{
 					if(element instanceof Transcript)
 					{
-						rename((Transcript) element, dialog.getName(), dialog.getChangeAudio());
+						rename((Transcript) element, dialog.getName());
 						
 						Facade.getInstance().saveTranscript((Transcript) element);	
 					}
@@ -116,9 +116,8 @@ public class RenameHandler extends AbstractHandler
 	/**
 	 * @param transcript
 	 * @param name
-	 * @param changeAudio
 	 */
-	private void rename(Transcript transcript, String name, boolean changeAudio)
+	private void rename(Transcript transcript, String name)
 	{	
 		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		IEditorReference[] editors = activePage.getEditorReferences();
@@ -139,25 +138,22 @@ public class RenameHandler extends AbstractHandler
 		
 		origFile.renameTo(newFile);
 		
-		if(changeAudio)
+		AudioFile audio = transcript.getAudioFile();
+		if(audio != null)
 		{
-			AudioFile audio = transcript.getAudioFile();
-			if(audio != null)
+			origFile = new File(projectPath + audio.getRelativePath());
+			
+			if(!origFile.exists())
 			{
-				origFile = new File(projectPath + audio.getRelativePath());
-				
-				if(!origFile.exists())
-				{
-					origFile = getNewAudioFile(projectPath);
-				}
-				
-				String audioExt = audio.getRelativePath().substring(audio.getRelativePath().lastIndexOf('.'));
-				newFile = new File(projectPath + AUDIO + name + audioExt);
-				
-				origFile.renameTo(newFile);
-				
-				audio.setRelativePath(AUDIO + name + audioExt);
+				origFile = getNewAudioFile(projectPath);
 			}
+			
+			String audioExt = audio.getRelativePath().substring(audio.getRelativePath().lastIndexOf('.'));
+			newFile = new File(projectPath + AUDIO + name + audioExt);
+			
+			origFile.renameTo(newFile);
+			
+			audio.setRelativePath(AUDIO + name + audioExt);
 		}
 		
 		transcript.setName(name);

@@ -16,11 +16,8 @@ import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -36,9 +33,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.validation.TranscriptNameValidator;
 public class RenameDialog extends TitleAreaDialog
 {
 	private Text fNewName;
-	private Button fChangeAudio;
 	private String fName;
-	private boolean fChange;
 	private Project fProject;
 	private String fOldName;
 	
@@ -49,7 +44,6 @@ public class RenameDialog extends TitleAreaDialog
 	public RenameDialog(Shell shell, Project project)
 	{
 		super(shell);
-		fChange = true;
 		fName = ""; //$NON-NLS-1$
 		fProject = project;
 	}
@@ -83,40 +77,7 @@ public class RenameDialog extends TitleAreaDialog
 		fNewName.addKeyListener(createKeyListener());
 		fNewName.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 		
-		composite = new Composite(parent, SWT.NULL);
-		layout = new GridLayout();
-		layout.numColumns = 2;
-		composite.setLayout(layout);
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
-		
-		fChangeAudio = new Button(composite, SWT.CHECK);
-		fChangeAudio.addSelectionListener(createSelectionListener());
-		fChangeAudio.setSelection(true);
-		
-		label = new Label(composite, SWT.NULL);
-		label.setText(Messages.getString("dialogs.RenameDialog.audioToo")); //$NON-NLS-1$
-		label.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
-		
 		return parent;
-	}
-
-	/**
-	 * @return
-	 */
-	private SelectionListener createSelectionListener()
-	{
-		return new SelectionListener(){
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e){}
-
-			@Override
-			public void widgetSelected(SelectionEvent e)
-			{
-				fChange = !fChange;
-			}
-			
-		};
 	}
 
 	/**
@@ -158,15 +119,6 @@ public class RenameDialog extends TitleAreaDialog
 	public String getName()
 	{
 		return fName;
-	}
-	
-	/**
-	 * See if the audio file should be renamed.
-	 * @return
-	 */
-	public boolean getChangeAudio()
-	{
-		return fChange;
 	}
 
 	/**
