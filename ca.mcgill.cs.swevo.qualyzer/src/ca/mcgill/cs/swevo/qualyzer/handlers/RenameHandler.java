@@ -135,10 +135,10 @@ public class RenameHandler extends AbstractHandler
 			}
 		}
 		
-		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(transcript.getProject().getName());
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(transcript.getProject().getFolderName());
 		String projectPath = project.getLocation().toString();
 		File origFile = new File(projectPath + TRANSCRIPT + transcript.getFileName());
-		File newFile = new File(projectPath + TRANSCRIPT + name + EXT);
+		File newFile = new File(projectPath + TRANSCRIPT + name.replace(' ', '_') + EXT);
 		
 		origFile.renameTo(newFile);
 		
@@ -153,15 +153,15 @@ public class RenameHandler extends AbstractHandler
 			}
 			
 			String audioExt = audio.getRelativePath().substring(audio.getRelativePath().lastIndexOf('.'));
-			newFile = new File(projectPath + AUDIO + name + audioExt);
+			newFile = new File(projectPath + AUDIO + name.replace(' ', '_') + audioExt);
 			
 			origFile.renameTo(newFile);
 			
-			audio.setRelativePath(AUDIO + name + audioExt);
+			audio.setRelativePath(AUDIO + name.replace(' ', '_') + audioExt);
 		}
 		
 		transcript.setName(name);
-		transcript.setFileName(name+EXT);
+		transcript.setFileName(name.replace(' ', '_')+EXT);
 	}
 
 	/**

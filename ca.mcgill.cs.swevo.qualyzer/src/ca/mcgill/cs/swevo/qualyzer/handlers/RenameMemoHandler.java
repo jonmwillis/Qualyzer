@@ -104,12 +104,12 @@ public class RenameMemoHandler extends AbstractHandler
 		
 		String projectPath = project.getLocation().toString();
 		File origFile = new File(projectPath + MEMO + memo.getFileName());
-		File newFile = new File(projectPath + MEMO + name + EXT);
+		File newFile = new File(projectPath + MEMO + name.replace(' ', '_') + EXT);
 		
 		origFile.renameTo(newFile);
 		
 		memo.setName(name);
-		memo.setFileName(name+EXT);
+		memo.setFileName(name.replace(' ', '_')+EXT);
 	}
 
 }
