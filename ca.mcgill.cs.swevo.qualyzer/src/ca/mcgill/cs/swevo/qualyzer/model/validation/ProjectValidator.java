@@ -52,7 +52,7 @@ public class ProjectValidator extends AbstractValidator
 		}
 		else
 		{
-			IProject wProject = fRoot.getProject(fName);
+			IProject wProject = fRoot.getProject(fName.replace(' ', '_'));
 			
 			if(wProject.exists())
 			{

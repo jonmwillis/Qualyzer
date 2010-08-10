@@ -60,7 +60,7 @@ public class NewMemoWizard extends Wizard
 	{
 		try
 		{
-			FileUtil.setupMemoFiles(fPage.getMemoName(), fProject.getName(), ""); //$NON-NLS-1$
+			FileUtil.setupMemoFiles(fPage.getMemoName(), fProject.getFolderName(), ""); //$NON-NLS-1$
 			
 			fMemo = Facade.getInstance().createMemo(fPage.getMemoName(), fPage.getDate(), fPage.getAuthor(), 
 					fPage.getParticipants(), fProject, fPage.getCode(), fPage.getTranscript());

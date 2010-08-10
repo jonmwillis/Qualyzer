@@ -165,7 +165,7 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 		else
 		{
 			Transcript trans = (Transcript) getDocument();
-			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(trans.getProject().getName());
+			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(trans.getProject().getFolderName());
 			String audioFile = project.getLocation() + File.separator + trans.getAudioFile().getRelativePath();
 			
 			fAudioPlayer = new AudioPlayer(audioFile, this);
@@ -373,7 +373,7 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 						else
 						{
 							IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(
-									editorTranscript.getProject().getName());
+									editorTranscript.getProject().getFolderName());
 							String audioFile = project.getLocation() + File.separator + 
 								editorTranscript.getAudioFile().getRelativePath();
 							fAudioPlayer.open(audioFile);
@@ -394,7 +394,7 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 		Transcript editorTranscript = (Transcript) getDocument();
 		editorTranscript.setAudioFile(transcript.getAudioFile());
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(
-				editorTranscript.getProject().getName());
+				editorTranscript.getProject().getFolderName());
 		String audioFile = project.getLocation() + File.separator + 
 			editorTranscript.getAudioFile().getRelativePath();
 		fAudioPlayer = new AudioPlayer(audioFile, this);

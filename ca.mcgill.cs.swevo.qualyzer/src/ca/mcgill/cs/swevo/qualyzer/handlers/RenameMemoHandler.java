@@ -100,7 +100,7 @@ public class RenameMemoHandler extends AbstractHandler
 			}
 		}
 		
-		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(memo.getProject().getName());
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(memo.getProject().getFolderName());
 		
 		String projectPath = project.getLocation().toString();
 		File origFile = new File(projectPath + MEMO + memo.getFileName());

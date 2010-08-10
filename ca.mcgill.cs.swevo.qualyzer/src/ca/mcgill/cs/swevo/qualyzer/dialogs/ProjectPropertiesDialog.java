@@ -53,7 +53,7 @@ public class ProjectPropertiesDialog extends TitleAreaDialog
 	{
 		super(shell);
 		fProject = project;
-		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(fProject.getName());
+		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(fProject.getFolderName());
 		try
 		{
 			fCurrentName = wProject.getDescription().getComment();
@@ -90,7 +90,7 @@ public class ProjectPropertiesDialog extends TitleAreaDialog
 		Label label = new Label(composite, SWT.NULL);
 		label.setText(Messages.getString("dialogs.ProjectPropertiesDialog.projectPath")); //$NON-NLS-1$
 		
-		String path = ResourcesPlugin.getWorkspace().getRoot().getProject(fProject.getName()).getLocation().toString();
+		String path = ResourcesPlugin.getWorkspace().getRoot().getProject(fProject.getFolderName()).getLocation().toString();
 		label = new Label(composite, SWT.BORDER);
 		label.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		label.setText(path);

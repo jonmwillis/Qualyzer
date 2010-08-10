@@ -86,7 +86,7 @@ public class TranscriptWizardPage extends WizardPage
 		fAudioFileSelected = false;
 		fContainer = null;
 		
-		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(fProject.getName());
+		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(fProject.getFolderName());
 		fWorkspacePath = wProject.getLocation().toString();
 	}
 	
@@ -105,7 +105,7 @@ public class TranscriptWizardPage extends WizardPage
 		fAudioFileSelected = false;
 		fContainer = null;
 		
-		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(fProject.getName());
+		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(fProject.getFolderName());
 		fWorkspacePath = wProject.getLocation().toString();
 	}
 
@@ -473,7 +473,7 @@ public class TranscriptWizardPage extends WizardPage
 	 */
 	protected String findAudioFile(String filename)
 	{	
-		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(fProject.getName());
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(fProject.getFolderName());
 		
 		String path = project.getLocation() + AUDIO_PATH + filename +".mp3"; //$NON-NLS-1$
 		File file = new File(path);

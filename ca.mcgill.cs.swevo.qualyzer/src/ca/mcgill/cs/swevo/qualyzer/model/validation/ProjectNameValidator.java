@@ -41,7 +41,7 @@ public class ProjectNameValidator extends BasicNameValidator
 	@Override
 	protected boolean nameInUse()
 	{
-		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(fName);
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(fName.replace(' ', '_'));
 		
 		return project.exists();
 	}

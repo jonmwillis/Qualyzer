@@ -60,7 +60,7 @@ public class ImportMemoWizard extends Wizard
 	{
 		try
 		{
-			FileUtil.setupMemoFiles(fPage.getMemoName(), fProject.getName(), fPage.getMemoFile());
+			FileUtil.setupMemoFiles(fPage.getMemoName(), fProject.getFolderName(), fPage.getMemoFile());
 			
 			fMemo = Facade.getInstance().createMemo(fPage.getMemoName(), fPage.getDate(),
 					fPage.getAuthor(), fPage.getParticipants(), fProject, fPage.getCode(), fPage.getTranscript());

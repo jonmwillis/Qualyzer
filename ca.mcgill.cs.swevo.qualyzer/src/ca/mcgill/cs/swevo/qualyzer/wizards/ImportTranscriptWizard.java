@@ -63,7 +63,7 @@ public class ImportTranscriptWizard extends Wizard
 	{
 		try
 		{
-			FileUtil.setupTranscriptFiles(fPage.getTranscriptName(), fProject.getName(), fPage.getAudioFile(),
+			FileUtil.setupTranscriptFiles(fPage.getTranscriptName(), fProject.getFolderName(), fPage.getAudioFile(),
 					fPage.getTranscriptFile());
 			
 			fTranscript = Facade.getInstance().createTranscript(fPage.getTranscriptName(), fPage.getDate(),

@@ -124,7 +124,7 @@ public class DeleteMemoHandler extends AbstractHandler
 	private void delete(Memo memo, Shell shell, boolean deleteCodes)
 	{
 		Project project = memo.getProject();
-		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(project.getName());
+		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(project.getFolderName());
 		
 		File file = new File(wProject.getLocation() + MEMO + memo.getFileName());
 		if(!file.delete())
