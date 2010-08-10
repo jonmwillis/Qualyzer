@@ -58,7 +58,6 @@ public class DeleteTranscriptHandler extends AbstractHandler
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		ISelection selection = page.getSelection();
 		Shell shell = HandlerUtil.getActiveShell(event).getShell();
-		
 		if(selection != null && selection instanceof IStructuredSelection)
 		{
 			List<Transcript> toDelete = new ArrayList<Transcript>();
@@ -95,7 +94,8 @@ public class DeleteTranscriptHandler extends AbstractHandler
 			else if(!conflicts.isEmpty())
 			{
 				String message = buildString(conflicts);
-				MessageDialog.openError(shell, "Unable to delete", message);
+				MessageDialog.openError(shell, Messages.getString(
+						"handlers.DeleteTranscriptHandler.unableToDelete"), message); //$NON-NLS-1$
 			}
 			else
 			{
@@ -111,7 +111,7 @@ public class DeleteTranscriptHandler extends AbstractHandler
 	 */
 	private String buildString(List<String> conflicts)
 	{
-		String message = "Unable to delete due to the following conflicts:\n";
+		String message = Messages.getString("handlers.DeleteTranscriptHandler.conflicts"); //$NON-NLS-1$
 		
 		for(String string : conflicts)
 		{
@@ -127,7 +127,7 @@ public class DeleteTranscriptHandler extends AbstractHandler
 	 */
 	private String checkForConflicts(Transcript transcript)
 	{
-		String conflict = "";
+		String conflict = ""; //$NON-NLS-1$
 		
 		for(Memo memo : transcript.getProject().getMemos())
 		{
@@ -135,10 +135,11 @@ public class DeleteTranscriptHandler extends AbstractHandler
 			{
 				if(!conflict.isEmpty())
 				{
-					conflict += "\n";
+					conflict += "\n"; //$NON-NLS-1$
 				}
-				conflict += "Transcript:"+transcript.getName();
-				conflict += " Memo:" + memo.getName();
+				conflict += Messages.getString(
+						"handlers.DeleteTranscriptHandler.transcript")+transcript.getName(); //$NON-NLS-1$
+				conflict += Messages.getString("handlers.DeleteTranscriptHandler.memo") + memo.getName(); //$NON-NLS-1$
 			}
 		}
 		
