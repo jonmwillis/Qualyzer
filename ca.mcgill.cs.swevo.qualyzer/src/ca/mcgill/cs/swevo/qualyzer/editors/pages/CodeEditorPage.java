@@ -335,6 +335,15 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 			public void widgetSelected(SelectionEvent e)
 			{
 				Code toDelete = fCodes.get(fTable.getSelectionIndex());
+				
+				List<Memo> hardConflicts = detectHardConflicts(toDelete);
+				if(!hardConflicts.isEmpty())
+				{
+					String message = buildErrorString(hardConflicts);
+					MessageDialog.openError(getSite().getShell(), "Unable to Delete", message);
+					return;
+				}
+				
 				List<Fragment> conflicts = detectConflicts(toDelete);
 				boolean check = false;
 				if(conflicts.size() == 0)
@@ -350,23 +359,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 									"editors.pages.CodeEditorPage.confirmMany2")); //$NON-NLS-1$
 					if(check)
 					{
-						for(Fragment fragment : conflicts)
-						{
-							for(int i = 0; i < fragment.getCodeEntries().size(); i++)
-							{
-								CodeEntry entry = fragment.getCodeEntries().get(i);
-								if(entry.getCode().equals(toDelete))
-								{
-									fragment.getCodeEntries().remove(i);
-									Facade.getInstance().saveDocument(fragment.getDocument());
-									break;
-								}
-							}
-							if(fragment.getCodeEntries().isEmpty())
-							{
-								Facade.getInstance().deleteFragment(fragment);
-							}
-						}
+						removeCodeFromFragments(toDelete, conflicts);
 					}
 				}
 				if(check)
@@ -378,6 +371,67 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 				}
 			}
 		};
+	}
+	
+	/**
+	 * @param conflicts 
+	 * @return
+	 */
+	protected String buildErrorString(List<Memo> conflicts)
+	{
+		String message = "Unable to delete code due to the following conflicts:";
+		
+		for(Memo memo : conflicts)
+		{
+			message += "\nMemo:" + memo.getName();
+		}
+		
+		return message;
+	}
+
+	/**
+	 * @param toDelete
+	 * @param conflicts
+	 */
+	private void removeCodeFromFragments(Code toDelete, List<Fragment> conflicts)
+	{
+		for(Fragment fragment : conflicts)
+		{
+			for(int i = 0; i < fragment.getCodeEntries().size(); i++)
+			{
+				CodeEntry entry = fragment.getCodeEntries().get(i);
+				if(entry.getCode().equals(toDelete))
+				{
+					fragment.getCodeEntries().remove(i);
+					Facade.getInstance().saveDocument(fragment.getDocument());
+					break;
+				}
+			}
+			if(fragment.getCodeEntries().isEmpty())
+			{
+				Facade.getInstance().deleteFragment(fragment);
+			}
+		}
+	}
+	
+	/**
+	 * Finds any memos that reference the code to be deleted.
+	 * @param code the code that will be deleted.
+	 * @return The list of memos "about" it.
+	 */
+	private List<Memo> detectHardConflicts(Code code)
+	{
+		List<Memo> memos = new ArrayList<Memo>();
+		
+		for(Memo memo : fProject.getMemos())
+		{
+			if(code.equals(memo.getCode()))
+			{
+				memos.add(memo);
+			}
+		}
+		
+		return memos;
 	}
 
 	/**
