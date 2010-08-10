@@ -230,7 +230,7 @@ public class TranscriptWizardPage extends WizardPage
 		label.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 		
 		Button button = new Button(composite, SWT.PUSH);
-		button.setText("Add...");
+		button.setText(Messages.getString("wizards.pages.TranscriptWizardPage.add")); //$NON-NLS-1$
 		button.addSelectionListener(new SelectionAdapter(){
 			
 			@Override

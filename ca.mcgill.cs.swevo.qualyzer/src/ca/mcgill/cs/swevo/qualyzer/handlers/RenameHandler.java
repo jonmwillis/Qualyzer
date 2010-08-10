@@ -45,6 +45,10 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 public class RenameHandler extends AbstractHandler
 {
 	
+	/**
+	 * 
+	 */
+	private static final String DOT = "."; //$NON-NLS-1$
 	private static final String EXT = ".rtf"; //$NON-NLS-1$
 	private static final String TRANSCRIPT = File.separator+"transcripts"+File.separator; //$NON-NLS-1$
 	private static final String AUDIO = File.separator+"audio"+File.separator; //$NON-NLS-1$
@@ -123,7 +127,7 @@ public class RenameHandler extends AbstractHandler
 		IEditorReference[] editors = activePage.getEditorReferences();
 		for(IEditorReference editor : editors)
 		{
-			String editorName = transcript.getProject().getName() + "." + Transcript.class.getSimpleName() + ".";
+			String editorName = transcript.getProject().getName() + DOT + Transcript.class.getSimpleName() + DOT;
 			if(editor.getName().equals(editorName + transcript.getFileName()))
 			{
 				activePage.closeEditor(editor.getEditor(true), true);
