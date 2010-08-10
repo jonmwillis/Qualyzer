@@ -109,7 +109,7 @@ public class RenameHandler extends AbstractHandler
 	 */
 	private boolean trancriptNoLongerExists(Transcript element)
 	{
-		String projectName = element.getProject().getName();
+		String projectName = element.getProject().getFolderName();
 		String projectPath = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName).getLocation().toString();
 		
 		File file = new File(projectPath+TRANSCRIPT+element.getFileName());

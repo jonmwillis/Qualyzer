@@ -51,7 +51,7 @@ public class TranscriptPropertiesHandler extends AbstractHandler
 			if(dialog.open() == Window.OK)
 			{
 				Transcript transcript = (Transcript) element;
-				String projectName = transcript.getProject().getName();
+				String projectName = transcript.getProject().getFolderName();
 				String newDate = dialog.getDate();
 				String audioFile = dialog.getAudioFile();
 				
@@ -95,7 +95,7 @@ public class TranscriptPropertiesHandler extends AbstractHandler
 						
 				String workspacePath = ResourcesPlugin.getWorkspace().getRoot().getLocation()+File.separator;
 				File input = new File(audioFile);
-				String dest = workspacePath + File.separator + transcript.getProject().getName();
+				String dest = workspacePath + File.separator + transcript.getProject().getFolderName();
 				dest = dest + relativePath;
 				File output = new File(dest);
 				try

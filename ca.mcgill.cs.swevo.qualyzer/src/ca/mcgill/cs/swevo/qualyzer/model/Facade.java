@@ -75,19 +75,20 @@ public final class Facade
 	public Project createProject(String name, String nickname, String fullName, String institution)
 			throws QualyzerException
 	{
-		String finalName = name.replace(' ', '_');
-		IProject wProject = FileUtil.makeProjectFileSystem(finalName);
+		String folderName = name.replace(' ', '_');
+		IProject wProject = FileUtil.makeProjectFileSystem(folderName);
 
 		Project project;
 
 		project = new Project();
-		project.setName(finalName);
+		project.setName(name);
+		project.setFolderName(folderName);
 
 		createInvestigator(nickname, fullName, institution, project, false);
 
 		PersistenceManager.getInstance().initDB(wProject);
 		HibernateDBManager manager;
-		manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(finalName);
+		manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(folderName);
 		HibernateUtil.quietSave(manager, project);
 		
 		try
@@ -124,7 +125,7 @@ public final class Facade
 		project.getCodes().add(code);
 
 		HibernateDBManager manager;
-		manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(project.getName());
+		manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(project.getFolderName());
 		HibernateUtil.quietSave(manager, project);
 
 		fListenerManager.notifyCodeListeners(ChangeType.ADD, new Code[] { code }, this);
@@ -155,7 +156,7 @@ public final class Facade
 		if (save)
 		{
 			HibernateDBManager manager;
-			manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(project.getName());
+			manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(project.getFolderName());
 			HibernateUtil.quietSave(manager, project);
 		}
 
@@ -181,7 +182,7 @@ public final class Facade
 		project.getParticipants().add(participant);
 
 		HibernateDBManager manager;
-		manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(project.getName());
+		manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(project.getFolderName());
 		HibernateUtil.quietSave(manager, project);
 
 		fListenerManager.notifyParticipantListeners(ChangeType.ADD, new Participant[] { participant }, this);
@@ -219,7 +220,8 @@ public final class Facade
 		project.getTranscripts().add(transcript);
 		transcript.setProject(project);
 
-		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(project.getName());
+		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(
+				project.getFolderName());
 		HibernateUtil.quietSave(manager, project);
 
 		fListenerManager.notifyTranscriptListeners(ChangeType.ADD, new Transcript[] { transcript }, this);
@@ -294,13 +296,14 @@ public final class Facade
 	 */
 	public void deleteProject(Project project)
 	{
-		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(project.getName());
+		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(project.getFolderName());
 
 		try
 		{
-			HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(project.getName());
+			HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(
+					project.getFolderName());
 
-			QualyzerActivator.getDefault().getHibernateDBManagers().remove(project.getName());
+			QualyzerActivator.getDefault().getHibernateDBManagers().remove(project.getFolderName());
 			//manager.shutdownDBServer();
 			manager.close();
 
@@ -326,7 +329,7 @@ public final class Facade
 	{
 		Object project = null;
 		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(
-				participant.getProject().getName());
+				participant.getProject().getFolderName());
 		Session session = null;
 		Transaction t = null;
 
@@ -374,7 +377,7 @@ public final class Facade
 	{
 		Object project = null;
 		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(
-				investigator.getProject().getName());
+				investigator.getProject().getFolderName());
 		Session session = null;
 		Transaction t = null;
 		try
@@ -420,7 +423,7 @@ public final class Facade
 	{
 		Object project = null;
 		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(
-				transcript.getProject().getName());
+				transcript.getProject().getFolderName());
 		Session session = null;
 		Transaction t = null;
 		try
@@ -466,7 +469,7 @@ public final class Facade
 	{
 		Object project = null;
 		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(
-				memo.getProject().getName());
+				memo.getProject().getFolderName());
 		Session session = null;
 		Transaction t = null;
 		try
@@ -513,7 +516,7 @@ public final class Facade
 	{
 		Transcript toReturn = null;
 		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(
-				transcript.getProject().getName());
+				transcript.getProject().getFolderName());
 		Session s = manager.openSession();
 
 		try
@@ -543,7 +546,7 @@ public final class Facade
 	{
 		Memo toReturn = null;
 		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(
-				memo.getProject().getName());
+				memo.getProject().getFolderName());
 		Session s = manager.openSession();
 		try
 		{
@@ -577,7 +580,7 @@ public final class Facade
 	public void saveCode(Code code)
 	{
 		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(
-				code.getProject().getName());
+				code.getProject().getFolderName());
 		HibernateUtil.quietSave(manager, code);
 
 		fListenerManager.notifyCodeListeners(ChangeType.MODIFY, new Code[] { code }, this);
@@ -591,7 +594,7 @@ public final class Facade
 	public void saveInvestigator(Investigator investigator)
 	{
 		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(
-				investigator.getProject().getName());
+				investigator.getProject().getFolderName());
 		HibernateUtil.quietSave(manager, investigator);
 
 		fListenerManager.notifyInvestigatorListeners(ChangeType.MODIFY, new Investigator[] { investigator }, this);
@@ -605,7 +608,7 @@ public final class Facade
 	public void saveParticipant(Participant participant)
 	{
 		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(
-				participant.getProject().getName());
+				participant.getProject().getFolderName());
 		HibernateUtil.quietSave(manager, participant);
 
 		fListenerManager.notifyParticipantListeners(ChangeType.MODIFY, new Participant[] { participant }, this);
@@ -619,7 +622,7 @@ public final class Facade
 	public void saveTranscript(Transcript transcript)
 	{
 		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(
-				transcript.getProject().getName());
+				transcript.getProject().getFolderName());
 		HibernateUtil.quietSave(manager, transcript);
 
 		fListenerManager.notifyTranscriptListeners(ChangeType.MODIFY, new Transcript[] { transcript }, this);
@@ -633,7 +636,7 @@ public final class Facade
 		if (modifiedCodes.length > 0)
 		{
 			HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(
-					modifiedCodes[0].getProject().getName());
+					modifiedCodes[0].getProject().getFolderName());
 			HibernateUtil.quietSave(manager, modifiedCodes);
 
 			fListenerManager.notifyCodeListeners(ChangeType.MODIFY, modifiedCodes, this);
@@ -648,7 +651,7 @@ public final class Facade
 	{
 		Object project = null;
 		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(
-				code.getProject().getName());
+				code.getProject().getFolderName());
 		Session session = null;
 		Transaction t = null;
 
@@ -695,7 +698,7 @@ public final class Facade
 	{
 		IAnnotatedDocument document = fragment.getDocument();
 		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(
-				document.getProject().getName());
+				document.getProject().getFolderName());
 		Session session = null;
 		Transaction t = null;
 
@@ -802,7 +805,8 @@ public final class Facade
 		project.getMemos().add(memo);
 		memo.setProject(project);
 
-		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(project.getName());
+		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(
+				project.getFolderName());
 		HibernateUtil.quietSave(manager, project);
 
 		fListenerManager.notifyMemoListeners(ChangeType.ADD, new Memo[] { memo }, this);
@@ -816,7 +820,7 @@ public final class Facade
 	public void saveMemo(Memo memo)
 	{
 		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(
-				memo.getProject().getName());
+				memo.getProject().getFolderName());
 		HibernateUtil.quietSave(manager, memo);
 
 		fListenerManager.notifyMemoListeners(ChangeType.MODIFY, new Memo[] { memo }, this);

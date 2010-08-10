@@ -38,6 +38,7 @@ public class Project
 	private static final int NUM2 = 52511;
 	
 	private String fName;
+	private String fFolderName;
 	private Long fPersistenceId;
 	private List<Investigator> fInvestigators = new ArrayList<Investigator>();
 	private List<Participant> fParticipants = new ArrayList<Participant>();
@@ -59,6 +60,22 @@ public class Project
 	public void setName(String name)
 	{
 		this.fName = name;
+	}
+	
+	/**
+	 * @return the folder name.
+	 */
+	public String getFolderName()
+	{
+		return fFolderName;
+	}
+	
+	/**
+	 * @param folderName The name to set.
+	 */
+	public void setFolderName(String folderName)
+	{
+		this.fFolderName = folderName;
 	}
 
 	/**

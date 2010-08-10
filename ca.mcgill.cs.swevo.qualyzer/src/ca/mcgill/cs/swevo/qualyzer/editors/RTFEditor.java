@@ -510,7 +510,7 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 	private Investigator recoverActiveInvestigator()
 	{
 		Project project = fDocument.getProject();
-		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(project.getName());
+		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(project.getFolderName());
 		String name = ""; //$NON-NLS-1$
 		
 		try
@@ -779,7 +779,7 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 	 */
 	private void refreshInput()
 	{
-		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(fDocument.getProject().getName());
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(fDocument.getProject().getFolderName());
 		IFile file;
 		if(fDocument instanceof Transcript)
 		{

@@ -132,7 +132,7 @@ public class DeleteTranscriptHandler extends AbstractHandler
 			Shell shell)
 	{
 		Project project = transcript.getProject();
-		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(project.getName());
+		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(project.getFolderName());
 		ArrayList<Participant> participants = null;
 		ArrayList<Code> codes = null;
 		

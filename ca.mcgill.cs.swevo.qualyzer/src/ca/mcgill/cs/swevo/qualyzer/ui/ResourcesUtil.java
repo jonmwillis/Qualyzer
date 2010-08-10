@@ -180,7 +180,7 @@ public final class ResourcesUtil
 	public static IEditorPart openEditor(IWorkbenchPage page, Transcript transcript)
 	{
 		IEditorPart editorPart = null;
-		IProject proj = ResourcesPlugin.getWorkspace().getRoot().getProject(transcript.getProject().getName());
+		IProject proj = ResourcesPlugin.getWorkspace().getRoot().getProject(transcript.getProject().getFolderName());
 		IFile file = proj.getFile("transcripts" + File.separator + transcript.getFileName()); //$NON-NLS-1$
 		try
 		{
@@ -245,7 +245,7 @@ public final class ResourcesUtil
 	public static IEditorPart openEditor(IWorkbenchPage page, Memo memo)
 	{
 		IEditorPart editorPart = null;
-		IProject proj = ResourcesPlugin.getWorkspace().getRoot().getProject(memo.getProject().getName());
+		IProject proj = ResourcesPlugin.getWorkspace().getRoot().getProject(memo.getProject().getFolderName());
 		IFile file = proj.getFile("memos" + File.separator + memo.getFileName()); //$NON-NLS-1$
 		try
 		{

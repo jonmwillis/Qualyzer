@@ -80,7 +80,7 @@ public class NewProjectWizard extends Wizard
 							fOne.getInvestigatorFullname(), fOne.getInstitution());
 					monitor.worked(2);
 					
-					fProject = ResourcesPlugin.getWorkspace().getRoot().getProject(project.getName());
+					fProject = ResourcesPlugin.getWorkspace().getRoot().getProject(project.getFolderName());
 					monitor.worked(1);
 					monitor.done();
 				}
@@ -88,11 +88,13 @@ public class NewProjectWizard extends Wizard
 		}
 		catch (InvocationTargetException e)
 		{
-			
+			System.out.println("invo");
+			e.printStackTrace();
 		}
 		catch (InterruptedException e)
 		{
-			
+			System.out.println("inter");
+			e.printStackTrace();
 		}
 		catch(QualyzerException e) 
 		{

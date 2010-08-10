@@ -170,7 +170,7 @@ public final class PersistenceManager
 	 */
 	public Project getProject(String name)
 	{
-		HibernateDBManager dbManager = fActivator.getHibernateDBManagers().get(name);
+		HibernateDBManager dbManager = fActivator.getHibernateDBManagers().get(name.replace(' ', '_'));
 
 		if(dbManager == null)
 		{
@@ -203,7 +203,7 @@ public final class PersistenceManager
 	 */
 	public void initializeDocument(IAnnotatedDocument document)
 	{
-		HibernateDBManager dbManager = fActivator.getHibernateDBManagers().get(document.getProject().getName());
+		HibernateDBManager dbManager = fActivator.getHibernateDBManagers().get(document.getProject().getFolderName());
 
 		Session session = dbManager.openSession();
 		try

@@ -180,7 +180,7 @@ public class CodeFragmentViewerPage extends FormPage implements ProjectListener,
 		
 		RTFDocumentProvider provider = new RTFDocumentProvider();
 		
-		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(document.getProject().getName());
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(document.getProject().getFolderName());
 		IFile file;
 		if(document instanceof Transcript)
 		{
