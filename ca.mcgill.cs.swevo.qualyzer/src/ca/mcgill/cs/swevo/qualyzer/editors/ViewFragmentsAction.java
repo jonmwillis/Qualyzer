@@ -69,6 +69,7 @@ public class ViewFragmentsAction extends Action
 	}
 
 	/**
+	 * Opens the selection dialog and then returns the code that the user wants to view.
 	 * @param fragment
 	 * @return
 	 */

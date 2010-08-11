@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
 
 /**
- *
+ * Contains the jlgui.BasicPlayer and handles all the actions on it.
  */
 public class AudioPlayer
 {
@@ -36,7 +36,6 @@ public class AudioPlayer
 	private Logger fLogger;
 	
 	private BasicPlayer fPlayer;
-//	private long fByteNumber;
 	private long fMicroSecondsPos;
 	private int fSecondsPos;
 	private double fLength;
@@ -48,7 +47,6 @@ public class AudioPlayer
 	private boolean fIsWAV;
 	
 	//WAV only
-//	private long fJumpSizeMicSeconds;
 	private long fMicSecondPosAfterSeek;
 	private double fMicSecondsPerByte;
 	
@@ -63,7 +61,6 @@ public class AudioPlayer
 		fEditor = editor;
 		fAudioFile = audioFile;
 		
-//		fByteNumber = 0;
 		fMicroSecondsPos = 0;
 		fSecondsPos = 0;
 		fLength = 0;
@@ -86,6 +83,7 @@ public class AudioPlayer
 	}
 	
 	/**
+	 * Handles updates as the file plays.
 	 * @return
 	 */
 	private BasicPlayerListener createBasicPlayerListener()
@@ -202,7 +200,8 @@ public class AudioPlayer
 	}
 
 	/**
-	 * @param selection
+	 * Forces the file to seek to the specified time.
+	 * @param selection A time in seconds to seek to.
 	 */
 	public void jumpToTime(int selection)
 	{
@@ -222,6 +221,7 @@ public class AudioPlayer
 	}
 
 	/**
+	 * Try to open a new audio file.
 	 * @param audioFile
 	 */
 	public void open(String audioFile)
@@ -236,6 +236,7 @@ public class AudioPlayer
 		catch(BasicPlayerException e)
 		{
 			fLogger.error("AudioPlayer: Could not open", e); //$NON-NLS-1$
+			throw new QualyzerException("Unable to open the audio file.", e);
 		}
 	}
 
@@ -252,7 +253,6 @@ public class AudioPlayer
 		fIsWAV = false;
 		fMicSecondPosAfterSeek = 0;
 		fMicSecondsPerByte = 0;
-		
 	}
 	
 }

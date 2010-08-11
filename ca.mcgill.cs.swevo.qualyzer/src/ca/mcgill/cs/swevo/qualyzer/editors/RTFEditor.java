@@ -161,6 +161,7 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 	}
 
 	/**
+	 * Handles enablement of the various actions when the selection changes in the source viewer.
 	 * @param viewer
 	 * @return
 	 */
@@ -312,6 +313,12 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 		return handleOverlaps(positions, selection);
 	}
 
+	/**
+	 * Deal with the various cases of the selection overlapping any number of existing positions.
+	 * @param positions
+	 * @param selection
+	 * @return
+	 */
 	private boolean handleOverlaps(ArrayList<Position> positions, Point selection)
 	{
 		boolean toReturn = false;
@@ -436,7 +443,8 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 		return false;
 	}
 	
-	/* (non-Javadoc)
+	/**
+	 * Initailizes all the actions and their key bindings.
 	 * @see org.eclipse.ui.editors.text.TextEditor#createActions()
 	 */
 	@Override
@@ -504,6 +512,7 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 	}
 	
 	/**
+	 * Check the project description to find out who the active investigator is.
 	 * @param fDocument2
 	 * @return
 	 */
@@ -775,7 +784,7 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 	}
 	
 	/**
-	 * 
+	 * Makes sure that all the objects are fresh from the database.
 	 */
 	private void refreshInput()
 	{

@@ -64,7 +64,7 @@ public class RTFSourceViewerConfiguration extends ColorerSourceViewerConfigurati
 	}
 	
 	/**
-	 * DoubleClickStrategy for marked fragments.
+	 * DoubleClickStrategy for marked fragments. Selects the entire fragment.
 	 */
 	private class FragmentDoubleClickStrategy extends DefaultTextDoubleClickStrategy
 	{	

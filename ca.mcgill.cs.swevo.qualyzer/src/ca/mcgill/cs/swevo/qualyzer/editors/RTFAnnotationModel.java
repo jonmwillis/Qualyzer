@@ -39,7 +39,8 @@ public class RTFAnnotationModel extends ResourceMarkerAnnotationModel
 		super(element.getFile());
 	}
 	
-	/* (non-Javadoc)
+	/**
+	 * If a fragment is being removed and has length zero then also removes the fragment from the document.
 	 * @see org.eclipse.jface.text.source.AnnotationModel#removeAnnotation(org.eclipse.jface.text.source.Annotation)
 	 */
 	@Override

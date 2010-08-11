@@ -55,28 +55,21 @@ import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
  */
 public class TranscriptPropertiesDialog extends TitleAreaDialog
 {
-	/**
-	 * 
-	 */
+	
 	private static final String SLASH = "/"; //$NON-NLS-1$
 	private static final String ADD_IMG = "ADD_IMG"; //$NON-NLS-1$
 	private static final String REMOVE_IMG = "REMOVE_IMG"; //$NON-NLS-1$
-	/**
-	 * 
-	 */
 	private static final int COLS = 4;
 	private static final String TRANSCRIPT = File.separator+"transcripts"+File.separator; //$NON-NLS-1$
 	
 	private final String fProjectName;
 	
 	private ImageRegistry fRegistry;
-	
 	private Transcript fTranscript;
 	private DateTime fDate;
 	private String fAudioPath;
 	private List<Participant> fParticipants;
 	private Table fTable;
-	
 	private String fDateS;
 	private Label fAudioLabel;
 	
@@ -98,6 +91,12 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 		
 	}
 	
+	/**
+	 * Add an image to the registry.
+	 * @param key
+	 * @param pluginID
+	 * @param path
+	 */
 	private void addImage(String key, String pluginID, String path)
 	{
 		String fullKey = computeKey(key, pluginID);
@@ -113,6 +112,12 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 		return pluginID + "_" + key; //$NON-NLS-1$
 	}
 	
+	/**
+	 * Get an image from the registry.
+	 * @param key
+	 * @param pluginID
+	 * @return
+	 */
 	private Image getImage(String key, String pluginID)
 	{
 		return fRegistry.get(computeKey(key, pluginID));
@@ -179,6 +184,7 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 	}
 
 	/**
+	 * Clears the audio selection.
 	 * @return
 	 */
 	private SelectionListener createClearListener()
@@ -228,6 +234,7 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 	}
 
 	/**
+	 * Removes a Participant from the transcript.
 	 * @return
 	 */
 	private SelectionAdapter createRemoveListener()
@@ -252,6 +259,7 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 	}
 
 	/**
+	 * Adds a participant to the transcript.
 	 * @return
 	 */
 	private SelectionAdapter createAddListener()
@@ -291,6 +299,7 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 	}
 
 	/**
+	 * Checks to see if Object s is in the table.
 	 * @param s
 	 * @return
 	 */
@@ -307,7 +316,7 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 	}
 
 	/**
-	 * 
+	 * Build the list of participants from the table.
 	 */
 	private void buildParticipants()
 	{
@@ -321,6 +330,7 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 	}
 
 	/**
+	 * Opens the file chooser for the audio file.
 	 * @return
 	 */
 	private SelectionAdapter createSelectionAdapter()
@@ -331,7 +341,6 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 			public void widgetSelected(SelectionEvent event)
 			{
 				FileDialog dialog = new FileDialog(getShell());
-				//dialog.setFilterPath("");
 				dialog.setFilterExtensions(new String[]{"*.mp3;*.wav"}); //$NON-NLS-1$
 				dialog.setFilterNames(
 						new String[]{Messages.getString("dialogs.TranscriptPropertiesDialog.audioExt")}); //$NON-NLS-1$

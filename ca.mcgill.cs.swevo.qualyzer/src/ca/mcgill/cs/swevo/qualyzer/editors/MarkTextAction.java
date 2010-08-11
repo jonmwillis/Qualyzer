@@ -94,10 +94,8 @@ public class MarkTextAction extends Action implements ITestableAction
 
 	// CSON:
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.action.Action#run()
+	/**
+	 * Opens the CodeChooser and upon selection of a code, attaches it to the selected fragment.
 	 */
 	@Override
 	public void run()

@@ -212,6 +212,7 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 
 	
 	/**
+	 * Sets the text of the FormText widget that links to all the memos.
 	 * @param sectionClient
 	 * @param toolkit
 	 */
@@ -268,6 +269,7 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 	}
 
 	/**
+	 * Parses the href of the link to determine which memo to open and then opens it.
 	 * @return
 	 */
 	private HyperlinkAdapter openMemoListener()
@@ -314,7 +316,7 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 	}
 	
 	/**
-	 * 
+	 * Sets the contents of the FormText widget that displays all the transcripts.
 	 */
 	private void buildTranscripts()
 	{
@@ -358,6 +360,7 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 	}
 
 	/**
+	 * Parses the href to determine which transcript to open and then does so.
 	 * @param transcript
 	 * @return
 	 */
@@ -439,6 +442,10 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 		return fInstitution.getText();
 	}
 	
+	/**
+	 * Handles updates to the dirty state as values change.
+	 * @return
+	 */
 	private KeyListener createKeyListener()
 	{
 		return new KeyListener(){

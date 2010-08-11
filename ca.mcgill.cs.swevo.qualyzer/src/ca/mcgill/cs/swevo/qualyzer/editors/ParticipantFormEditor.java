@@ -63,9 +63,6 @@ public class ParticipantFormEditor extends FormEditor
 	{
 		fParticipant.setParticipantId(fPage.getId());
 		fParticipant.setFullName(fPage.getFullname());
-		//Leaving these out for 0.1, needs to be left out for save to work.
-		//fParticipant.setContactInfo(fPage.getContactInfo());
-		//fParticipant.setNotes(fPage.getNotes());
 		
 		Facade.getInstance().saveParticipant(fParticipant);
 		

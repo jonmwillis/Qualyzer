@@ -18,6 +18,7 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
 /**
+ * To be used whenever Colors are needed in various editors.
   */
 public class ColorManager
 {

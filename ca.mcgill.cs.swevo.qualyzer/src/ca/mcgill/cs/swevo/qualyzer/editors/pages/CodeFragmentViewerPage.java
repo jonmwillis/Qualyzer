@@ -61,7 +61,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
- *
+ * Displays all the Fragments that are associated with a given code.
  */
 public class CodeFragmentViewerPage extends FormPage implements ProjectListener, CodeListener
 {
@@ -72,7 +72,7 @@ public class CodeFragmentViewerPage extends FormPage implements ProjectListener,
 	private ScrolledForm fForm;
 	
 	/**
-	 * 
+	 * Constructor.
 	 */
 	public CodeFragmentViewerPage(FormEditor editor, Code code)
 	{
@@ -127,6 +127,7 @@ public class CodeFragmentViewerPage extends FormPage implements ProjectListener,
 	}
 
 	/**
+	 * Opens a new editor with updated information and closes this one.
 	 * @return
 	 */
 	private SelectionAdapter refreshSelectedListener()
@@ -153,6 +154,7 @@ public class CodeFragmentViewerPage extends FormPage implements ProjectListener,
 	}
 
 	/**
+	 * Builds a Transcript or memo section. Lists all the fragments for one document.
 	 * @param document
 	 * @param contents
 	 * @param toolkit
@@ -208,6 +210,7 @@ public class CodeFragmentViewerPage extends FormPage implements ProjectListener,
 	}
 
 	/**
+	 * Creates the form text representing one fragment. Sets the fragment text itself as a hyperlink to the document.
 	 * @param sectionClient
 	 * @param text
 	 * @param fragment
@@ -248,6 +251,7 @@ public class CodeFragmentViewerPage extends FormPage implements ProjectListener,
 	}
 
 	/**
+	 * Opens the editor represented by the fragment and selects the fragment text.
 	 * @param fragment
 	 * @return
 	 */
@@ -268,6 +272,7 @@ public class CodeFragmentViewerPage extends FormPage implements ProjectListener,
 	}
 
 	/**
+	 * Find the end of the text to display. Ends after the 2nd punctuation mark, or a paragraph.
 	 * @param text
 	 * @param fragment
 	 * @return
@@ -298,6 +303,8 @@ public class CodeFragmentViewerPage extends FormPage implements ProjectListener,
 	}
 
 	/**
+	 * Find the start of the text to display. Starts either at the beginning of the previous sentence, 
+	 * or the start of the paragraph.
 	 * @param text
 	 * @param fragment
 	 * @return
@@ -324,6 +331,7 @@ public class CodeFragmentViewerPage extends FormPage implements ProjectListener,
 	}
 
 	/**
+	 * Checks if a the character at a certain index is punctuation.
 	 * @param text
 	 * @param index
 	 * @return
@@ -336,6 +344,7 @@ public class CodeFragmentViewerPage extends FormPage implements ProjectListener,
 	}
 
 	/**
+	 * Sort the list of fragments according to the offsets.
 	 * @param contents
 	 */
 	private void sort(ArrayList<Fragment> contents)
@@ -352,6 +361,7 @@ public class CodeFragmentViewerPage extends FormPage implements ProjectListener,
 	}
 
 	/**
+	 * Gets all the fragments in the document that contain the code being viewed.
 	 * @param document
 	 * @return
 	 */

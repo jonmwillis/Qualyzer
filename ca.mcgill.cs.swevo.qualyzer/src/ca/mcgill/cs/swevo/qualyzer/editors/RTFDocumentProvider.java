@@ -41,6 +41,13 @@ import ca.mcgill.cs.swevo.qualyzer.model.IAnnotatedDocument;
 
 /**
  * The DocumentProvider for our editor.
+ * If you need to parse a document for some other task (without opening the editor) do the following.
+ * 
+ * RTFDocumentProvider provider = new RTFDocumentProvider();
+ * RTFEditorInput input = new RTFEditorInput(file, document);
+ * IDocument parsedDocument = provider.getCreatedDocument(input);
+ * 
+ * String paresedText = parsedDocument.getText();
  *
  */
 public class RTFDocumentProvider extends FileDocumentProvider
@@ -87,8 +94,8 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	
 	/**
 	 * Exists only for use by things that need parsed documents, but that don't want to open the editor.
-	 * @param element
-	 * @return
+	 * @param element The editor input that will be used to create the document.
+	 * @return The parsed document.
 	 */
 	public IDocument getCreatedDocument(Object element)
 	{
@@ -103,7 +110,8 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		return null;
 	}
 	
-	/* (non-Javadoc)
+	/**
+	 * Parses the document for all the rtf tags and creates all necessary annotations.
 	 * @see org.eclipse.ui.editors.text.StorageDocumentProvider#setDocumentContent(
 	 * org.eclipse.jface.text.IDocument, java.io.InputStream, java.lang.String)
 	 */
@@ -198,7 +206,8 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	}
 	
 	/**
-	 * @param groupTag
+	 * Checks to see if the tag is an ignored group tag as defined in RTFTags.IGNORE_GROUPS.
+	 * @param groupTag The tag to check.
 	 * @return
 	 */
 	private boolean isIgnoredGroup(String groupTag)
@@ -213,12 +222,20 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		return false;
 	}
 
+	/**
+	 * Handles the various tags.
+	 * @param escape The tag to handle.
+	 * @param document The document being parsed.
+	 * @param currentText The parsed text so far.
+	 * @param stream The stream from which the document is being read.
+	 * @return String The text to add to the parsed text.
+	 * @throws IOException
+	 */
 	private String handleTag(String escape, RTFDocument document, String currentText, InputStream stream) 
 		throws IOException
 	{
 		String string = escape.trim();
 		String toReturn = EMPTY;
-		
 		if(!string.isEmpty())
 		{
 			if(string.charAt(string.length() - 1) == '\\')
@@ -264,29 +281,30 @@ public class RTFDocumentProvider extends FileDocumentProvider
 				handleFormatTag(document, currentText, string);
 			}
 		}
-
 		return toReturn;
 	}
 
 	/**
-	 * @param string
+	 * Parses a string for an integer code and then converts it to its Unicode value.
+	 * @param code
 	 * @return
 	 */
-	private String getUnicodeCharacter(String string)
+	private String getUnicodeCharacter(String code)
 	{
-		int unicode = Integer.parseInt(string);
+		int unicode = Integer.parseInt(code);
 				
 		return EMPTY + (char) unicode;
 	}
 
 	/**
-	 * @param stream
-	 * @param string
+	 * Skip a group based on the tag.
+	 * @param stream The stream from which the document is being read.
+	 * @param tag The tag that started the group.
 	 * @throws IOException
 	 */
-	private void skipGroup(InputStream stream, String string) throws IOException
+	private void skipGroup(InputStream stream, String tag) throws IOException
 	{
-		int count = string.equals(RTFTags.IGNORE) || string.equals(RTFTags.COLOR_TABLE) ? 1 : 2;
+		int count = tag.equals(RTFTags.IGNORE) || tag.equals(RTFTags.COLOR_TABLE) ? 1 : 2;
 		while(count > 0)
 		{
 			char c = (char) stream.read();
@@ -586,6 +604,12 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		}
 	}
 	
+	/**
+	 * Find the next tag that needs to be handled. Assumes that the text at the start of the stream forms a tag.
+	 * @param ioStream
+	 * @return
+	 * @throws IOException
+	 */
 	private String nextTag(InputStream ioStream) throws IOException
 	{
 		String escape = EMPTY;
@@ -634,7 +658,8 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		return escape;
 	}
 	
-	/* (non-Javadoc)
+	/**
+	 * Converts the contents of the document back into rtf so that it can be saved to disk.
 	 * @see org.eclipse.ui.editors.text.FileDocumentProvider#doSaveDocument(org.eclipse.core.runtime.IProgressMonitor,
 	 *  java.lang.Object, org.eclipse.jface.text.IDocument, boolean)
 	 */
@@ -882,6 +907,13 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		return super.createAnnotationModel(element);
 	}
 	
+	/**
+	 * Handles a group start by pushing the current state of formatting onto the stack.
+	 * @param document
+	 * @param text
+	 * @param stream
+	 * @throws IOException
+	 */
 	private void pushState(RTFDocument document, String text, InputStream stream) throws IOException
 	{
 		ParserState state = new ParserState(fBoldTag != -1, fItalicTag != -1, fUnderlineTag != -1);
@@ -901,6 +933,13 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		}
 	}
 	
+	/**
+	 * Handles the end of a group by popping the last formatting state off the stack.
+	 * @param document
+	 * @param text
+	 * @param stream
+	 * @throws IOException
+	 */
 	private void popState(RTFDocument document, String text, InputStream stream) throws IOException
 	{
 		handleTag(RTFTags.PLAIN, document, text, stream);

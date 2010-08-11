@@ -69,9 +69,6 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 public class CodeEditorPage extends FormPage implements CodeListener, ProjectListener, TranscriptListener, MemoListener
 {
 
-	/**
-	 * 
-	 */
 	private static final String EMPTY = "";
 	private static final int THRESHHOLD = 18;
 	private static final int BORDER_SIZE = 10;
@@ -126,7 +123,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	}
 	
 	/**
-	 * 
+	 * Count how many times each code occurs.
 	 */
 	private void countFrequency()
 	{
@@ -238,13 +235,6 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		col2.setText(Messages.getString("editors.pages.CodeEditorPage.frequency")); //$NON-NLS-1$
 		col2.setMoveable(false);
 		col2.setResizable(false);
-	}
-	
-	@Override
-	public void createPartControl(Composite parent)
-	{
-		super.createPartControl(parent);
-		
 	}	
 
 	/**
@@ -277,7 +267,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	}
 
 	/**
-	 * 
+	 * Builds the context menu that gives access to the New Code, Delete Code, and View Fragments actions.
 	 */
 	private void createTableContextMenu()
 	{
@@ -298,6 +288,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	}
 
 	/**
+	 * Handles the selection of the View Associated Fragments Action.
 	 * @return
 	 */
 	private SelectionListener viewFragmentsSelected()
@@ -330,6 +321,11 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	}
 
 	/**
+	 * Handles the selection of the Delete Code Action.
+	 * Checks if there are any memos stopping the deletion.
+	 * Then finds all the fragments that contain the code.
+	 * Displays a warning/confirmation.
+	 * Removes the code from all associated fragments and then deletes the code.
 	 * @return
 	 */
 	private SelectionAdapter deleteCodeSelected()
@@ -395,6 +391,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	}
 
 	/**
+	 * Goes through the fragments and removes the code from them, saving each one.
 	 * @param toDelete
 	 * @param conflicts
 	 */
@@ -440,6 +437,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	}
 
 	/**
+	 * Handles the selection of the new code action.
 	 * @return
 	 */
 	private SelectionAdapter newCodeSelected()
@@ -466,6 +464,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	}
 
 	/**
+	 * Finds all the fragments that reference this code.
 	 * @param toDelete
 	 * @return
 	 */
@@ -507,6 +506,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	}
 
 	/**
+	 * Handles updating the dirty state.
 	 * @return
 	 */
 	private KeyAdapter createKeyAdapter()
@@ -541,6 +541,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	}
 	
 	/**
+	 * Updates the Name and Description boxes on the right as the selected item in the table changes.
 	 * @return
 	 */
 	private SelectionAdapter createTableSelectionListener()
@@ -582,7 +583,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	}
 
 	/**
-	 * 
+	 * Fills out out the table.
 	 */
 	private void buildFormTable()
 	{

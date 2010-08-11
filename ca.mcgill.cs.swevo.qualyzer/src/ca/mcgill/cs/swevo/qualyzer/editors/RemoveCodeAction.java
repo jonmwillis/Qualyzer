@@ -37,7 +37,7 @@ public class RemoveCodeAction extends Action
 	private RTFSourceViewer fSourceViewer;
 	
 	/**
-	 * Contructor.
+	 * Constructor.
 	 * @param editor
 	 * @param viewer
 	 */
@@ -48,7 +48,8 @@ public class RemoveCodeAction extends Action
 		fSourceViewer = viewer;
 	}
 	
-	/* (non-Javadoc)
+	/**
+	 * Opens a selection dialog and then removes the selected code from the fragment.
 	 * @see org.eclipse.jface.action.Action#run()
 	 */
 	@SuppressWarnings("unchecked")
