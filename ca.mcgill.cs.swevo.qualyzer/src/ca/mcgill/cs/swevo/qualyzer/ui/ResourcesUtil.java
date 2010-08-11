@@ -60,9 +60,6 @@ import ca.mcgill.cs.swevo.qualyzer.providers.WrapperCode;
  */
 public final class ResourcesUtil
 {
-	/**
-	 * 
-	 */
 	private static final String ERROR_MSG = "Could not open editor"; //$NON-NLS-1$
 	private static Logger gLogger = LoggerFactory.getLogger(ResourcesUtil.class);
 
@@ -123,6 +120,7 @@ public final class ResourcesUtil
 	}
 	
 	/**
+	 * Retrieves the Qualyzer project that the object belongs to, or represents.
 	 * @param element The object selected by the user.
 	 * @return The project the object belongs to.
 	 */

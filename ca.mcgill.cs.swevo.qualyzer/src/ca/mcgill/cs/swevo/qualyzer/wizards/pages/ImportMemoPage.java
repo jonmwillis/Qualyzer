@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Jonathan Faubert
  *******************************************************************************/
 /**
  * 
@@ -33,7 +33,6 @@ import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.validation.ImportTranscriptValidator;
 
 /**
- * @author Jonathan Faubert
  *
  */
 public class ImportMemoPage extends NewMemoPage
@@ -43,6 +42,7 @@ public class ImportMemoPage extends NewMemoPage
 	private Text fMemoFile;
 
 	/**
+	 * Constructor.
 	 * @param project
 	 */
 	public ImportMemoPage(Project project)
@@ -89,6 +89,7 @@ public class ImportMemoPage extends NewMemoPage
 	}
 
 	/**
+	 * Validates all text inputs.
 	 * @return
 	 */
 	private ModifyListener createModifyTextListener()
@@ -103,6 +104,10 @@ public class ImportMemoPage extends NewMemoPage
 		};
 	}
 	
+	/**
+	 * Handles the browse button's behavior.
+	 * @return
+	 */
 	private SelectionListener createNewSelectionListener()
 	{
 		return new SelectionAdapter(){
@@ -127,6 +132,9 @@ public class ImportMemoPage extends NewMemoPage
 		};
 	}
 	
+	/**
+	 * Fills out the memo name based on the filename selected.
+	 */
 	private void fillOutForm()
 	{
 		int begin = fMemoFile.getText().lastIndexOf(File.separatorChar) + 1;

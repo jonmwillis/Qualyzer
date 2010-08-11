@@ -39,8 +39,6 @@ public class AddParticipantPage extends WizardPage
 	private Project fProject;
 	private Text fIdText;
 	private Text fFullNameText;
-	private Text fContactInfoText;
-	private Text fNotesText;
 	
 	/**
 	 * Constructor.
@@ -74,17 +72,6 @@ public class AddParticipantPage extends WizardPage
 		fFullNameText.setText("");  //$NON-NLS-1$
 		fFullNameText.addKeyListener(createStringLengthValidator(
 				Messages.getString("wizards.pages.AddParticipantPage.fullName"), fFullNameText)); //$NON-NLS-1$
-		
-		//JF: removing for 0.1 to be consistent with the editor
-//		label = new Label(fContainer, SWT.NULL);
-//		label.setText("Contact Info");
-//		fContactInfoText = new Text(fContainer, SWT.BORDER);
-//		fContactInfoText.setText(""); //$NON-NLS-1$
-//		
-//		label = new Label(fContainer, SWT.NULL);
-//		label.setText("Notes");
-//		fNotesText = new Text(fContainer, SWT.BORDER);
-//		fNotesText.setText(""); //$NON-NLS-1$
 		
 		setGridData();
 		setControl(fContainer);
@@ -147,8 +134,6 @@ public class AddParticipantPage extends WizardPage
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		fIdText.setLayoutData(gd);
 		fFullNameText.setLayoutData(gd);
-		//fContactInfoText.setLayoutData(gd);
-		//fNotesText.setLayoutData(gd);
 	}
 	
 	/**
@@ -168,27 +153,10 @@ public class AddParticipantPage extends WizardPage
 	{
 		return fFullNameText.getText();
 	}
-
-	/**
-	 * Get the contact info field.
-	 * @return
-	 */
-	public String getContactInfo()
-	{
-		return fContactInfoText.getText();
-	}
-
-	/**
-	 * Get the notes field.
-	 * @return
-	 */
-	public String getNotes()
-	{
-		return fNotesText.getText();
-	}
 	
 	/**
 	 * Build the participant represented by the information entered in this page.
+	 * @deprecated Use Facade.createParticipant(...)
 	 * @return The participant that was built.
 	 */
 	public Participant getParticipant()
@@ -196,8 +164,6 @@ public class AddParticipantPage extends WizardPage
 		Participant participant = new Participant();
 		participant.setParticipantId(getParticipantId());
 		participant.setFullName(getFullname());
-		//participant.setNotes(getNotes());
-		//participant.setContactInfo(getContactInfo());
 		return participant;
 	}
 

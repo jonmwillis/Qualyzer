@@ -13,10 +13,10 @@ package ca.mcgill.cs.swevo.qualyzer.wizards.pages;
 import java.io.File;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -33,9 +33,6 @@ import ca.mcgill.cs.swevo.qualyzer.model.validation.ImportTranscriptValidator;
  */
 public class ImportTranscriptPage extends TranscriptWizardPage
 {
-	/**
-	 * 
-	 */
 	private static final int COLS = 3;
 	private Text fTranscriptFile;
 	
@@ -82,12 +79,13 @@ public class ImportTranscriptPage extends TranscriptWizardPage
 		super.createControl(parent);
 	}
 
-	private SelectionListener createNewSelectionListener()
+	/**
+	 * Handles the browse button.
+	 * @return
+	 */
+	private SelectionAdapter createNewSelectionListener()
 	{
-		return new SelectionListener(){
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e){}
+		return new SelectionAdapter(){
 
 			@Override
 			public void widgetSelected(SelectionEvent e)
@@ -110,6 +108,9 @@ public class ImportTranscriptPage extends TranscriptWizardPage
 		};
 	}
 	
+	/**
+	 * Fills in the transcript name and audio file based on the selection of the file to import.
+	 */
 	private void fillOutForm()
 	{
 		int begin = fTranscriptFile.getText().lastIndexOf(File.separatorChar) + 1;
@@ -121,11 +122,9 @@ public class ImportTranscriptPage extends TranscriptWizardPage
 	}
 
 	@Override
-	protected KeyListener createKeyListener()
+	protected KeyAdapter createKeyListener()
 	{
-		return new KeyListener(){
-			@Override
-			public void keyPressed(KeyEvent e){}
+		return new KeyAdapter(){
 			@Override
 			public void keyReleased(KeyEvent e)
 			{
@@ -152,7 +151,7 @@ public class ImportTranscriptPage extends TranscriptWizardPage
 	}
 
 	/**
-	 * 
+	 * The file path for the transcript that is to be imported.
 	 * @return
 	 */
 	public String getTranscriptFile()
