@@ -69,6 +69,10 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 public class CodeEditorPage extends FormPage implements CodeListener, ProjectListener, TranscriptListener, MemoListener
 {
 
+	/**
+	 * 
+	 */
+	private static final String EMPTY = "";
 	private static final int THRESHHOLD = 18;
 	private static final int BORDER_SIZE = 10;
 
@@ -196,7 +200,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
 		toolkit.createLabel(composite, Messages.getString("editors.pages.CodeEditorPage.name")); //$NON-NLS-1$
-		fName = toolkit.createText(composite, ""); //$NON-NLS-1$
+		fName = toolkit.createText(composite, EMPTY); //$NON-NLS-1$
 		fName.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 		fName.addKeyListener(createKeyAdapter());
 		fName.addKeyListener(createValidator());
@@ -215,7 +219,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		fTable.addSelectionListener(createTableSelectionListener());
 		createTableContextMenu();
 		
-		fCurrentSelection = fTable.getSelectionIndex();
+		updateSelection();
 	}
 
 	/**
@@ -590,7 +594,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 			Code code = fCodes.get(i);
 			TableItem item = new TableItem(fTable, SWT.NULL);
 			item.setText(0, code.getCodeName());
-			item.setText(1, ""+fFrequency[i]); //$NON-NLS-1$
+			item.setText(1, EMPTY+fFrequency[i]); //$NON-NLS-1$
 		}
 		
 		fTable.getColumn(0).pack();
@@ -674,7 +678,24 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		
 		buildFormTable();
 		
+		updateSelection();
+		
+	}
+
+	/**
+	 * 
+	 */
+	private void updateSelection()
+	{
 		fCurrentSelection = fTable.getSelectionIndex();
+		if(fCurrentSelection == -1)
+		{
+			fCurrentSelection = 0;
+			fTable.select(0);
+		}
+		
+		fName.setText(fCodes.get(fCurrentSelection).getCodeName());
+		fDescription.setText(fCodes.get(fCurrentSelection).getDescription());
 	}
 
 	/**
@@ -732,7 +753,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 			clearModified();
 			
 			buildFormTable();
-			fCurrentSelection = fTable.getSelectionIndex();
+			updateSelection();
 		}
 	}
 
@@ -756,7 +777,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 			clearModified();
 			
 			buildFormTable();
-			fCurrentSelection = fTable.getSelectionIndex();
+			updateSelection();
 		}
 		
 	}
