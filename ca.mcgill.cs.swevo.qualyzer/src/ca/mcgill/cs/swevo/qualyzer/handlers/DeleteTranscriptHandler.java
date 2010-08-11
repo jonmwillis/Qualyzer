@@ -162,7 +162,7 @@ public class DeleteTranscriptHandler extends AbstractHandler
 		{	
 			for(Transcript transcript : toDelete)
 			{
-				delete(transcript, dialog.getDeleteAudio(), dialog.getDeleteCodes(), 
+				delete(transcript, dialog.getDeleteCodes(), 
 						dialog.getDeleteParticipants(), shell);
 									
 				CommonNavigator view;
@@ -179,7 +179,7 @@ public class DeleteTranscriptHandler extends AbstractHandler
 	 * @param deleteCodes
 	 * @param deleteParticipants
 	 */
-	private void delete(Transcript transcript, boolean deleteAudio, boolean deleteCodes, boolean deleteParticipants,
+	private void delete(Transcript transcript, boolean deleteCodes, boolean deleteParticipants,
 			Shell shell)
 	{
 		Project project = transcript.getProject();
@@ -197,7 +197,7 @@ public class DeleteTranscriptHandler extends AbstractHandler
 			codes = deleteCodes(transcript);
 		}
 		
-		if(deleteAudio && transcript.getAudioFile() != null)
+		if(transcript.getAudioFile() != null)
 		{
 			File file = new File(wProject.getLocation() + transcript.getAudioFile().getRelativePath());
 			if(!file.delete())
