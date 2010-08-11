@@ -16,6 +16,10 @@ package ca.mcgill.cs.swevo.qualyzer.wizards.pages;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -29,6 +33,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Code;
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
@@ -42,7 +48,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.validation.MemoValidator;
  */
 public class NewMemoPage extends WizardPage
 {
-	
+	private static Logger gLogger = LoggerFactory.getLogger(NewMemoPage.class);
 	private static final String SLASH = "/";  //$NON-NLS-1$
 	
 	protected Text fName;
@@ -98,15 +104,7 @@ public class NewMemoPage extends WizardPage
 		fDate = new DateTime(fContainer, SWT.DATE);
 		
 		createLabel(fContainer, Messages.getString("wizards.pages.NewMemoPage.author")); //$NON-NLS-1$
-		fAuthorName = new Combo(fContainer, SWT.DROP_DOWN | SWT.READ_ONLY);
-		fAuthorName.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
-		
-		for(Investigator investigator : fProject.getInvestigators())
-		{
-			fAuthorName.add(investigator.getNickName());
-		}
-		fAuthorName.select(0);	//TODO select default investigator.
-		fAuthorName.addModifyListener(createModifyListener());
+		setupAuthorCombo();
 		
 		createLongLabel();
 		createTable();
@@ -127,6 +125,45 @@ public class NewMemoPage extends WizardPage
 		
 		setControl(fContainer);
 		setPageComplete(false);
+	}
+
+	/**
+	 * 
+	 */
+	private void setupAuthorCombo()
+	{
+		fAuthorName = new Combo(fContainer, SWT.DROP_DOWN | SWT.READ_ONLY);
+		fAuthorName.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
+		
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(fProject.getFolderName());
+		IProjectDescription description;
+		String name = "";
+		try
+		{
+			description = project.getDescription();
+			name = description.getComment();
+		}
+		catch (CoreException e)
+		{
+			gLogger.error("NewMemoPage: Could not open .project file", e);
+		}
+		
+		
+		for(Investigator investigator : fProject.getInvestigators())
+		{
+			fAuthorName.add(investigator.getNickName());
+			if(name.equals(investigator.getNickName()))
+			{
+				fAuthorName.select(fAuthorName.getItemCount() - 1);
+			}
+		}
+		
+		if(fAuthorName.getSelectionIndex() < 0)
+		{
+			fAuthorName.select(0);
+		}
+		
+		fAuthorName.addModifyListener(createModifyListener());
 	}
 
 	/**
