@@ -838,10 +838,13 @@ public final class Facade
 		fListenerManager.notifyProjectListeners(ChangeType.DELETE, project, this);
 		
 		String oldName = project.getName();
+		String oldFolderName = project.getFolderName();
+		
 		Project refreshedProject = PersistenceManager.getInstance().getProject(oldName);
 		
-		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(oldName);
+		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(oldFolderName);
 		refreshedProject.setName(newName);
+		refreshedProject.setFolderName(newName.replace(' ', '_'));
 		HibernateUtil.quietSave(manager, refreshedProject);
 		
 		fListenerManager.handleProjectNameChange(oldName, refreshedProject);

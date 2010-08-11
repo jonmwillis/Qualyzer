@@ -20,7 +20,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -386,13 +385,11 @@ public final class FileUtil
 		manager.close();
 		
 		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(oldName);
-		IFile dbLock = wProject.getFile(".db/qualyzer_db.lock.db"); //$NON-NLS-1$
 		
 		try
 		{
-			dbLock.delete(true, new NullProgressMonitor());
 			IProjectDescription description = wProject.getDescription();
-			description.setName(newName);
+			description.setName(newName.replace(' ', '_'));
 			wProject.move(description, true, new NullProgressMonitor());
 		}
 		catch(CoreException e)
