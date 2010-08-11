@@ -688,14 +688,22 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	private void updateSelection()
 	{
 		fCurrentSelection = fTable.getSelectionIndex();
-		if(fCurrentSelection == -1)
+		if(fCurrentSelection == -1 && !fCodes.isEmpty())
 		{
 			fCurrentSelection = 0;
 			fTable.select(0);
 		}
 		
-		fName.setText(fCodes.get(fCurrentSelection).getCodeName());
-		fDescription.setText(fCodes.get(fCurrentSelection).getDescription());
+		if(fCurrentSelection != -1)
+		{
+			fName.setText(fCodes.get(fCurrentSelection).getCodeName());
+			fDescription.setText(fCodes.get(fCurrentSelection).getDescription());
+		}
+		else
+		{
+			fName.setText(EMPTY);
+			fDescription.setText(EMPTY);
+		}
 	}
 
 	/**
