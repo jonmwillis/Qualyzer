@@ -28,8 +28,7 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 import ca.mcgill.cs.swevo.qualyzer.wizards.ImportMemoWizard;
 
 /**
- * 
- *
+ * Opens the import memo wizard and the opens the memo editor.
  */
 public class ImportMemoHandler extends AbstractHandler
 {

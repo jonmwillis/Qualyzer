@@ -35,7 +35,8 @@ import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
- * 
+ * Displays the project properties, including the location and active investigator. 
+ * Saves any changes made to the active investigator.
  *
  */
 public class ProjectPropertiesHandler extends AbstractHandler

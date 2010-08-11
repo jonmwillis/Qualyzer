@@ -933,7 +933,7 @@
    <extension
          point="org.eclipse.ui.handlers">
       <handler
-            class="ca.mcgill.cs.swevo.qualyzer.handlers.RenameHandler"
+            class="ca.mcgill.cs.swevo.qualyzer.handlers.RenameTranscriptHandler"
             commandId="org.eclipse.ui.edit.rename">
          <activeWhen>
             <and>

@@ -42,9 +42,6 @@ import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 public class DeleteInvestigatorHandler extends AbstractHandler
 {
 
-	/**
-	 * 
-	 */
 	private static final String NEWLINE = "\n"; //$NON-NLS-1$
 
 	@Override
@@ -101,6 +98,7 @@ public class DeleteInvestigatorHandler extends AbstractHandler
 	}
 
 	/**
+	 * Opens a confirmation dialog and then proceeds to delete each investigator that was selected.
 	 * @param page
 	 * @param shell
 	 * @param toDelete

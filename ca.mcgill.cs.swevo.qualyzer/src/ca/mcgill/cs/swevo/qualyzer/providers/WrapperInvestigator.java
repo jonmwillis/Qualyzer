@@ -35,12 +35,7 @@ public class WrapperInvestigator extends ProjectWrapper
 	public WrapperInvestigator(Project project)
 	{
 		super(project);
-	}
-	
-	@Override
-	public String getResource()
-	{
-		return RESOURCE;
+		fResource = RESOURCE;
 	}
 	
 	@Override

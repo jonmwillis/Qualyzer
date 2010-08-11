@@ -27,7 +27,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Memo;
 
 /**
- * 
+ * Opens the memo properties dialog and then saves any changes.
  *
  */
 public class MemoPropertiesHandler extends AbstractHandler

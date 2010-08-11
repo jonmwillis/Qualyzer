@@ -42,7 +42,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 
 /**
- * 
+ * Verifies that the memos can be deleted and then prompts for confirmation and deletes them.
  *
  */
 public class DeleteMemoHandler extends AbstractHandler

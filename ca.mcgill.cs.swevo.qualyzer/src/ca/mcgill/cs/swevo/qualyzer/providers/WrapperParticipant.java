@@ -35,12 +35,7 @@ public class WrapperParticipant extends ProjectWrapper
 	public WrapperParticipant(Project project)
 	{
 		super(project);
-	}
-	
-	@Override
-	public String getResource()
-	{
-		return RESOURCE;
+		fResource = RESOURCE;
 	}
 	
 	@Override

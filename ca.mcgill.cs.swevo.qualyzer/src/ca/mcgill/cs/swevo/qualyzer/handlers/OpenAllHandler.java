@@ -27,7 +27,7 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
  * The handler for the open all command.
- *
+ * Opens an editor for each selected item.
  */
 public class OpenAllHandler extends AbstractHandler
 {

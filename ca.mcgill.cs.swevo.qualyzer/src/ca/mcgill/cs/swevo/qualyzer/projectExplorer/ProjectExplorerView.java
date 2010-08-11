@@ -21,7 +21,7 @@ import org.eclipse.ui.navigator.INavigatorViewerDescriptor;
 
 
 /**
- *
+ * Extends the CommonNavigator in order to hide some of its buttons.
  */
 @SuppressWarnings("restriction")
 public class ProjectExplorerView extends CommonNavigator

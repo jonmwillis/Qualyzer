@@ -28,6 +28,7 @@ import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 
 /**
  * Handler for the close project command.
+ * @deprecated This is no longer used.
  *
  */
 public class CloseProjectHandler extends AbstractHandler

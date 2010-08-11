@@ -89,6 +89,12 @@ public class DeleteParticipantHandler extends AbstractHandler
 		return null;
 	}
 
+	/**
+	 * Asks for confirmation and then deletes all the participants in toDelete.
+	 * @param page
+	 * @param shell
+	 * @param toDelete
+	 */
 	private void proceedWithDeletion(IWorkbenchPage page, Shell shell, List<Participant> toDelete) 
 	{
 		String message = ""; //$NON-NLS-1$

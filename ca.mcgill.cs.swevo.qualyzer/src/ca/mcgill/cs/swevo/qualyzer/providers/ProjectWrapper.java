@@ -28,6 +28,7 @@ public abstract class ProjectWrapper
 	private static final int NUM1 = 35367;
 	private static final int NUM2 = 21853;
 	
+	protected String fResource;
 	private Project fProject;
 	
 	/**
@@ -37,13 +38,14 @@ public abstract class ProjectWrapper
 	public ProjectWrapper(Project project)
 	{
 		setProject(project);
+		fResource = null;
 	}
 
 	/**
 	 * Sets the project.
 	 * @param project
 	 */
-	public void setProject(Project project)
+	public final void setProject(Project project)
 	{
 		this.fProject = project;
 	}
@@ -52,7 +54,7 @@ public abstract class ProjectWrapper
 	 * Get the project that this wrapper belongs to.
 	 * @return The project contained in the wrapper.
 	 */
-	public Project getProject()
+	public final Project getProject()
 	{
 		return fProject;
 	}
@@ -61,12 +63,15 @@ public abstract class ProjectWrapper
 	 * Returns the name of the resource that this wrapper acts as a folder for.
 	 * @return A resource name.
 	 */
-	public abstract String getResource();
+	public final String getResource()
+	{
+		return fResource;
+	}
 	
 	@Override
 	public int hashCode()
 	{
-		return new HashCodeBuilder(NUM1, NUM2).append(fProject).toHashCode();
+		return new HashCodeBuilder(NUM1, NUM2).append(fProject).append(fResource).toHashCode();
 	}
 	
 	@Override
@@ -79,7 +84,8 @@ public abstract class ProjectWrapper
 		if(obj instanceof ProjectWrapper)
 		{
 			ProjectWrapper wrapper = (ProjectWrapper) obj;
-			return new EqualsBuilder().append(fProject, wrapper.fProject).isEquals();
+			return new EqualsBuilder().append(fProject, wrapper.fProject)
+				.append(fResource, wrapper.fResource).isEquals();
 		}
 		return false;
 	}

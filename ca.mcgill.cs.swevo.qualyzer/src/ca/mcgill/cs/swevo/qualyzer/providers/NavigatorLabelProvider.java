@@ -23,7 +23,6 @@ import org.eclipse.ui.navigator.IDescriptionProvider;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
-import ca.mcgill.cs.swevo.qualyzer.model.Code;
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
 import ca.mcgill.cs.swevo.qualyzer.model.Memo;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
@@ -133,45 +132,10 @@ public class NavigatorLabelProvider extends LabelProvider implements ILabelProvi
 		return image;
 	}
 
-	//Only displayed in the status bar
+	//Only displayed in the status bar (which we don't have)
 	@Override
 	public String getDescription(Object anElement)
 	{
-//		String output = null;
-//
-//		if (anElement instanceof IProject)
-//		{
-//			output = ((IProject) anElement).getName();
-//		}
-//		else if(anElement instanceof Project)
-//		{
-//			output = ((Project) anElement).getName();
-//		}
-//		else if(anElement instanceof ProjectWrapper)
-//		{
-//			output = ((ProjectWrapper) anElement).getResource();
-//		}
-//		else if(anElement instanceof Transcript)
-//		{
-//			output = ((Transcript) anElement).getName();
-//		}
-//		else if(anElement instanceof Investigator)
-//		{
-//			output = ((Investigator) anElement).getFullName();
-//		}
-//		else if(anElement instanceof Memo)
-//		{
-//			output = ((Memo) anElement).getName();
-//		}
-//		else if(anElement instanceof Participant)
-//		{
-//			output = ((Participant) anElement).getFullName();
-//		}
-//		else if(anElement instanceof Code)
-//		{
-//			output = ((Code) anElement).getCodeName();
-//		}
-//
 		return null;
 	}
 	
@@ -182,7 +146,7 @@ public class NavigatorLabelProvider extends LabelProvider implements ILabelProvi
 
 		if (anElement instanceof IProject)
 		{
-			output = ((IProject) anElement).getName().replace('_', ' ');
+			output = ((IProject) anElement).getName();
 		}
 		else if(anElement instanceof Project)
 		{
@@ -207,10 +171,6 @@ public class NavigatorLabelProvider extends LabelProvider implements ILabelProvi
 		else if(anElement instanceof Participant)
 		{
 			output = ((Participant) anElement).getParticipantId();
-		}
-		else if(anElement instanceof Code)
-		{
-			output = ((Code) anElement).getCodeName();
 		}
 		
 		return output;
