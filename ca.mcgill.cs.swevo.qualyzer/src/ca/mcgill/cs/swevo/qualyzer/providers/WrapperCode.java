@@ -35,12 +35,7 @@ public class WrapperCode extends ProjectWrapper
 	public WrapperCode(Project project)
 	{
 		super(project);
-	}
-	
-	@Override
-	public String getResource()
-	{
-		return RESOURCE;
+		fResource = RESOURCE;
 	}
 	
 	@Override

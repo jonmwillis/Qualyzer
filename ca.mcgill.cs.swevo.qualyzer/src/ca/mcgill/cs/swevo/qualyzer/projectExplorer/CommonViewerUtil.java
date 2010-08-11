@@ -20,14 +20,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
+ * For use only by the ProjectExplorerView.
  */
 @SuppressWarnings("restriction")
-public final class CommonViewerUtil
+final class CommonViewerUtil
 {
-	/**
-	 * 
-	 */
 	private static final String ERROR_MSG = "Error hidding buttons in Project Explorer"; //$NON-NLS-1$
 	private static Logger gLogger = LoggerFactory.getLogger(CommonViewerUtil.class);
 	
@@ -35,11 +32,12 @@ public final class CommonViewerUtil
 	
 	/**
 	 * Set the property of the CommonViewer to hide the link button and the customise actions.
+	 * Uses reflection to get around access restrictions, leave this code alone.
 	 * @param desc The NavigatorViewerDescriptor.
 	 * @param prop The property you want to change.
 	 * @param val The value to change it to.
 	 */
-	protected static void setProperty(NavigatorViewerDescriptor desc, String prop, String val)
+	static void setProperty(NavigatorViewerDescriptor desc, String prop, String val)
 	{
 		try
 		{

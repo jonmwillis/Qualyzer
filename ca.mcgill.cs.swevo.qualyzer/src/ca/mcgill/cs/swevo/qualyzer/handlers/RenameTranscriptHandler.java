@@ -39,15 +39,11 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
  * Qualyzer handler for rename (F2).
- *  
+ * The transcript version. Renames the transcript file, transcript object, and audio file/object.
  *
  */
-public class RenameHandler extends AbstractHandler
+public class RenameTranscriptHandler extends AbstractHandler
 {
-	
-	/**
-	 * 
-	 */
 	private static final String DOT = "."; //$NON-NLS-1$
 	private static final String EXT = ".rtf"; //$NON-NLS-1$
 	private static final String TRANSCRIPT = File.separator+"transcripts"+File.separator; //$NON-NLS-1$
@@ -118,6 +114,7 @@ public class RenameHandler extends AbstractHandler
 	}
 
 	/**
+	 * Carries out the actual renaming operations.
 	 * @param transcript
 	 * @param name
 	 */
@@ -165,6 +162,7 @@ public class RenameHandler extends AbstractHandler
 	}
 
 	/**
+	 * If the audio file has disapeared asks for a new one.
 	 * @param projectPath
 	 * @return
 	 */

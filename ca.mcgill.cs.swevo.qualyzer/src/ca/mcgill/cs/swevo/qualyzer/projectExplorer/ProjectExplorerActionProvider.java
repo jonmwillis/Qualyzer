@@ -31,13 +31,11 @@ import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 import ca.mcgill.cs.swevo.qualyzer.providers.WrapperCode;
 
 /**
- * 
+ * Handles all the double click actions by linking them to the proper open commands.
  */
 public class ProjectExplorerActionProvider extends CommonActionProvider
 {
-	/**
-	 * 
-	 */
+	
 	private static final String OPEN_ALL_COMMAND_ID = "ca.mcgill.cs.swevo.qualyzer.commands.openAll"; //$NON-NLS-1$
 	private static Logger gLogger = LoggerFactory.getLogger(ProjectExplorerActionProvider.class);
 	

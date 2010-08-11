@@ -67,10 +67,14 @@ public final class Facade
 	}
 
 	/**
-	 * Create a new Project with the given name.
+	 * Create a new Project with the given name and investigator information.
 	 * 
 	 * @param name
+	 * @param nickname
+	 * @param fullName
+	 * @param institution
 	 * @return
+	 * @throws QualyzerException
 	 */
 	public Project createProject(String name, String nickname, String fullName, String institution)
 			throws QualyzerException
@@ -133,14 +137,16 @@ public final class Facade
 		return code;
 	}
 
+
 	/**
 	 * Create an investigator from the given information.
-	 * 
 	 * @param nickname
 	 * @param fullName
 	 * @param institution
 	 * @param project
+	 * @param save
 	 * @return
+	 * @throws QualyzerException
 	 */
 	public Investigator createInvestigator(String nickname, String fullName, String institution, Project project,
 			boolean save) throws QualyzerException
@@ -166,6 +172,7 @@ public final class Facade
 	}
 
 	/**
+	 * Create a new participant from the given information.
 	 * @param participantId
 	 * @param fullname
 	 * @param fProject
@@ -191,13 +198,14 @@ public final class Facade
 	}
 
 	/**
-	 * Create a transcript.
-	 * 
+	 * Create a new transcript.
 	 * @param name
-	 * @param Date
+	 * @param date
+	 * @param audioFilePath
 	 * @param participants
 	 * @param project
 	 * @return
+	 * @throws QualyzerException
 	 */
 	public Transcript createTranscript(String name, String date, String audioFilePath, List<Participant> participants,
 			Project project) throws QualyzerException
@@ -251,9 +259,9 @@ public final class Facade
 	}
 
 	/**
-	 * Create a new Fragment. Must be called with a properly loaded Transcript.
+	 * Create a new Fragment. Must be called with a properly loaded document.
 	 * 
-	 * @param transcript
+	 * @param document
 	 * @param offset
 	 * @param length
 	 * @return
@@ -462,7 +470,7 @@ public final class Facade
 	}
 	
 	/**
-	 * Try to delete the transcript.
+	 * Try to delete the memo.
 	 * 
 	 * @param memo
 	 */
@@ -575,8 +583,8 @@ public final class Facade
 
 	/**
 	 * Save a code.
-	 * 
 	 * @param code
+	 * @deprecated use saveCodes(Code[])
 	 */
 	public void saveCode(Code code)
 	{
@@ -646,7 +654,8 @@ public final class Facade
 	}
 
 	/**
-	 * @param toDelete
+	 * Delete a code.
+	 * @param code
 	 */
 	public void deleteCode(Code code)
 	{
@@ -692,8 +701,8 @@ public final class Facade
 	}
 
 	/**
+	 * Delete a fragment.
 	 * @param fragment
-	 * @param fTranscript
 	 */
 	public void deleteFragment(Fragment fragment)
 	{
@@ -712,7 +721,6 @@ public final class Facade
 			 * The following is ALL required in order to delete the object from the database. Don't ask me why, I don't
 			 * really understand it myself -JF.
 			 */
-			// Object lFragment = session.get(Fragment.class, fragment.getPersistenceId());
 
 			document.getFragments().remove(fragment);
 			session.delete(fragment);
@@ -746,6 +754,7 @@ public final class Facade
 
 	/**
 	 * Try to save the document.
+	 * Convenience method, delegates to saveTranscript(Transcript) and saveMemo(Memo)
 	 * 
 	 * @param document
 	 */
@@ -763,6 +772,7 @@ public final class Facade
 
 	/**
 	 * Force a document to load.
+	 * Convenience method, delegates to saveTranscript(Transcript) and saveMemo(Memo)
 	 * 
 	 * @param document
 	 * @return
@@ -784,10 +794,15 @@ public final class Facade
 	}
 
 	/**
+	 * Create a new memo from the given information.
+	 * 
 	 * @param memoName
 	 * @param date
+	 * @param author
 	 * @param participants
-	 * @param fProject
+	 * @param project
+	 * @param code
+	 * @param transcript
 	 * @return
 	 */
 	public Memo createMemo(String memoName, String date, Investigator author, List<Participant> participants,
@@ -816,6 +831,7 @@ public final class Facade
 	}
 
 	/**
+	 * Save a memo.
 	 * @param memo
 	 */
 	public void saveMemo(Memo memo)
@@ -829,6 +845,8 @@ public final class Facade
 	}
 
 	/**
+	 * Rename a project. This only affects the Qualyzer project in the database to 
+	 * rename the files on disk use FileUtil.renameProject(String oldname, String newName)
 	 * @param project
 	 * @param newName
 	 */

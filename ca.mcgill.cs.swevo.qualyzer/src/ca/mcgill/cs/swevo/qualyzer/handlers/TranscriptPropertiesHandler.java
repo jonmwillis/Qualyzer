@@ -30,8 +30,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 import ca.mcgill.cs.swevo.qualyzer.util.FileUtil;
 
 /**
- * 
- *
+ * Opens the transcript properties dialog and then saves any changes that are made.
  */
 public class TranscriptPropertiesHandler extends AbstractHandler
 {

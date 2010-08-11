@@ -33,6 +33,8 @@ public class AudioFile
 	private Long fPersistenceId;
 
 	/**
+	 * Gets the path of the audio file relative to the project.
+	 * Has format /audio/transcriptName.extension
 	 * @return
 	 */
 	public String getRelativePath()
@@ -41,6 +43,8 @@ public class AudioFile
 	}
 
 	/**
+	 * Sets the path of the audio file relative to the project.
+	 * Has format /audio/transcriptName.extension
 	 * @param relativePath
 	 */
 	public void setRelativePath(String relativePath)

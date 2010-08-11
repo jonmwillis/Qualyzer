@@ -35,12 +35,7 @@ public class WrapperTranscript extends ProjectWrapper
 	public WrapperTranscript(Project project)
 	{
 		super(project);
-	}
-	
-	@Override
-	public String getResource()
-	{
-		return RESOURCE;
+		fResource = RESOURCE;
 	}
 	
 	@Override

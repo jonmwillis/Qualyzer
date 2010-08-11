@@ -122,6 +122,7 @@ public class DeleteTranscriptHandler extends AbstractHandler
 	}
 
 	/**
+	 * Checks that no Memos reference the transcript.
 	 * @param transcript
 	 * @return
 	 */

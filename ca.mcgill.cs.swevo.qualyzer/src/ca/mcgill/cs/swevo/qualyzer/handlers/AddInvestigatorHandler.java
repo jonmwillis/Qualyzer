@@ -34,6 +34,9 @@ import ca.mcgill.cs.swevo.qualyzer.wizards.AddInvestigatorWizard;
 public class AddInvestigatorHandler extends AbstractHandler
 {
 
+	/**
+	 * Opens the wizard and then opens the editor.
+	 */
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
 	{

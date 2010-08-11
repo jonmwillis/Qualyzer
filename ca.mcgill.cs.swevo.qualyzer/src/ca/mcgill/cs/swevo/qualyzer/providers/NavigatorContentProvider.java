@@ -37,13 +37,16 @@ public class NavigatorContentProvider extends WorkbenchContentProvider
 	private Viewer fViewer;
 
 	/**
-	 *  
+	 *  Constructor.
 	 */
 	public NavigatorContentProvider()
 	{
 		super();
 	}
 
+	/**
+	 * Only returns those Projects under root that are also Qualyzer Projects.
+	 */
 	@Override
 	public Object[] getElements(Object element)
 	{

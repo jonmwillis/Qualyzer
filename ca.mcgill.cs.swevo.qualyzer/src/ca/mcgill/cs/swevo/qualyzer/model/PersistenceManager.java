@@ -166,7 +166,7 @@ public final class PersistenceManager
 	/**
 	 * Gets the Project object represented by the given name.
 	 * @param name The name of the expected Project
-	 * @return The Project represented by name.
+	 * @return The Project represented by name or null if no such Qualyzer project.
 	 */
 	public Project getProject(String name)
 	{

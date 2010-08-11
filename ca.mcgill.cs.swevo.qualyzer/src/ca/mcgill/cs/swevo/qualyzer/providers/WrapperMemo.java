@@ -35,12 +35,7 @@ public class WrapperMemo extends ProjectWrapper
 	public WrapperMemo(Project project)
 	{
 		super(project);
-	}
-	
-	@Override
-	public String getResource()
-	{
-		return RESOURCE;
+		fResource = RESOURCE;
 	}
 	
 	@Override

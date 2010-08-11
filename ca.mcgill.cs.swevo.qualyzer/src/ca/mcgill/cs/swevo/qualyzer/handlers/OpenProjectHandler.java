@@ -28,6 +28,7 @@ import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 
 /**
  * The handler for the open project command.
+ * @deprecated This is no longer used.
  *
  */
 public class OpenProjectHandler extends AbstractHandler
