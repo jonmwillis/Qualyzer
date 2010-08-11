@@ -120,6 +120,8 @@ public class CodeChooserDialog extends TitleAreaDialog
 	}
 
 	/**
+	 * Listens for changes in the text and validates the data entered. Displays a creation
+	 *  warning if the code doesn't exist.
 	 * @return
 	 */
 	private ModifyListener createModifyListener()

@@ -52,11 +52,10 @@ import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
- *
+ *	Extends the RTFEditor with a formatting bar and an audio bar.
  */
 public class TranscriptEditor extends RTFEditor implements TranscriptListener
 {	
-
 	public static final String ID = "ca.mcgill.cs.swevo.qualyzer.editors.transcriptEditor"; //$NON-NLS-1$
 	
 	private static final int NUM_COLS = 10;
@@ -106,36 +105,36 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 		addImage(FORWARD_IMG, QualyzerActivator.PLUGIN_ID, "icons/seek-forward.png"); //$NON-NLS-1$
 	}
 	
-/* (non-Javadoc)
- * @see ca.mcgill.cs.swevo.qualyzer.editors.RTFEditor#createSourceViewer(org.eclipse.swt.widgets.Composite,
- *  org.eclipse.jface.text.source.IVerticalRuler, int)
- */
-@Override
-protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler ruler, int styles)
-{
-	final SourceViewer viewer = (SourceViewer) super.createSourceViewer(parent, ruler, styles);
-	viewer.addSelectionChangedListener(new ISelectionChangedListener(){
-		@Override
-		public void selectionChanged(SelectionChangedEvent event)
-		{
-			IAnnotationModel model = viewer.getAnnotationModel();
-			Point selection = viewer.getSelectedRange();
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.editors.RTFEditor#createSourceViewer(org.eclipse.swt.widgets.Composite,
+	 *  org.eclipse.jface.text.source.IVerticalRuler, int)
+	 */
+	@Override
+	protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler ruler, int styles)
+	{
+		final SourceViewer viewer = (SourceViewer) super.createSourceViewer(parent, ruler, styles);
+		viewer.addSelectionChangedListener(new ISelectionChangedListener(){
+			@Override
+			public void selectionChanged(SelectionChangedEvent event)
+			{
+				IAnnotationModel model = viewer.getAnnotationModel();
+				Point selection = viewer.getSelectedRange();
+				
+				boolean enabled = selection.y != 0;
+				
+				fBoldButton.setEnabled(enabled && isBoldEnabled(model, selection));
+				fItalicButton.setEnabled(enabled && isItalicEnabled(model, selection));
+				fUnderlineButton.setEnabled(enabled && isUnderlineEnabled(model, selection));
+				fCodeButton.setEnabled(enabled && isMarkEnabled(model, selection));
+				
+				fBoldButton.setSelection(isBoldChecked());
+				fItalicButton.setSelection(isItalicChecked());
+				fUnderlineButton.setSelection(isUnderlineChecked());
+			}
 			
-			boolean enabled = selection.y != 0;
-			
-			fBoldButton.setEnabled(enabled && isBoldEnabled(model, selection));
-			fItalicButton.setEnabled(enabled && isItalicEnabled(model, selection));
-			fUnderlineButton.setEnabled(enabled && isUnderlineEnabled(model, selection));
-			fCodeButton.setEnabled(enabled && isMarkEnabled(model, selection));
-			
-			fBoldButton.setSelection(isBoldChecked());
-			fItalicButton.setSelection(isItalicChecked());
-			fUnderlineButton.setSelection(isUnderlineChecked());
-		}
-		
-	});
-	return viewer;
-}
+		});
+		return viewer;
+	}
 	
 	/* (non-Javadoc)
 	 * @see ca.mcgill.cs.swevo.qualyzer.editors.RTFEditor#createPartControl(org.eclipse.swt.widgets.Composite)
@@ -186,7 +185,10 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 	}
 	
 	/**
-	 * @param musicBar
+	 * Sets the 2nd half of the passed continer to the enablement according to state.
+	 * Used to enable or disable the music bar.
+	 * @param container
+	 * @param state
 	 */
 	private void setEnable(Composite container, boolean state)
 	{
@@ -316,7 +318,8 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 	}
 	
 	/**
-	 * @param fBoldAction2
+	 * A Generic listener that handles all the button actions for the format bar.
+	 * @param action
 	 * @return
 	 */
 	private SelectionAdapter createButtonSelectionListener(final Action action)
@@ -435,6 +438,11 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 		fTimeLabel.setText(label);
 	}
 	
+	/**
+	 * Converts seconds into MM:SS.
+	 * @param seconds
+	 * @return
+	 */
 	private String getTimeString(int seconds)
 	{
 		int minutes = seconds / SECONDS_PER_MINUTE;
@@ -470,7 +478,7 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 	}
 	
 	/**
-	 * 
+	 * Allows access to the seek back command so that the key binding works.
 	 */
 	public void seekBack()
 	{
@@ -484,7 +492,7 @@ protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler rule
 	}
 
 	/**
-	 * 
+	 * Allows access to the seek forward command so that the key binding works.
 	 */
 	public void seekForward()
 	{

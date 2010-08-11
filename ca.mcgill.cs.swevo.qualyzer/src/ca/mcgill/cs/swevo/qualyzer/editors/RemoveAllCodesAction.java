@@ -46,7 +46,8 @@ public class RemoveAllCodesAction extends Action
 		fSourceViewer = viewer;
 	}
 	
-	/* (non-Javadoc)
+	/**
+	 * Opens a confirmation dialog and then removes all the codes from the selected fragment.
 	 * @see org.eclipse.jface.action.Action#run()
 	 */
 	@SuppressWarnings("unchecked")

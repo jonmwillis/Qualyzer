@@ -57,9 +57,7 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 public class ParticipantEditorPage extends FormPage implements ProjectListener, TranscriptListener,
 	ParticipantListener, MemoListener
 {
-	/**
-	 * 
-	 */
+	
 	private static final String DELIMITER = ":"; //$NON-NLS-1$
 	private static final String LABEL_PARTICIPANT_NAME = Messages.getString(
 			"editors.pages.ParticipantEditorPage.participantName"); //$NON-NLS-1$
@@ -71,8 +69,6 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 	private Participant fParticipant;
 	private Text fID;
 	private Text fFullname;
-	private Text fContactInfo;
-	private Text fNotes;
 	private boolean fIsDirty;
 	private FormToolkit fToolkit;
 	private FormText fTranscriptText;
@@ -117,24 +113,15 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 		fFullname = createText(fParticipant.getFullName(), body);
 		fFullname.addKeyListener(createStringLengthValidator(
 				Messages.getString("editors.pages.ParticipantEditorPage.participantName"), fFullname)); //$NON-NLS-1$
-		
-		// MPR: removed to simplify the UI for 0.1
-//		toolkit.createLabel(body, "Contact Info:");
-//		fContactInfo = createText(toolkit, fParticipant.getContactInfo(), body);
-				
-//		createLongLabel(toolkit, body, "Notes");
-//		createNotesArea(toolkit, body);
 	
 		buildTranscriptSection(body);
 		buildMemoSection(body);
-		
-		//Are we even doing this anymore? - JF
-		//buildCodesSection(form, toolkit, body);
 		
 		fToolkit.paintBordersFor(body);
 	}
 
 	/**
+	 * Validates input.
 	 * @return
 	 */
 	private KeyAdapter createKeyAdapter()
@@ -182,54 +169,6 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 			}
 		};
 	}
-
-	/**
-	 * @param toolkit
-	 * @param body
-	 */
-	// Let's leave this out for 0.1
-//	private void createNotesArea(FormToolkit toolkit, Composite body)
-//	{
-//		TableWrapData td;
-//		fNotes = toolkit.createText(body, fParticipant.getNotes());
-//		td = new TableWrapData(TableWrapData.FILL_GRAB);
-//		td.rowspan = 2;
-//		td.colspan = 2;
-//		fNotes.setLayoutData(td);
-//		fNotes.addKeyListener(createKeyListener());
-//	}
-
-	/**
-	 * @param form
-	 * @param toolkit
-	 * @param body
-	 */
-	// Let's leave this out for 0.1
-//	private void buildCodesSection(final ScrolledForm form, FormToolkit toolkit, Composite body)
-//	{
-//		TableWrapData td;
-//		Label label;
-//		Section section;
-//		Composite sectionClient;
-//		GridLayout gridLayout;
-//		section = toolkit.createSection(body, Section.EXPANDED | Section.TWISTIE | Section.TITLE_BAR);
-//		section.setText("Codes");
-//		td = new TableWrapData(TableWrapData.FILL_GRAB);
-//		td.colspan = 2;
-//		section.setLayoutData(td);
-//		section.addExpansionListener(createExpansionListener(form));
-//		sectionClient = toolkit.createComposite(section);
-//		gridLayout = new GridLayout();
-//		gridLayout.numColumns = 2;
-//		gridLayout.makeColumnsEqualWidth = true;
-//		sectionClient.setLayout(gridLayout);
-//		GridData gd = new GridData(SWT.FILL, SWT.NULL, true, false);
-//		label = toolkit.createLabel(sectionClient, "Example code");
-//		label.setLayoutData(gd);
-//		label = toolkit.createLabel(sectionClient, "Example Interview");
-//		label.setLayoutData(gd);
-//		section.setClient(sectionClient);
-//	}
 
 	/**
 	 * @param form
@@ -282,23 +221,7 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 	}
 
 	/**
-	 * @param toolkit
-	 * @param body
-	 */
-	// Let's leave this out for 0.1
-//	private Label createLongLabel(FormToolkit toolkit, Composite body, String text)
-//	{
-//		TableWrapData td;
-//		Label label;
-//		label = toolkit.createLabel(body, text);
-//		td = new TableWrapData(TableWrapData.FILL_GRAB);
-//		td.colspan = 2;
-//		label.setLayoutData(td);
-//		return label;
-//	}
-
-	/**
-	 * 
+	 * Sets the contents of the FormText Widget that displays the list of memos and links to them.
 	 */
 	private void buildMemos()
 	{
@@ -328,9 +251,7 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 	}
 
 	/**
-	 * @param toolkit 
-	 * @param sectionClient 
-	 * 
+	 * Sets the contents of the FormText widget that displays the list of transcripts and links to them.
 	 */
 	private void buildInterviews()
 	{
@@ -360,7 +281,7 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 	}
 
 	/**
-	 * @param transcript
+	 * Extracts the type and name of the document to open. Then does so.
 	 * @return
 	 */
 	private HyperlinkAdapter createHyperlinkListener()
@@ -451,23 +372,9 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 	}
 	
 	/**
-	 * Get the participant's contact info.
-	 * @return The contact info field.
+	 * Updates the dirty state.
+	 * @return
 	 */
-	public String getContactInfo()
-	{
-		return fContactInfo.getText();
-	}
-
-	/**
-	 * Get the notes related to this participant.
-	 * @return The notes field.
-	 */
-	public String getNotes()
-	{
-		return fNotes.getText();
-	}
-	
 	private KeyListener createKeyListener()
 	{
 		return new KeyAdapter() 

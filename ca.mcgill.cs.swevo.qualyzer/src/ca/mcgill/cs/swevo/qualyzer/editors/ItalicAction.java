@@ -18,7 +18,7 @@ import org.eclipse.jface.text.Position;
 import org.eclipse.swt.graphics.Point;
 
 /**
- *
+ * The Italic Action in the RTF Editor.
  */
 public class ItalicAction extends Action
 {

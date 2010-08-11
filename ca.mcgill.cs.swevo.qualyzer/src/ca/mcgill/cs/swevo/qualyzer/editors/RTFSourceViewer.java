@@ -41,9 +41,6 @@ import ca.mcgill.cs.swevo.qualyzer.model.Fragment;
 public class RTFSourceViewer extends ProjectionViewer
 {
 
-	/**
-	 * 
-	 */
 	private static final String EMPTY = "";  //$NON-NLS-1$
 
 	/**
@@ -85,6 +82,7 @@ public class RTFSourceViewer extends ProjectionViewer
 		
 		RTFDocument rtfDoc = (RTFDocument) document;
 		
+		//Adds all the annotations that were found when the document was parsed.
 		for(Position position : rtfDoc.getKeys())
 		{
 			annotationModel.addAnnotation(rtfDoc.getAnnotation(position), position);
@@ -137,6 +135,14 @@ public class RTFSourceViewer extends ProjectionViewer
 		}
 	}
 	
+	/**
+	 * Handles toggling when there is only 1 position overlapping.
+	 * @param model
+	 * @param position
+	 * @param currentPos
+	 * @param current
+	 * @return
+	 */
 	private Map<Position, Annotation> handleToggle1(IAnnotationModel model, Position position, 
 			ArrayList<Position> currentPos, ArrayList<Annotation> current)
 	{
@@ -175,6 +181,14 @@ public class RTFSourceViewer extends ProjectionViewer
 		return toToggle;
 	}
 	
+	/**
+	 * Handles toggling when the is more than one position overlapping.
+	 * @param current
+	 * @param currentPos
+	 * @param position
+	 * @param model
+	 * @return
+	 */
 	private Map<Position, Annotation> handleToggle2(ArrayList<Annotation> current, ArrayList<Position> currentPos,
 			Position position, IAnnotationModel model)
 	{
@@ -450,7 +464,6 @@ public class RTFSourceViewer extends ProjectionViewer
 	 * @param model
 	 * @param current
 	 * @param currentPos
-	 * @param type 0: bold, 1: italic, -1: underlined
 	 */
 	@SuppressWarnings("unchecked")
 	private void findOverlaps(Position position, IAnnotationModel model, ArrayList<Annotation> current,
@@ -479,6 +492,12 @@ public class RTFSourceViewer extends ProjectionViewer
 		}
 	}
 	
+	/**
+	 * Sort the list of annotations along with the list of positions.
+	 * @param current
+	 * @param currentPos
+	 * @param model
+	 */
 	private void sort(ArrayList<Annotation> current, ArrayList<Position> currentPos, final IAnnotationModel model)
 	{
 		HashMap<Position, Annotation> data = new HashMap<Position, Annotation>();

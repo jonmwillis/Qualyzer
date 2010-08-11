@@ -58,6 +58,7 @@ public class FragmentAnnotation extends Annotation
 	}
 
 	/**
+	 * Update the fragment that is associated with this Annotation.
 	 * @param fragment
 	 */
 	public void setFragment(Fragment fragment)

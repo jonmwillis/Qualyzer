@@ -161,7 +161,7 @@ public class MemoPropertiesDialog extends TitleAreaDialog
 	}
 
 	/**
-	 * 
+	 * Builds the list of transcripts to choose from.
 	 */
 	private void createTranscriptCombo(Composite container)
 	{
@@ -182,7 +182,7 @@ public class MemoPropertiesDialog extends TitleAreaDialog
 	}
 
 	/**
-	 * 
+	 * Builds the list of codes to choose from.
 	 */
 	private void createCodeCombo(Composite container)
 	{
@@ -259,6 +259,7 @@ public class MemoPropertiesDialog extends TitleAreaDialog
 	}
 	
 	/**
+	 * Handles adding participant to the table.
 	 * @return
 	 */
 	private SelectionListener createAddListener()
@@ -295,6 +296,7 @@ public class MemoPropertiesDialog extends TitleAreaDialog
 	}
 
 	/**
+	 * Checks that s isn't in the table.
 	 * @param s
 	 * @return
 	 */
@@ -311,6 +313,7 @@ public class MemoPropertiesDialog extends TitleAreaDialog
 	}
 
 	/**
+	 * Handles removing a participant from the table.
 	 * @return
 	 */
 	private SelectionListener addRemoveListener()
@@ -442,7 +445,7 @@ public class MemoPropertiesDialog extends TitleAreaDialog
 	}
 	
 	/**
-	 * 
+	 * Get the transcript that was selected.
 	 * @return
 	 */
 	public Transcript getTranscript()
@@ -451,7 +454,7 @@ public class MemoPropertiesDialog extends TitleAreaDialog
 	}
 	
 	/**
-	 * 
+	 * Get the code that was selected.
 	 * @return
 	 */
 	public Code getCode()

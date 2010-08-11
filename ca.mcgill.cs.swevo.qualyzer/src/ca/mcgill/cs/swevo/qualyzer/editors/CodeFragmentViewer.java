@@ -80,6 +80,15 @@ public class CodeFragmentViewer extends FormEditor
 		return false;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.forms.editor.FormEditor#isDirty()
+	 */
+	@Override
+	public boolean isDirty()
+	{
+		return false;
+	}
+	
 	// This override is to eliminate the single tab at the bottom of the editor.
 	@Override
 	protected void createPages() 

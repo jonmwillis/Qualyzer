@@ -57,7 +57,7 @@ public class RTFDocument extends Document
 	}
 	
 	/**
-	 * Get the annotations for the given position.
+	 * Get the annotation for the given position.
 	 * @param position
 	 * @return
 	 */

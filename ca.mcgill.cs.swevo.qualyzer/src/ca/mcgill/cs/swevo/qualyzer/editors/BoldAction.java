@@ -18,7 +18,7 @@ import org.eclipse.jface.text.Position;
 import org.eclipse.swt.graphics.Point;
 
 /**
- *
+ * The bold action in the RTF Editor.
  */
 public class BoldAction extends Action
 {
@@ -26,7 +26,7 @@ public class BoldAction extends Action
 	private RTFSourceViewer fSourceViewer;
 
 	/**
-	 * 
+	 * Constructor.
 	 */
 	public BoldAction(RTFEditor editor, RTFSourceViewer viewer)
 	{

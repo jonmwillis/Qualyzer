@@ -183,6 +183,7 @@ public class RTFDecorationSupport extends SourceViewerDecorationSupport implemen
 	@Override
 	public void propertyChange(PropertyChangeEvent event)
 	{
+		//If the fragment color preference has changed then update the editor preference store as well.
 		if(event.getProperty().equals(IQualyzerPreferenceConstants.FRAGMENT_COLOR))
 		{
 			String color = QualyzerActivator.getDefault().getPreferenceStore().getString(
@@ -201,6 +202,8 @@ public class RTFDecorationSupport extends SourceViewerDecorationSupport implemen
 	{
 		super.setAnnotationPreference(info);
 		
+		//Override the color that was set in the Editor preference store with the 
+		//value from the Qualyzer Preference Store.
 		if(info.getAnnotationType().equals(RTFConstants.FRAGMENT_TYPE))
 		{
 			String color = QualyzerActivator.getDefault().getPreferenceStore().getString(
