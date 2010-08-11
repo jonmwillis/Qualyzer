@@ -190,6 +190,7 @@ public class AddInvestigatorPage extends WizardPage
 	
 	/**
 	 * Build the investigator represented by the information entered in the wizard.
+	 * @deprecated use Facade.createInvestigator(...)
 	 * @return The resulting investigator.
 	 */
 	public Investigator getInvestigator()

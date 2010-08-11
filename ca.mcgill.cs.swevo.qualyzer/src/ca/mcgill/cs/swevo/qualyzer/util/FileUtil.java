@@ -115,6 +115,10 @@ public final class FileUtil
 		return wProject;
 	}
 	
+	/**
+	 * Rolls-back the creation of the project's sub-folders.
+	 * @param wProject
+	 */
 	private static void cleanUpFolders(IProject wProject)
 	{
 		try
@@ -145,6 +149,11 @@ public final class FileUtil
 		}
 	}
 	
+	/**
+	 * Create the sub-folders for the given project.
+	 * @param wProject
+	 * @return
+	 */
 	private static boolean makeSubFolders(IProject wProject)
 	{
 		try
@@ -319,6 +328,7 @@ public final class FileUtil
 	}
 
 	/**
+	 * Create a new empty memo file or copy an existing one.
 	 * @param memoName
 	 * @param name
 	 */
@@ -375,7 +385,7 @@ public final class FileUtil
 	}
 	
 	/**
-	 * Handles the renaming on the Resource Side.
+	 * Handles the renaming of a project on the Resource Side.
 	 * @param oldName
 	 * @param newName
 	 */

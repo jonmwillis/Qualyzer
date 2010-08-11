@@ -42,9 +42,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.validation.MemoValidator;
  */
 public class NewMemoPage extends WizardPage
 {
-	/**
-	 * 
-	 */
+	
 	private static final String SLASH = "/";  //$NON-NLS-1$
 	
 	protected Text fName;

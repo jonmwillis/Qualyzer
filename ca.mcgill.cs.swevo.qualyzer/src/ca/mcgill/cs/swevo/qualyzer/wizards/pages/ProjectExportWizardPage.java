@@ -23,7 +23,8 @@ import org.eclipse.ui.internal.wizards.datatransfer.ArchiveFileExportOperation;
 import org.eclipse.ui.internal.wizards.datatransfer.WizardArchiveFileResourceExportPage1;
 
 /**
- *
+ * Extends the WizardArchiveFileResourceExportPage1 in order to force a refresh of all
+ *  the resources before trying to access them.
  */
 @SuppressWarnings("restriction")
 public class ProjectExportWizardPage extends WizardArchiveFileResourceExportPage1

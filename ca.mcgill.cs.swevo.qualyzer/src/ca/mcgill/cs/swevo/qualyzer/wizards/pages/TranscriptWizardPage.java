@@ -23,7 +23,6 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -52,9 +51,6 @@ import ca.mcgill.cs.swevo.qualyzer.wizards.AddParticipantWizard;
  */
 public class TranscriptWizardPage extends WizardPage
 {
-	/**
-	 * 
-	 */
 	private static final int COMPOSITE_COLS = 4;
 
 	private static final String AUDIO_PATH = File.separator+"audio"+File.separator; //$NON-NLS-1$
@@ -68,7 +64,6 @@ public class TranscriptWizardPage extends WizardPage
 	private DateTime fDate;
 	private Project fProject;
 	private ArrayList<Participant> fParticipants;
-	//private Text fDescription;
 	private final String fWorkspacePath;
 	
 	/**
@@ -110,7 +105,7 @@ public class TranscriptWizardPage extends WizardPage
 	}
 
 	/**
-	 * 
+	 * To be used by children that want to place widgets above those create by this page.
 	 * @return
 	 */
 	protected Composite getfContainer()
@@ -166,6 +161,7 @@ public class TranscriptWizardPage extends WizardPage
 	}
 
 	/**
+	 * Clears the audio file selection.
 	 * @return
 	 */
 	private SelectionListener createClearListener()
@@ -217,7 +213,7 @@ public class TranscriptWizardPage extends WizardPage
 	}
 
 	/**
-	 * 
+	 * Creates the participants button bar.
 	 */
 	private void createLongLabel()
 	{
@@ -283,14 +279,12 @@ public class TranscriptWizardPage extends WizardPage
 	}
 
 	/**
+	 * Opens the file chooser for the audio file.
 	 * @return
 	 */
-	private SelectionListener createButtonListener()
+	private SelectionAdapter createButtonListener()
 	{
-		return new SelectionListener(){
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e){}
+		return new SelectionAdapter(){
 
 			@Override
 			public void widgetSelected(SelectionEvent e)
@@ -319,14 +313,12 @@ public class TranscriptWizardPage extends WizardPage
 	}
 
 	/**
+	 * Validates all input.
 	 * @return
 	 */
-	protected SelectionListener createSelectionListener()
+	protected SelectionAdapter createSelectionListener()
 	{
-		return new SelectionListener(){
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e)	{}
+		return new SelectionAdapter(){
 
 			@Override
 			public void widgetSelected(SelectionEvent e)
@@ -337,9 +329,10 @@ public class TranscriptWizardPage extends WizardPage
 	}
 
 	/**
-	 * @param string 
-	 * @param fContainer2 
 	 * 
+	 * @param container
+	 * @param string
+	 * @return
 	 */
 	private Label createLabel(Composite container, String string)
 	{
@@ -362,11 +355,9 @@ public class TranscriptWizardPage extends WizardPage
 	/**
 	 * @return
 	 */
-	protected KeyListener createKeyListener()
+	protected KeyAdapter createKeyListener()
 	{
-		return new KeyListener(){
-			@Override
-			public void keyPressed(KeyEvent e){}
+		return new KeyAdapter(){
 			@Override
 			public void keyReleased(KeyEvent e)
 			{
@@ -414,7 +405,7 @@ public class TranscriptWizardPage extends WizardPage
 	
 	/**
 	 * 
-	 * @return The data field.
+	 * @return The date field. In the format MM/DD/YYYY.
 	 */
 	public String getDate()
 	{
@@ -431,7 +422,7 @@ public class TranscriptWizardPage extends WizardPage
 	
 	/**
 	 * 
-	 * @return The audio file's absoulte path.
+	 * @return The audio file's absolute path.
 	 */
 	public String getAudioFile()
 	{
@@ -448,6 +439,9 @@ public class TranscriptWizardPage extends WizardPage
 		return fParticipants;
 	}
 
+	/**
+	 * Build the participant list based on the table.
+	 */
 	private void buildParticipants()
 	{
 		fParticipants = new ArrayList<Participant>();
@@ -467,7 +461,7 @@ public class TranscriptWizardPage extends WizardPage
 	}
 	
 	/**
-	 * 
+	 * Checks if an audio file with a matching name already exists in the audio folder.
 	 * @param filename
 	 * @return The absolute path of the audio file represented by the filename.
 	 */

@@ -140,6 +140,7 @@ public class NewProjectPage extends WizardPage
 	}
 
 	/**
+	 * Validates input text.
 	 * @return
 	 */
 	private KeyListener createKeyListener()

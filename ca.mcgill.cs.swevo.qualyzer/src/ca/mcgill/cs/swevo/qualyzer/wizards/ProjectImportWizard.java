@@ -32,7 +32,9 @@ import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.util.FileUtil;
 
 /**
- * 
+ * The wizard for importing a project into the workspace. Mostly copied from the Eclipse import wizard.
+ * Slight changes made to performFinish() to deal with recreating folders and rolling back non-Qualyzer 
+ * projects that get imported.
  *
  */
 @SuppressWarnings("restriction")
@@ -55,11 +57,10 @@ public class ProjectImportWizard extends Wizard implements IImportWizard
 	}
 
 	/**
-	 * Constructor for TestImportWizard.
+	 * Constructor for ProjectImportWizard.
 	 * 
 	 * @param initialPath
 	 *            Default path for wizard to import
-	 * @since 3.5
 	 */
 	public ProjectImportWizard(String initialPath)
 	{
@@ -108,6 +109,13 @@ public class ProjectImportWizard extends Wizard implements IImportWizard
 		ArrayList<IProject> toDelete = new ArrayList<IProject>();
 		for(IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects())
 		{
+			/*For each project that was imported:
+			 * Verify that it is a Qualyzer Project,
+			 * Recreate it's sub-folders.
+			 * If it was not then show an error message and delete it from the workspace.
+			 * 
+			 */
+			
 			PersistenceManager.getInstance().refreshManager(project);
 			Project qProject = PersistenceManager.getInstance().getProject(project.getName());
 			if(qProject != null)

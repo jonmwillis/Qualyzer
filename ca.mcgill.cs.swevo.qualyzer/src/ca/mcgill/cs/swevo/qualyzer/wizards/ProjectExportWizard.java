@@ -27,6 +27,7 @@ import ca.mcgill.cs.swevo.qualyzer.wizards.pages.ProjectExportWizardPage;
 
 /**
  * The Wizard the handles exporting projects.
+ * This was copied from the Eclipse export wizard.
  *
  */
 @SuppressWarnings("restriction")

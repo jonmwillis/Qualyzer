@@ -30,9 +30,6 @@ import ca.mcgill.cs.swevo.qualyzer.wizards.pages.NewProjectPage;
  */
 public class NewProjectWizard extends Wizard
 {
-	/**
-	 * 
-	 */
 	private static final int WORK = 5;
 	private NewProjectPage fOne;
 	private IProject fProject;
