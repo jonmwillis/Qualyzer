@@ -29,11 +29,9 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class TranscriptDeleteDialog extends TitleAreaDialog
 {
-	private boolean fDeleteAudio;
 	private boolean fDeleteParticipants;
 	private boolean fDeleteCodes;
 	
-	private Button fAudioButton;
 	private Button fParticipantButton;
 	private Button fCodeButton;
 	
@@ -44,7 +42,6 @@ public class TranscriptDeleteDialog extends TitleAreaDialog
 	public TranscriptDeleteDialog(Shell shell)
 	{
 		super(shell);
-		fDeleteAudio = false;
 		fDeleteParticipants = false;
 		fDeleteCodes = false;
 	}
@@ -75,9 +72,6 @@ public class TranscriptDeleteDialog extends TitleAreaDialog
 		
 		label.setLayoutData(gd);
 		
-		fAudioButton = new Button(composite, SWT.CHECK);
-		fAudioButton.setText(Messages.getString("dialogs.TranscriptDeleteDialog.deleteAudio")); //$NON-NLS-1$
-		
 		fCodeButton = new Button(composite, SWT.CHECK);
 		fCodeButton.setText(Messages.getString("dialogs.TranscriptDeleteDialog.deleteCodes")); //$NON-NLS-1$
 		
@@ -91,20 +85,10 @@ public class TranscriptDeleteDialog extends TitleAreaDialog
 	@Override
 	public void okPressed()
 	{
-		fDeleteAudio = fAudioButton.getSelection();
 		fDeleteParticipants = fParticipantButton.getSelection();
 		fDeleteCodes = fCodeButton.getSelection();
 		
 		super.okPressed();
-	}
-	
-	/**
-	 * Get if the delete audio file button is selected.
-	 * @return
-	 */
-	public boolean getDeleteAudio()
-	{
-		return fDeleteAudio;
 	}
 	
 	/**
