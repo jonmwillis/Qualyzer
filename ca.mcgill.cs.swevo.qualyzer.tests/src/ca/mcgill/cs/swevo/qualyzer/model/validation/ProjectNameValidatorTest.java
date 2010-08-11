@@ -17,29 +17,22 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
-import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
-import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 
 /**
  *
  */
-public class MemoNameValidatorTest
+public class ProjectNameValidatorTest
 {
 	private static final String TEST_PROJECT_NAME = "TestProject";
+	private static final String TEST_PROJECT_NAME2 = "TestProject2";
+
 	private static final String TEST_INVESTIGATOR_NAME = "Bob";
-	private static final String TEST_PARTICIPANT_NAME = "Jaffy";
-	private static final String TEST_PARTICIPANT_ID = "P01";
-	private static final String TEST_MEMO_NAME = "Transcript1";
-	private static final String TEST_MEMO_NAME2 = "Transcript2";
 	
 	private static final String LONG_NAME = "AAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBB"+
 	"AAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBB"+
@@ -49,24 +42,21 @@ public class MemoNameValidatorTest
 	
 	private Facade fFacade;
 	private Project fProject;
-	private Investigator fInvestigator;
+	private Project fProject2;
 	
 	@Before
 	public void setUp()
 	{
 		fFacade = Facade.getInstance();
 		fProject = fFacade.createProject(TEST_PROJECT_NAME, TEST_INVESTIGATOR_NAME, TEST_INVESTIGATOR_NAME, "");
-		Participant lBob = fFacade.createParticipant(TEST_PARTICIPANT_ID, TEST_PARTICIPANT_NAME, fProject);
-		List<Participant> lParticipants = new ArrayList<Participant>();
-		lParticipants.add(lBob);
-		fFacade.createMemo(TEST_MEMO_NAME, "", fInvestigator, lParticipants, fProject, null, null);
-		fFacade.createMemo(TEST_MEMO_NAME2, "", fInvestigator, lParticipants, fProject, null, null);
+		fProject2 = fFacade.createProject(TEST_PROJECT_NAME2, TEST_INVESTIGATOR_NAME, TEST_INVESTIGATOR_NAME, "");
 	}
 
 	@After
 	public void tearDown()
 	{
 		fFacade.deleteProject(fProject);
+		fFacade.deleteProject(fProject2);
 	}
 	
 	/**
@@ -75,9 +65,9 @@ public class MemoNameValidatorTest
 	@Test
 	public void testEmptyName()
 	{
-		MemoNameValidator lValidator = new MemoNameValidator("", TEST_MEMO_NAME, fProject);
+		ProjectNameValidator lValidator = new ProjectNameValidator("", TEST_PROJECT_NAME, fProject);
 		assertFalse(lValidator.isValid());
-		assertEquals("Memo name " + Messages.getString("model.validation.BasicNameValidator.empty"),lValidator.getErrorMessage());
+		assertEquals("Project name " + Messages.getString("model.validation.BasicNameValidator.empty"),lValidator.getErrorMessage());
 	}
 	
 	/**
@@ -86,18 +76,18 @@ public class MemoNameValidatorTest
 	@Test
 	public void testNameFormat()
 	{
-		MemoNameValidator lValidator = new MemoNameValidator("Mickey Mouse!!", TEST_MEMO_NAME, fProject);
+		ProjectNameValidator lValidator = new ProjectNameValidator("Mickey Mouse!!", TEST_PROJECT_NAME, fProject);
 		assertFalse(lValidator.isValid());
-		assertEquals("Memo name " + Messages.getString("model.validation.BasicNameValidator.invalid"),lValidator.getErrorMessage());
+		assertEquals("Project name " + Messages.getString("model.validation.BasicNameValidator.invalid"),lValidator.getErrorMessage());
 	}
 	
 	/**
 	 * Verifies that the name can be the current name
 	 */
 	@Test
-	public void testMemoUniqueName1()
+	public void testProjectUniqueName1()
 	{
-		MemoNameValidator lValidator = new MemoNameValidator(TEST_MEMO_NAME, TEST_MEMO_NAME, fProject);
+		ProjectNameValidator lValidator = new ProjectNameValidator(TEST_PROJECT_NAME, TEST_PROJECT_NAME, fProject);
 		assertTrue(lValidator.isValid());
 		assertEquals(null,lValidator.getErrorMessage());
 	}
@@ -106,20 +96,20 @@ public class MemoNameValidatorTest
 	 * Verifies that the name cannot be of an existing memo.
 	 */
 	@Test
-	public void testMemoUniqueName2()
+	public void testProjectUniqueName2()
 	{
-		MemoNameValidator lValidator = new MemoNameValidator(TEST_MEMO_NAME2, TEST_MEMO_NAME, fProject);
+		ProjectNameValidator lValidator = new ProjectNameValidator(TEST_PROJECT_NAME2, TEST_PROJECT_NAME, fProject);
 		assertFalse(lValidator.isValid());
-		assertEquals("Memo name " + Messages.getString("model.validation.BasicNameValidator.taken"),lValidator.getErrorMessage());
+		assertEquals("Project name " + Messages.getString("model.validation.BasicNameValidator.taken"),lValidator.getErrorMessage());
 	}
 	
 	/**
-	 * Tests that a valid memo is indeed valid
+	 * Tests that a valid project is indeed valid
 	 */
 	@Test
 	public void testValid()
 	{
-		MemoNameValidator lValidator = new MemoNameValidator("NewMemo", TEST_MEMO_NAME, fProject);
+		ProjectNameValidator lValidator = new ProjectNameValidator("NewProject", TEST_PROJECT_NAME, fProject);
 		assertTrue(lValidator.isValid());
 		assertEquals(null,lValidator.getErrorMessage());
 	}
@@ -130,8 +120,8 @@ public class MemoNameValidatorTest
 	@Test
 	public void testTooLong()
 	{
-		MemoNameValidator lValidator = new MemoNameValidator(LONG_NAME, null, fProject);
+		ProjectNameValidator lValidator = new ProjectNameValidator(LONG_NAME, null, fProject);
 		assertFalse(lValidator.isValid());
-		assertEquals("Memo name " + Messages.getString("model.validation.BasicNameValidator.tooLong"),lValidator.getErrorMessage());
+		assertEquals("Project name " + Messages.getString("model.validation.BasicNameValidator.tooLong"),lValidator.getErrorMessage());
 	}
 }
