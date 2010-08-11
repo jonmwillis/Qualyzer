@@ -59,18 +59,18 @@ public class RenameProjectHandler extends AbstractHandler
 				{
 					try
 					{
-						String oldName = project.getName();
+						String oldFolderName = project.getFolderName();
 						Facade.getInstance().renameProject(project, dialog.getNewName());
 						
 						CommonNavigator view = (CommonNavigator) page.findView(
 								QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
 						view.getCommonViewer().refresh();
 						
-						FileUtil.renameProject(oldName, dialog.getNewName());
+						FileUtil.renameProject(oldFolderName, dialog.getNewName());
 						
-						IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(dialog.getNewName());
+						IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(
+								dialog.getNewName().replace(' ', '_'));
 						PersistenceManager.getInstance().refreshManager(wProject);
-						
 						
 					}
 					catch(QualyzerException e)
