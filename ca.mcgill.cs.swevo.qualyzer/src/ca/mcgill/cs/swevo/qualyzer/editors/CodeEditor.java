@@ -15,9 +15,11 @@ import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.editor.FormEditor;
+import org.eclipse.ui.navigator.CommonNavigator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.CodeEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.editors.pages.CodeEditorPage;
 import ca.mcgill.cs.swevo.qualyzer.model.Code;
@@ -62,6 +64,10 @@ public class CodeEditor extends FormEditor
 		Code[] codes = fPage.getModifiedCodes();
 		Facade.getInstance().saveCodes(codes);
 		fPage.notDirty();
+		
+		CommonNavigator view = (CommonNavigator) getSite().getPage().findView(
+				QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+		view.getCommonViewer().refresh();
 	}
 
 	@Override

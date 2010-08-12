@@ -429,8 +429,11 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 	{
 		if(ChangeType.DELETE == cType)
 		{
-			IWorkbenchPage page = getEditor().getEditorSite().getPage();
-			ResourcesUtil.closeEditor(page, getEditorInput().getName());
+			getEditor().close(false);
+		}
+		else if(ChangeType.RENAME == cType)
+		{
+			ResourcesUtil.closeEditor(getSite().getPage(), getEditorInput().getName());
 		}
 		
 	}
@@ -490,14 +493,13 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 	@Override
 	public void participantChanged(ChangeType cType, Participant[] participants, Facade facade)
 	{
-		IWorkbenchPage page = getEditor().getEditorSite().getPage();
 		if(cType == ChangeType.DELETE)
 		{
 			for(Participant participant : participants)
 			{
 				if(fParticipant.equals(participant))
 				{
-					ResourcesUtil.closeEditor(page, getEditorInput().getName());
+					getEditor().close(false);
 					break;
 				}
 			}

@@ -43,7 +43,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbenchActionConstants;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
@@ -771,8 +770,11 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 	{
 		if(ChangeType.DELETE == cType)
 		{
-			IWorkbenchPage page = getSite().getPage();
-			ResourcesUtil.closeEditor(page, getEditorInput().getName());
+			close(false);
+		}
+		else if(ChangeType.RENAME == cType)
+		{
+			ResourcesUtil.closeEditor(getSite().getPage(), getEditorInput().getName());
 		}
 		else if(ChangeType.MODIFY == cType)
 		{
