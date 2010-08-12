@@ -10,12 +10,18 @@
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OrderColumn;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -28,11 +34,12 @@ public class Code implements Comparable<Code>
 {
 	private static final int NUM = 24651;
 	private static final int NUM2 = 23959;
-	
+
 	private String fCodeName;
 	private String fDescription;
 	private Project fProject;
 	private Long fPersistenceId;
+	private List<String> fParents = new ArrayList<String>();
 
 	/**
 	 * @return the codeName
@@ -43,7 +50,8 @@ public class Code implements Comparable<Code>
 	}
 
 	/**
-	 * @param codeName the codeName to set
+	 * @param codeName
+	 *            the codeName to set
 	 */
 	public void setCodeName(String codeName)
 	{
@@ -104,30 +112,52 @@ public class Code implements Comparable<Code>
 		this.fProject = project;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	@ElementCollection(fetch = FetchType.EAGER)
+	@OrderColumn(name = "parents_index")
+	public List<String> getParents()
+	{
+		return fParents;
+	}
+
+	/**
+	 * 
+	 * Does something.
+	 * 
+	 * @param parents
+	 */
+	public void setParents(List<String> parents)
+	{
+		this.fParents = parents;
+	}
+
 	@Override
 	public int compareTo(Code code)
 	{
 		return this.getCodeName().compareTo(code.getCodeName());
 	}
-	
+
 	@Override
 	public int hashCode()
 	{
 		return new HashCodeBuilder(NUM, NUM2).append(fCodeName).append(fProject).toHashCode();
 	}
-	
+
 	@Override
 	public boolean equals(Object obj)
 	{
-		if(this == obj)
+		if (this == obj)
 		{
 			return true;
 		}
-		else if(obj == null)
+		else if (obj == null)
 		{
 			return false;
 		}
-		else if(obj.getClass().equals(getClass()))
+		else if (obj.getClass().equals(getClass()))
 		{
 			Code code = (Code) obj;
 			return new EqualsBuilder().append(fCodeName, code.fCodeName).append(fProject, code.fProject).isEquals();

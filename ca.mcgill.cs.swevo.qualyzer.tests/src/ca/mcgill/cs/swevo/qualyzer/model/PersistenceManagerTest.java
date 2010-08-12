@@ -289,5 +289,27 @@ public class PersistenceManagerTest
 		
 		assertNotNull(activator.getHibernateDBManagers().get(project.getName()));
 	}
+	
+	@Test
+	public void testHibernateListOfElements()
+	{
+		fManager.initDB(fProject);
+		HibernateDBManager dbManager = fActivator.getHibernateDBManagers().get(TEST_PROJECT_NAME);
+		Project projectDB = new Project();
+		projectDB.setName(TEST_PROJECT_NAME);
+		HibernateUtil.quietSave(dbManager, projectDB);
+
+		Code code1 = new Code();
+		code1.setCodeName(B_CODE);
+		code1.getParents().add("codeA/codeC");
+		code1.getParents().add("codeA/codeD");
+		projectDB.getCodes().add(code1);
+		HibernateUtil.quietSave(dbManager, projectDB);
+		
+		
+		projectDB = fManager.getProject(TEST_PROJECT_NAME);
+		Code tempCode = projectDB.getCodes().get(0);
+		assertEquals("codeA/codeD", tempCode.getParents().get(1));
+	}
 
 }
