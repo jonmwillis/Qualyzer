@@ -21,6 +21,7 @@ import java.util.Map;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
@@ -34,6 +35,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Code;
 import ca.mcgill.cs.swevo.qualyzer.model.CodeEntry;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Fragment;
+import ca.mcgill.cs.swevo.qualyzer.model.Memo;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 import ca.mcgill.cs.swevo.qualyzer.providers.WrapperCode;
@@ -48,11 +50,11 @@ public class ExportCodesHandler extends AbstractHandler
 	/**
 	 * 
 	 */
-	private static final String CSV = ".csv";
+	private static final String CSV = ".csv"; //$NON-NLS-1$
 	/**
 	 * 
 	 */
-	private static final String COMMA = ",";
+	private static final String COMMA = ","; //$NON-NLS-1$
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
@@ -76,7 +78,8 @@ public class ExportCodesHandler extends AbstractHandler
 				Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 				
 				FileDialog dialog = new FileDialog(shell, SWT.SAVE);
-				dialog.setFilterExtensions(new String[]{CSV});
+				dialog.setText(Messages.getString("handlers.ExportCodesHandler.exportDestination")); //$NON-NLS-1$
+				dialog.setFilterExtensions(new String[]{"*.csv"}); //$NON-NLS-1$
 				String fileName = dialog.open();
 				
 				if(fileName !=  null)
@@ -87,94 +90,177 @@ public class ExportCodesHandler extends AbstractHandler
 						fileName += CSV;
 					}
 					
-					Map<String, List<String>> transcriptMap = new HashMap<String, List<String>>();
+					Map<String, List<String>> documentMap = new HashMap<String, List<String>>();
 					Map<String, List<Integer>> freqMap = new HashMap<String, List<Integer>>();
 					
+					detectDocuments(project, facade, documentMap, freqMap);
 					
-					for(Code code : project.getCodes())
-					{
-						List<String> transcripts = new ArrayList<String>();
-						List<Integer> frequencies = new ArrayList<Integer>();
-						
-						for(Transcript transcript : project.getTranscripts())
-						{
-							Transcript lTranscript = facade.forceTranscriptLoad(transcript);
-							int freq = 0;
-							
-							for(Fragment fragment : lTranscript.getFragments())
-							{
-								for(CodeEntry entry : fragment.getCodeEntries())
-								{
-									if(entry.getCode().equals(code))
-									{
-										freq++;
-										break;
-									}
-								}
-							}
-							
-							if(freq > 0)
-							{
-								transcripts.add(transcript.getFileName());
-								frequencies.add(freq);
-							}
-						}
-						
-						transcriptMap.put(code.getCodeName(), transcripts);
-						freqMap.put(code.getCodeName(), frequencies);
-					}
+					StringBuffer buffer = buildStringBuffer(documentMap, freqMap);
 					
-					StringBuffer buffer = new StringBuffer();
-					
-					for(String codeName : transcriptMap.keySet())
-					{
-						int totalFreq = sum(freqMap.get(codeName));
-						buffer.append(codeName + COMMA + totalFreq + COMMA);
-						List<String> transcripts = transcriptMap.get(codeName);
-						List<Integer> frequencies = freqMap.get(codeName);
-						
-						for(int i = 0; i < transcripts.size(); i++)
-						{
-							String transcriptName = transcripts.get(i);
-							Integer frequency = frequencies.get(i);
-							buffer.append(transcriptName + COMMA + frequency + COMMA);
-						}
-						buffer.append("\n");
-					}
-					
-					File file = new File(fileName);
-					FileWriter writer = null;
-					try
-					{
-						writer = new FileWriter(file);
-						writer.write(buffer.toString());
-					}
-					catch (IOException e)
-					{
-						throw new QualyzerException("Unable to write the exported code file.");
-					}
-					finally
-					{
-						try
-						{
-							if(writer != null)
-							{
-								writer.close();
-							}
-						}
-						catch (IOException e)
-						{
-							throw new QualyzerException("Problem closing the exported code file.");
-						}
-					}
+					writeFile(shell, fileName, buffer);
 				}
-				
-				
-				
-				
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * @param shell
+	 * @param fileName
+	 * @param buffer
+	 */
+	private void writeFile(Shell shell, String fileName, StringBuffer buffer)
+	{
+		File file = new File(fileName);
+		FileWriter writer = null;
+		try
+		{
+			writer = new FileWriter(file);
+			writer.write(buffer.toString());
+			MessageDialog.openInformation(shell, Messages.getString(
+					"handlers.ExportCodesHandler.exportSucessful"), Messages.getString(//$NON-NLS-1$ 
+							"handlers.ExportCodesHandler.exportMessage") + fileName); //$NON-NLS-1$ 
+		}
+		catch (IOException e)
+		{
+			throw new QualyzerException(Messages.getString(
+					"handlers.ExportCodesHandler.writeFailed")); //$NON-NLS-1$
+		}
+		finally
+		{
+			try
+			{
+				if(writer != null)
+				{
+					writer.close();
+				}
+			}
+			catch (IOException e)
+			{
+				throw new QualyzerException(Messages.getString(
+						"handlers.ExportCodesHandler.closeFailed")); //$NON-NLS-1$
+			}
+		}
+	}
+
+	/**
+	 * @param transcriptMap
+	 * @param freqMap
+	 * @return
+	 */
+	private StringBuffer buildStringBuffer(Map<String, List<String>> transcriptMap, Map<String, List<Integer>> freqMap)
+	{
+		StringBuffer buffer = new StringBuffer();
+		
+		for(String codeName : transcriptMap.keySet())
+		{
+			int totalFreq = sum(freqMap.get(codeName));
+			buffer.append(codeName + COMMA + totalFreq + COMMA);
+			List<String> transcripts = transcriptMap.get(codeName);
+			List<Integer> frequencies = freqMap.get(codeName);
+			
+			for(int i = 0; i < transcripts.size(); i++)
+			{
+				String transcriptName = transcripts.get(i);
+				Integer frequency = frequencies.get(i);
+				buffer.append(transcriptName + COMMA + frequency + COMMA);
+			}
+			buffer.append("\n"); //$NON-NLS-1$
+		}
+		return buffer;
+	}
+
+	/**
+	 * @param project
+	 * @param facade
+	 * @param documentMap
+	 * @param freqMap
+	 */
+	private void detectDocuments(Project project, Facade facade, Map<String, List<String>> documentMap,
+			Map<String, List<Integer>> freqMap)
+	{
+		for(Code code : project.getCodes())
+		{
+			List<String> documents = new ArrayList<String>();
+			List<Integer> frequencies = new ArrayList<Integer>();
+			
+			detectTranscripts(project, facade, code, documents, frequencies);
+			
+			detectMemos(project, facade, code, documents, frequencies);
+			
+			documentMap.put(code.getCodeName(), documents);
+			freqMap.put(code.getCodeName(), frequencies);
+		}
+	}
+
+	/**
+	 * @param project
+	 * @param facade
+	 * @param code
+	 * @param documents
+	 * @param frequencies
+	 */
+	private void detectMemos(Project project, Facade facade, Code code, List<String> documents,
+			List<Integer> frequencies)
+	{
+		for(Memo memo : project.getMemos())
+		{
+			Memo lMemo = facade.forceMemoLoad(memo);
+			int freq = 0;
+			
+			for(Fragment fragment : lMemo.getFragments())
+			{
+				for(CodeEntry entry : fragment.getCodeEntries())
+				{
+					if(entry.getCode().equals(code))
+					{
+						freq++;
+						break;
+					}
+				}
+			}
+			
+			if(freq > 0)
+			{
+				documents.add("Memo:" + memo.getName());
+				frequencies.add(freq);
+			}
+		}
+	}
+
+	/**
+	 * @param project
+	 * @param facade
+	 * @param code
+	 * @param documents
+	 * @param frequencies
+	 */
+	private void detectTranscripts(Project project, Facade facade, Code code, List<String> documents,
+			List<Integer> frequencies)
+	{
+		for(Transcript transcript : project.getTranscripts())
+		{
+			Transcript lTranscript = facade.forceTranscriptLoad(transcript);
+			int freq = 0;
+			
+			for(Fragment fragment : lTranscript.getFragments())
+			{
+				for(CodeEntry entry : fragment.getCodeEntries())
+				{
+					if(entry.getCode().equals(code))
+					{
+						freq++;
+						break;
+					}
+				}
+			}
+			
+			if(freq > 0)
+			{
+				documents.add("Transcript:" + transcript.getName());
+				frequencies.add(freq);
+			}
+		}
 	}
 
 	/**
