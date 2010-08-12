@@ -853,7 +853,7 @@ public final class Facade
 	public void renameProject(Project project, String newName)
 	{
 		//Close related editors
-		fListenerManager.notifyProjectListeners(ChangeType.DELETE, project, this);
+		fListenerManager.notifyProjectListeners(ChangeType.RENAME, project, this);
 		
 		String oldName = project.getName();
 		String oldFolderName = project.getFolderName();

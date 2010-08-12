@@ -22,7 +22,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.FormPage;
@@ -503,8 +502,11 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 	{
 		if(cType == ChangeType.DELETE)
 		{
-			IWorkbenchPage page = getEditor().getSite().getPage();
-			ResourcesUtil.closeEditor(page, getEditor().getEditorInput().getName());
+			getEditor().close(false);
+		}
+		else if(cType == ChangeType.RENAME)
+		{
+			ResourcesUtil.closeEditor(getSite().getPage(), getEditorInput().getName());
 		}
 	}
 	
@@ -533,12 +535,11 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 	{
 		if(cType == ChangeType.DELETE)
 		{
-			IWorkbenchPage page = getEditor().getSite().getPage();
 			for(Investigator investigator : investigators)
 			{
 				if(fInvestigator.equals(investigator))
 				{
-					ResourcesUtil.closeEditor(page, getEditorInput().getName());
+					getEditor().close(false);
 					break;
 				}
 			}

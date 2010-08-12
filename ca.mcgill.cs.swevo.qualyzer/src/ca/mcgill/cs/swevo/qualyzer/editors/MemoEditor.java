@@ -30,14 +30,12 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.ui.IWorkbenchPage;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Memo;
 import ca.mcgill.cs.swevo.qualyzer.model.MemoListener;
 import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
-import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
  *
@@ -86,8 +84,7 @@ public class MemoEditor extends RTFEditor implements MemoListener
 			{
 				if(memo.equals(getDocument()))
 				{
-					IWorkbenchPage page = getSite().getPage();
-					ResourcesUtil.closeEditor(page, getEditorInput().getName());
+					close(false);
 					break;
 				}
 			}

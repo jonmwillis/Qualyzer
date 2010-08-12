@@ -40,7 +40,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Scale;
-import org.eclipse.ui.IWorkbenchPage;
 
 import ca.mcgill.cs.swevo.qualyzer.IQualyzerPreferenceConstants;
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
@@ -49,7 +48,6 @@ import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 import ca.mcgill.cs.swevo.qualyzer.model.TranscriptListener;
 import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
-import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
  *	Extends the RTFEditor with a formatting bar and an audio bar.
@@ -355,8 +353,7 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 			{
 				if(transcript.equals(getDocument()))
 				{
-					IWorkbenchPage page = getSite().getPage();
-					ResourcesUtil.closeEditor(page, getEditorInput().getName());
+					close(false);
 					break;
 				}
 			}

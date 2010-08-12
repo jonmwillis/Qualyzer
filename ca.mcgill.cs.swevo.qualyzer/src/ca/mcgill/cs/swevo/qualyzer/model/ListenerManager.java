@@ -26,7 +26,7 @@ public class ListenerManager
 	 * Defines the various reasons listeners can be notified.
 	 */
 	public enum ChangeType
-	{ADD, DELETE, MODIFY}
+	{ADD, DELETE, MODIFY, RENAME}
 	
 	private HashMap<Project, ArrayList<ProjectListener>> fProjectListeners;
 	private HashMap<Project, ArrayList<CodeListener>> fCodeListeners;

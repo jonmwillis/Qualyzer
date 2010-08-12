@@ -405,6 +405,10 @@ public class CodeFragmentViewerPage extends FormPage implements ProjectListener,
 	{
 		if(ChangeType.DELETE == cType)
 		{
+			getEditor().close(false);
+		}
+		else if(cType == ChangeType.RENAME)
+		{
 			ResourcesUtil.closeEditor(getSite().getPage(), getEditorInput().getName());
 		}
 		
@@ -424,7 +428,8 @@ public class CodeFragmentViewerPage extends FormPage implements ProjectListener,
 			{
 				if(code.equals(fCode))
 				{
-					ResourcesUtil.closeEditor(getSite().getPage(), getEditorInput().getName());
+					getEditor().close(false);
+					break;
 				}
 			}
 		}
