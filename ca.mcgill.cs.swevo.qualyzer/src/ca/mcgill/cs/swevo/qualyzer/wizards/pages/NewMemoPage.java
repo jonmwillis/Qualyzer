@@ -137,7 +137,7 @@ public class NewMemoPage extends WizardPage
 		
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(fProject.getFolderName());
 		IProjectDescription description;
-		String name = "";
+		String name = ""; //$NON-NLS-1$
 		try
 		{
 			description = project.getDescription();
@@ -145,7 +145,7 @@ public class NewMemoPage extends WizardPage
 		}
 		catch (CoreException e)
 		{
-			gLogger.error("NewMemoPage: Could not open .project file", e);
+			gLogger.error("NewMemoPage: Could not open .project file", e); //$NON-NLS-1$
 		}
 		
 		
