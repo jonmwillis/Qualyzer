@@ -198,6 +198,11 @@
             id="ca.mcgill.cs.swevo.qualyzer.category.AudioCommands"
             name="%category.name.audioCommands">
       </category>
+      <command
+            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.ExportCodesHandler"
+            id="ca.mcgill.cs.swevo.qualyzer.commands.exportCodes"
+            name="Export Codes">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -649,6 +654,22 @@
                         operator="and">
                      <instanceof
                            value="org.eclipse.core.resources.IProject">
+                     </instanceof>
+                  </iterate>
+               </visibleWhen>
+            </command>
+            <command
+                  commandId="ca.mcgill.cs.swevo.qualyzer.commands.exportCodes"
+                  icon="icons/code_obj.png"
+                  label="Codes"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <iterate
+                        ifEmpty="false"
+                        operator="and">
+                     <instanceof
+                           value="ca.mcgill.cs.swevo.qualyzer.providers.WrapperCode">
                      </instanceof>
                   </iterate>
                </visibleWhen>
