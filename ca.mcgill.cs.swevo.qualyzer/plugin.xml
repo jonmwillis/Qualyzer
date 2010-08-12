@@ -145,16 +145,6 @@
             name="%command.name.importTranscript">
       </command>
       <command
-            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.CloseProjectHandler"
-            id="ca.mcgill.cs.swevo.qualyzer.commands.closeProject"
-            name="%command.name.closeProject">
-      </command>
-      <command
-            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.OpenProjectHandler"
-            id="ca.mcgill.cs.swevo.qualyzer.commands.openProject"
-            name="%command.name.openProject">
-      </command>
-      <command
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.AboutQualyzerHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.aboutQualyzer"
             name="%command.name.aboutQualyzer">
