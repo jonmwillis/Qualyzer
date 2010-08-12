@@ -225,11 +225,18 @@ public class CodeChooserDialog extends TitleAreaDialog
 			}
 		}
 		
+		CommonNavigator view = (CommonNavigator) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+		.getActivePage().findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+		
 		if(fCode == null)
 		{
 			fCode = Facade.getInstance().createCode(fCodeName.getText(), fDescription.getText(), fProject);
-			CommonNavigator view = (CommonNavigator) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-			.getActivePage().findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+			view.getCommonViewer().refresh();
+		}
+		else
+		{
+			fCode.setDescription(fDescription.getText());
+			Facade.getInstance().saveCodes(new Code[]{fCode});
 			view.getCommonViewer().refresh();
 		}
 		
