@@ -68,7 +68,7 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 public class CodeEditorPage extends FormPage implements CodeListener, ProjectListener, TranscriptListener, MemoListener
 {
 
-	private static final String EMPTY = "";
+	private static final String EMPTY = ""; //$NON-NLS-1$
 	private static final int THRESHHOLD = 18;
 	private static final int BORDER_SIZE = 10;
 

@@ -222,7 +222,7 @@ public class ExportCodesHandler extends AbstractHandler
 			
 			if(freq > 0)
 			{
-				documents.add("Memo:" + memo.getName());
+				documents.add(Messages.getString("handlers.ExportCodesHandler.memo") + memo.getName()); //$NON-NLS-1$
 				frequencies.add(freq);
 			}
 		}
@@ -257,7 +257,8 @@ public class ExportCodesHandler extends AbstractHandler
 			
 			if(freq > 0)
 			{
-				documents.add("Transcript:" + transcript.getName());
+				documents.add(Messages.getString("handlers.ExportCodesHandler.transcript") + //$NON-NLS-1$
+						transcript.getName()); 
 				frequencies.add(freq);
 			}
 		}
