@@ -25,12 +25,10 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.navigator.CommonNavigator;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.TestUtil;
 import ca.mcgill.cs.swevo.qualyzer.dialogs.RenameProjectDialog;
 import ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester;
@@ -44,21 +42,18 @@ import ca.mcgill.cs.swevo.qualyzer.model.Project;
  */
 public class RenameProjectHandlerTest
 {
-	/**
-	 * 
-	 */
+	
 	private static final String OTHER_PROJECT = "otherProject";
-	/**
-	 * 
-	 */
 	private static final String PROJECT_NAME = "project";
+	
 	private Project fProject;
+	private IWorkbenchPage fPage;
 	
 	@Before
 	public void setUp()
 	{
-		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		page.closeAllEditors(true);
+		fPage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		fPage.closeAllEditors(true);
 		fProject = TestUtil.createProject(PROJECT_NAME, "inves", "p1", "t1");
 	}
 	
@@ -77,11 +72,7 @@ public class RenameProjectHandlerTest
 		assertTrue(project.exists());
 		
 		TestUtil.setProjectExplorerSelection(project);
-		
-		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		System.out.println(activePage.getSelection());
-		System.out.println(((CommonNavigator) activePage.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID)).getCommonViewer().getSelection());
-		
+				
 		RenameProjectHandler handler = new RenameProjectHandler();
 		handler.setWindowsBlock(false);
 		handler.setTester(new IDialogTester(){
@@ -116,6 +107,8 @@ public class RenameProjectHandlerTest
 		assertEquals(fProject.getInvestigators().size(), 1);
 		assertEquals(fProject.getParticipants().size(), 1);
 		assertEquals(fProject.getTranscripts().size(), 1);
+		assertEquals(fPage.getEditorReferences().length, 0);
+		
 	}
 
 	

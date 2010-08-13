@@ -13,9 +13,8 @@ package ca.mcgill.cs.swevo.qualyzer.wizards.pages;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -74,14 +73,14 @@ public class AddInvestigatorPage extends WizardPage
 		}
 		
 		//Only allows the user to proceed if a valid name is entered
-		fNickname.addKeyListener(createKeyListener());
+		fNickname.addModifyListener(createKeyListener());
 		
 		label = new Label(fContainer, SWT.NULL);
 		label.setText(Messages.getString("wizards.pages.AddInvestigatorPage.fullName")); //$NON-NLS-1$
 		
 		fFullname = new Text(fContainer, SWT.BORDER | SWT.SINGLE);
 		fFullname.setText(""); //$NON-NLS-1$
-		fFullname.addKeyListener(createStringLengthValidator(
+		fFullname.addModifyListener(createStringLengthValidator(
 				Messages.getString("wizards.pages.AddInvestigatorPage.fullName"), fFullname)); //$NON-NLS-1$
 		
 		label = new Label(fContainer, SWT.NULL);
@@ -89,7 +88,7 @@ public class AddInvestigatorPage extends WizardPage
 		
 		fInstitution = new Text(fContainer, SWT.BORDER | SWT.SINGLE);
 		fInstitution.setText("");  //$NON-NLS-1$
-		fInstitution.addKeyListener(createStringLengthValidator(
+		fInstitution.addModifyListener(createStringLengthValidator(
 				Messages.getString("wizards.pages.AddInvestigatorPage.insitution"), fInstitution)); //$NON-NLS-1$
 		
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -129,14 +128,11 @@ public class AddInvestigatorPage extends WizardPage
 		return fInstitution.getText();
 	}
 	
-	private KeyListener createKeyListener()
+	private ModifyListener createKeyListener()
 	{
-		return new KeyListener(){
+		return new ModifyListener(){
 			@Override
-			public void keyPressed(KeyEvent e){}
-
-			@Override
-			public void keyReleased(KeyEvent e)
+			public void modifyText(ModifyEvent e)
 			{
 				InvestigatorValidator lValidator = new InvestigatorValidator(fNickname.getText(), fProject);
 				if(lValidator.isValid())
@@ -153,12 +149,12 @@ public class AddInvestigatorPage extends WizardPage
 		};
 	}
 	
-	private KeyAdapter createStringLengthValidator(final String pLabel, final Text pText)
+	private ModifyListener createStringLengthValidator(final String pLabel, final Text pText)
 	{
-		return new KeyAdapter(){
-						
+		return new ModifyListener(){
+
 			@Override
-			public void keyReleased(KeyEvent event)
+			public void modifyText(ModifyEvent e)
 			{
 				StringLengthValidator lValidator = new StringLengthValidator(pLabel, pText.getText());
 				
@@ -171,7 +167,7 @@ public class AddInvestigatorPage extends WizardPage
 				{
 					setPageComplete(false);
 					setErrorMessage(lValidator.getErrorMessage());
-				}
+				}	
 			}
 		};
 	}
@@ -200,6 +196,33 @@ public class AddInvestigatorPage extends WizardPage
 		investigator.setNickName(fNickname.getText());
 		investigator.setInstitution(fInstitution.getText());
 		return investigator;
+	}
+	
+	/**
+	 * For Testing.
+	 * @return
+	 */
+	public Text getNicknameText()
+	{
+		return fNickname;
+	}
+	
+	/**
+	 * For Testing.
+	 * @return
+	 */
+	public Text getFullNameText()
+	{
+		return fFullname;
+	}
+	
+	/**
+	 * For Testing.
+	 * @return
+	 */
+	public Text getInstitutionText()
+	{
+		return fInstitution;
 	}
 
 }
