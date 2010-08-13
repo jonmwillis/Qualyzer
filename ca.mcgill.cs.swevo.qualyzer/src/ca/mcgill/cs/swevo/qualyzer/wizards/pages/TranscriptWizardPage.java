@@ -23,6 +23,8 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -347,7 +349,7 @@ public class TranscriptWizardPage extends WizardPage
 		text.setText(""); //$NON-NLS-1$
 		GridData gd = new GridData(SWT.FILL, SWT.NULL, true, false);
 		text.setLayoutData(gd);
-		text.addKeyListener(createKeyListener());
+		text.addModifyListener(createKeyListener());
 		
 		return text;
 	}
@@ -355,11 +357,12 @@ public class TranscriptWizardPage extends WizardPage
 	/**
 	 * @return
 	 */
-	protected KeyAdapter createKeyListener()
+	protected ModifyListener createKeyListener()
 	{
-		return new KeyAdapter(){
+		return new ModifyListener(){
+
 			@Override
-			public void keyReleased(KeyEvent e)
+			public void modifyText(ModifyEvent e)
 			{
 				if(!fAudioFileSelected && !fName.getText().isEmpty())
 				{
@@ -370,6 +373,7 @@ public class TranscriptWizardPage extends WizardPage
 					}
 				}
 				validate();
+				
 			}
 		};
 	}
@@ -501,4 +505,21 @@ public class TranscriptWizardPage extends WizardPage
 		}
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	public Text getNameText()
+	{
+		return fName;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Table getTable()
+	{
+		return fTable;
+	}
 }
