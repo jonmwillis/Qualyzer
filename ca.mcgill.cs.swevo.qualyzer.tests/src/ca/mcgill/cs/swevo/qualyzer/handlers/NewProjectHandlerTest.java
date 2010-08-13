@@ -16,64 +16,78 @@ package ca.mcgill.cs.swevo.qualyzer.handlers;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.junit.Assert.assertNotNull;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import ca.mcgill.cs.swevo.qualyzer.TestUtil;
 import ca.mcgill.cs.swevo.qualyzer.dialogs.QualyzerWizardDialog;
 import ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester;
-import ca.mcgill.cs.swevo.qualyzer.editors.MemoEditor;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
-import ca.mcgill.cs.swevo.qualyzer.model.Memo;
+import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
 import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
-import ca.mcgill.cs.swevo.qualyzer.wizards.pages.NewMemoPage;
+import ca.mcgill.cs.swevo.qualyzer.wizards.pages.NewProjectPage;
 
 /**
  * @author Jonathan Faubert
  *
  */
-public class NewMemoHandlerTest
+public class NewProjectHandlerTest
 {
+	/**
+	 * 
+	 */
+	private static final String INSTITUTION = "institution";
+
+	/**
+	 * 
+	 */
+	private static final String FULL_NAME = "full name";
+
+	/**
+	 * 
+	 */
+	private static final String INVESTIGATOR = "Investigator";
+
 	private static final String PROJECT = "Project";
-	private static final String INV = "Inv";
-	private static final String MEMO_NAME = "memoHere";
 	
+	private IWorkbenchPage fPage;
 	private Project fProject;
 	private IProject wProject;
-	private IWorkbenchPage fPage;
 	
 	@Before
 	public void setUp()
 	{
 		fPage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		fPage.closeAllEditors(false);
-		fProject = Facade.getInstance().createProject(PROJECT, INV, "", "");
-		wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(PROJECT);
+		fProject = null;
+		wProject = null;
 	}
 	
 	@After
 	public void tearDown()
 	{
-		Facade.getInstance().deleteProject(fProject);
+		fProject = PersistenceManager.getInstance().getProject(PROJECT);
+		wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(PROJECT);
+		
+		if(fProject != null && wProject.exists())
+		{
+			Facade.getInstance().deleteProject(fProject);
+		}
 	}
 	
 	@Test
-	public void newMemoTest()
+	public void testNewProject()
 	{
-		assertTrue(wProject.exists());
-		TestUtil.setProjectExplorerSelection(wProject);
-		
-		NewMemoHandler handler = new NewMemoHandler();
+		NewProjectHandler handler = new NewProjectHandler();
 		handler.setWindowsBlock(false);
 		handler.setTester(new IDialogTester()
 		{
@@ -83,9 +97,12 @@ public class NewMemoHandlerTest
 			{
 				QualyzerWizardDialog wizard = (QualyzerWizardDialog) dialog;
 				
-				NewMemoPage page = (NewMemoPage) wizard.getCurrentPage();
+				NewProjectPage page = (NewProjectPage) wizard.getCurrentPage();
 				
-				page.getNameText().setText(MEMO_NAME);
+				page.getProjectNameText().setText(PROJECT);
+				page.getNickNameText().setText(INVESTIGATOR);
+				page.getFullNameText().setText(FULL_NAME);
+				page.getInstitutionText().setText(INSTITUTION);
 				
 				wizard.finishPressed();
 			}
@@ -101,18 +118,28 @@ public class NewMemoHandlerTest
 		}
 		
 		fProject = PersistenceManager.getInstance().getProject(PROJECT);
-		assertEquals(fProject.getMemos().size(), 1);
+		wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(PROJECT);
 		
-		Memo memo = fProject.getMemos().get(0);
-		assertEquals(memo.getName(), MEMO_NAME);
-		assertEquals(memo.getAuthor(), fProject.getInvestigators().get(0));
-		assertEquals(memo.getCode(), null);
-		assertEquals(memo.getTranscript(), null);
+		assertNotNull(fProject);
+		assertNotNull(wProject);
+		assertTrue(wProject.exists());
 		
-		assertEquals(fPage.getEditorReferences().length, 1);
-		IEditorPart editor = fPage.getActiveEditor();
+		assertEquals(fProject.getName(), PROJECT);
+		assertEquals(fProject.getFolderName(), PROJECT);
+		assertEquals(fProject.getInvestigators().size(), 1);
+		assertEquals(fProject.getCodes().size(), 0);
+		assertEquals(fProject.getParticipants().size(), 0);
+		assertEquals(fProject.getTranscripts().size(), 0);
+		assertEquals(fProject.getMemos().size(), 0);
 		
-		assertEquals(editor.getClass(), MemoEditor.class);
-		assertEquals(memo, ((MemoEditor) editor).getDocument());
+		Investigator inves = fProject.getInvestigators().get(0);
+		
+		assertEquals(inves.getNickName(), INVESTIGATOR);
+		assertEquals(inves.getFullName(), FULL_NAME);
+		assertEquals(inves.getInstitution(), INSTITUTION);
+		
+		assertEquals(fPage.getEditorReferences().length, 0);
+		
 	}
+	
 }
