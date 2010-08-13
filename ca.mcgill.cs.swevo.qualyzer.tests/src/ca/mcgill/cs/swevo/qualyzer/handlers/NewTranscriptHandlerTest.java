@@ -1,20 +1,10 @@
-/*******************************************************************************
- * Copyright (c) 2010 McGill University
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     McGill University - initial API and implementation
- *******************************************************************************/
 /**
  * 
  */
 package ca.mcgill.cs.swevo.qualyzer.handlers;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import org.eclipse.core.commands.ExecutionException;
@@ -31,23 +21,23 @@ import org.junit.Test;
 import ca.mcgill.cs.swevo.qualyzer.TestUtil;
 import ca.mcgill.cs.swevo.qualyzer.dialogs.QualyzerWizardDialog;
 import ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester;
-import ca.mcgill.cs.swevo.qualyzer.editors.MemoEditor;
+import ca.mcgill.cs.swevo.qualyzer.editors.TranscriptEditor;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
-import ca.mcgill.cs.swevo.qualyzer.model.Memo;
 import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
-import ca.mcgill.cs.swevo.qualyzer.wizards.pages.NewMemoPage;
+import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
+import ca.mcgill.cs.swevo.qualyzer.wizards.pages.TranscriptWizardPage;
 
 /**
  * @author Jonathan Faubert
  *
  */
-public class NewMemoHandlerTest
+public class NewTranscriptHandlerTest
 {
 	private static final String PROJECT = "Project";
-	private static final String INV = "Inv";
-	private static final String MEMO_NAME = "memoHere";
-	
+	private static final String INV = "Investigator";
+	private static final String PART = "Participant";
+	private static final String TRANSCRIPT = "Transcript";
 	private Project fProject;
 	private IProject wProject;
 	private IWorkbenchPage fPage;
@@ -58,6 +48,7 @@ public class NewMemoHandlerTest
 		fPage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		fPage.closeAllEditors(false);
 		fProject = Facade.getInstance().createProject(PROJECT, INV, "", "");
+		Facade.getInstance().createParticipant(PART, "", fProject);
 		wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(PROJECT);
 	}
 	
@@ -68,12 +59,11 @@ public class NewMemoHandlerTest
 	}
 	
 	@Test
-	public void newMemoTest()
+	public void NewTranscriptTest()
 	{
-		assertTrue(wProject.exists());
 		TestUtil.setProjectExplorerSelection(wProject);
 		
-		NewMemoHandler handler = new NewMemoHandler();
+		NewTranscriptHandler handler = new NewTranscriptHandler();
 		handler.setWindowsBlock(false);
 		handler.setTester(new IDialogTester()
 		{
@@ -83,9 +73,10 @@ public class NewMemoHandlerTest
 			{
 				QualyzerWizardDialog wizard = (QualyzerWizardDialog) dialog;
 				
-				NewMemoPage page = (NewMemoPage) wizard.getCurrentPage();
+				TranscriptWizardPage page = (TranscriptWizardPage) wizard.getCurrentPage();
 				
-				page.getNameText().setText(MEMO_NAME);
+				page.getNameText().setText(TRANSCRIPT);
+				page.getTable().select(0);
 				
 				wizard.finishPressed();
 			}
@@ -101,21 +92,23 @@ public class NewMemoHandlerTest
 		}
 		
 		fProject = PersistenceManager.getInstance().getProject(PROJECT);
-		assertEquals(fProject.getMemos().size(), 1);
 		
-		Memo memo = fProject.getMemos().get(0);
-		assertEquals(memo.getName(), MEMO_NAME);
-		assertEquals(memo.getAuthor(), fProject.getInvestigators().get(0));
-		assertEquals(memo.getCode(), null);
-		assertEquals(memo.getTranscript(), null);
+		assertEquals(fProject.getTranscripts().size(), 1);
+		
+		Transcript transcript = fProject.getTranscripts().get(0);
+		
+		assertEquals(transcript.getName(), TRANSCRIPT);
+		assertNull(transcript.getAudioFile());
+		assertEquals(transcript.getFileName(), TRANSCRIPT + ".rtf");
+		
+		Transcript lTranscript = Facade.getInstance().forceTranscriptLoad(transcript);
+		assertEquals(lTranscript.getParticipants().size(), 1);
+		assertEquals(lTranscript.getParticipants().get(0), fProject.getParticipants().get(0));
 		
 		assertEquals(fPage.getEditorReferences().length, 1);
+		
 		IEditorPart editor = fPage.getActiveEditor();
-		
-		assertEquals(editor.getClass(), MemoEditor.class);
-		assertEquals(memo, ((MemoEditor) editor).getDocument());
-		
-		Memo lMemo = Facade.getInstance().forceMemoLoad(memo);
-		assertEquals(lMemo.getParticipants().size(), 0);
+		assertEquals(editor.getClass(), TranscriptEditor.class);
+		assertEquals(((TranscriptEditor) editor).getDocument(), transcript);
 	}
 }
