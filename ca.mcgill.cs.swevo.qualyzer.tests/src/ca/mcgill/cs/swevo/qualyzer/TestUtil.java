@@ -115,9 +115,6 @@ public final class TestUtil
 			.getActivePage().findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
 		IStructuredSelection selection = new StructuredSelection(element);
 		view.getCommonViewer().setSelection(selection, true);
-		view.setFocus();
-		view.getSite().getSelectionProvider().setSelection(selection);
-		//PlatformUI.getWorkbench().getActiveWorkbenchWindow().setActivePage(view.getSite().getPage());
 	}
 	
 }
