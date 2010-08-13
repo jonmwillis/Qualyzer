@@ -113,8 +113,9 @@ public final class TestUtil
 	{
 		CommonNavigator view = (CommonNavigator) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 			.getActivePage().findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+		view.getCommonViewer().refresh();
 		IStructuredSelection selection = new StructuredSelection(element);
-		view.getCommonViewer().setSelection(selection, true);
+		view.selectReveal(selection);
 	}
 	
 }
