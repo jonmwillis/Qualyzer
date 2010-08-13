@@ -12,6 +12,9 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,6 +22,8 @@ import org.junit.Test;
 import ca.mcgill.cs.swevo.qualyzer.TestUtil;
 import ca.mcgill.cs.swevo.qualyzer.dialogs.QualyzerWizardDialog;
 import ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester;
+import ca.mcgill.cs.swevo.qualyzer.editors.InvestigatorFormEditor;
+import ca.mcgill.cs.swevo.qualyzer.editors.inputs.InvestigatorEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
 import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
@@ -104,6 +109,12 @@ public class AddInvestigatorHandlerTest
 		assertEquals(test.getNickName(), NAME);
 		assertEquals(test.getFullName(), FULL);
 		assertEquals(test.getInstitution(), INSTITUTE);
+				
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		InvestigatorEditorInput input = new InvestigatorEditorInput(test);
+		IEditorPart editor = page.getActiveEditor();
+		assertEquals(editor.getClass(), InvestigatorFormEditor.class);
+		assertEquals(editor.getEditorInput().getName(), input.getName());
 		
 	}
 }
