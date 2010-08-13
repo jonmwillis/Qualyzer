@@ -14,21 +14,25 @@ package ca.mcgill.cs.swevo.qualyzer.handlers;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.navigator.CommonNavigator;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
+import ca.mcgill.cs.swevo.qualyzer.dialogs.QualyzerWizardDialog;
+import ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester;
 import ca.mcgill.cs.swevo.qualyzer.wizards.NewProjectWizard;
 
 /**
  * Handler for the New Project Command.
  * 
  */
-public class NewProjectHandler extends AbstractHandler
+public class NewProjectHandler extends AbstractHandler implements ITestableHandler
 {
+
+	private IDialogTester fTester;
+	private boolean fWindowsBlock;
 
 	/**
 	 * Displays a New Project Wizard.
@@ -42,9 +46,13 @@ public class NewProjectHandler extends AbstractHandler
 	public Object execute(ExecutionEvent event) throws ExecutionException
 	{
 		NewProjectWizard wizard = new NewProjectWizard();
+		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		
-		WizardDialog dialog = new WizardDialog(HandlerUtil.getActiveShell(event), wizard);
+		QualyzerWizardDialog dialog = new QualyzerWizardDialog(shell, wizard);
+		dialog.create();
+		dialog.setBlockOnOpen(fWindowsBlock);
 		dialog.open();
+		fTester.execute(dialog);
 		
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		CommonNavigator view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
@@ -53,6 +61,43 @@ public class NewProjectHandler extends AbstractHandler
 		view.getCommonViewer().expandToLevel(wizard.getProjectReference(), 2);
 		
 		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#getTester()
+	 */
+	@Override
+	public IDialogTester getTester()
+	{
+		return fTester;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#isWindowsBlock()
+	 */
+	@Override
+	public boolean isWindowsBlock()
+	{
+		return fWindowsBlock;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#setTester(
+	 * ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester)
+	 */
+	@Override
+	public void setTester(IDialogTester tester)
+	{
+		fTester = tester;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#setWindowsBlock(boolean)
+	 */
+	@Override
+	public void setWindowsBlock(boolean windowsBlock)
+	{
+		fWindowsBlock = windowsBlock;
 	}
 
 }

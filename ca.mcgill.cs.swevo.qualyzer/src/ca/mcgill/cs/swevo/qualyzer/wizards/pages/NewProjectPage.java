@@ -13,8 +13,8 @@ package ca.mcgill.cs.swevo.qualyzer.wizards.pages;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -68,7 +68,7 @@ public class NewProjectPage extends WizardPage
 		label.setText(Messages.getString("wizards.pages.NewProjectPage.projectName")); //$NON-NLS-1$
 		fProjectName = new Text(fContainer, SWT.BORDER);
 		fProjectName.setText(""); //$NON-NLS-1$
-		fProjectName.addKeyListener(createKeyListener());
+		fProjectName.addModifyListener(createKeyListener());
 		
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		fProjectName.setLayoutData(gd);
@@ -83,7 +83,7 @@ public class NewProjectPage extends WizardPage
 		fNickname = new Text(group, SWT.BORDER | SWT.SINGLE);
 		fNickname.setText(fDefaultInvName); //$NON-NLS-1$
 		
-		fNickname.addKeyListener(createKeyListener());
+		fNickname.addModifyListener(createKeyListener());
 		
 		label = new Label(group, SWT.NULL);
 		label.setText(Messages.getString("wizards.pages.NewProjectPage.fullName")); //$NON-NLS-1$
@@ -143,14 +143,12 @@ public class NewProjectPage extends WizardPage
 	 * Validates input text.
 	 * @return
 	 */
-	private KeyListener createKeyListener()
+	private ModifyListener createKeyListener()
 	{
-		return new KeyListener(){
+		return new ModifyListener(){
+
 			@Override
-			public void keyPressed(KeyEvent e){}
-			
-			@Override
-			public void keyReleased(KeyEvent e) 
+			public void modifyText(ModifyEvent e)
 			{
 				ProjectValidator lValidator = new ProjectValidator(fProjectName.getText(), 
 						fNickname.getText(), ResourcesPlugin.getWorkspace().getRoot());
@@ -225,4 +223,41 @@ public class NewProjectPage extends WizardPage
 		fFullNameString = fFullname.getText();
 		fInstitutionString = fInstitution.getText();
 	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Text getProjectNameText()
+	{
+		return fProjectName;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Text getNickNameText()
+	{
+		return fNickname;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Text getFullNameText()
+	{
+		return fFullname;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Text getInstitutionText()
+	{
+		return fInstitution;
+	}
+	
 }
