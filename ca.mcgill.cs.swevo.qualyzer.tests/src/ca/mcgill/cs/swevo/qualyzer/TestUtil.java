@@ -23,6 +23,10 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.navigator.CommonNavigator;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Code;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
@@ -103,6 +107,17 @@ public final class TestUtil
 			}
 		}
 		return exists;
+	}
+	
+	public static final void setProjectExplorerSelection(Object element)
+	{
+		CommonNavigator view = (CommonNavigator) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+			.getActivePage().findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+		IStructuredSelection selection = new StructuredSelection(element);
+		view.getCommonViewer().setSelection(selection, true);
+		view.setFocus();
+		view.getSite().getSelectionProvider().setSelection(selection);
+		//PlatformUI.getWorkbench().getActiveWorkbenchWindow().setActivePage(view.getSite().getPage());
 	}
 	
 }

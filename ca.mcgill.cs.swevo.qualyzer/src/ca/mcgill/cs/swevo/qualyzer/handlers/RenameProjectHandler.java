@@ -27,6 +27,8 @@ import org.eclipse.ui.navigator.CommonNavigator;
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
 import ca.mcgill.cs.swevo.qualyzer.dialogs.RenameProjectDialog;
+import ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester;
+import ca.mcgill.cs.swevo.qualyzer.editors.NullTester;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
@@ -37,14 +39,21 @@ import ca.mcgill.cs.swevo.qualyzer.util.FileUtil;
  * 
  *
  */
-public class RenameProjectHandler extends AbstractHandler
+public class RenameProjectHandler extends AbstractHandler implements ITestableHandler
 {
+	
+
+	private IDialogTester fTester = new NullTester();
+	private boolean fWindowBlock = true;
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
 	{
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		ISelection selection = page.getSelection();
+		CommonNavigator view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+		
+		ISelection selection = view.getCommonViewer().getSelection();
+		
 		if(selection != null && selection instanceof IStructuredSelection)
 		{
 			IStructuredSelection struct = (IStructuredSelection) selection;
@@ -54,16 +63,17 @@ public class RenameProjectHandler extends AbstractHandler
 				Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 				Project project = ResourcesUtil.getProject(element);
 				RenameProjectDialog dialog = new RenameProjectDialog(shell, project);
+				dialog.setBlockOnOpen(fWindowBlock);
 				dialog.create();
-				if(dialog.open() == Window.OK)
+				dialog.open();
+				fTester.execute(dialog);
+				if(dialog.getReturnCode() == Window.OK)
 				{
 					try
 					{
 						String oldFolderName = project.getFolderName();
 						Facade.getInstance().renameProject(project, dialog.getNewName());
 						
-						CommonNavigator view = (CommonNavigator) page.findView(
-								QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
 						view.getCommonViewer().refresh();
 						
 						FileUtil.renameProject(oldFolderName, dialog.getNewName());
@@ -82,6 +92,43 @@ public class RenameProjectHandler extends AbstractHandler
 			}
 		}
 		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#getTester()
+	 */
+	@Override
+	public IDialogTester getTester()
+	{
+		return fTester;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#isWindowsBlock()
+	 */
+	@Override
+	public boolean isWindowsBlock()
+	{
+		return fWindowBlock;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#setTester(
+	 * ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester)
+	 */
+	@Override
+	public void setTester(IDialogTester tester)
+	{
+		fTester = tester;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#setWindowsBlock(boolean)
+	 */
+	@Override
+	public void setWindowsBlock(boolean windowsBlock)
+	{
+		fWindowBlock = windowsBlock;
 	}
 
 }

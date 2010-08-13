@@ -26,6 +26,7 @@ import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
 import ca.mcgill.cs.swevo.qualyzer.model.Memo;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
+import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 
@@ -146,7 +147,7 @@ public class NavigatorLabelProvider extends LabelProvider implements ILabelProvi
 
 		if (anElement instanceof IProject)
 		{
-			output = ((IProject) anElement).getName();
+			output = PersistenceManager.getInstance().getProject(((IProject) anElement).getName()).getName();
 		}
 		else if(anElement instanceof Project)
 		{
