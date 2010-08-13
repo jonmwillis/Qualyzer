@@ -42,7 +42,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Project;
  * @author Jonathan Faubert
  *
  */
-public class RenameHandlerTest
+public class RenameProjectHandlerTest
 {
 	/**
 	 * 
