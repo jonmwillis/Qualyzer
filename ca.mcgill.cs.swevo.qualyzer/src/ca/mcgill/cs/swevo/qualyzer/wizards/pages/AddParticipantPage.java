@@ -16,9 +16,8 @@ package ca.mcgill.cs.swevo.qualyzer.wizards.pages;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -64,13 +63,13 @@ public class AddParticipantPage extends WizardPage
 		label.setText(Messages.getString("wizards.pages.AddParticipantPage.participantId")); //$NON-NLS-1$
 		fIdText = new Text(fContainer, SWT.BORDER);
 		fIdText.setText(""); //$NON-NLS-1$
-		fIdText.addKeyListener(createKeyListener());
+		fIdText.addModifyListener(createKeyListener());
 		
 		label = new Label(fContainer, SWT.NULL);
 		label.setText(Messages.getString("wizards.pages.AddParticipantPage.fullName")); //$NON-NLS-1$
 		fFullNameText = new Text(fContainer, SWT.BORDER);
 		fFullNameText.setText("");  //$NON-NLS-1$
-		fFullNameText.addKeyListener(createStringLengthValidator(
+		fFullNameText.addModifyListener(createStringLengthValidator(
 				Messages.getString("wizards.pages.AddParticipantPage.fullName"), fFullNameText)); //$NON-NLS-1$
 		
 		setGridData();
@@ -81,15 +80,12 @@ public class AddParticipantPage extends WizardPage
 	/**
 	 * @return
 	 */
-	private KeyListener createKeyListener()
+	private ModifyListener createKeyListener()
 	{
-		return new KeyListener(){
+		return new ModifyListener(){
 
 			@Override
-			public void keyPressed(KeyEvent e){}
-
-			@Override
-			public void keyReleased(KeyEvent e)
+			public void modifyText(ModifyEvent e)
 			{
 				ParticipantValidator lValidator = new ParticipantValidator(fIdText.getText(), fProject);
 				if(lValidator.isValid())
@@ -103,15 +99,16 @@ public class AddParticipantPage extends WizardPage
 					setErrorMessage(lValidator.getErrorMessage());
 				}
 			}
+
 		};
 	}
 	
-	private KeyAdapter createStringLengthValidator(final String pLabel, final Text pText)
+	private ModifyListener createStringLengthValidator(final String pLabel, final Text pText)
 	{
-		return new KeyAdapter(){
-						
+		return new ModifyListener(){
+
 			@Override
-			public void keyReleased(KeyEvent event)
+			public void modifyText(ModifyEvent e)
 			{
 				StringLengthValidator lValidator = new StringLengthValidator(pLabel, pText.getText());
 				
@@ -124,7 +121,7 @@ public class AddParticipantPage extends WizardPage
 				{
 					setPageComplete(false);
 					setErrorMessage(lValidator.getErrorMessage());
-				}
+				}	
 			}
 		};
 	}
@@ -165,6 +162,23 @@ public class AddParticipantPage extends WizardPage
 		participant.setParticipantId(getParticipantId());
 		participant.setFullName(getFullname());
 		return participant;
+	}
+
+	/**
+	 * @return
+	 */
+	public Text getIDText()
+	{
+		return fIdText;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Text getFullnameText()
+	{
+		return fFullNameText;
 	}
 
 }
