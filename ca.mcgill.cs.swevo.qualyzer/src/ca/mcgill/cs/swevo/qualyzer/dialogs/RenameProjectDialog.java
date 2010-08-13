@@ -108,7 +108,7 @@ public class RenameProjectDialog extends TitleAreaDialog
 	 * @see org.eclipse.jface.dialogs.Dialog#okPressed()
 	 */
 	@Override
-	protected void okPressed()
+	public void okPressed()
 	{
 		fNewName = fNameText.getText();
 		super.okPressed();
@@ -120,6 +120,15 @@ public class RenameProjectDialog extends TitleAreaDialog
 	public String getNewName()
 	{
 		return fNewName;
+	}
+	
+	/**
+	 * Get the Text field to input a name, for use in testing.
+	 * @return
+	 */
+	public Text getNameField()
+	{
+		return fNameText;
 	}
 
 }
