@@ -22,6 +22,7 @@ import org.eclipse.ui.navigator.CommonNavigator;
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.dialogs.QualyzerWizardDialog;
 import ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester;
+import ca.mcgill.cs.swevo.qualyzer.editors.NullTester;
 import ca.mcgill.cs.swevo.qualyzer.wizards.NewProjectWizard;
 
 /**
@@ -31,8 +32,8 @@ import ca.mcgill.cs.swevo.qualyzer.wizards.NewProjectWizard;
 public class NewProjectHandler extends AbstractHandler implements ITestableHandler
 {
 
-	private IDialogTester fTester;
-	private boolean fWindowsBlock;
+	private IDialogTester fTester = new NullTester();
+	private boolean fWindowsBlock = true;
 
 	/**
 	 * Displays a New Project Wizard.
