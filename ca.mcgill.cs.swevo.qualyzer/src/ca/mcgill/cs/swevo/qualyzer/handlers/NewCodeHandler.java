@@ -23,6 +23,7 @@ import org.eclipse.ui.navigator.CommonNavigator;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.dialogs.NewCodeDialog;
+import ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.providers.WrapperCode;
@@ -32,14 +33,19 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
  * Handler for the new code command.
  *
  */
-public class NewCodeHandler extends AbstractHandler
+public class NewCodeHandler extends AbstractHandler implements ITestableHandler
 {
+
+	private IDialogTester fTester;
+	private boolean fWindowsBlock;
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
 	{
 		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		ISelection selection = activePage.getSelection();
+		CommonNavigator viewer = (CommonNavigator) activePage.findView(
+				QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+		ISelection selection = viewer.getCommonViewer().getSelection();
 		
 		if(selection != null && selection instanceof IStructuredSelection)
 		{
@@ -48,16 +54,18 @@ public class NewCodeHandler extends AbstractHandler
 			
 			Project project = ResourcesUtil.getProject(element);
 			
-			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-				.getActivePage().getActivePart().getSite().getShell();
+			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			
 			NewCodeDialog dialog = new NewCodeDialog(shell, project);
 			dialog.create();
-			if(dialog.open() == Window.OK)
+			dialog.setBlockOnOpen(fWindowsBlock);
+			dialog.open();
+			fTester.execute(dialog);
+			
+			if(dialog.getReturnCode() == Window.OK)
 			{
 				Facade.getInstance().createCode(dialog.getName(), dialog.getDescription(), project);
-				CommonNavigator viewer = (CommonNavigator) activePage.findView(
-						QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+				
 				viewer.getCommonViewer().refresh();
 				
 				ResourcesUtil.openEditor(activePage, new WrapperCode(project));
@@ -65,6 +73,43 @@ public class NewCodeHandler extends AbstractHandler
 		}
 		
 		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#getTester()
+	 */
+	@Override
+	public IDialogTester getTester()
+	{
+		return fTester;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#isWindowsBlock()
+	 */
+	@Override
+	public boolean isWindowsBlock()
+	{
+		return fWindowsBlock;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#setTester(
+	 * ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester)
+	 */
+	@Override
+	public void setTester(IDialogTester tester)
+	{
+		fTester = tester;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#setWindowsBlock(boolean)
+	 */
+	@Override
+	public void setWindowsBlock(boolean windowsBlock)
+	{
+		fWindowsBlock = windowsBlock;
 	}
 
 }
