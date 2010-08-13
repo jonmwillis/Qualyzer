@@ -4,6 +4,7 @@
 package ca.mcgill.cs.swevo.qualyzer.handlers;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.eclipse.core.commands.ExecutionException;
@@ -54,11 +55,14 @@ public class AddInvestigatorHandlerTest
 	private static final String NAME = "jon";
 	private Project fProject;
 	private IProject wProject;
+	private IWorkbenchPage fPage;
 	
 	@Before
 	public void setUp()
 	{
-		fProject = Facade.getInstance().createProject(PROJECT, "inv", "", "");
+		fPage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		fPage.closeAllEditors(false);
+		fProject = TestUtil.createProject(PROJECT, "first", "other", "trans");
 		wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(PROJECT);
 	}
 	
@@ -71,6 +75,7 @@ public class AddInvestigatorHandlerTest
 	@Test
 	public void testAddInvestigator()
 	{
+		assertTrue(wProject.exists());
 		TestUtil.setProjectExplorerSelection(wProject);
 		
 		AddInvestigatorHandler handler = new AddInvestigatorHandler();
@@ -109,10 +114,9 @@ public class AddInvestigatorHandlerTest
 		assertEquals(test.getNickName(), NAME);
 		assertEquals(test.getFullName(), FULL);
 		assertEquals(test.getInstitution(), INSTITUTE);
-				
-		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		
 		InvestigatorEditorInput input = new InvestigatorEditorInput(test);
-		IEditorPart editor = page.getActiveEditor();
+		IEditorPart editor = fPage.getActiveEditor();
 		assertEquals(editor.getClass(), InvestigatorFormEditor.class);
 		assertEquals(editor.getEditorInput().getName(), input.getName());
 		
