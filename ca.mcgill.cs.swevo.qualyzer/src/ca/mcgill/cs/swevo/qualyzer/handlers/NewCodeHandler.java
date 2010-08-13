@@ -24,6 +24,7 @@ import org.eclipse.ui.navigator.CommonNavigator;
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.dialogs.NewCodeDialog;
 import ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester;
+import ca.mcgill.cs.swevo.qualyzer.editors.NullTester;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.providers.WrapperCode;
@@ -36,8 +37,8 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 public class NewCodeHandler extends AbstractHandler implements ITestableHandler
 {
 
-	private IDialogTester fTester;
-	private boolean fWindowsBlock;
+	private IDialogTester fTester = new NullTester();
+	private boolean fWindowsBlock = true;
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException

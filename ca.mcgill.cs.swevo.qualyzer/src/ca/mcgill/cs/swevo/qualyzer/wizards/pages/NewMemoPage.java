@@ -377,4 +377,13 @@ public class NewMemoPage extends WizardPage
 		
 		return null;
 	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Text getNameText()
+	{
+		return fName;
+	}
 }
