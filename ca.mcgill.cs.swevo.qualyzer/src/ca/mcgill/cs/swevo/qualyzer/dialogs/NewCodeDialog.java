@@ -15,8 +15,8 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -74,7 +74,7 @@ public class NewCodeDialog extends TitleAreaDialog
 		fNameText = new Text(composite, SWT.BORDER);
 		fNameText.setText(""); //$NON-NLS-1$
 		fNameText.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
-		fNameText.addKeyListener(createKeyAdapter());
+		fNameText.addModifyListener(createKeyAdapter());
 		
 		label = new Label(composite, SWT.NULL);
 		label.setText(Messages.getString("dialogs.NewCodeDialog.description")); //$NON-NLS-1$
@@ -88,12 +88,12 @@ public class NewCodeDialog extends TitleAreaDialog
 	/**
 	 * @return
 	 */
-	private KeyAdapter createKeyAdapter()
+	private ModifyListener createKeyAdapter()
 	{
-		return new KeyAdapter(){
-			
+		return new ModifyListener(){
+
 			@Override
-			public void keyReleased(KeyEvent e)
+			public void modifyText(ModifyEvent e)
 			{
 				CodeValidator lValidator = new CodeValidator(fNameText.getText(), fProject);
 				
@@ -112,7 +112,7 @@ public class NewCodeDialog extends TitleAreaDialog
 	}
 	
 	@Override
-	protected void okPressed()
+	public void okPressed()
 	{
 		fName = fNameText.getText();
 		fDescription = fDescriptionText.getText();
@@ -135,6 +135,24 @@ public class NewCodeDialog extends TitleAreaDialog
 	public String getDescription()
 	{
 		return fDescription;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Text getNameText()
+	{
+		return fNameText;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public StyledText getDescriptionText()
+	{
+		return fDescriptionText;
 	}
 	
 }
