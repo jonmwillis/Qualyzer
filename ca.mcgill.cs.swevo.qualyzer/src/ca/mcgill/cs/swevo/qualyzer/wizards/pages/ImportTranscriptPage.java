@@ -13,8 +13,8 @@ package ca.mcgill.cs.swevo.qualyzer.wizards.pages;
 import java.io.File;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -69,7 +69,7 @@ public class ImportTranscriptPage extends TranscriptWizardPage
 		fTranscriptFile.setText(""); //$NON-NLS-1$
 		gd = new GridData(SWT.FILL, SWT.NULL, true, false);
 		fTranscriptFile.setLayoutData(gd);
-		fTranscriptFile.addKeyListener(createKeyListener());
+		fTranscriptFile.addModifyListener(createKeyListener());
 		
 		Button button = new Button(composite, SWT.PUSH);
 		button.addSelectionListener(createNewSelectionListener());
@@ -122,11 +122,12 @@ public class ImportTranscriptPage extends TranscriptWizardPage
 	}
 
 	@Override
-	protected KeyAdapter createKeyListener()
+	protected ModifyListener createKeyListener()
 	{
-		return new KeyAdapter(){
+		return new ModifyListener(){
+
 			@Override
-			public void keyReleased(KeyEvent e)
+			public void modifyText(ModifyEvent e)
 			{
 				if(!fAudioFileSelected && !fName.getText().isEmpty())
 				{
