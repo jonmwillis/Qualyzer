@@ -26,6 +26,8 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.navigator.CommonNavigator;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
+import ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester;
+import ca.mcgill.cs.swevo.qualyzer.editors.NullTester;
 import ca.mcgill.cs.swevo.qualyzer.model.Annotation;
 import ca.mcgill.cs.swevo.qualyzer.model.CodeEntry;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
@@ -39,10 +41,12 @@ import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
  * Handler for the Delete Investigator Command.
  *
  */
-public class DeleteInvestigatorHandler extends AbstractHandler
+public class DeleteInvestigatorHandler extends AbstractHandler implements ITestableHandler
 {
 
 	private static final String NEWLINE = "\n"; //$NON-NLS-1$
+	private IDialogTester fTester = new NullTester();
+	private boolean fWindowsBlock = true;
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
@@ -310,6 +314,43 @@ public class DeleteInvestigatorHandler extends AbstractHandler
 			}
 		}
 		return count;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#getTester()
+	 */
+	@Override
+	public IDialogTester getTester()
+	{
+		return fTester;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#isWindowsBlock()
+	 */
+	@Override
+	public boolean isWindowsBlock()
+	{
+		return fWindowsBlock;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#setTester(
+	 * ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester)
+	 */
+	@Override
+	public void setTester(IDialogTester tester)
+	{
+		fTester = tester;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#setWindowsBlock(boolean)
+	 */
+	@Override
+	public void setWindowsBlock(boolean windowsBlock)
+	{
+		fWindowsBlock = windowsBlock;
 	}
 
 }

@@ -80,7 +80,7 @@ public class MemoDeleteDialog extends TitleAreaDialog
 	 * @see org.eclipse.jface.dialogs.Dialog#okPressed()
 	 */
 	@Override
-	protected void okPressed()
+	public void okPressed()
 	{
 		fCodes = fButton.getSelection();
 		super.okPressed();
@@ -93,5 +93,14 @@ public class MemoDeleteDialog extends TitleAreaDialog
 	public boolean deleteCodes()
 	{
 		return fCodes;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Button getCheckBox()
+	{
+		return fButton;
 	}
 }

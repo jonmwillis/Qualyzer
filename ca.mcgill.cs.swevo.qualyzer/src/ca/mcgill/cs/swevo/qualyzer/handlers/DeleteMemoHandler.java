@@ -26,13 +26,14 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.dialogs.MemoDeleteDialog;
+import ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester;
+import ca.mcgill.cs.swevo.qualyzer.editors.NullTester;
 import ca.mcgill.cs.swevo.qualyzer.model.Code;
 import ca.mcgill.cs.swevo.qualyzer.model.CodeEntry;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
@@ -45,17 +46,20 @@ import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
  * Verifies that the memos can be deleted and then prompts for confirmation and deletes them.
  *
  */
-public class DeleteMemoHandler extends AbstractHandler
+public class DeleteMemoHandler extends AbstractHandler implements ITestableHandler
 {
 	private static final String MEMO = File.separator + "memos" + File.separator; //$NON-NLS-1$
 	private final Logger fLogger = LoggerFactory.getLogger(DeleteMemoHandler.class);
+	private IDialogTester fTester = new NullTester();
+	private boolean fWindowsBlock = true;
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
 	{
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		ISelection selection = page.getSelection();
-		Shell shell = HandlerUtil.getActiveShell(event).getShell();
+		CommonNavigator view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+		ISelection selection = view.getCommonViewer().getSelection();
+		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		
 		if(selection != null && selection instanceof IStructuredSelection)
 		{
@@ -101,9 +105,11 @@ public class DeleteMemoHandler extends AbstractHandler
 	{
 		MemoDeleteDialog dialog = new MemoDeleteDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
 		dialog.create();
-		int check = dialog.open();
+		dialog.setBlockOnOpen(fWindowsBlock);
+		dialog.open();
+		fTester.execute(dialog);
 			
-		if(check == Window.OK)
+		if(dialog.getReturnCode() == Window.OK)
 		{	
 			for(Memo memo : toDelete)
 			{
@@ -206,6 +212,43 @@ public class DeleteMemoHandler extends AbstractHandler
 			}
 		}
 		return codes;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#getTester()
+	 */
+	@Override
+	public IDialogTester getTester()
+	{
+		return fTester;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#isWindowsBlock()
+	 */
+	@Override
+	public boolean isWindowsBlock()
+	{
+		return fWindowsBlock;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#setTester(
+	 * ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester)
+	 */
+	@Override
+	public void setTester(IDialogTester tester)
+	{
+		fTester = tester;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#setWindowsBlock(boolean)
+	 */
+	@Override
+	public void setWindowsBlock(boolean windowsBlock)
+	{
+		fWindowsBlock = windowsBlock;
 	}
 
 }
