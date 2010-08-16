@@ -13,6 +13,7 @@ package ca.mcgill.cs.swevo.qualyzer.model.validation;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 
 
 /**
@@ -54,7 +55,7 @@ public class ProjectValidator extends AbstractValidator
 		{
 			IProject wProject = fRoot.getProject(fName.replace(' ', '_'));
 			
-			if(wProject.exists())
+			if(projectExists(wProject))
 			{
 				fMessage = Messages.getString("model.validation.ProjectValidator.alreadyExists"); //$NON-NLS-1$
 				lReturn = false;
@@ -72,5 +73,29 @@ public class ProjectValidator extends AbstractValidator
 			}
 		}
 		return lReturn;
+	}
+
+	/**
+	 * @param wProject
+	 * @return
+	 */
+	private boolean projectExists(IProject wProject)
+	{
+		if(wProject.exists())
+		{
+			return true;
+		}
+		else
+		{
+			for(IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects())
+			{
+				if(project.getName().equalsIgnoreCase(wProject.getName()))
+				{
+					return true;
+				}
+			}
+				
+			return false;
+		}
 	}
 }
