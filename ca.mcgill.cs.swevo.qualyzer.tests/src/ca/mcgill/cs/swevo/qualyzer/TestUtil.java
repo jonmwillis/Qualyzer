@@ -57,7 +57,7 @@ public final class TestUtil
 		List<Participant> participants = new ArrayList<Participant>();
 		participants.add(participant);
 		FileUtil.setupTranscriptFiles(transcriptName, projectName, "", ""); //$NON-NLS-1$
-		Transcript transcript = facade.createTranscript(transcriptName, "", "", participants, project);
+		Transcript transcript = facade.createTranscript(transcriptName, "01/01/2001", "", participants, project);
 		fillFile(project.getName(), transcript.getFileName());
 		return project;
 	}
@@ -68,7 +68,7 @@ public final class TestUtil
 		Project project = facade.createProject(projectName, investigatorName, investigatorName, "");
 		
 		FileUtil.setupMemoFiles(memoName, projectName, "");
-		facade.createMemo(memoName, "", project.getInvestigators().get(0), new ArrayList<Participant>(), 
+		facade.createMemo(memoName, "01/01/1989", project.getInvestigators().get(0), new ArrayList<Participant>(), 
 				project, null, null);
 		
 		return project;
