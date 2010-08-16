@@ -109,5 +109,23 @@ public class TranscriptDeleteDialog extends TitleAreaDialog
 		return fDeleteCodes;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
+	public Button getParticipantButton()
+	{
+		return fParticipantButton;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Button getCodeButton()
+	{
+		return fCodeButton;
+	}
+	
 	
 }

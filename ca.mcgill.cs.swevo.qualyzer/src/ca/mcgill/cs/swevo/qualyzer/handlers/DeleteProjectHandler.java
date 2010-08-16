@@ -21,6 +21,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
+import ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester;
+import ca.mcgill.cs.swevo.qualyzer.editors.NullTester;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
@@ -29,8 +31,11 @@ import ca.mcgill.cs.swevo.qualyzer.model.Project;
  * Handler for the Delete Project Command.
  *
  */
-public class DeleteProjectHandler extends AbstractHandler
+public class DeleteProjectHandler extends AbstractHandler implements ITestableHandler
 {
+
+	private boolean fWindowsBlock = true;
+	private IDialogTester fTester = new NullTester();
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
@@ -43,7 +48,7 @@ public class DeleteProjectHandler extends AbstractHandler
 			for(Object element : ((IStructuredSelection) selection).toArray())
 			{
 				if(element instanceof IProject)
-				{	
+				{
 					boolean confirm = MessageDialog.openConfirm(shell, 
 							Messages.getString("handler.DeleteProjectHandler.deleteProject"),  //$NON-NLS-1$
 							Messages.getString("handler.DeleteProjectHandler.confirm")); //$NON-NLS-1$
@@ -58,6 +63,43 @@ public class DeleteProjectHandler extends AbstractHandler
 		}
 		
 		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#getTester()
+	 */
+	@Override
+	public IDialogTester getTester()
+	{
+		return fTester;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#isWindowsBlock()
+	 */
+	@Override
+	public boolean isWindowsBlock()
+	{
+		return fWindowsBlock;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#setTester(
+	 * ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester)
+	 */
+	@Override
+	public void setTester(IDialogTester tester)
+	{
+		fTester = tester;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#setWindowsBlock(boolean)
+	 */
+	@Override
+	public void setWindowsBlock(boolean windowsBlock)
+	{
+		fWindowsBlock = windowsBlock;
 	}
 
 }
