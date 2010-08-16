@@ -61,6 +61,18 @@ public final class TestUtil
 		fillFile(project.getName(), transcript.getFileName());
 		return project;
 	}
+	
+	public static final Project createProject(String projectName, String investigatorName, String memoName)
+	{
+		Facade facade = Facade.getInstance();
+		Project project = facade.createProject(projectName, investigatorName, investigatorName, "");
+		
+		FileUtil.setupMemoFiles(memoName, projectName, "");
+		facade.createMemo(memoName, "", project.getInvestigators().get(0), new ArrayList<Participant>(), 
+				project, null, null);
+		
+		return project;
+	}
 
 	private static final void fillFile(String projectName, String fileName)
 	{
