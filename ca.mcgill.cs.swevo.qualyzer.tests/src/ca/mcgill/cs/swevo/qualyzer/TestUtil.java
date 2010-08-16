@@ -131,4 +131,14 @@ public final class TestUtil
 		view.selectReveal(selection);
 	}
 	
+	public static final void setProjectExplorerSelection(Object[] elements)
+	{
+	CommonNavigator view = (CommonNavigator) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+		.getActivePage().findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+	view.getCommonViewer().refresh();
+	view.getCommonViewer().expandAll();
+	IStructuredSelection selection = new StructuredSelection(elements);
+	view.selectReveal(selection);
+	}
+	
 }
