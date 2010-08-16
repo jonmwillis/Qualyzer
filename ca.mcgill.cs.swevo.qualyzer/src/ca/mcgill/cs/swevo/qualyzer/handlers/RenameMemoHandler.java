@@ -28,6 +28,8 @@ import org.eclipse.ui.navigator.CommonNavigator;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.dialogs.RenameMemoDialog;
+import ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester;
+import ca.mcgill.cs.swevo.qualyzer.editors.NullTester;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Memo;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
@@ -37,7 +39,7 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
  * 
  *
  */
-public class RenameMemoHandler extends AbstractHandler
+public class RenameMemoHandler extends AbstractHandler implements ITestableHandler
 {
 
 	
@@ -48,14 +50,17 @@ public class RenameMemoHandler extends AbstractHandler
 	private static final String MEMO = File.separator + "memos" + File.separator; //$NON-NLS-1$
 	private static final String EXT = ".rtf"; //$NON-NLS-1$
 	private boolean fClosed = false;
+	private IDialogTester fTester = new NullTester();
+	private boolean fWindowsBlock = true;
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
 	{
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		CommonNavigator view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		
-		ISelection selection = page.getSelection();
+		ISelection selection = view.getCommonViewer().getSelection();
 		
 		if(selection != null && selection instanceof IStructuredSelection)
 		{
@@ -67,14 +72,17 @@ public class RenameMemoHandler extends AbstractHandler
 				RenameMemoDialog dialog = new RenameMemoDialog(shell, project);
 				dialog.setOldName(currentName);
 				dialog.create();
-				if(dialog.open() == Window.OK)
+				dialog.setBlockOnOpen(fWindowsBlock);
+				dialog.open();
+				fTester.execute(dialog);
+				
+				if(dialog.getReturnCode() == Window.OK)
 				{
 					rename((Memo) element, dialog.getName());
 					
 					Facade.getInstance().saveMemo((Memo) element);
 					
-					((CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID))
-						.getCommonViewer().refresh();
+					view.getCommonViewer().refresh();
 					
 					if(fClosed)
 					{
@@ -110,6 +118,43 @@ public class RenameMemoHandler extends AbstractHandler
 		
 		memo.setName(name);
 		memo.setFileName(name.replace(' ', '_')+EXT);
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#getTester()
+	 */
+	@Override
+	public IDialogTester getTester()
+	{
+		return fTester;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#isWindowsBlock()
+	 */
+	@Override
+	public boolean isWindowsBlock()
+	{
+		return fWindowsBlock;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#setTester(
+	 * ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester)
+	 */
+	@Override
+	public void setTester(IDialogTester tester)
+	{
+		fTester = tester;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#setWindowsBlock(boolean)
+	 */
+	@Override
+	public void setWindowsBlock(boolean windowsBlock)
+	{
+		fWindowsBlock = windowsBlock;
 	}
 
 }
