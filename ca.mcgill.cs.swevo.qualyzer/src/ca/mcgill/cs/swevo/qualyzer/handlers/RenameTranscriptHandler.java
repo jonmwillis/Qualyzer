@@ -23,6 +23,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
@@ -31,6 +32,8 @@ import org.eclipse.ui.navigator.CommonNavigator;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.dialogs.RenameDialog;
+import ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester;
+import ca.mcgill.cs.swevo.qualyzer.editors.NullTester;
 import ca.mcgill.cs.swevo.qualyzer.model.AudioFile;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
@@ -42,7 +45,7 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
  * The transcript version. Renames the transcript file, transcript object, and audio file/object.
  *
  */
-public class RenameTranscriptHandler extends AbstractHandler
+public class RenameTranscriptHandler extends AbstractHandler implements ITestableHandler
 {
 	private static final String DOT = "."; //$NON-NLS-1$
 	private static final String EXT = ".rtf"; //$NON-NLS-1$
@@ -50,13 +53,15 @@ public class RenameTranscriptHandler extends AbstractHandler
 	private static final String AUDIO = File.separator+"audio"+File.separator; //$NON-NLS-1$
 	
 	private boolean fClosed = false;
+	private IDialogTester fTester = new NullTester();
+	private boolean fWindowsBlock = true;
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
 	{
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		ISelection selection = page.getSelection();
 		CommonNavigator view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+		ISelection selection = view.getCommonViewer().getSelection();
 		
 		if(selection != null && selection instanceof IStructuredSelection)
 		{
@@ -65,8 +70,9 @@ public class RenameTranscriptHandler extends AbstractHandler
 			if(element instanceof Transcript)
 			{
 				Project project = ResourcesUtil.getProject(element);
-
-				RenameDialog dialog = new RenameDialog(HandlerUtil.getActiveShell(event).getShell(), project);
+				
+				Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+				RenameDialog dialog = new RenameDialog(shell, project);
 
 				dialog.create();
 				dialog.setCurrentName(((Transcript) element).getName());
@@ -79,7 +85,11 @@ public class RenameTranscriptHandler extends AbstractHandler
 					return null;
 				}
 				
-				if(dialog.open() == Window.OK)
+				dialog.setBlockOnOpen(fWindowsBlock);
+				dialog.open();
+				fTester.execute(dialog);
+				
+				if(dialog.getReturnCode() == Window.OK)
 				{
 					if(element instanceof Transcript)
 					{
@@ -182,6 +192,43 @@ public class RenameTranscriptHandler extends AbstractHandler
 		String fileName = dialog.open();
 		origFile = new File(fileName);
 		return origFile;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#getTester()
+	 */
+	@Override
+	public IDialogTester getTester()
+	{
+		return fTester;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#isWindowsBlock()
+	 */
+	@Override
+	public boolean isWindowsBlock()
+	{
+		return fWindowsBlock;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#setTester(
+	 * ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester)
+	 */
+	@Override
+	public void setTester(IDialogTester tester)
+	{
+		fTester = tester;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#setWindowsBlock(boolean)
+	 */
+	@Override
+	public void setWindowsBlock(boolean windowsBlock)
+	{
+		fWindowsBlock = windowsBlock;
 	}
 
 }
