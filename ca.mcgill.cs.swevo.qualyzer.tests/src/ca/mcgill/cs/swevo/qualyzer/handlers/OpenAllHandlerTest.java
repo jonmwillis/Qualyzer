@@ -19,6 +19,7 @@ import static org.junit.Assert.fail;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.junit.After;
@@ -26,9 +27,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ca.mcgill.cs.swevo.qualyzer.TestUtil;
+import ca.mcgill.cs.swevo.qualyzer.editors.CodeEditor;
 import ca.mcgill.cs.swevo.qualyzer.editors.InvestigatorFormEditor;
 import ca.mcgill.cs.swevo.qualyzer.editors.ParticipantFormEditor;
 import ca.mcgill.cs.swevo.qualyzer.editors.TranscriptEditor;
+import ca.mcgill.cs.swevo.qualyzer.editors.inputs.CodeEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.InvestigatorEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.ParticipantEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
@@ -36,6 +39,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
+import ca.mcgill.cs.swevo.qualyzer.providers.WrapperCode;
 
 /**
  * @author Jonathan Faubert
@@ -154,12 +158,82 @@ public class OpenAllHandlerTest
 	@Test
 	public void testOpenCodes()
 	{
+		WrapperCode codeNode = new WrapperCode(fProject);
+		TestUtil.setProjectExplorerSelection(codeNode);
 		
+		OpenAllHandler handler = new OpenAllHandler();
+		try
+		{
+			handler.execute(null);
+		}
+		catch (ExecutionException e)
+		{
+			fail();
+		}
+		
+		assertEquals(fPage.getEditorReferences().length, 1);
+		
+		IEditorPart editor = fPage.getActiveEditor();
+		
+		assertTrue(editor instanceof CodeEditor);
+		assertEquals(editor.getEditorInput().getName(), new CodeEditorInput(fProject).getName());
 	}
 	
 	@Test
 	public void testOpenAll()
 	{
+		Object[] selection = new Object[]{fInves, fPartic, fTranscript, new WrapperCode(fProject)};
+		TestUtil.setProjectExplorerSelection(selection);
 		
+		OpenAllHandler handler = new OpenAllHandler();
+		try
+		{
+			handler.execute(null);
+		}
+		catch (ExecutionException e)
+		{
+			fail();
+		}
+		
+		assertEquals(fPage.getEditorReferences().length, 4);
+		
+		boolean iFound = false, pFound = false, cFound = false, tFound = false;
+		int count = 0;
+		
+		for(IEditorReference ref : fPage.getEditorReferences())
+		{
+			IEditorPart editor = ref.getEditor(true);
+			boolean found = false;
+			
+			if(editor instanceof InvestigatorFormEditor)
+			{
+				found = true;
+				iFound = true;
+				count++;
+			}
+			else if(editor instanceof ParticipantFormEditor)
+			{
+				found = true;
+				pFound = true;
+				count++;
+			}
+			else if(editor instanceof TranscriptEditor)
+			{
+				found = true;
+				tFound = true;
+				count++;
+			}
+			else if(editor instanceof CodeEditor)
+			{
+				found = true;
+				cFound = true;
+				count++;
+			}
+			
+			assertTrue(found);
+		}
+		
+		assertTrue(iFound && pFound && cFound && tFound);
+		assertTrue(count == 4);
 	}
 }
