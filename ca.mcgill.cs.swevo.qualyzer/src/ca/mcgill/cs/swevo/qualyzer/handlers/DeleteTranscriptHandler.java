@@ -26,13 +26,14 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.dialogs.TranscriptDeleteDialog;
+import ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester;
+import ca.mcgill.cs.swevo.qualyzer.editors.NullTester;
 import ca.mcgill.cs.swevo.qualyzer.model.Code;
 import ca.mcgill.cs.swevo.qualyzer.model.CodeEntry;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
@@ -46,18 +47,23 @@ import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
  * Hander for the delete transcript command.
  *
  */
-public class DeleteTranscriptHandler extends AbstractHandler
+public class DeleteTranscriptHandler extends AbstractHandler implements ITestableHandler
 {
 	private static final String TRANSCRIPT = File.separator + "transcripts" + File.separator; //$NON-NLS-1$
 
 	private final Logger fLogger = LoggerFactory.getLogger(DeleteTranscriptHandler.class);
+
+	private IDialogTester fTester = new NullTester();
+
+	private boolean fWindowsBlock = true;
 	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
 	{
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		ISelection selection = page.getSelection();
-		Shell shell = HandlerUtil.getActiveShell(event).getShell();
+		CommonNavigator view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+		ISelection selection = view.getCommonViewer().getSelection();
+		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		if(selection != null && selection instanceof IStructuredSelection)
 		{
 			List<Transcript> toDelete = new ArrayList<Transcript>();
@@ -82,7 +88,6 @@ public class DeleteTranscriptHandler extends AbstractHandler
 					toDelete.add(transcript);	
 				}
 			}
-			
 			if(projects.size() > 1)
 			{
 				String warningMessage = Messages.getString(
@@ -156,10 +161,12 @@ public class DeleteTranscriptHandler extends AbstractHandler
 	{	
 		TranscriptDeleteDialog dialog = new TranscriptDeleteDialog(shell);
 		dialog.create();
+		dialog.setBlockOnOpen(fWindowsBlock);
+		dialog.open();
 		
-		int check = dialog.open();
-			
-		if(check == Window.OK)
+		fTester.execute(dialog);
+		
+		if(dialog.getReturnCode() == Window.OK)
 		{	
 			for(Transcript transcript : toDelete)
 			{
@@ -342,6 +349,43 @@ public class DeleteTranscriptHandler extends AbstractHandler
 		}
 				
 		return toDelete;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#getTester()
+	 */
+	@Override
+	public IDialogTester getTester()
+	{
+		return fTester;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#isWindowsBlock()
+	 */
+	@Override
+	public boolean isWindowsBlock()
+	{
+		return fWindowsBlock;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#setTester(
+	 * ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester)
+	 */
+	@Override
+	public void setTester(IDialogTester tester)
+	{
+		fTester = tester;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#setWindowsBlock(boolean)
+	 */
+	@Override
+	public void setWindowsBlock(boolean windowsBlock)
+	{
+		fWindowsBlock = windowsBlock;
 	}
 
 }
