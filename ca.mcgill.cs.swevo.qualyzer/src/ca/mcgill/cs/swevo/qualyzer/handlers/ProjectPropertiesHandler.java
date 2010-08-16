@@ -24,9 +24,11 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.navigator.CommonNavigator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
 import ca.mcgill.cs.swevo.qualyzer.dialogs.ProjectPropertiesDialog;
 import ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester;
@@ -52,7 +54,8 @@ public class ProjectPropertiesHandler extends AbstractHandler implements ITestab
 	public Object execute(ExecutionEvent event) throws ExecutionException
 	{
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		ISelection selection = page.getSelection();
+		CommonNavigator view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+		ISelection selection = view.getCommonViewer().getSelection();
 		
 		if(selection != null && selection instanceof IStructuredSelection)
 		{
@@ -66,7 +69,6 @@ public class ProjectPropertiesHandler extends AbstractHandler implements ITestab
 				dialog.setBlockOnOpen(fWindowsBlock);
 				dialog.open();
 				fTester.execute(dialog);
-				
 				try
 				{
 					if(dialog.getReturnCode() == Window.OK)
