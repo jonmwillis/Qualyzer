@@ -14,8 +14,8 @@ package ca.mcgill.cs.swevo.qualyzer.dialogs;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -74,7 +74,7 @@ public class RenameDialog extends TitleAreaDialog
 		
 		fNewName = new Text(composite, SWT.BORDER);
 		fNewName.setText(""); //$NON-NLS-1$
-		fNewName.addKeyListener(createKeyListener());
+		fNewName.addModifyListener(createKeyListener());
 		fNewName.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 		
 		return parent;
@@ -83,15 +83,12 @@ public class RenameDialog extends TitleAreaDialog
 	/**
 	 * @return
 	 */
-	private KeyListener createKeyListener()
+	private ModifyListener createKeyListener()
 	{
-		return new KeyListener(){
+		return new ModifyListener(){
 
 			@Override
-			public void keyPressed(KeyEvent e){}
-
-			@Override
-			public void keyReleased(KeyEvent e)
+			public void modifyText(ModifyEvent e)
 			{
 				TranscriptNameValidator lValidator = 
 					new TranscriptNameValidator(fNewName.getText(), fOldName, fProject);
@@ -108,7 +105,6 @@ public class RenameDialog extends TitleAreaDialog
 					getButton(IDialogConstants.OK_ID).setEnabled(true);
 				}
 			}
-			
 		};
 	}
 	
@@ -127,6 +123,25 @@ public class RenameDialog extends TitleAreaDialog
 	public void setCurrentName(String name)
 	{
 		fOldName = name;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Text getNameText()
+	{
+		return fNewName;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.dialogs.Dialog#okPressed()
+	 */
+	@Override
+	public void okPressed()
+	{
+		// TODO Auto-generated method stub
+		super.okPressed();
 	}
 	
 }
