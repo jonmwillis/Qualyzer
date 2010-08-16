@@ -17,9 +17,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.util.ArrayList;
+import java.io.File;
 
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
@@ -32,7 +33,6 @@ import ca.mcgill.cs.swevo.qualyzer.dialogs.RenameMemoDialog;
 import ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Memo;
-import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 
@@ -56,9 +56,8 @@ public class RenameMemoHandlerTest
 	{
 		fPage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		fPage.closeAllEditors(false);
-		fProject = Facade.getInstance().createProject(PROJECT, INV, "", "");
-		fMemo = Facade.getInstance().createMemo(MEMO, "02/02/1958", fProject.getInvestigators().get(0), 
-				new ArrayList<Participant>(), fProject, null, null);
+		fProject = TestUtil.createProject(PROJECT, INV, MEMO);
+		fMemo = fProject.getMemos().get(0);
 	}
 	
 	@After
@@ -109,11 +108,11 @@ public class RenameMemoHandlerTest
 		Memo lMemo = Facade.getInstance().forceMemoLoad(fMemo);
 		assertTrue(lMemo.getParticipants().isEmpty());
 		
-//		String path = ResourcesPlugin.getWorkspace().getRoot().getProject(fProject.getFolderName()).getLocation().toString();
-//		path += File.separator + "memos" + File.separator + fMemo.getFileName();
+		String path = ResourcesPlugin.getWorkspace().getRoot().getProject(fProject.getFolderName()).getLocation().toString();
+		path += File.separator + "memos" + File.separator + fMemo.getFileName();
 		
-//		File memoFile = new File(path);
-//		assertTrue(memoFile.exists());
+		File memoFile = new File(path);
+		assertTrue(memoFile.exists());
 		
 	}
 }
