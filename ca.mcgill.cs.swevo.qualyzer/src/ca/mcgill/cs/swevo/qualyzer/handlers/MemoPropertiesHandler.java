@@ -23,6 +23,8 @@ import org.eclipse.ui.navigator.CommonNavigator;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.dialogs.MemoPropertiesDialog;
+import ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester;
+import ca.mcgill.cs.swevo.qualyzer.editors.NullTester;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Memo;
 
@@ -30,15 +32,19 @@ import ca.mcgill.cs.swevo.qualyzer.model.Memo;
  * Opens the memo properties dialog and then saves any changes.
  *
  */
-public class MemoPropertiesHandler extends AbstractHandler
+public class MemoPropertiesHandler extends AbstractHandler implements ITestableHandler
 {
+
+	private IDialogTester fTester = new NullTester();
+	private boolean fWindowsBlock = true;
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
 	{
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		ISelection selection = page.getSelection();
+		CommonNavigator view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+		ISelection selection = view.getCommonViewer().getSelection();
 		
 		if(selection != null && selection instanceof IStructuredSelection)
 		{
@@ -50,7 +56,11 @@ public class MemoPropertiesHandler extends AbstractHandler
 				Memo memo = (Memo) element;
 				MemoPropertiesDialog dialog = new MemoPropertiesDialog(shell, memo);
 				dialog.create();
-				if(dialog.open() == Window.OK)
+				dialog.setBlockOnOpen(fWindowsBlock);
+				dialog.open();
+				fTester.execute(dialog);
+				
+				if(dialog.getReturnCode() == Window.OK)
 				{
 					memo.setDate(dialog.getDate());
 					memo.setAuthor(dialog.getAuthor());
@@ -60,12 +70,48 @@ public class MemoPropertiesHandler extends AbstractHandler
 					
 					Facade.getInstance().saveMemo(memo);
 					
-					CommonNavigator view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
 					view.getCommonViewer().refresh();
 				}
 			}
 		}
 		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#getTester()
+	 */
+	@Override
+	public IDialogTester getTester()
+	{
+		return fTester;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#isWindowsBlock()
+	 */
+	@Override
+	public boolean isWindowsBlock()
+	{
+		return fWindowsBlock;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#setTester(
+	 * ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester)
+	 */
+	@Override
+	public void setTester(IDialogTester tester)
+	{
+		fTester = tester;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#setWindowsBlock(boolean)
+	 */
+	@Override
+	public void setWindowsBlock(boolean windowsBlock)
+	{
+		fWindowsBlock = windowsBlock;
 	}
 
 }

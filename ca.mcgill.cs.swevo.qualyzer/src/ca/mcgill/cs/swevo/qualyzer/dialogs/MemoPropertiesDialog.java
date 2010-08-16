@@ -407,7 +407,7 @@ public class MemoPropertiesDialog extends TitleAreaDialog
 	 * @see org.eclipse.jface.dialogs.Dialog#okPressed()
 	 */
 	@Override
-	protected void okPressed()
+	public void okPressed()
 	{
 		fDateString = (fDate.getMonth() + 1)+SLASH+fDate.getDay()+SLASH+fDate.getYear();
 		fParticipants = retrieveParticipants();
@@ -460,5 +460,32 @@ public class MemoPropertiesDialog extends TitleAreaDialog
 	public Code getCode()
 	{
 		return fCode;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Combo getAuthorCombo()
+	{
+		return fAuthor;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Combo getCodeCombo()
+	{
+		return fCodeCombo;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Combo getTranscriptCombo()
+	{
+		return fTranscriptCombo;
 	}
 }

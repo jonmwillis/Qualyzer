@@ -413,7 +413,7 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 	}
 	
 	@Override
-	protected void okPressed()
+	public void okPressed()
 	{
 		save();
 		
@@ -473,4 +473,5 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 	{
 		return fParticipants;
 	}
+	
 }
