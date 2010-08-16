@@ -110,7 +110,7 @@ public class RenameMemoDialog extends TitleAreaDialog
 	 * @see org.eclipse.jface.dialogs.Dialog#okPressed()
 	 */
 	@Override
-	protected void okPressed()
+	public void okPressed()
 	{
 		fName = fNewName.getText();
 		super.okPressed();
@@ -132,5 +132,14 @@ public class RenameMemoDialog extends TitleAreaDialog
 	public void setOldName(String name)
 	{
 		fOldName = name;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Text getNameText()
+	{
+		return fNewName;
 	}
 }
