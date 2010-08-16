@@ -119,7 +119,7 @@ public class ProjectPropertiesDialog extends TitleAreaDialog
 	 * @see org.eclipse.jface.dialogs.Dialog#okPressed()
 	 */
 	@Override
-	protected void okPressed()
+	public void okPressed()
 	{
 		fInvestigatorName = fInvestigator.getText();
 		super.okPressed();
@@ -132,5 +132,14 @@ public class ProjectPropertiesDialog extends TitleAreaDialog
 	public String getInvestigator()
 	{
 		return fInvestigatorName;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Combo getInvestigatorCombo()
+	{
+		return fInvestigator;
 	}
 }

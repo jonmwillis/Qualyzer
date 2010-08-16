@@ -20,10 +20,15 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.HandlerUtil;
+import org.eclipse.ui.navigator.CommonNavigator;
 
+import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.dialogs.TranscriptPropertiesDialog;
+import ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester;
+import ca.mcgill.cs.swevo.qualyzer.editors.NullTester;
 import ca.mcgill.cs.swevo.qualyzer.model.AudioFile;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
@@ -32,22 +37,29 @@ import ca.mcgill.cs.swevo.qualyzer.util.FileUtil;
 /**
  * Opens the transcript properties dialog and then saves any changes that are made.
  */
-public class TranscriptPropertiesHandler extends AbstractHandler
+public class TranscriptPropertiesHandler extends AbstractHandler implements ITestableHandler
 {
 
+	private boolean fWindowsBlock = true;
+	private IDialogTester fTester = new NullTester();
+	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
 	{
-		ISelection selection = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getSelection();
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		CommonNavigator view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+		ISelection selection = view.getCommonViewer().getSelection();
+		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		
 		if(selection != null && selection instanceof IStructuredSelection)
 		{
 			Object element = ((IStructuredSelection) selection).getFirstElement();
-			TranscriptPropertiesDialog dialog;
-			dialog = new TranscriptPropertiesDialog(HandlerUtil.getActiveShell(event).getShell(), (Transcript) element);
+			TranscriptPropertiesDialog dialog = new TranscriptPropertiesDialog(shell, (Transcript) element);
 			
-			dialog.create();
-			if(dialog.open() == Window.OK)
+			dialog.setBlockOnOpen(fWindowsBlock);
+			dialog.open();
+			fTester.execute(dialog);
+			if(dialog.getReturnCode() == Window.OK)
 			{
 				Transcript transcript = (Transcript) element;
 				String projectName = transcript.getProject().getFolderName();
@@ -68,7 +80,8 @@ public class TranscriptPropertiesHandler extends AbstractHandler
 				transcript.setDate(newDate);
 				transcript.setParticipants(dialog.getParticipants());
 								
-				Facade.getInstance().saveTranscript(transcript);				
+				Facade.getInstance().saveTranscript(transcript);
+				view.getCommonViewer().refresh();
 			}
 		}
 		
@@ -112,6 +125,43 @@ public class TranscriptPropertiesHandler extends AbstractHandler
 				transcript.setAudioFile(null);
 			}
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#getTester()
+	 */
+	@Override
+	public IDialogTester getTester()
+	{
+		return fTester;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#isWindowsBlock()
+	 */
+	@Override
+	public boolean isWindowsBlock()
+	{
+		return fWindowsBlock;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#setTester(
+	 * ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester)
+	 */
+	@Override
+	public void setTester(IDialogTester tester)
+	{
+		fTester = tester;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#setWindowsBlock(boolean)
+	 */
+	@Override
+	public void setWindowsBlock(boolean windowsBlock)
+	{
+		fWindowsBlock = windowsBlock;
 	}
 
 }

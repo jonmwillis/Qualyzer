@@ -29,6 +29,8 @@ import org.slf4j.LoggerFactory;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
 import ca.mcgill.cs.swevo.qualyzer.dialogs.ProjectPropertiesDialog;
+import ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester;
+import ca.mcgill.cs.swevo.qualyzer.editors.NullTester;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
@@ -39,9 +41,12 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
  * Saves any changes made to the active investigator.
  *
  */
-public class ProjectPropertiesHandler extends AbstractHandler
+public class ProjectPropertiesHandler extends AbstractHandler implements ITestableHandler
 {
 	private static Logger gLogger = LoggerFactory.getLogger(ProjectPropertiesHandler.class);
+	
+	private boolean fWindowsBlock = true;
+	private IDialogTester fTester = new NullTester();
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
@@ -58,11 +63,13 @@ public class ProjectPropertiesHandler extends AbstractHandler
 				Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 				Project project = ResourcesUtil.getProject(element);
 				ProjectPropertiesDialog dialog = new ProjectPropertiesDialog(shell, project);
-				dialog.create();
+				dialog.setBlockOnOpen(fWindowsBlock);
+				dialog.open();
+				fTester.execute(dialog);
 				
 				try
 				{
-					if(dialog.open() == Window.OK)
+					if(dialog.getReturnCode() == Window.OK)
 					{
 						IProject wProject = (IProject) element;
 						try
@@ -92,6 +99,39 @@ public class ProjectPropertiesHandler extends AbstractHandler
 		}
 		
 		return null;
+	}
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#getTester()
+	 */
+	@Override
+	public IDialogTester getTester()
+	{
+		return fTester;
+	}
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#isWindowsBlock()
+	 */
+	@Override
+	public boolean isWindowsBlock()
+	{
+		return fWindowsBlock;
+	}
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#setTester(
+	 * ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester)
+	 */
+	@Override
+	public void setTester(IDialogTester tester)
+	{
+		fTester = tester;
+	}
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#setWindowsBlock(boolean)
+	 */
+	@Override
+	public void setWindowsBlock(boolean windowsBlock)
+	{
+		fWindowsBlock = windowsBlock;
 	}
 
 }
