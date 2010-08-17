@@ -19,8 +19,11 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.navigator.CommonNavigator;
 
+import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester;
 import ca.mcgill.cs.swevo.qualyzer.editors.NullTester;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
@@ -40,7 +43,9 @@ public class DeleteProjectHandler extends AbstractHandler implements ITestableHa
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
 	{
-		ISelection selection = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getSelection();
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		CommonNavigator view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+		ISelection selection = view.getCommonViewer().getSelection();
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		
 		if(selection != null && selection instanceof IStructuredSelection)

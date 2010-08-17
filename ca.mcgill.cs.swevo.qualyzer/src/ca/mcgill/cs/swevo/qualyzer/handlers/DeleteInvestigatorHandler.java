@@ -22,7 +22,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.navigator.CommonNavigator;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
@@ -75,7 +74,6 @@ public class DeleteInvestigatorHandler extends AbstractHandler implements ITesta
 					toDelete.add(investigator);
 				}
 			}
-			
 			if(projects.size() > 1)
 			{
 				MessageDialog.openError(shell, 
