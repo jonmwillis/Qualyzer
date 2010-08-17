@@ -207,7 +207,8 @@ public class DeleteParticipantHandler extends AbstractHandler implements ITestab
 	}
 
 	/* (non-Javadoc)
-	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#setTester(ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#setTester(
+	 * ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester)
 	 */
 	@Override
 	public void setTester(IDialogTester tester)
