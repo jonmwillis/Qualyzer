@@ -16,13 +16,15 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonNavigator;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
+import ca.mcgill.cs.swevo.qualyzer.dialogs.QualyzerWizardDialog;
+import ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester;
+import ca.mcgill.cs.swevo.qualyzer.editors.NullTester;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 import ca.mcgill.cs.swevo.qualyzer.wizards.ImportMemoWizard;
@@ -30,14 +32,17 @@ import ca.mcgill.cs.swevo.qualyzer.wizards.ImportMemoWizard;
 /**
  * Opens the import memo wizard and the opens the memo editor.
  */
-public class ImportMemoHandler extends AbstractHandler
+public class ImportMemoHandler extends AbstractHandler implements ITestableHandler
 {
+	private boolean fWindowsBlock = true;
+	private IDialogTester fTester = new NullTester();
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
 	{
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		ISelection selection = page.getSelection();
+		CommonNavigator view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+		ISelection selection = view.getCommonViewer().getSelection();
 		
 		if(selection != null && selection instanceof IStructuredSelection)
 		{
@@ -46,18 +51,57 @@ public class ImportMemoHandler extends AbstractHandler
 			
 			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			ImportMemoWizard wizard = new ImportMemoWizard(project);
-			WizardDialog dialog = new WizardDialog(shell, wizard);
-			
+			QualyzerWizardDialog dialog = new QualyzerWizardDialog(shell, wizard);
 			dialog.create();
-			if(dialog.open() == Window.OK)
+			dialog.setBlockOnOpen(fWindowsBlock);
+			dialog.open();
+			fTester.execute(dialog);
+			
+			if(dialog.getReturnCode() == Window.OK)
 			{
-				CommonNavigator view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
 				view.getCommonViewer().refresh();
 								
 				ResourcesUtil.openEditor(page, wizard.getMemo());
 			}
 		}
 		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#getTester()
+	 */
+	@Override
+	public IDialogTester getTester()
+	{
+		return fTester;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#isWindowsBlock()
+	 */
+	@Override
+	public boolean isWindowsBlock()
+	{
+		return fWindowsBlock;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#setTester(
+	 * ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester)
+	 */
+	@Override
+	public void setTester(IDialogTester tester)
+	{
+		fTester = tester;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#setWindowsBlock(boolean)
+	 */
+	@Override
+	public void setWindowsBlock(boolean windowsBlock)
+	{
+		fWindowsBlock = windowsBlock;
 	}
 
 }
