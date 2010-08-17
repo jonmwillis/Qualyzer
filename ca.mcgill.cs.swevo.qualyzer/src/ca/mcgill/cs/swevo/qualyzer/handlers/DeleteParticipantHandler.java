@@ -23,10 +23,11 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.navigator.CommonNavigator;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
+import ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester;
+import ca.mcgill.cs.swevo.qualyzer.editors.NullTester;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Memo;
 import ca.mcgill.cs.swevo.qualyzer.model.Participant;
@@ -38,14 +39,18 @@ import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
  * Multiple participants can be deleted at once, but the operation is atomic.
  * Either all the selected participants are deleted, or none.
  */
-public class DeleteParticipantHandler extends AbstractHandler
+public class DeleteParticipantHandler extends AbstractHandler implements ITestableHandler
 {
+	private boolean fTesting = false;
+	private IDialogTester fTester = new NullTester();
+	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
 	{
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		ISelection selection = page.getSelection();
-		Shell shell = HandlerUtil.getActiveShell(event).getShell();
+		CommonNavigator view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+		ISelection selection = view.getCommonViewer().getSelection();
+		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		
 		if(selection != null && selection instanceof IStructuredSelection)
 		{
@@ -107,7 +112,7 @@ public class DeleteParticipantHandler extends AbstractHandler
 			message = Messages.getString("handlers.DeleteParticipantHandler.confirmMany"); //$NON-NLS-1$
 		}
 		
-		boolean check = MessageDialog.openConfirm(shell, Messages.getString(
+		boolean check = fTesting || MessageDialog.openConfirm(shell, Messages.getString(
 				"handlers.DeleteParticipantHandler.deleteParticipant"),  //$NON-NLS-1$
 				message); //$NON-NLS-1$
 		
@@ -181,6 +186,42 @@ public class DeleteParticipantHandler extends AbstractHandler
 		}
 
 		return conflicts;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#getTester()
+	 */
+	@Override
+	public IDialogTester getTester()
+	{
+		return fTester;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#isTesting()
+	 */
+	@Override
+	public boolean isTesting()
+	{
+		return fTesting;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#setTester(ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester)
+	 */
+	@Override
+	public void setTester(IDialogTester tester)
+	{
+		fTester = tester;
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#setTesting(boolean)
+	 */
+	@Override
+	public void setTesting(boolean isTesting)
+	{
+		fTesting = isTesting;
 	}
 
 }
