@@ -474,4 +474,13 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 		return fParticipants;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
+	public DateTime getDateWidget()
+	{
+		return fDate;
+	}
+	
 }
