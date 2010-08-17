@@ -52,8 +52,9 @@ public class DeleteInvestigatorHandler extends AbstractHandler implements ITesta
 	public Object execute(ExecutionEvent event) throws ExecutionException
 	{
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		ISelection selection = page.getSelection();
-		Shell shell = HandlerUtil.getActiveShell(event).getShell();
+		CommonNavigator	view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+		ISelection selection = view.getCommonViewer().getSelection();
+		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		
 		if(selection != null && selection instanceof IStructuredSelection)
 		{
