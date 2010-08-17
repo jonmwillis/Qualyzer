@@ -13,15 +13,16 @@
  */
 package ca.mcgill.cs.swevo.qualyzer.handlers;
 
-import static org.junit.Assert.fail;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 
 import ca.mcgill.cs.swevo.qualyzer.TestUtil;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
@@ -58,6 +59,7 @@ public class DeleteProjectHandlerTest
 		}
 	}
 	
+	@Test
 	public void testDeleteProject()
 	{
 		TestUtil.setProjectExplorerSelection(wProject);
