@@ -36,7 +36,7 @@ import ca.mcgill.cs.swevo.qualyzer.wizards.AddInvestigatorWizard;
 public class AddInvestigatorHandler extends AbstractHandler implements ITestableHandler
 {
 
-	private boolean fWindowsBlock = true;
+	private boolean fTesting = false;
 	private IDialogTester fTester = new NullTester();
 
 	/**
@@ -57,7 +57,7 @@ public class AddInvestigatorHandler extends AbstractHandler implements ITestable
 			AddInvestigatorWizard wizard = new AddInvestigatorWizard(project);
 			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			QualyzerWizardDialog dialog = new QualyzerWizardDialog(shell, wizard);
-			dialog.setBlockOnOpen(fWindowsBlock);
+			dialog.setBlockOnOpen(!fTesting);
 			dialog.open();
 			fTester.execute(dialog);
 		
@@ -85,9 +85,9 @@ public class AddInvestigatorHandler extends AbstractHandler implements ITestable
 	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#isWindowsBlock()
 	 */
 	@Override
-	public boolean isWindowsBlock()
+	public boolean isTesting()
 	{
-		return fWindowsBlock;
+		return fTesting;
 	}
 
 	/* (non-Javadoc)
@@ -104,8 +104,8 @@ public class AddInvestigatorHandler extends AbstractHandler implements ITestable
 	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#setWindowsBlock(boolean)
 	 */
 	@Override
-	public void setWindowsBlock(boolean windowsBlock)
+	public void setTesting(boolean isTesting)
 	{
-		fWindowsBlock = windowsBlock;
+		fTesting = isTesting;
 	}
 }

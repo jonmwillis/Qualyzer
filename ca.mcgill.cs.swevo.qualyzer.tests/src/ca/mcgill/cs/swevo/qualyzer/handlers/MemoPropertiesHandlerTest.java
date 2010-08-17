@@ -65,7 +65,7 @@ public class MemoPropertiesHandlerTest
 		TestUtil.setProjectExplorerSelection(fMemo);
 		
 		MemoPropertiesHandler handler = new MemoPropertiesHandler();
-		handler.setWindowsBlock(false);
+		handler.setTesting(true);
 		handler.setTester(new IDialogTester()
 		{
 			

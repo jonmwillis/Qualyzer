@@ -72,7 +72,7 @@ public class RenameMemoHandlerTest
 		TestUtil.setProjectExplorerSelection(fMemo);
 		
 		RenameMemoHandler handler = new RenameMemoHandler();
-		handler.setWindowsBlock(false);
+		handler.setTesting(true);
 		handler.setTester(new IDialogTester()
 		{
 			

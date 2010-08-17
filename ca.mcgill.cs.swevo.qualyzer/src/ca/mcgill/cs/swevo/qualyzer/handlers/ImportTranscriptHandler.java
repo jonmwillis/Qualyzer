@@ -36,7 +36,7 @@ import ca.mcgill.cs.swevo.qualyzer.wizards.ImportTranscriptWizard;
 public class ImportTranscriptHandler extends AbstractHandler implements ITestableHandler
 {
 
-	private boolean fWindowsBlock = true;
+	private boolean fTesting = false;
 	private IDialogTester fTester = new NullTester();
 	
 	@Override
@@ -54,7 +54,7 @@ public class ImportTranscriptHandler extends AbstractHandler implements ITestabl
 			ImportTranscriptWizard wizard = new ImportTranscriptWizard(project);
 			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			QualyzerWizardDialog dialog = new QualyzerWizardDialog(shell, wizard);
-			dialog.setBlockOnOpen(fWindowsBlock);
+			dialog.setBlockOnOpen(!fTesting);
 			dialog.open();
 			fTester.execute(dialog);
 			
@@ -82,9 +82,9 @@ public class ImportTranscriptHandler extends AbstractHandler implements ITestabl
 	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#isWindowsBlock()
 	 */
 	@Override
-	public boolean isWindowsBlock()
+	public boolean isTesting()
 	{
-		return fWindowsBlock;
+		return fTesting;
 	}
 
 	/* (non-Javadoc)
@@ -101,9 +101,9 @@ public class ImportTranscriptHandler extends AbstractHandler implements ITestabl
 	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#setWindowsBlock(boolean)
 	 */
 	@Override
-	public void setWindowsBlock(boolean windowsBlock)
+	public void setTesting(boolean windowsBlock)
 	{
-		fWindowsBlock = windowsBlock;
+		fTesting = windowsBlock;
 	}
 
 }

@@ -64,7 +64,7 @@ public class ImportMemoHandlerTest
 		TestUtil.setProjectExplorerSelection(wProject);
 		
 		ImportMemoHandler handler = new ImportMemoHandler();
-		handler.setWindowsBlock(false);
+		handler.setTesting(true);
 		handler.setTester(new IDialogTester()
 		{
 			

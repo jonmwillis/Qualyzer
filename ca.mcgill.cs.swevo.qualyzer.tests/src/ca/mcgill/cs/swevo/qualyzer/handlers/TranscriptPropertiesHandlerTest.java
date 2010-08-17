@@ -63,7 +63,7 @@ public class TranscriptPropertiesHandlerTest
 		TestUtil.setProjectExplorerSelection(fTranscript);
 		
 		TranscriptPropertiesHandler handler = new TranscriptPropertiesHandler();
-		handler.setWindowsBlock(false);
+		handler.setTesting(true);
 		handler.setTester(new IDialogTester()
 		{
 			

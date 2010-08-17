@@ -70,7 +70,7 @@ public class DeleteMemoHandlerTest
 		IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getProject(PROJECT).getFolder("memos");
 		
 		DeleteMemoHandler handler = new DeleteMemoHandler();
-		handler.setWindowsBlock(false);
+		handler.setTesting(true);
 		handler.setTester(new IDialogTester()
 		{
 			

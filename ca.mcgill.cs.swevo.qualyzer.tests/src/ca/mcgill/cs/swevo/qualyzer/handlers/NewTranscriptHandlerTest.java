@@ -64,7 +64,7 @@ public class NewTranscriptHandlerTest
 		TestUtil.setProjectExplorerSelection(wProject);
 		
 		NewTranscriptHandler handler = new NewTranscriptHandler();
-		handler.setWindowsBlock(false);
+		handler.setTesting(true);
 		handler.setTester(new IDialogTester()
 		{
 			

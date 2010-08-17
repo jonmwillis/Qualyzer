@@ -75,7 +75,7 @@ public class AddParticipantHandlerTest
 		TestUtil.setProjectExplorerSelection(wProject);
 		
 		AddParticipantHandler handler = new AddParticipantHandler();
-		handler.setWindowsBlock(false);
+		handler.setTesting(true);
 		handler.setTester(new IDialogTester()
 		{
 			

@@ -72,7 +72,7 @@ public class ImportTranscriptHandlerTest
 		TestUtil.setProjectExplorerSelection(wProject);
 		
 		ImportTranscriptHandler handler = new ImportTranscriptHandler();
-		handler.setWindowsBlock(false);
+		handler.setTesting(true);
 		handler.setTester(new IDialogTester()
 		{
 			

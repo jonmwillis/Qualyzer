@@ -51,7 +51,7 @@ public class DeleteMemoHandler extends AbstractHandler implements ITestableHandl
 	private static final String MEMO = File.separator + "memos" + File.separator; //$NON-NLS-1$
 	private final Logger fLogger = LoggerFactory.getLogger(DeleteMemoHandler.class);
 	private IDialogTester fTester = new NullTester();
-	private boolean fWindowsBlock = true;
+	private boolean fTesting = false;
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
@@ -105,7 +105,7 @@ public class DeleteMemoHandler extends AbstractHandler implements ITestableHandl
 	{
 		MemoDeleteDialog dialog = new MemoDeleteDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
 		dialog.create();
-		dialog.setBlockOnOpen(fWindowsBlock);
+		dialog.setBlockOnOpen(!fTesting);
 		dialog.open();
 		fTester.execute(dialog);
 			
@@ -227,9 +227,9 @@ public class DeleteMemoHandler extends AbstractHandler implements ITestableHandl
 	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#isWindowsBlock()
 	 */
 	@Override
-	public boolean isWindowsBlock()
+	public boolean isTesting()
 	{
-		return fWindowsBlock;
+		return fTesting;
 	}
 
 	/* (non-Javadoc)
@@ -246,9 +246,9 @@ public class DeleteMemoHandler extends AbstractHandler implements ITestableHandl
 	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#setWindowsBlock(boolean)
 	 */
 	@Override
-	public void setWindowsBlock(boolean windowsBlock)
+	public void setTesting(boolean windowsBlock)
 	{
-		fWindowsBlock = windowsBlock;
+		fTesting = windowsBlock;
 	}
 
 }

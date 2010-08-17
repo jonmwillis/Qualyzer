@@ -34,7 +34,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Project;
 public class DeleteProjectHandler extends AbstractHandler implements ITestableHandler
 {
 
-	private boolean fWindowsBlock = true;
+	private boolean fTesting = false;
 	private IDialogTester fTester = new NullTester();
 
 	@Override
@@ -49,7 +49,7 @@ public class DeleteProjectHandler extends AbstractHandler implements ITestableHa
 			{
 				if(element instanceof IProject)
 				{
-					boolean confirm = MessageDialog.openConfirm(shell, 
+					boolean confirm = fTesting || MessageDialog.openConfirm(shell, 
 							Messages.getString("handler.DeleteProjectHandler.deleteProject"),  //$NON-NLS-1$
 							Messages.getString("handler.DeleteProjectHandler.confirm")); //$NON-NLS-1$
 					
@@ -78,9 +78,9 @@ public class DeleteProjectHandler extends AbstractHandler implements ITestableHa
 	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#isWindowsBlock()
 	 */
 	@Override
-	public boolean isWindowsBlock()
+	public boolean isTesting()
 	{
-		return fWindowsBlock;
+		return fTesting;
 	}
 
 	/* (non-Javadoc)
@@ -97,9 +97,9 @@ public class DeleteProjectHandler extends AbstractHandler implements ITestableHa
 	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#setWindowsBlock(boolean)
 	 */
 	@Override
-	public void setWindowsBlock(boolean windowsBlock)
+	public void setTesting(boolean windowsBlock)
 	{
-		fWindowsBlock = windowsBlock;
+		fTesting = windowsBlock;
 	}
 
 }

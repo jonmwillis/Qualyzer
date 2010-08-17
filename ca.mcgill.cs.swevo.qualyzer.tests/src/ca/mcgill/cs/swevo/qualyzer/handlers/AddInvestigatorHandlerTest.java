@@ -79,7 +79,7 @@ public class AddInvestigatorHandlerTest
 		TestUtil.setProjectExplorerSelection(wProject);
 		
 		AddInvestigatorHandler handler = new AddInvestigatorHandler();
-		handler.setWindowsBlock(false);
+		handler.setTesting(true);
 		handler.setTester(new IDialogTester(){
 
 			@Override
