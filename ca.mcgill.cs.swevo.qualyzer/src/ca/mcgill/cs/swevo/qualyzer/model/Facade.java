@@ -82,9 +82,7 @@ public final class Facade
 		String folderName = name.replace(' ', '_');
 		IProject wProject = FileUtil.makeProjectFileSystem(folderName);
 
-		Project project;
-
-		project = new Project();
+		Project project = new Project();
 		project.setName(name);
 		project.setFolderName(folderName);
 

@@ -45,12 +45,36 @@ public class QualyzerActivator extends AbstractUIPlugin
 	private Map<String, HibernateDBManager> fHibernateManagers = new HashMap<String, HibernateDBManager>();
 	
 	private final Logger fLogger = LoggerFactory.getLogger(QualyzerActivator.class);
+	
+	/**
+	 * Used by NavigatorContentProvider to determine whether or not to process delta.
+	 */
+	private boolean fCreatingProject;
 
 	/**
 	 * The constructor.
 	 */
 	public QualyzerActivator()
 	{
+		fCreatingProject = false;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean isCreatingProject()
+	{
+		return fCreatingProject;
+	}
+	
+	/**
+	 * 
+	 * @param set
+	 */
+	public void setCreatingProject(boolean set)
+	{
+		fCreatingProject = set;
 	}
 
 	/*
