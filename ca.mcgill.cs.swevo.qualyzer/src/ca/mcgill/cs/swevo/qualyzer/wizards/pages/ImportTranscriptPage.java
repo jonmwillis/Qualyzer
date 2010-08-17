@@ -173,5 +173,14 @@ public class ImportTranscriptPage extends TranscriptWizardPage
 			super.validate();
 		}
 	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Text getFileText()
+	{
+		return fTranscriptFile;
+	}
 
 }
