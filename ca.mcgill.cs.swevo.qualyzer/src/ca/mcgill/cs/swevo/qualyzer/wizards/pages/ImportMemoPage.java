@@ -179,5 +179,14 @@ public class ImportMemoPage extends NewMemoPage
 	{
 		return fMemoFile.getText();
 	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Text getFileText()
+	{
+		return fMemoFile;
+	}
 
 }
