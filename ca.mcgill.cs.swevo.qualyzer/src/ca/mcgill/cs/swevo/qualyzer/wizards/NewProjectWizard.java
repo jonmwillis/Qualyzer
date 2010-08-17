@@ -20,6 +20,7 @@ import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
 
+import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
@@ -68,6 +69,7 @@ public class NewProjectWizard extends Wizard
 				@Override
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException
 				{
+					QualyzerActivator.getDefault().setCreatingProject(true);
 					monitor.beginTask(Messages.getString("wizards.NewProjectWizard.creatingNewProject"), //$NON-NLS-1$
 							WORK); 
 					monitor.worked(1);
@@ -80,6 +82,7 @@ public class NewProjectWizard extends Wizard
 					fProject = ResourcesPlugin.getWorkspace().getRoot().getProject(project.getFolderName());
 					monitor.worked(1);
 					monitor.done();
+					QualyzerActivator.getDefault().setCreatingProject(false);
 				}
 			});
 		}

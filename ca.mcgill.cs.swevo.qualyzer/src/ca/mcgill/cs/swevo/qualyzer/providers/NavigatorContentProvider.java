@@ -24,6 +24,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 
+import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 
@@ -230,6 +231,11 @@ public class NavigatorContentProvider extends WorkbenchContentProvider
 		// by the time this is run. Check for this and do nothing if so.
 		Control ctrl = fViewer.getControl();
 		if (ctrl == null || ctrl.isDisposed())
+		{
+			return;
+		}
+		
+		if(QualyzerActivator.getDefault().isCreatingProject())
 		{
 			return;
 		}

@@ -147,7 +147,11 @@ public class NavigatorLabelProvider extends LabelProvider implements ILabelProvi
 
 		if (anElement instanceof IProject)
 		{
-			output = PersistenceManager.getInstance().getProject(((IProject) anElement).getName()).getName();
+			Project project = PersistenceManager.getInstance().getProject(((IProject) anElement).getName());
+			if(project != null)
+			{
+				output = project.getName();
+			}
 		}
 		else if(anElement instanceof Project)
 		{
