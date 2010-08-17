@@ -37,7 +37,7 @@ public class NewTranscriptHandler extends AbstractHandler implements ITestableHa
 {
 
 	private IDialogTester fTester = new NullTester();
-	private boolean fWindowsBlock = true;;
+	private boolean fTesting = false;
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
@@ -55,7 +55,7 @@ public class NewTranscriptHandler extends AbstractHandler implements ITestableHa
 			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			QualyzerWizardDialog dialog = new QualyzerWizardDialog(shell, wizard);
 			dialog.create();
-			dialog.setBlockOnOpen(fWindowsBlock);
+			dialog.setBlockOnOpen(!fTesting);
 			dialog.open();
 			fTester.execute(dialog);
 			
@@ -83,9 +83,9 @@ public class NewTranscriptHandler extends AbstractHandler implements ITestableHa
 	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#isWindowsBlock()
 	 */
 	@Override
-	public boolean isWindowsBlock()
+	public boolean isTesting()
 	{
-		return fWindowsBlock;
+		return fTesting;
 	}
 
 	/* (non-Javadoc)
@@ -102,9 +102,9 @@ public class NewTranscriptHandler extends AbstractHandler implements ITestableHa
 	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#setWindowsBlock(boolean)
 	 */
 	@Override
-	public void setWindowsBlock(boolean windowsBlock)
+	public void setTesting(boolean windowsBlock)
 	{
-		fWindowsBlock = windowsBlock;
+		fTesting = windowsBlock;
 	}
 
 }

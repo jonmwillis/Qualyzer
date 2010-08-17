@@ -79,7 +79,7 @@ public class RenameTranscriptHandlerTest
 		String oldFile = projectPath + File.separator + "transcripts" + File.separator + fTranscript.getFileName();
 		
 		RenameTranscriptHandler handler = new RenameTranscriptHandler();
-		handler.setWindowsBlock(false);
+		handler.setTesting(true);
 		handler.setTester(new IDialogTester()
 		{
 			

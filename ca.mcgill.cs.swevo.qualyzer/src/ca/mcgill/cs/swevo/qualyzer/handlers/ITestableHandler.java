@@ -23,13 +23,13 @@ public interface ITestableHandler
 	 *
 	 * @return
 	 */
-	boolean isWindowsBlock();
+	boolean isTesting();
 
 	/**
 	 *
-	 * @param windowsBlock
+	 * @param isTesting
 	 */
-	void setWindowsBlock(boolean windowsBlock);
+	void setTesting(boolean isTesting);
 
 	/**
 	 * @return the tester

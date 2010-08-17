@@ -44,7 +44,7 @@ public class RenameProjectHandler extends AbstractHandler implements ITestableHa
 	
 
 	private IDialogTester fTester = new NullTester();
-	private boolean fWindowBlock = true;
+	private boolean fTesting = false;
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
@@ -63,7 +63,7 @@ public class RenameProjectHandler extends AbstractHandler implements ITestableHa
 				Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 				Project project = ResourcesUtil.getProject(element);
 				RenameProjectDialog dialog = new RenameProjectDialog(shell, project);
-				dialog.setBlockOnOpen(fWindowBlock);
+				dialog.setBlockOnOpen(!fTesting);
 				dialog.create();
 				dialog.open();
 				fTester.execute(dialog);
@@ -107,9 +107,9 @@ public class RenameProjectHandler extends AbstractHandler implements ITestableHa
 	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#isWindowsBlock()
 	 */
 	@Override
-	public boolean isWindowsBlock()
+	public boolean isTesting()
 	{
-		return fWindowBlock;
+		return fTesting;
 	}
 
 	/* (non-Javadoc)
@@ -126,9 +126,9 @@ public class RenameProjectHandler extends AbstractHandler implements ITestableHa
 	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#setWindowsBlock(boolean)
 	 */
 	@Override
-	public void setWindowsBlock(boolean windowsBlock)
+	public void setTesting(boolean windowsBlock)
 	{
-		fWindowBlock = windowsBlock;
+		fTesting = windowsBlock;
 	}
 
 }

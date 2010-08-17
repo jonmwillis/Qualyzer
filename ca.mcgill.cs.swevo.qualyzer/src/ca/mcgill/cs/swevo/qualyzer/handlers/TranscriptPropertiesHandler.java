@@ -40,7 +40,7 @@ import ca.mcgill.cs.swevo.qualyzer.util.FileUtil;
 public class TranscriptPropertiesHandler extends AbstractHandler implements ITestableHandler
 {
 
-	private boolean fWindowsBlock = true;
+	private boolean fTesting = false;
 	private IDialogTester fTester = new NullTester();
 	
 	@Override
@@ -56,7 +56,7 @@ public class TranscriptPropertiesHandler extends AbstractHandler implements ITes
 			Object element = ((IStructuredSelection) selection).getFirstElement();
 			TranscriptPropertiesDialog dialog = new TranscriptPropertiesDialog(shell, (Transcript) element);
 			
-			dialog.setBlockOnOpen(fWindowsBlock);
+			dialog.setBlockOnOpen(!fTesting);
 			dialog.open();
 			fTester.execute(dialog);
 			if(dialog.getReturnCode() == Window.OK)
@@ -140,9 +140,9 @@ public class TranscriptPropertiesHandler extends AbstractHandler implements ITes
 	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#isWindowsBlock()
 	 */
 	@Override
-	public boolean isWindowsBlock()
+	public boolean isTesting()
 	{
-		return fWindowsBlock;
+		return fTesting;
 	}
 
 	/* (non-Javadoc)
@@ -159,9 +159,9 @@ public class TranscriptPropertiesHandler extends AbstractHandler implements ITes
 	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#setWindowsBlock(boolean)
 	 */
 	@Override
-	public void setWindowsBlock(boolean windowsBlock)
+	public void setTesting(boolean windowsBlock)
 	{
-		fWindowsBlock = windowsBlock;
+		fTesting = windowsBlock;
 	}
 
 }

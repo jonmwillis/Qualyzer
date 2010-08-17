@@ -54,7 +54,7 @@ public class RenameTranscriptHandler extends AbstractHandler implements ITestabl
 	
 	private boolean fClosed = false;
 	private IDialogTester fTester = new NullTester();
-	private boolean fWindowsBlock = true;
+	private boolean fTesting = false;
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
@@ -85,7 +85,7 @@ public class RenameTranscriptHandler extends AbstractHandler implements ITestabl
 					return null;
 				}
 				
-				dialog.setBlockOnOpen(fWindowsBlock);
+				dialog.setBlockOnOpen(!fTesting);
 				dialog.open();
 				fTester.execute(dialog);
 				
@@ -207,9 +207,9 @@ public class RenameTranscriptHandler extends AbstractHandler implements ITestabl
 	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#isWindowsBlock()
 	 */
 	@Override
-	public boolean isWindowsBlock()
+	public boolean isTesting()
 	{
-		return fWindowsBlock;
+		return fTesting;
 	}
 
 	/* (non-Javadoc)
@@ -226,9 +226,9 @@ public class RenameTranscriptHandler extends AbstractHandler implements ITestabl
 	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#setWindowsBlock(boolean)
 	 */
 	@Override
-	public void setWindowsBlock(boolean windowsBlock)
+	public void setTesting(boolean windowsBlock)
 	{
-		fWindowsBlock = windowsBlock;
+		fTesting = windowsBlock;
 	}
 
 }

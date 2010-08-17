@@ -55,7 +55,7 @@ public class DeleteTranscriptHandler extends AbstractHandler implements ITestabl
 
 	private IDialogTester fTester = new NullTester();
 
-	private boolean fWindowsBlock = true;
+	private boolean fTesting = true;
 	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
@@ -161,7 +161,7 @@ public class DeleteTranscriptHandler extends AbstractHandler implements ITestabl
 	{	
 		TranscriptDeleteDialog dialog = new TranscriptDeleteDialog(shell);
 		dialog.create();
-		dialog.setBlockOnOpen(fWindowsBlock);
+		dialog.setBlockOnOpen(!fTesting);
 		dialog.open();
 		
 		fTester.execute(dialog);
@@ -364,9 +364,9 @@ public class DeleteTranscriptHandler extends AbstractHandler implements ITestabl
 	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#isWindowsBlock()
 	 */
 	@Override
-	public boolean isWindowsBlock()
+	public boolean isTesting()
 	{
-		return fWindowsBlock;
+		return fTesting;
 	}
 
 	/* (non-Javadoc)
@@ -383,9 +383,9 @@ public class DeleteTranscriptHandler extends AbstractHandler implements ITestabl
 	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#setWindowsBlock(boolean)
 	 */
 	@Override
-	public void setWindowsBlock(boolean windowsBlock)
+	public void setTesting(boolean windowsBlock)
 	{
-		fWindowsBlock = windowsBlock;
+		fTesting = windowsBlock;
 	}
 
 }

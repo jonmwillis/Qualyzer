@@ -81,7 +81,7 @@ public class NewCodeHandlerTest
 		TestUtil.setProjectExplorerSelection(wProject);
 		
 		NewCodeHandler handler = new NewCodeHandler();
-		handler.setWindowsBlock(false);
+		handler.setTesting(true);
 		handler.setTester(new IDialogTester()
 		{
 			

@@ -74,7 +74,7 @@ public class RenameProjectHandlerTest
 		TestUtil.setProjectExplorerSelection(project);
 				
 		RenameProjectHandler handler = new RenameProjectHandler();
-		handler.setWindowsBlock(false);
+		handler.setTesting(true);
 		handler.setTester(new IDialogTester(){
 
 			@Override

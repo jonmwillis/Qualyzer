@@ -36,7 +36,7 @@ public class MemoPropertiesHandler extends AbstractHandler implements ITestableH
 {
 
 	private IDialogTester fTester = new NullTester();
-	private boolean fWindowsBlock = true;
+	private boolean fTesting = false;
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
@@ -56,7 +56,7 @@ public class MemoPropertiesHandler extends AbstractHandler implements ITestableH
 				Memo memo = (Memo) element;
 				MemoPropertiesDialog dialog = new MemoPropertiesDialog(shell, memo);
 				dialog.create();
-				dialog.setBlockOnOpen(fWindowsBlock);
+				dialog.setBlockOnOpen(!fTesting);
 				dialog.open();
 				fTester.execute(dialog);
 				
@@ -90,9 +90,9 @@ public class MemoPropertiesHandler extends AbstractHandler implements ITestableH
 	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#isWindowsBlock()
 	 */
 	@Override
-	public boolean isWindowsBlock()
+	public boolean isTesting()
 	{
-		return fWindowsBlock;
+		return fTesting;
 	}
 
 	/* (non-Javadoc)
@@ -109,9 +109,9 @@ public class MemoPropertiesHandler extends AbstractHandler implements ITestableH
 	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#setWindowsBlock(boolean)
 	 */
 	@Override
-	public void setWindowsBlock(boolean windowsBlock)
+	public void setTesting(boolean windowsBlock)
 	{
-		fWindowsBlock = windowsBlock;
+		fTesting = windowsBlock;
 	}
 
 }

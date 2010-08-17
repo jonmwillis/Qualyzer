@@ -46,7 +46,7 @@ public class DeleteInvestigatorHandler extends AbstractHandler implements ITesta
 
 	private static final String NEWLINE = "\n"; //$NON-NLS-1$
 	private IDialogTester fTester = new NullTester();
-	private boolean fWindowsBlock = true;
+	private boolean fTesting = false;
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
@@ -119,7 +119,7 @@ public class DeleteInvestigatorHandler extends AbstractHandler implements ITesta
 			msg = Messages.getString("handlers.DeleteInvestigatorHandler.confirm2"); //$NON-NLS-1$
 		}
 		
-		boolean check = MessageDialog.openConfirm(shell, Messages.getString(
+		boolean check = fTesting || MessageDialog.openConfirm(shell, Messages.getString(
 		"handlers.DeleteInvestigatorHandler.deleteInvestigator"), msg); //$NON-NLS-1$
 		
 		if(check)
@@ -329,9 +329,9 @@ public class DeleteInvestigatorHandler extends AbstractHandler implements ITesta
 	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#isWindowsBlock()
 	 */
 	@Override
-	public boolean isWindowsBlock()
+	public boolean isTesting()
 	{
-		return fWindowsBlock;
+		return fTesting;
 	}
 
 	/* (non-Javadoc)
@@ -348,9 +348,9 @@ public class DeleteInvestigatorHandler extends AbstractHandler implements ITesta
 	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#setWindowsBlock(boolean)
 	 */
 	@Override
-	public void setWindowsBlock(boolean windowsBlock)
+	public void setTesting(boolean windowsBlock)
 	{
-		fWindowsBlock = windowsBlock;
+		fTesting = windowsBlock;
 	}
 
 }

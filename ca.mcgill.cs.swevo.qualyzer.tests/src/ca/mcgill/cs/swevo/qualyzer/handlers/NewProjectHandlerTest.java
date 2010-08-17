@@ -88,7 +88,7 @@ public class NewProjectHandlerTest
 	public void testNewProject()
 	{
 		NewProjectHandler handler = new NewProjectHandler();
-		handler.setWindowsBlock(false);
+		handler.setTesting(true);
 		handler.setTester(new IDialogTester()
 		{
 			

@@ -70,7 +70,7 @@ public class DeleteTranscriptHandlerTest
 		TestUtil.setProjectExplorerSelection(fTranscript);
 		
 		DeleteTranscriptHandler handler = new DeleteTranscriptHandler();
-		handler.setWindowsBlock(false);
+		handler.setTesting(true);
 		handler.setTester(new IDialogTester()
 		{
 			

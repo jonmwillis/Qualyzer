@@ -74,7 +74,7 @@ public class NewMemoHandlerTest
 		TestUtil.setProjectExplorerSelection(wProject);
 		
 		NewMemoHandler handler = new NewMemoHandler();
-		handler.setWindowsBlock(false);
+		handler.setTesting(true);
 		handler.setTester(new IDialogTester()
 		{
 			

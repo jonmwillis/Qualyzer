@@ -68,7 +68,7 @@ public class ProjectPropertiesTest
 		TestUtil.setProjectExplorerSelection(wProject);
 		
 		ProjectPropertiesHandler handler = new ProjectPropertiesHandler();
-		handler.setWindowsBlock(false);
+		handler.setTesting(true);
 		handler.setTester(new IDialogTester()
 		{
 			
