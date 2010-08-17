@@ -88,7 +88,8 @@ public class ImportTranscriptHandler extends AbstractHandler implements ITestabl
 	}
 
 	/* (non-Javadoc)
-	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#setTester(ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester)
+	 * @see ca.mcgill.cs.swevo.qualyzer.handlers.ITestableHandler#setTester(
+	 * ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester)
 	 */
 	@Override
 	public void setTester(IDialogTester tester)
