@@ -31,6 +31,7 @@ import ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
+import ca.mcgill.cs.swevo.qualyzer.util.FileUtil;
 
 /**
  * @author Jonathan Faubert
@@ -95,7 +96,7 @@ public class ProjectPropertiesTest
 		String name = "";
 		try
 		{
-			name = wProject.getDescription().getComment();
+			name = FileUtil.getProjectProperty(wProject, FileUtil.ACTIVE_INV);
 		}
 		catch (CoreException e)
 		{
