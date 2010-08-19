@@ -23,6 +23,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.LockOptions;
 import org.hibernate.Session;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
+import org.hibernate.tool.hbm2ddl.SchemaUpdate;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
@@ -99,6 +100,32 @@ public final class PersistenceManager
 		// Init DB
 		SchemaExport export = new SchemaExport(dbManager.getConfiguration());
 		export.execute(false, true, false, false);
+	}
+	
+	/**
+	 * Update the database of a project.
+	 * @param project
+	 */
+	public void updateDB(IProject project) 
+	{
+		String dbPath = getDBPath(project).toOSString();
+		String connectionString = DB_CONNECTION_STRING.replace("%s", dbPath) + DB_INIT_STRING; //$NON-NLS-1$
+
+		HibernateDBManager dbManager;
+		dbManager = new HibernateDBManager(connectionString, DB_USERNAME,
+				"", DB_DRIVER, DB_DIALECT); //$NON-NLS-1$
+
+		// Init DB
+		SchemaUpdate update = new SchemaUpdate(dbManager.getConfiguration());
+		update.execute(false, true);
+
+		dbManager.getSessionFactory().close();
+
+		if (!update.getExceptions().isEmpty()) 
+		{
+			throw new QualyzerException("Error while upgrading the database.",
+					(Throwable) update.getExceptions().get(0));
+		}
 	}
 	
 	/**

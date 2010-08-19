@@ -85,6 +85,12 @@ public class PersistenceManagerTest
 	{
 		try
 		{
+			HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(
+					fProject.getName());
+			if (manager != null) 
+			{
+				manager.close();
+			}
 			fProject.delete(true, new NullProgressMonitor());
 		}
 		catch (CoreException e)
@@ -103,6 +109,25 @@ public class PersistenceManagerTest
 		fManager.initDB(fProject);
 		IPath path = fManager.getDBFilePath(fProject);
 		assertTrue(path.toFile().exists());
+	}
+	
+	/**
+	 * Verifies that an up-to-date db can be updated without throwing exceptions.
+	 * 
+	 */
+	@Test
+	public void testDBUpdate()
+	{
+		fManager.initDB(fProject);
+		Project projectDB = new Project();
+		projectDB.setName(TEST_PROJECT_NAME);
+		HibernateUtil.quietSave(fActivator.getHibernateDBManagers().get(TEST_PROJECT_NAME), projectDB);
+		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(
+				fProject.getName());
+		manager.close();
+		
+		fManager.updateDB(fProject);
+	
 	}
 
 	/**
