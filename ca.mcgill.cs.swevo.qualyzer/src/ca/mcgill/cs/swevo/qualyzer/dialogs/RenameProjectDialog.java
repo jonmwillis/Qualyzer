@@ -90,7 +90,8 @@ public class RenameProjectDialog extends TitleAreaDialog
 	
 	private void validate()
 	{
-		ProjectNameValidator validator = new ProjectNameValidator(fNameText.getText(), fProject.getName(), fProject);
+		ProjectNameValidator validator = new ProjectNameValidator(fNameText.getText().trim(), 
+				fProject.getName(), fProject);
 		if(validator.isValid())
 		{
 			setErrorMessage(null);
@@ -110,7 +111,7 @@ public class RenameProjectDialog extends TitleAreaDialog
 	@Override
 	public void okPressed()
 	{
-		fNewName = fNameText.getText();
+		fNewName = fNameText.getText().trim();
 		super.okPressed();
 	}
 	
@@ -119,7 +120,7 @@ public class RenameProjectDialog extends TitleAreaDialog
 	 */
 	public String getNewName()
 	{
-		return fNewName;
+		return fNewName.trim();
 	}
 	
 	/**

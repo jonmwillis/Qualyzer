@@ -246,7 +246,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 			@Override
 			public void keyReleased(KeyEvent e)
 			{
-				CodeValidator lValidator = new CodeValidator(fName.getText(), 
+				CodeValidator lValidator = new CodeValidator(fName.getText().trim(), 
 						fCodes.get(fCurrentSelection).getCodeName(), fProject);
 				if(!lValidator.isValid())
 				{
@@ -518,8 +518,8 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 				if(!fIsDirty)
 				{
 					Code code = fCodes.get(fCurrentSelection);
-					if(!fName.getText().equals(code.getCodeName()) || 
-							!fDescription.getText().equals(code.getDescription()))
+					if(!fName.getText().trim().equals(code.getCodeName()) || 
+							!fDescription.getText().trim().equals(code.getDescription()))
 					{
 						fIsDirty = true;
 						getEditor().editorDirtyStateChanged();
@@ -563,13 +563,13 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 					if(fCurrentSelection != -1 && index != -1)
 					{
 						Code old = fCodes.get(fCurrentSelection);
-						if(!old.getCodeName().equals(fName.getText()) || 
-								!old.getDescription().equals(fDescription.getText()))
+						if(!old.getCodeName().equals(fName.getText().trim()) || 
+								!old.getDescription().equals(fDescription.getText().trim()))
 						{
 							fModified[fCurrentSelection] = old;
-							old.setCodeName(fName.getText());
-							old.setDescription(fDescription.getText());
-							fTable.getItem(fCurrentSelection).setText(fName.getText());
+							old.setCodeName(fName.getText().trim());
+							old.setDescription(fDescription.getText().trim());
+							fTable.getItem(fCurrentSelection).setText(fName.getText().trim());
 						}
 					}
 					fCurrentSelection = index;
@@ -646,10 +646,11 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	public Code[] getModifiedCodes()
 	{
 		Code current = fCodes.get(fCurrentSelection);
-		if(!current.getCodeName().equals(fName.getText()) || !current.getDescription().equals(fDescription.getText()))
+		if(!current.getCodeName().equals(fName.getText().trim()) || 
+				!current.getDescription().equals(fDescription.getText().trim()))
 		{
-			current.setCodeName(fName.getText());
-			current.setDescription(fDescription.getText());
+			current.setCodeName(fName.getText().trim());
+			current.setDescription(fDescription.getText().trim());
 			fModified[fCurrentSelection] = current;
 		}
 		

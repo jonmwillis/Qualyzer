@@ -421,7 +421,7 @@ public class TranscriptWizardPage extends WizardPage
 	 */
 	public String getTranscriptName()
 	{
-		return fName.getText();
+		return fName.getText().trim();
 	}
 	
 	/**
@@ -492,7 +492,7 @@ public class TranscriptWizardPage extends WizardPage
 	 */
 	protected void validate()
 	{
-		TranscriptValidator lValidator = new TranscriptValidator(fName.getText(), fProject, 
+		TranscriptValidator lValidator = new TranscriptValidator(fName.getText().trim(), fProject, 
 				fTable.getSelectionCount(), fAudioFile.getText());
 		
 		if(!lValidator.isValid())
