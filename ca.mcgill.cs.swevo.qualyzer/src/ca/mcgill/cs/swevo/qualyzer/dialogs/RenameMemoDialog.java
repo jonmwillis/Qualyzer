@@ -89,7 +89,7 @@ public class RenameMemoDialog extends TitleAreaDialog
 			@Override
 			public void modifyText(ModifyEvent e)
 			{
-				MemoNameValidator validator = new MemoNameValidator(fNewName.getText(), fOldName, fProject);
+				MemoNameValidator validator = new MemoNameValidator(fNewName.getText().trim(), fOldName, fProject);
 				if(validator.isValid())
 				{
 					setErrorMessage(null);
@@ -122,7 +122,7 @@ public class RenameMemoDialog extends TitleAreaDialog
 	 */
 	public String getName()
 	{
-		return fName;
+		return fName.trim();
 	}
 	
 	/**

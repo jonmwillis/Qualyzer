@@ -107,7 +107,7 @@ public class AddInvestigatorPage extends WizardPage
 	 */
 	public String getInvestigatorNickname()
 	{
-		return fNickname.getText();
+		return fNickname.getText().trim();
 	}
 	
 	/**
@@ -116,7 +116,7 @@ public class AddInvestigatorPage extends WizardPage
 	 */
 	public String getInvestigatorFullname()
 	{
-		return fFullname.getText();
+		return fFullname.getText().trim();
 	}
 	
 	/**
@@ -125,7 +125,7 @@ public class AddInvestigatorPage extends WizardPage
 	 */
 	public String getInstitution()
 	{
-		return fInstitution.getText();
+		return fInstitution.getText().trim();
 	}
 	
 	private ModifyListener createKeyListener()
@@ -134,7 +134,7 @@ public class AddInvestigatorPage extends WizardPage
 			@Override
 			public void modifyText(ModifyEvent e)
 			{
-				InvestigatorValidator lValidator = new InvestigatorValidator(fNickname.getText(), fProject);
+				InvestigatorValidator lValidator = new InvestigatorValidator(fNickname.getText().trim(), fProject);
 				if(lValidator.isValid())
 				{
 					setPageComplete(true);
@@ -156,7 +156,7 @@ public class AddInvestigatorPage extends WizardPage
 			@Override
 			public void modifyText(ModifyEvent e)
 			{
-				StringLengthValidator lValidator = new StringLengthValidator(pLabel, pText.getText());
+				StringLengthValidator lValidator = new StringLengthValidator(pLabel, pText.getText().trim());
 				
 				if(lValidator.isValid())
 				{
