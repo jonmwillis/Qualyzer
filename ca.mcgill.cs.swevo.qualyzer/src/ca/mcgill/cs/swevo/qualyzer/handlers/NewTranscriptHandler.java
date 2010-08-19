@@ -13,6 +13,9 @@ package ca.mcgill.cs.swevo.qualyzer.handlers;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -26,6 +29,7 @@ import ca.mcgill.cs.swevo.qualyzer.dialogs.QualyzerWizardDialog;
 import ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester;
 import ca.mcgill.cs.swevo.qualyzer.editors.NullTester;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
+import ca.mcgill.cs.swevo.qualyzer.providers.WrapperTranscript;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 import ca.mcgill.cs.swevo.qualyzer.wizards.NewTranscriptWizard;
 
@@ -62,6 +66,10 @@ public class NewTranscriptHandler extends AbstractHandler implements ITestableHa
 			if(dialog.getReturnCode() == WizardDialog.OK)
 			{
 				view.getCommonViewer().refresh();
+				IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(project.getFolderName());
+				WrapperTranscript wrapper = new WrapperTranscript(project);
+				view.getCommonViewer().expandToLevel(wProject, IResource.DEPTH_ONE);
+				view.getCommonViewer().expandToLevel(wrapper, IResource.DEPTH_INFINITE);
 								
 				ResourcesUtil.openEditor(page, wizard.getTranscript());
 			}

@@ -13,6 +13,9 @@ package ca.mcgill.cs.swevo.qualyzer.handlers;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
@@ -66,8 +69,9 @@ public class NewCodeHandler extends AbstractHandler implements ITestableHandler
 			if(dialog.getReturnCode() == Window.OK)
 			{
 				Facade.getInstance().createCode(dialog.getName(), dialog.getDescription(), project);
-				
 				viewer.getCommonViewer().refresh();
+				IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(project.getFolderName());
+				viewer.getCommonViewer().expandToLevel(wProject, IResource.DEPTH_ONE);
 				
 				ResourcesUtil.openEditor(activePage, new WrapperCode(project));
 			}
