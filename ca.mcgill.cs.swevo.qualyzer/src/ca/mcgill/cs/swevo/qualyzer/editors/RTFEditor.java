@@ -62,6 +62,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.ProjectListener;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
+import ca.mcgill.cs.swevo.qualyzer.util.FileUtil;
 
 /**
  * A Rich Text Editor.
@@ -523,7 +524,7 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 		
 		try
 		{
-			name = wProject.getDescription().getComment();
+			name = FileUtil.getProjectProperty(wProject, FileUtil.ACTIVE_INV);
 		}
 		catch (CoreException e)
 		{

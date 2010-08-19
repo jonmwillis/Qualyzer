@@ -18,7 +18,6 @@ import java.io.File;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -95,9 +94,7 @@ public final class Facade
 		
 		try
 		{
-			IProjectDescription desc = wProject.getDescription();
-			desc.setComment(nickname);
-			wProject.setDescription(desc, new NullProgressMonitor());
+			FileUtil.setProjectProperty(wProject, FileUtil.ACTIVE_INV, nickname);
 		}
 		catch (CoreException e)
 		{

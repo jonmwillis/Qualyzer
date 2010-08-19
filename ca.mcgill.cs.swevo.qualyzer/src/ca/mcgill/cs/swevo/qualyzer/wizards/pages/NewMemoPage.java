@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.wizard.WizardPage;
@@ -42,6 +41,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Participant;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 import ca.mcgill.cs.swevo.qualyzer.model.validation.MemoValidator;
+import ca.mcgill.cs.swevo.qualyzer.util.FileUtil;
 
 /**
  *
@@ -136,12 +136,10 @@ public class NewMemoPage extends WizardPage
 		fAuthorName.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 		
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(fProject.getFolderName());
-		IProjectDescription description;
 		String name = ""; //$NON-NLS-1$
 		try
 		{
-			description = project.getDescription();
-			name = description.getComment();
+			name = FileUtil.getProjectProperty(project, FileUtil.ACTIVE_INV);
 		}
 		catch (CoreException e)
 		{

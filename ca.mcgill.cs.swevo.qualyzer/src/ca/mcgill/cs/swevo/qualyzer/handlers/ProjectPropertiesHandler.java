@@ -14,9 +14,7 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -37,6 +35,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
+import ca.mcgill.cs.swevo.qualyzer.util.FileUtil;
 
 /**
  * Displays the project properties, including the location and active investigator. 
@@ -76,9 +75,7 @@ public class ProjectPropertiesHandler extends AbstractHandler implements ITestab
 						IProject wProject = (IProject) element;
 						try
 						{
-							IProjectDescription desc = wProject.getDescription();
-							desc.setComment(dialog.getInvestigator());
-							wProject.setDescription(desc, new NullProgressMonitor());
+							FileUtil.setProjectProperty(wProject, FileUtil.ACTIVE_INV, dialog.getInvestigator());
 							
 							Facade facade = Facade.getInstance();
 							facade.getListenerManager().notifyProjectListeners(ChangeType.MODIFY, project, facade);

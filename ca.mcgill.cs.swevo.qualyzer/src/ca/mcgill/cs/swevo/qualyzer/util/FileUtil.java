@@ -39,6 +39,9 @@ import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
  */
 public final class FileUtil
 {
+	public static final String ACTIVE_INV = "activeInv";
+	private static final String DELIMITER = ";";
+	private static final String EQUAL = "=";
 
 	private static final String MEMOS = "memos"; //$NON-NLS-1$
 	private static final String TRANSCRIPTS = "transcripts"; //$NON-NLS-1$
@@ -46,6 +49,72 @@ public final class FileUtil
 	private static Logger gLogger = LoggerFactory.getLogger(FileUtil.class);
 
 	private FileUtil(){}
+	
+	/**
+	 * Get the value of the specified property in the project's .project file.
+	 * @param project
+	 * @param property
+	 * @return
+	 * @throws CoreException
+	 */
+	public static String getProjectProperty(IProject project, String property) throws CoreException
+	{	
+		String comment = project.getDescription().getComment();
+		String[] pairs = comment.split(DELIMITER);
+		for(String pair : pairs)
+		{
+			String[] keyValue = pair.split(EQUAL);
+			if(keyValue.length == 2 && keyValue[0].equals(property))
+			{
+				return keyValue[1];
+			}
+		}
+		
+		return "";
+	}
+	
+	/**
+	 * Set the specified property with the given value in the project's .project file.
+	 * @param project
+	 * @param property
+	 * @param value
+	 * @throws CoreException
+	 */
+	public static void setProjectProperty(IProject project, String property, String value) throws CoreException
+	{
+		IProjectDescription description = project.getDescription();
+		String comment = description.getComment();
+		String newValue = property + EQUAL + value;
+		
+		String[] pairs = comment.split(DELIMITER);
+		boolean found = false;
+		for(int i = 0; i < pairs.length; i++)
+		{
+			String[] keyValue = pairs[i].split(EQUAL);
+			
+			if(keyValue.length == 2 && keyValue[0].equals(property))
+			{
+				pairs[i] = newValue;
+				found = true;
+				break;
+			}
+		}
+		
+		comment = "";
+		for(String info : pairs)
+		{
+			comment += info + DELIMITER;
+		}
+		
+		if(!found)
+		{
+			comment += newValue;
+		}
+		
+		description.setComment(comment);
+		
+		project.setDescription(description, new NullProgressMonitor());
+	}
 
 	/**
 	 * Copies input to the location specified by output.
