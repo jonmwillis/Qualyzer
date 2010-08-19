@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
 import ca.mcgill.cs.swevo.qualyzer.model.Investigator;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
+import ca.mcgill.cs.swevo.qualyzer.util.FileUtil;
 
 /**
  *
@@ -56,7 +57,7 @@ public class ProjectPropertiesDialog extends TitleAreaDialog
 		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(fProject.getFolderName());
 		try
 		{
-			fCurrentName = wProject.getDescription().getComment();
+			fCurrentName = FileUtil.getProjectProperty(wProject, FileUtil.ACTIVE_INV);
 		}
 		catch (CoreException e)
 		{
