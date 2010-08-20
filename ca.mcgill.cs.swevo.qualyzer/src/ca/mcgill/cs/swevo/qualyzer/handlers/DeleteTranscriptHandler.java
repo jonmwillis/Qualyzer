@@ -265,7 +265,7 @@ public class DeleteTranscriptHandler extends AbstractHandler implements ITestabl
 		Project project = transcript.getProject();
 		ArrayList<Code> codes = new ArrayList<Code>();
 		Transcript lTranscript = Facade.getInstance().forceTranscriptLoad(transcript);
-		for(Fragment fragment : lTranscript.getFragments())
+		for(Fragment fragment : lTranscript.getFragments().values())
 		{
 			for(CodeEntry entry : fragment.getCodeEntries())
 			{
@@ -281,7 +281,7 @@ public class DeleteTranscriptHandler extends AbstractHandler implements ITestabl
 			if(!pTranscript.equals(transcript))
 			{
 				Transcript lTrans = Facade.getInstance().forceTranscriptLoad(pTranscript);
-				for(Fragment fragment : lTrans.getFragments())
+				for(Fragment fragment : lTrans.getFragments().values())
 				{
 					for(CodeEntry entry : fragment.getCodeEntries())
 					{
@@ -297,7 +297,7 @@ public class DeleteTranscriptHandler extends AbstractHandler implements ITestabl
 		for(Memo memo : project.getMemos())
 		{
 			Memo lMemo = Facade.getInstance().forceMemoLoad(memo);
-			for(Fragment fragment : lMemo.getFragments())
+			for(Fragment fragment : lMemo.getFragments().values())
 			{
 				for(CodeEntry entry : fragment.getCodeEntries())
 				{

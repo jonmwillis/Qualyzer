@@ -167,7 +167,7 @@ public class DeleteMemoHandler extends AbstractHandler implements ITestableHandl
 		Project project = memo.getProject();
 		ArrayList<Code> codes = new ArrayList<Code>();
 		Memo lMemo = Facade.getInstance().forceMemoLoad(memo);
-		for(Fragment fragment : lMemo.getFragments())
+		for(Fragment fragment : lMemo.getFragments().values())
 		{
 			for(CodeEntry entry : fragment.getCodeEntries())
 			{
@@ -181,7 +181,7 @@ public class DeleteMemoHandler extends AbstractHandler implements ITestableHandl
 		for(Transcript transcript : project.getTranscripts())
 		{
 			Transcript lTrans = Facade.getInstance().forceTranscriptLoad(transcript);
-			for(Fragment fragment : lTrans.getFragments())
+			for(Fragment fragment : lTrans.getFragments().values())
 			{
 				for(CodeEntry entry : fragment.getCodeEntries())
 				{
@@ -198,7 +198,7 @@ public class DeleteMemoHandler extends AbstractHandler implements ITestableHandl
 			if(!pMemo.equals(memo))
 			{
 				Memo lMem = Facade.getInstance().forceMemoLoad(pMemo);
-				for(Fragment fragment : lMem.getFragments())
+				for(Fragment fragment : lMem.getFragments().values())
 				{
 					for(CodeEntry entry : fragment.getCodeEntries())
 					{

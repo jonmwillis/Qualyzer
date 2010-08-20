@@ -234,7 +234,7 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 			else
 			{
 				Memo lMemo = Facade.getInstance().forceMemoLoad(memo);
-				for(Fragment fragment : lMemo.getFragments())
+				for(Fragment fragment : lMemo.getFragments().values())
 				{
 					boolean found = false;
 					for(CodeEntry entry : fragment.getCodeEntries())
@@ -326,7 +326,7 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 		for(Transcript transcript : fInvestigator.getProject().getTranscripts())
 		{
 			Transcript lTranscript = Facade.getInstance().forceTranscriptLoad(transcript);
-			for(Fragment fragment : lTranscript.getFragments())
+			for(Fragment fragment : lTranscript.getFragments().values())
 			{
 				boolean found = false;
 				for(CodeEntry entry : fragment.getCodeEntries())

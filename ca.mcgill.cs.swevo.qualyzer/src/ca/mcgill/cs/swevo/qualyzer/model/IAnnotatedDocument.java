@@ -12,52 +12,56 @@
 package ca.mcgill.cs.swevo.qualyzer.model;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  */
 public interface IAnnotatedDocument
 {
-	
+
 	/**
 	 * @return
 	 */
 	String getName();
-	
+
 	/**
 	 * @return
 	 */
 	List<Participant> getParticipants();
-	
+
 	/**
 	 * @return
 	 */
-	List<Fragment> getFragments();
-	
+	Map<Integer, Fragment> getFragments();
+
 	/**
 	 * @return
 	 */
 	Project getProject();
-	
+
 	/**
 	 * Get the file name.
+	 * 
 	 * @return
 	 */
 	String getFileName();
-	
+
 	/**
 	 * 
 	 * @return
 	 */
 	String getDate();
-	
+
 	/**
 	 * Set the fragments.
+	 * 
 	 * @param fragments
 	 */
-	void setFragments(List<Fragment> fragments);
-	
+	void setFragments(Map<Integer, Fragment> fragments);
+
 	/**
 	 * Set the project.
+	 * 
 	 * @param project
 	 */
 	void setProject(Project project);
@@ -66,7 +70,7 @@ public interface IAnnotatedDocument
 	 * @param name
 	 */
 	void setName(String name);
-	
+
 	/**
 	 * 
 	 * @param date

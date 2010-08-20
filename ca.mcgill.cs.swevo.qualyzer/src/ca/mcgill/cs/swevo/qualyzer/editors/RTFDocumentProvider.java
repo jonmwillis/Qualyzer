@@ -74,7 +74,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		
 		IAnnotatedDocument transcript = ((RTFEditorInput) element).getDocument();
 		
-		for(Fragment fragment : transcript.getFragments())
+		for(Fragment fragment : transcript.getFragments().values())
 		{
 			Position position = new Position(fragment.getOffset(), fragment.getLength());
 			doc.addAnnotation(position, new FragmentAnnotation(fragment));

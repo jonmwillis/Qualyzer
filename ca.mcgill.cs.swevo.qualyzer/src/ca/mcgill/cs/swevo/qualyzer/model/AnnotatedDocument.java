@@ -11,7 +11,9 @@
 package ca.mcgill.cs.swevo.qualyzer.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -27,6 +29,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -49,14 +52,14 @@ public abstract class AnnotatedDocument implements IAnnotatedDocument
 
 	private static final int NUM1 = 7;
 	private static final int NUM2 = 23;
-	
+
 	private Long fPersistenceId;
 	private Project fProject;
 	private List<Participant> fParticipants = new ArrayList<Participant>();
-	private List<Fragment> fFragments = new ArrayList<Fragment>();
+	private Map<Integer, Fragment> fFragments = new HashMap<Integer, Fragment>();
 	private String fName;
 	private String fFileName;
-	
+
 	/**
 	 * Has the format MM/DD/YYYY. Always entered using a DateTime Widget.
 	 */
@@ -79,7 +82,7 @@ public abstract class AnnotatedDocument implements IAnnotatedDocument
 	{
 		this.fPersistenceId = persistenceId;
 	}
-	
+
 	@ManyToMany(fetch = FetchType.LAZY)
 	@CollectionId(columns = @Column(name = "COL_ID"), type = @Type(type = "string"), generator = "uuid-gen")
 	@Override
@@ -97,8 +100,9 @@ public abstract class AnnotatedDocument implements IAnnotatedDocument
 	}
 
 	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "document")
+	@MapKey(name = "offset")
 	@Override
-	public List<Fragment> getFragments()
+	public Map<Integer, Fragment> getFragments()
 	{
 		return fFragments;
 	}
@@ -106,7 +110,7 @@ public abstract class AnnotatedDocument implements IAnnotatedDocument
 	/**
 	 * @param fragments
 	 */
-	public void setFragments(List<Fragment> fragments)
+	public void setFragments(Map<Integer, Fragment> fragments)
 	{
 		this.fFragments = fragments;
 	}
@@ -158,7 +162,7 @@ public abstract class AnnotatedDocument implements IAnnotatedDocument
 	{
 		this.fProject = project;
 	}
-	
+
 	/**
 	 * 
 	 * @param Date
@@ -176,7 +180,7 @@ public abstract class AnnotatedDocument implements IAnnotatedDocument
 	{
 		return fDate;
 	}
-	
+
 	@Override
 	public int hashCode()
 	{
@@ -197,8 +201,8 @@ public abstract class AnnotatedDocument implements IAnnotatedDocument
 
 		AnnotatedDocument document = (AnnotatedDocument) obj;
 
-		return new EqualsBuilder().append(fName, document.fName).append(fFileName, document.fFileName).append(
-				fProject, document.fProject).isEquals();
+		return new EqualsBuilder().append(fName, document.fName).append(fFileName, document.fFileName).append(fProject,
+				document.fProject).isEquals();
 	}
 
 }

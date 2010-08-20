@@ -49,16 +49,7 @@ public class ViewFragmentsAction extends Action
 	public void run()
 	{
 		Point selection = fViewer.getSelectedRange();
-		Fragment fragment = null;
-		
-		for(Fragment frag : fEditor.getDocument().getFragments())
-		{
-			if(frag.getOffset() == selection.x && frag.getLength() == selection.y)
-			{
-				fragment = frag;
-				break;
-			}
-		}
+		Fragment fragment = fEditor.getDocument().getFragments().get(selection.x);
 		
 		Code toOpen = chooseCode(fragment);
 		
