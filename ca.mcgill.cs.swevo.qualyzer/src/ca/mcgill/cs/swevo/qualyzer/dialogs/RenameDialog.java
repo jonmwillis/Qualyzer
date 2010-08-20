@@ -91,7 +91,7 @@ public class RenameDialog extends TitleAreaDialog
 			public void modifyText(ModifyEvent e)
 			{
 				TranscriptNameValidator lValidator = 
-					new TranscriptNameValidator(fNewName.getText(), fOldName, fProject);
+					new TranscriptNameValidator(fNewName.getText().trim(), fOldName, fProject);
 				
 				if(!lValidator.isValid())
 				{
@@ -114,7 +114,7 @@ public class RenameDialog extends TitleAreaDialog
 	 */
 	public String getName()
 	{
-		return fName;
+		return fName.trim();
 	}
 
 	/**

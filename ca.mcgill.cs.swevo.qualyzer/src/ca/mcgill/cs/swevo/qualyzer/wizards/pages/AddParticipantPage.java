@@ -87,7 +87,7 @@ public class AddParticipantPage extends WizardPage
 			@Override
 			public void modifyText(ModifyEvent e)
 			{
-				ParticipantValidator lValidator = new ParticipantValidator(fIdText.getText(), fProject);
+				ParticipantValidator lValidator = new ParticipantValidator(fIdText.getText().trim(), fProject);
 				if(lValidator.isValid())
 				{
 					setPageComplete(true);
@@ -139,7 +139,7 @@ public class AddParticipantPage extends WizardPage
 	 */
 	public String getParticipantId()
 	{
-		return fIdText.getText();
+		return fIdText.getText().trim();
 	}
 
 	/**
@@ -148,7 +148,7 @@ public class AddParticipantPage extends WizardPage
 	 */
 	public String getFullname()
 	{
-		return fFullNameText.getText();
+		return fFullNameText.getText().trim();
 	}
 	
 	/**

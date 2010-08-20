@@ -862,4 +862,13 @@ public final class Facade
 		
 		fListenerManager.handleProjectNameChange(oldName, refreshedProject);
 	}
+	
+	/**
+	 * Update a project database when the project's version does not match the current version.
+	 * @param project
+	 */
+	public void updateProject(IProject project) 
+	{
+		
+	}
 }

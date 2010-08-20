@@ -131,7 +131,7 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 			@Override
 			public void keyReleased(KeyEvent event)
 			{
-				ParticipantValidator lValidator = new ParticipantValidator(fID.getText(), 
+				ParticipantValidator lValidator = new ParticipantValidator(fID.getText().trim(), 
 						fParticipant.getParticipantId(), fParticipant.getProject());
 				
 				if(!lValidator.isValid())
@@ -155,7 +155,7 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 			@Override
 			public void keyReleased(KeyEvent event)
 			{
-				StringLengthValidator lValidator = new StringLengthValidator(pLabel, pText.getText());
+				StringLengthValidator lValidator = new StringLengthValidator(pLabel, pText.getText().trim());
 				
 				if(!lValidator.isValid())
 				{
@@ -359,7 +359,7 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 	 */
 	public String getId()
 	{
-		return fID.getText();
+		return fID.getText().trim();
 	}
 	
 	/**
@@ -368,7 +368,7 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 	 */
 	public String getFullname()
 	{
-		return fFullname.getText();
+		return fFullname.getText().trim();
 	}
 	
 	/**
@@ -391,11 +391,11 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 
 			private boolean fieldHasChanged()
 			{
-				if(!fID.getText().equals(fParticipant.getParticipantId()))
+				if(!fID.getText().trim().equals(fParticipant.getParticipantId()))
 				{
 					return true;
 				}
-				else if(!fFullname.getText().equals(fParticipant.getFullName()))
+				else if(!fFullname.getText().trim().equals(fParticipant.getFullName()))
 				{
 					return true;
 				}

@@ -212,7 +212,7 @@ public class NewMemoPage extends WizardPage
 	 */
 	protected void validate()
 	{
-		MemoValidator validator = new MemoValidator(fName.getText(), getAuthor(), fProject);
+		MemoValidator validator = new MemoValidator(fName.getText().trim(), getAuthor(), fProject);
 		
 		if(validator.isValid())
 		{
@@ -281,7 +281,7 @@ public class NewMemoPage extends WizardPage
 	 */
 	public String getMemoName()
 	{
-		return fName.getText();
+		return fName.getText().trim();
 	}
 	
 	/**
