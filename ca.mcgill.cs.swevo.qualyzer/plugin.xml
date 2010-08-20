@@ -579,11 +579,10 @@
                   style="push">
             </command>
             <command
-                  commandId="ca.mcgill.cs.swevo.qualyzer.commands.importTranscript"
-                  icon="icons/file_obj.gif"
-                  label="%command.label.transcript"
-                  style="push"
-                  tooltip="%command.tooltip.importTranscript">
+                  commandId="ca.mcgill.cs.swevo.qualyzer.commands.importMemo"
+                  icon="icons/memo_obj.png"
+                  label="%command.label.memo"
+                  style="push">
                <visibleWhen
                      checkEnabled="false">
                   <iterate
@@ -609,10 +608,11 @@
                </visibleWhen>
             </command>
             <command
-                  commandId="ca.mcgill.cs.swevo.qualyzer.commands.importMemo"
-                  icon="icons/memo_obj.png"
-                  label="%command.label.memo"
-                  style="push">
+                  commandId="ca.mcgill.cs.swevo.qualyzer.commands.importTranscript"
+                  icon="icons/file_obj.gif"
+                  label="%command.label.transcript"
+                  style="push"
+                  tooltip="%command.tooltip.importTranscript">
                <visibleWhen
                      checkEnabled="false">
                   <iterate

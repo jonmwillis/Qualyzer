@@ -150,8 +150,8 @@ public class NewProjectPage extends WizardPage
 			@Override
 			public void modifyText(ModifyEvent e)
 			{
-				ProjectValidator lValidator = new ProjectValidator(fProjectName.getText(), 
-						fNickname.getText(), ResourcesPlugin.getWorkspace().getRoot());
+				ProjectValidator lValidator = new ProjectValidator(fProjectName.getText().trim(), 
+						fNickname.getText().trim(), ResourcesPlugin.getWorkspace().getRoot());
 				if(lValidator.isValid())
 				{
 					setError(null);
@@ -183,7 +183,7 @@ public class NewProjectPage extends WizardPage
 	 */
 	public String getProjectName()
 	{
-		return fProjectNameString;
+		return fProjectNameString.trim();
 	}
 	
 	/**
@@ -192,7 +192,7 @@ public class NewProjectPage extends WizardPage
 	 */
 	public String getInvestigatorNickname()
 	{
-		return fNicknameString;
+		return fNicknameString.trim();
 	}
 	
 	/**
@@ -201,7 +201,7 @@ public class NewProjectPage extends WizardPage
 	 */
 	public String getInvestigatorFullname()
 	{
-		return fFullNameString;
+		return fFullNameString.trim();
 	}
 	
 	/**
@@ -210,7 +210,7 @@ public class NewProjectPage extends WizardPage
 	 */
 	public String getInstitution()
 	{
-		return fInstitutionString;
+		return fInstitutionString.trim();
 	}
 	
 	/**
