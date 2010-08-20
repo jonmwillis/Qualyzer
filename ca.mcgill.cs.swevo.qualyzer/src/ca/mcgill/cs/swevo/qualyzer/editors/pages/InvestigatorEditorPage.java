@@ -145,7 +145,7 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 			@Override
 			public void keyReleased(KeyEvent event)
 			{
-				InvestigatorValidator lValidator = new InvestigatorValidator(fNickname.getText(),
+				InvestigatorValidator lValidator = new InvestigatorValidator(fNickname.getText().trim(),
 						fInvestigator.getNickName(), fInvestigator.getProject());
 				
 				if(!lValidator.isValid())
@@ -168,7 +168,7 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 			@Override
 			public void keyReleased(KeyEvent event)
 			{
-				StringLengthValidator lValidator = new StringLengthValidator(pLabel, pText.getText());
+				StringLengthValidator lValidator = new StringLengthValidator(pLabel, pText.getText().trim());
 				
 				if(!lValidator.isValid())
 				{
@@ -420,7 +420,7 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 	 */
 	public String getNickname()
 	{
-		return fNickname.getText();
+		return fNickname.getText().trim();
 	}
 	
 	/**
@@ -429,7 +429,7 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 	 */
 	public String getFullname()
 	{
-		return fFullname.getText();
+		return fFullname.getText().trim();
 	}
 	
 	/**
@@ -438,7 +438,7 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 	 */
 	public String getInstitution()
 	{
-		return fInstitution.getText();
+		return fInstitution.getText().trim();
 	}
 	
 	/**
@@ -465,15 +465,15 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 			private boolean fieldHasChanged()
 			{
 				boolean hasChanged = false;
-				if(!fNickname.getText().equals(fInvestigator.getNickName()))
+				if(!fNickname.getText().trim().equals(fInvestigator.getNickName()))
 				{
 					hasChanged = true;
 				}
-				else if(!fFullname.getText().equals(fInvestigator.getFullName()))
+				else if(!fFullname.getText().trim().equals(fInvestigator.getFullName()))
 				{
 					hasChanged = true;
 				}
-				else if(!fInstitution.getText().equals(fInvestigator.getInstitution()))
+				else if(!fInstitution.getText().trim().equals(fInvestigator.getInstitution()))
 				{
 					hasChanged = true;
 				}
