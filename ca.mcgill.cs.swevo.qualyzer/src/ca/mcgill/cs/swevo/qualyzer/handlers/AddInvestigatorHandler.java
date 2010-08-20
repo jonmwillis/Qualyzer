@@ -13,6 +13,9 @@ package ca.mcgill.cs.swevo.qualyzer.handlers;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
@@ -26,6 +29,7 @@ import ca.mcgill.cs.swevo.qualyzer.dialogs.QualyzerWizardDialog;
 import ca.mcgill.cs.swevo.qualyzer.editors.IDialogTester;
 import ca.mcgill.cs.swevo.qualyzer.editors.NullTester;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
+import ca.mcgill.cs.swevo.qualyzer.providers.WrapperInvestigator;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 import ca.mcgill.cs.swevo.qualyzer.wizards.AddInvestigatorWizard;
 
@@ -64,6 +68,10 @@ public class AddInvestigatorHandler extends AbstractHandler implements ITestable
 			if(dialog.getReturnCode() == Window.OK)
 			{
 				view.getCommonViewer().refresh();
+				IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(project.getFolderName());
+				WrapperInvestigator wrapper = new WrapperInvestigator(project);
+				view.getCommonViewer().expandToLevel(wProject, IResource.DEPTH_ONE);
+				view.getCommonViewer().expandToLevel(wrapper, IResource.DEPTH_INFINITE);
 				
 				ResourcesUtil.openEditor(page, wizard.getInvestigator());
 			}

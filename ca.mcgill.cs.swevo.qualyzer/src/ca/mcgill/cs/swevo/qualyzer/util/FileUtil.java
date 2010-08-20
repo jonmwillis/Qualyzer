@@ -39,9 +39,10 @@ import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
  */
 public final class FileUtil
 {
-	public static final String ACTIVE_INV = "activeInv";
-	private static final String DELIMITER = ";";
-	private static final String EQUAL = "=";
+	public static final String ACTIVE_INV = "activeInv"; //$NON-NLS-1$
+	public static final String PROJECT_VERSION = "projectVersion";
+	private static final String DELIMITER = ";"; //$NON-NLS-1$
+	private static final String EQUAL = "="; //$NON-NLS-1$
 
 	private static final String MEMOS = "memos"; //$NON-NLS-1$
 	private static final String TRANSCRIPTS = "transcripts"; //$NON-NLS-1$
@@ -70,7 +71,7 @@ public final class FileUtil
 			}
 		}
 		
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 	
 	/**
@@ -100,7 +101,7 @@ public final class FileUtil
 			}
 		}
 		
-		comment = "";
+		comment = ""; //$NON-NLS-1$
 		for(String info : pairs)
 		{
 			comment += info + DELIMITER;

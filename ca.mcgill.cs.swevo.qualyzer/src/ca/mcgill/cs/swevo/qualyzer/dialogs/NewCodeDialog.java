@@ -95,7 +95,7 @@ public class NewCodeDialog extends TitleAreaDialog
 			@Override
 			public void modifyText(ModifyEvent e)
 			{
-				CodeValidator lValidator = new CodeValidator(fNameText.getText(), fProject);
+				CodeValidator lValidator = new CodeValidator(fNameText.getText().trim(), fProject);
 				
 				if(!lValidator.isValid())
 				{
@@ -125,7 +125,7 @@ public class NewCodeDialog extends TitleAreaDialog
 	 */
 	public String getName()
 	{
-		return fName;
+		return fName.trim();
 	}
 	
 	/**
@@ -134,7 +134,7 @@ public class NewCodeDialog extends TitleAreaDialog
 	 */
 	public String getDescription()
 	{
-		return fDescription;
+		return fDescription.trim();
 	}
 	
 	/**

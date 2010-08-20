@@ -131,7 +131,8 @@ public class CodeChooserDialog extends TitleAreaDialog
 			@Override
 			public void modifyText(ModifyEvent e)
 			{
-				CodeChooserValidator validator = new CodeChooserValidator(fCodeName.getText(), fProject, fFragment);
+				CodeChooserValidator validator = new CodeChooserValidator(fCodeName.getText().trim(), 
+						fProject, fFragment);
 				if(!validator.isValid())
 				{
 					if(validator.getErrorMessage().equals(Messages.getString(
@@ -141,7 +142,7 @@ public class CodeChooserDialog extends TitleAreaDialog
 						setMessage(Messages.getString("dialogs.CodeChooserDialog.enterName")); //$NON-NLS-1$
 						for(Code code : fProject.getCodes())
 						{
-							if(code.getCodeName().equals(fCodeName.getText()))
+							if(code.getCodeName().equals(fCodeName.getText().trim()))
 							{
 								fDescription.setText(code.getDescription());
 							}
@@ -218,7 +219,7 @@ public class CodeChooserDialog extends TitleAreaDialog
 	{	
 		for(Code code : fProject.getCodes())
 		{
-			if(code.getCodeName().equals(fCodeName.getText()))
+			if(code.getCodeName().equals(fCodeName.getText().trim()))
 			{
 				fCode = code;
 				break;
@@ -230,12 +231,13 @@ public class CodeChooserDialog extends TitleAreaDialog
 		
 		if(fCode == null)
 		{
-			fCode = Facade.getInstance().createCode(fCodeName.getText(), fDescription.getText(), fProject);
+			fCode = Facade.getInstance().createCode(fCodeName.getText().trim(), 
+					fDescription.getText().trim(), fProject);
 			view.getCommonViewer().refresh();
 		}
 		else
 		{
-			fCode.setDescription(fDescription.getText());
+			fCode.setDescription(fDescription.getText().trim());
 			Facade.getInstance().saveCodes(new Code[]{fCode});
 			view.getCommonViewer().refresh();
 		}
