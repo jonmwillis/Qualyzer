@@ -135,7 +135,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		for(Transcript transcript : fProject.getTranscripts())
 		{
 			Transcript lTranscript = Facade.getInstance().forceTranscriptLoad(transcript);
-			for(Fragment fragment : lTranscript.getFragments())
+			for(Fragment fragment : lTranscript.getFragments().values())
 			{
 				for(CodeEntry entry : fragment.getCodeEntries())
 				{
@@ -151,7 +151,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		for(Memo memo : fProject.getMemos())
 		{
 			Memo lMemo = Facade.getInstance().forceMemoLoad(memo);
-			for(Fragment fragment : lMemo.getFragments())
+			for(Fragment fragment : lMemo.getFragments().values())
 			{
 				for(CodeEntry entry : fragment.getCodeEntries())
 				{
@@ -474,7 +474,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		for(Transcript transcript : fProject.getTranscripts())
 		{
 			Transcript lTranscript = Facade.getInstance().forceTranscriptLoad(transcript);
-			for(Fragment fragment : lTranscript.getFragments())
+			for(Fragment fragment : lTranscript.getFragments().values())
 			{
 				for(CodeEntry entry : fragment.getCodeEntries())
 				{
@@ -489,7 +489,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		for(Memo memo : fProject.getMemos())
 		{
 			Memo lMemo = Facade.getInstance().forceMemoLoad(memo);
-			for(Fragment fragment : lMemo.getFragments())
+			for(Fragment fragment : lMemo.getFragments().values())
 			{
 				for(CodeEntry entry : fragment.getCodeEntries())
 				{

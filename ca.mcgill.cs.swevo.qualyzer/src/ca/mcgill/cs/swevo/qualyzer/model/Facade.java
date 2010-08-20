@@ -270,7 +270,7 @@ public final class Facade
 		try
 		{
 			fragment.setDocument(document);
-			document.getFragments().add(fragment);
+			document.getFragments().put(fragment.getOffset(), fragment);
 		}
 		catch (HibernateException he)
 		{
@@ -717,7 +717,7 @@ public final class Facade
 			 * really understand it myself -JF.
 			 */
 
-			document.getFragments().remove(fragment);
+			document.getFragments().remove(fragment.getOffset());
 			session.delete(fragment);
 			session.saveOrUpdate(document);
 			session.flush();

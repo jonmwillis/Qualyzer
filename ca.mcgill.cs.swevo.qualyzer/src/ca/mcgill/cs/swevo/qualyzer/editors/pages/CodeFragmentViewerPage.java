@@ -370,7 +370,7 @@ public class CodeFragmentViewerPage extends FormPage implements ProjectListener,
 		IAnnotatedDocument lDocument = Facade.getInstance().forceDocumentLoad(document);
 		ArrayList<Fragment> toReturn = new ArrayList<Fragment>();
 		
-		for(Fragment fragment : lDocument.getFragments())
+		for(Fragment fragment : lDocument.getFragments().values())
 		{
 			for(CodeEntry entry : fragment.getCodeEntries())
 			{

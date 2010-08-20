@@ -104,7 +104,7 @@ public class MarkTextAction extends Action implements ITestableAction
 		Point selection = fSourceViewer.getSelectedRange();
 		Position position = new Position(selection.x, selection.y);
 
-		Fragment fragment = getFragment(document, position);
+		Fragment fragment = document.getFragments().get(position.offset);
 
 		CodeChooserDialog dialog = new CodeChooserDialog(fEditor.getSite().getShell(), document.getProject(), fragment);
 		dialog.setBlockOnOpen(fWindowsBlock);
@@ -123,7 +123,7 @@ public class MarkTextAction extends Action implements ITestableAction
 			}
 			else
 			{
-				fragment = getFragment(document, position);
+				fragment = document.getFragments().get(position.offset);
 			}
 
 			fragment.getCodeEntries().add(entry);
@@ -136,22 +136,4 @@ public class MarkTextAction extends Action implements ITestableAction
 
 	}
 
-	/**
-	 * @param document
-	 * @param position
-	 * @return
-	 */
-	private Fragment getFragment(IAnnotatedDocument document, Position position)
-	{
-		Fragment fragment = null;
-		for (Fragment existingFragment : document.getFragments())
-		{
-			if (existingFragment.getOffset() == position.offset && existingFragment.getLength() == position.length)
-			{
-				fragment = existingFragment;
-				break;
-			}
-		}
-		return fragment;
-	}
 }

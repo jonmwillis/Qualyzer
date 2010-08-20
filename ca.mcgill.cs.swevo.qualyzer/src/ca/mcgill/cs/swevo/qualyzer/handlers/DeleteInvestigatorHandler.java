@@ -171,7 +171,7 @@ public class DeleteInvestigatorHandler extends AbstractHandler implements ITesta
 				Memo lMemo = Facade.getInstance().forceMemoLoad(memo);
 				int numAnnotations = 0;
 				int numCodeEntries = 0;
-				for(Fragment fragment : ((Memo) lMemo).getFragments())
+				for(Fragment fragment : ((Memo) lMemo).getFragments().values())
 				{
 					numAnnotations += countAnnotations(investigator, fragment);	
 					numCodeEntries += countCodeEntries(investigator, fragment);
@@ -189,7 +189,7 @@ public class DeleteInvestigatorHandler extends AbstractHandler implements ITesta
 			Transcript lTranscript = Facade.getInstance().forceTranscriptLoad(transcript);
 			int numAnnotations = 0;
 			int numCodeEntries = 0;
-			for(Fragment fragment : ((Transcript) lTranscript).getFragments())
+			for(Fragment fragment : ((Transcript) lTranscript).getFragments().values())
 			{
 				numAnnotations += countAnnotations(investigator, fragment);	
 				numCodeEntries += countCodeEntries(investigator, fragment);

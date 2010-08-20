@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Map;
 
 import net.sf.colorer.eclipse.ColorerPlugin;
 import net.sf.colorer.eclipse.editors.ColorerEditor;
@@ -836,8 +836,8 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 		if(cType == ChangeType.DELETE || cType == ChangeType.MODIFY)
 		{
 			IAnnotatedDocument document = Facade.getInstance().forceDocumentLoad(fDocument);
-			List<Fragment> newList = document.getFragments();
-			fDocument.setFragments(newList);
+			Map<Integer, Fragment> newMap = document.getFragments();
+			fDocument.setFragments(newMap);
 			
 			while(iter.hasNext())
 			{
@@ -845,13 +845,13 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 				if(annotation instanceof FragmentAnnotation)
 				{
 					Fragment fragment = ((FragmentAnnotation) annotation).getFragment();
-					if(!newList.contains(fragment))
+					if(!newMap.containsKey(fragment.getOffset()))
 					{
 						model.removeAnnotation(annotation);
 					}
 					else
 					{
-						Fragment newFragment = newList.get(newList.indexOf(fragment));
+						Fragment newFragment = newMap.get(fragment.getOffset());
 						((FragmentAnnotation) annotation).setFragment(newFragment);
 					}
 				}

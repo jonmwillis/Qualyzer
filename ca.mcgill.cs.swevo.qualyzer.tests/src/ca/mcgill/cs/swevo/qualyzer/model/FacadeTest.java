@@ -667,8 +667,8 @@ public class FacadeTest
 		Transcript newTranscript = PersistenceManager.getInstance().getProject(TEST_PROJECT_NAME).getTranscripts().get(
 				0);
 		newTranscript = fFacade.forceTranscriptLoad(newTranscript);
-		assertNotNull(newTranscript.getFragments().get(0));
-		assertEquals(transcript, newTranscript.getFragments().get(0).getDocument());
+		assertNotNull(newTranscript.getFragments().get(1));
+		assertEquals(transcript, newTranscript.getFragments().get(1).getDocument());
 	}
 	
 	/**
@@ -692,7 +692,7 @@ public class FacadeTest
 		fFacade.saveTranscript(newTranscript);
 		
 		
-		Fragment newFragment = newTranscript.getFragments().get(0);
+		Fragment newFragment = newTranscript.getFragments().get(1);
 		CodeEntry ce1 = new CodeEntry();
 		ce1.setCode(code1);
 //		ce1.setInvestigator(investigator);

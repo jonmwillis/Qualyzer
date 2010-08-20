@@ -208,7 +208,7 @@ public class ExportCodesHandler extends AbstractHandler
 			Memo lMemo = facade.forceMemoLoad(memo);
 			int freq = 0;
 			
-			for(Fragment fragment : lMemo.getFragments())
+			for(Fragment fragment : lMemo.getFragments().values())
 			{
 				for(CodeEntry entry : fragment.getCodeEntries())
 				{
@@ -243,7 +243,7 @@ public class ExportCodesHandler extends AbstractHandler
 			Transcript lTranscript = facade.forceTranscriptLoad(transcript);
 			int freq = 0;
 			
-			for(Fragment fragment : lTranscript.getFragments())
+			for(Fragment fragment : lTranscript.getFragments().values())
 			{
 				for(CodeEntry entry : fragment.getCodeEntries())
 				{
