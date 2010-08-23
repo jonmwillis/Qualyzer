@@ -12,39 +12,37 @@
 package ca.mcgill.cs.swevo.qualyzer.editors.pages;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.window.Window;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
-import org.eclipse.ui.navigator.CommonNavigator;
 
-import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
-import ca.mcgill.cs.swevo.qualyzer.dialogs.NewCodeDialog;
+import ca.mcgill.cs.swevo.qualyzer.editors.inputs.CodeTableInput;
+import ca.mcgill.cs.swevo.qualyzer.editors.inputs.CodeTableInput.CodeTableRow;
 import ca.mcgill.cs.swevo.qualyzer.model.Code;
 import ca.mcgill.cs.swevo.qualyzer.model.CodeEntry;
 import ca.mcgill.cs.swevo.qualyzer.model.CodeListener;
@@ -60,6 +58,8 @@ import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 import ca.mcgill.cs.swevo.qualyzer.model.TranscriptListener;
 import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
 import ca.mcgill.cs.swevo.qualyzer.model.validation.CodeValidator;
+import ca.mcgill.cs.swevo.qualyzer.providers.CodeTableContentProvider;
+import ca.mcgill.cs.swevo.qualyzer.providers.CodeTableLabelProvider;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
@@ -68,22 +68,22 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 public class CodeEditorPage extends FormPage implements CodeListener, ProjectListener, TranscriptListener, MemoListener
 {
 
+	/**
+	 * 
+	 */
+	private static final int COL_WIDTH = 100;
 	private static final String EMPTY = ""; //$NON-NLS-1$
 	private static final int THRESHHOLD = 18;
-	private static final int BORDER_SIZE = 10;
 
 	private static final String DELETE_CODE = Messages.getString(
 			"editors.pages.CodeEditorPage.deleteCode"); //$NON-NLS-1$
 
 	private Project fProject;
-	
-	private ArrayList<Code> fCodes;
-	private Code[] fModified;
-	private int[] fFrequency;
 
-	private Table fTable;
+	private TableViewer fTableViewer;
+	private CodeTableSorter fSorter;
+	private CodeTableRow fCurrentRow;
 
-	private int fCurrentSelection;
 	private Text fName;
 	private StyledText fDescription;
 
@@ -100,70 +100,14 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		super(editor, Messages.getString("editors.pages.CodeEditorPage.codeEditor"), //$NON-NLS-1$
 				Messages.getString("editors.pages.CodeEditorPage.codeEditor")); //$NON-NLS-1$ 
 		fProject = project;
-		fCodes = new ArrayList<Code>();
-		
-		for(Code code : fProject.getCodes())
-		{
-			fCodes.add(code);
-		}
 				
 		fIsDirty = false;
-		fCurrentSelection = -1;
-		
-		clearModified();
-		
-		countFrequency();
-		
+						
 		ListenerManager listenerManager = Facade.getInstance().getListenerManager();
 		listenerManager.registerCodeListener(fProject, this);
 		listenerManager.registerProjectListener(fProject, this);
 		listenerManager.registerTranscriptListener(fProject, this);
 		listenerManager.registerMemoListener(fProject, this);
-	}
-	
-	/**
-	 * Count how many times each code occurs.
-	 */
-	private void countFrequency()
-	{
-		fFrequency = new int[fCodes.size()];
-		for(int i = 0; i < fFrequency.length; i++)
-		{
-			fFrequency[i] = 0;
-		}
-		
-		for(Transcript transcript : fProject.getTranscripts())
-		{
-			Transcript lTranscript = Facade.getInstance().forceTranscriptLoad(transcript);
-			for(Fragment fragment : lTranscript.getFragments().values())
-			{
-				for(CodeEntry entry : fragment.getCodeEntries())
-				{
-					int index = fCodes.indexOf(entry.getCode());
-					if(index != -1)
-					{
-						fFrequency[index]++;
-					}
-				}
-			}
-		}
-		
-		for(Memo memo : fProject.getMemos())
-		{
-			Memo lMemo = Facade.getInstance().forceMemoLoad(memo);
-			for(Fragment fragment : lMemo.getFragments().values())
-			{
-				for(CodeEntry entry : fragment.getCodeEntries())
-				{
-					int index = fCodes.indexOf(entry.getCode());
-					if(index != -1)
-					{
-						fFrequency[index]++;
-					}
-				}
-			}
-		}
-		
 	}
 
 	@Override
@@ -177,17 +121,16 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		GridLayout layout = new GridLayout(2, true);
 		body.setLayout(layout);
 		
-		initializeTable(toolkit, body);
+		buildTableViewer(body);
 
-		if(fCodes.size() < THRESHHOLD)
+		if(fProject.getCodes().size() < THRESHHOLD)
 		{
-			fTable.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
+			fTableViewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 		}
 		else
 		{
-			fTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+			fTableViewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		}
-		
 		
 		Composite composite = toolkit.createComposite(body, SWT.BORDER);
 		layout = new GridLayout();
@@ -211,30 +154,71 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		toolkit.paintBordersFor(composite);
 		toolkit.paintBordersFor(body);
 		
-		buildFormTable();
-		fTable.addSelectionListener(createTableSelectionListener());
+		fTableViewer.addSelectionChangedListener(createTableSelectionListener());
 		createTableContextMenu();
 		
-		updateSelection();
+		//updateSelection();
 	}
 
 	/**
-	 * @param toolkit
-	 * @param body
+	 * @param body 
+	 * 
 	 */
-	private void initializeTable(FormToolkit toolkit, Composite body)
+	private void buildTableViewer(Composite body)
 	{
-		fTable = toolkit.createTable(body, SWT.BORDER | SWT.SINGLE);
-		fTable.setLinesVisible(true);
-		fTable.setHeaderVisible(true);
-		TableColumn col1 = new TableColumn(fTable, SWT.NONE);
-		col1.setText(Messages.getString("editors.pages.CodeEditorPage.codeName")); //$NON-NLS-1$
-		col1.setMoveable(false);
-		TableColumn col2 = new TableColumn(fTable, SWT.LEFT);
-		col2.setText(Messages.getString("editors.pages.CodeEditorPage.frequency")); //$NON-NLS-1$
-		col2.setMoveable(false);
-		col2.setResizable(false);
-	}	
+		fTableViewer = new TableViewer(body, SWT.SINGLE |  SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL);
+		
+		TableColumn col = new TableColumn(fTableViewer.getTable(), SWT.NONE);
+		col.setText("Code Name");
+		col.setWidth(COL_WIDTH);
+		col.addSelectionListener(createColSortListener(0, col));
+		col.setMoveable(false);
+		
+		col = new TableColumn(fTableViewer.getTable(), SWT.NONE);
+		col.setText("Frequency");
+		col.setWidth(COL_WIDTH);
+		col.addSelectionListener(createColSortListener(1, col));
+		col.setMoveable(false);
+		
+		fTableViewer.setContentProvider(new CodeTableContentProvider());
+		fTableViewer.setLabelProvider(new CodeTableLabelProvider());
+		fTableViewer.setInput(new CodeTableInput(fProject));
+		fTableViewer.getTable().setHeaderVisible(true);
+		fSorter = new CodeTableSorter();
+		fTableViewer.setSorter(fSorter);
+	}
+
+	/**
+	 * @param i
+	 * @return
+	 */
+	private SelectionListener createColSortListener(final int colIndex, final TableColumn column)
+	{
+		return new SelectionAdapter()
+		{
+			
+			@Override
+			public void widgetSelected(SelectionEvent e)
+			{
+				fSorter.setColumn(colIndex);
+				
+				int dir = fTableViewer.getTable().getSortDirection();
+				if(fTableViewer.getTable().getSortColumn() == column)
+				{
+					dir = dir == SWT.UP ? SWT.DOWN : SWT.UP;
+				}
+				else
+				{
+					dir = SWT.UP;
+				}
+				
+				fTableViewer.getTable().setSortColumn(column);
+				fTableViewer.getTable().setSortDirection(dir);
+				
+				fTableViewer.refresh();
+			}
+		};
+	}
 
 	/**
 	 * @return A keyadapter that acts as a validator for the new code name.
@@ -246,8 +230,13 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 			@Override
 			public void keyReleased(KeyEvent e)
 			{
+				IStructuredSelection sel = (IStructuredSelection) fTableViewer.getSelection();
+				if(sel.getFirstElement() == null)
+				{
+					return;
+				}
 				CodeValidator lValidator = new CodeValidator(fName.getText().trim(), 
-						fCodes.get(fCurrentSelection).getCodeName(), fProject);
+						fCurrentRow.getCode().getCodeName(), fProject);
 				if(!lValidator.isValid())
 				{
 					if(fIsDirty)
@@ -270,7 +259,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	 */
 	private void createTableContextMenu()
 	{
-		Menu menu = new Menu(fTable);
+		Menu menu = new Menu(fTableViewer.getTable());
 		MenuItem item = new MenuItem(menu, SWT.PUSH);
 		item.setText(Messages.getString("editors.pages.CodeEditorPage.newCode")); //$NON-NLS-1$
 		item.addSelectionListener(newCodeSelected()); 
@@ -283,7 +272,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		item.setText(Messages.getString("editors.pages.CodeEditorPage.viewFragments")); //$NON-NLS-1$
 		item.addSelectionListener(viewFragmentsSelected());
 		
-		fTable.setMenu(menu);
+		fTableViewer.getTable().setMenu(menu);
 	}
 
 	/**
@@ -299,18 +288,10 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 			@Override
 			public void widgetSelected(SelectionEvent e)
 			{
-				Code toView = null;
+				CodeTableRow row = (CodeTableRow)((IStructuredSelection) fTableViewer.getSelection()).getFirstElement();
 				
-				TableItem item = fTable.getSelection()[0];
+				Code toView = row.getCode();
 				
-				for(Code code : fProject.getCodes())
-				{
-					if(code.getCodeName().equals(item.getText()))
-					{
-						toView = code;
-						break;
-					}
-				}
 				if(toView != null)
 				{
 					ResourcesUtil.openEditor(getSite().getPage(), toView);
@@ -333,42 +314,42 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 			@Override
 			public void widgetSelected(SelectionEvent e)
 			{
-				Code toDelete = fCodes.get(fTable.getSelectionIndex());
-				
-				List<Memo> hardConflicts = detectHardConflicts(toDelete);
-				if(!hardConflicts.isEmpty())
-				{
-					String message = buildErrorString(hardConflicts);
-					MessageDialog.openError(getSite().getShell(), Messages.getString(
-							"editors.pages.CodeEditorPage.unableToDelete"), message); //$NON-NLS-1$
-					return;
-				}
-				
-				List<Fragment> conflicts = detectConflicts(toDelete);
-				boolean check = false;
-				if(conflicts.size() == 0)
-				{
-					check = MessageDialog.openConfirm(getSite().getShell(), DELETE_CODE,
-					Messages.getString("editors.pages.CodeEditorPage.confirm")); //$NON-NLS-1$
-				}
-				else
-				{
-					check = MessageDialog.openConfirm(getSite().getShell(), DELETE_CODE, 
-							Messages.getString("editors.pages.CodeEditorPage.confirmMany") + //$NON-NLS-1$
-							conflicts.size() + Messages.getString(
-									"editors.pages.CodeEditorPage.confirmMany2")); //$NON-NLS-1$
-					if(check)
-					{
-						removeCodeFromFragments(toDelete, conflicts);
-					}
-				}
-				if(check)
-				{
-					Facade.getInstance().deleteCode(toDelete);
-					CommonNavigator view = (CommonNavigator) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-					.getActivePage().findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
-					view.getCommonViewer().refresh();
-				}
+//				Code toDelete = fCodes.get(fTable.getSelectionIndex());
+//				
+//				List<Memo> hardConflicts = detectHardConflicts(toDelete);
+//				if(!hardConflicts.isEmpty())
+//				{
+//					String message = buildErrorString(hardConflicts);
+//					MessageDialog.openError(getSite().getShell(), Messages.getString(
+//							"editors.pages.CodeEditorPage.unableToDelete"), message); //$NON-NLS-1$
+//					return;
+//				}
+//				
+//				List<Fragment> conflicts = detectConflicts(toDelete);
+//				boolean check = false;
+//				if(conflicts.size() == 0)
+//				{
+//					check = MessageDialog.openConfirm(getSite().getShell(), DELETE_CODE,
+//					Messages.getString("editors.pages.CodeEditorPage.confirm")); //$NON-NLS-1$
+//				}
+//				else
+//				{
+//					check = MessageDialog.openConfirm(getSite().getShell(), DELETE_CODE, 
+//							Messages.getString("editors.pages.CodeEditorPage.confirmMany") + //$NON-NLS-1$
+//							conflicts.size() + Messages.getString(
+//									"editors.pages.CodeEditorPage.confirmMany2")); //$NON-NLS-1$
+//					if(check)
+//					{
+//						removeCodeFromFragments(toDelete, conflicts);
+//					}
+//				}
+//				if(check)
+//				{
+//					Facade.getInstance().deleteCode(toDelete);
+//					CommonNavigator view = (CommonNavigator) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+//					.getActivePage().findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+//					view.getCommonViewer().refresh();
+//				}
 			}
 		};
 	}
@@ -448,16 +429,16 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 			@Override
 			public void widgetSelected(SelectionEvent e)
 			{
-				NewCodeDialog dialog = new NewCodeDialog(getEditor().getSite().getShell(), fProject);
-				dialog.create();
-				if(dialog.open() == Window.OK)
-				{
-					Facade.getInstance().createCode(dialog.getName(), dialog.getDescription(), fProject);
-					fTable.setSelection(fCurrentSelection);
-					CommonNavigator view = (CommonNavigator) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-					.getActivePage().findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
-					view.getCommonViewer().refresh();
-				}
+//				NewCodeDialog dialog = new NewCodeDialog(getEditor().getSite().getShell(), fProject);
+//				dialog.create();
+//				if(dialog.open() == Window.OK)
+//				{
+//					Facade.getInstance().createCode(dialog.getName(), dialog.getDescription(), fProject);
+//					fTable.setSelection(fCurrentSelection);
+//					CommonNavigator view = (CommonNavigator) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+//					.getActivePage().findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+//					view.getCommonViewer().refresh();
+//				}
 			}
 		};
 	}
@@ -508,23 +489,20 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	 * Handles updating the dirty state.
 	 * @return
 	 */
-	private KeyAdapter createKeyAdapter()
+	private KeyListener createKeyAdapter()
 	{
 		return new KeyAdapter(){
-			
+
 			@Override
 			public void keyReleased(KeyEvent e)
 			{
-				if(!fIsDirty)
-				{
-					Code code = fCodes.get(fCurrentSelection);
-					if(!fName.getText().trim().equals(code.getCodeName()) || 
-							!fDescription.getText().trim().equals(code.getDescription()))
-					{
-						fIsDirty = true;
-						getEditor().editorDirtyStateChanged();
-					}
+				if(!fIsDirty && (fName.getText().equals(fCurrentRow.getName()) || 
+						fDescription.getText().equals(fCurrentRow.getDescription())))
+				{				
+					fIsDirty = true;
+					getEditor().editorDirtyStateChanged();
 				}
+				
 			}
 		};
 	}
@@ -535,7 +513,6 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	public void notDirty()
 	{
 		fIsDirty = false;
-		clearModified();
 		getEditor().editorDirtyStateChanged();
 	}
 	
@@ -543,144 +520,62 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	 * Updates the Name and Description boxes on the right as the selected item in the table changes.
 	 * @return
 	 */
-	private SelectionAdapter createTableSelectionListener()
+	private ISelectionChangedListener createTableSelectionListener()
 	{
-		return new SelectionAdapter(){
-		
+		return new ISelectionChangedListener()
+		{
+			
 			@Override
-			public void widgetSelected(SelectionEvent e)
+			public void selectionChanged(SelectionChangedEvent event)
 			{
-				int index = fTable.getSelectionIndex();
+				IStructuredSelection selection = (IStructuredSelection) fTableViewer.getSelection();
+				CodeTableRow row = (CodeTableRow) selection.getFirstElement();
 				
-				if(fForm.getMessageType() == IMessageProvider.ERROR)
+				if(row == null)
 				{
-					fTable.setSelection(fCurrentSelection);
+					fName.setText(EMPTY);
+					fDescription.setText(EMPTY);
 					return;
 				}
 				
-				if(index != fCurrentSelection)
+				if(fForm.getMessageType() == IMessageProvider.ERROR)
 				{
-					if(fCurrentSelection != -1 && index != -1)
-					{
-						Code old = fCodes.get(fCurrentSelection);
-						if(!old.getCodeName().equals(fName.getText().trim()) || 
-								!old.getDescription().equals(fDescription.getText().trim()))
-						{
-							fModified[fCurrentSelection] = old;
-							old.setCodeName(fName.getText().trim());
-							old.setDescription(fDescription.getText().trim());
-							fTable.getItem(fCurrentSelection).setText(fName.getText().trim());
-						}
-					}
-					fCurrentSelection = index;
-					Code code = fCodes.get(fCurrentSelection);
-					fName.setText(code.getCodeName());
-					fDescription.setText(code.getDescription());
+					fTableViewer.setSelection(new StructuredSelection(fCurrentRow));
 				}
+				
+				if(row != fCurrentRow)
+				{
+					if(fCurrentRow != null)
+					{
+						fCurrentRow.setName(fName.getText().trim());
+						fCurrentRow.setDescription(fDescription.getText().trim());
+						fTableViewer.refresh(fCurrentRow);
+					}
+				}
+				
+				fCurrentRow = row;
+				fName.setText(fCurrentRow.getName());
+				fDescription.setText(fCurrentRow.getDescription());
 			}
+
 		};
 	}
 
-	/**
-	 * Fills out out the table.
-	 */
-	private void buildFormTable()
-	{
-		Collections.sort(fCodes);
-		countFrequency();
-		
-		for(int i = 0; i < fCodes.size(); i++)
-		{
-			Code code = fCodes.get(i);
-			TableItem item = new TableItem(fTable, SWT.NULL);
-			item.setText(0, code.getCodeName());
-			item.setText(1, EMPTY+fFrequency[i]); //$NON-NLS-1$
-		}
-		
-		fTable.getColumn(0).pack();
-		fTable.getColumn(1).pack();
-		Rectangle rect = fTable.getBounds();
-		Rectangle newRect = new Rectangle(rect.x, rect.y, rect.width, rect.height);
-		fTable.pack();
-		newRect.height = fTable.getBounds().height;
-		newRect.width = rect.width > fTable.getBounds().width ? rect.width : fTable.getBounds().width;
-
-		if(newRect.height + BORDER_SIZE <= fTable.getParent().getBounds().height)
-		{
-			fTable.setBounds(newRect);
-		}
-		else
-		{
-			newRect.height = fTable.getParent().getBounds().height - BORDER_SIZE;
-			fTable.setBounds(newRect);
-		}
-		
-		int width;
-		if(fCodes.size() < THRESHHOLD)
-		{
-			width = fTable.getBounds().width - 2;
-		}
-		else
-		{
-			width = fTable.getBounds().width - THRESHHOLD;
-		}
-		
-		fTable.getColumn(0).setWidth(width -width/2);
-		fTable.getColumn(1).setWidth(width/2);
-		
-
-		fForm.getBody().redraw();
-		fForm.update();
-	}
 	
 	@Override
 	public boolean isDirty()
 	{
 		return fIsDirty;
 	}
-	
-	/**
-	 * Get the list of Codes that have been modified.
-	 * @return
-	 */
-	public Code[] getModifiedCodes()
-	{
-		Code current = fCodes.get(fCurrentSelection);
-		if(!current.getCodeName().equals(fName.getText().trim()) || 
-				!current.getDescription().equals(fDescription.getText().trim()))
-		{
-			current.setCodeName(fName.getText().trim());
-			current.setDescription(fDescription.getText().trim());
-			fModified[fCurrentSelection] = current;
-		}
-		
-		ArrayList<Code> codes = new ArrayList<Code>();
-		for(Code code : fModified)
-		{
-			if(code != null)
-			{
-				codes.add(code);
-			}
-		}
-		return codes.toArray(new Code[]{});
-	}
 
 	@Override
 	public void codeChanged(ChangeType cType, Code[] codes, Facade facade)
 	{
 		fProject = PersistenceManager.getInstance().getProject(fProject.getName());
-		fTable.removeAll();
-		fCodes.clear();
-		for(Code code : fProject.getCodes())
-		{
-			fCodes.add(code);
-		}
-		clearModified();
-		
-		buildFormTable();
+
+		fTableViewer.setInput(new CodeTableInput(fProject));
 		
 		updateSelection();
-		
 	}
 
 	/**
@@ -688,36 +583,29 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	 */
 	private void updateSelection()
 	{
-		fCurrentSelection = fTable.getSelectionIndex();
-		if(fCurrentSelection == -1 && !fCodes.isEmpty())
+		CodeTableRow row;
+		if(fCurrentRow == null)
 		{
-			fCurrentSelection = 0;
-			fTable.select(0);
-		}
-		
-		if(fCurrentSelection != -1)
-		{
-			fName.setText(fCodes.get(fCurrentSelection).getCodeName());
-			fDescription.setText(fCodes.get(fCurrentSelection).getDescription());
+			row = (CodeTableRow) fTableViewer.getElementAt(0);
 		}
 		else
 		{
-			fName.setText(EMPTY);
-			fDescription.setText(EMPTY);
+			int index = 0;
+			while((row = (CodeTableRow) fTableViewer.getElementAt(index)) != null)
+			{
+				if(row.getName().equals(fCurrentRow.getName()))
+				{
+					break;
+				}
+				index++;
+			}
 		}
-	}
-
-	/**
-	 * 
-	 */
-	private void clearModified()
-	{
-		fModified = new Code[fCodes.size()];
-		for(int i = 0; i < fModified.length; i++)
+		if(row == null)
 		{
-			fModified[i] = null;
+			row = (CodeTableRow) fTableViewer.getElementAt(0);
 		}
 		
+		fTableViewer.setSelection(new StructuredSelection(row));
 	}
 
 	@Override
@@ -753,20 +641,20 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	@Override
 	public void transcriptChanged(ChangeType cType, Transcript[] transcripts, Facade facade)
 	{
-		if(cType == ChangeType.MODIFY || cType == ChangeType.DELETE)
-		{
-			fProject = PersistenceManager.getInstance().getProject(fProject.getName());
-			fTable.removeAll();
-			fCodes.clear();
-			for(Code code : fProject.getCodes())
-			{
-				fCodes.add(code);
-			}
-			clearModified();
-			
-			buildFormTable();
-			updateSelection();
-		}
+//		if(cType == ChangeType.MODIFY || cType == ChangeType.DELETE)
+//		{
+//			fProject = PersistenceManager.getInstance().getProject(fProject.getName());
+//			fTable.removeAll();
+//			fCodes.clear();
+//			for(Code code : fProject.getCodes())
+//			{
+//				fCodes.add(code);
+//			}
+//			clearModified();
+//			
+//			buildFormTable();
+//			updateSelection();
+//		}
 	}
 
 	/* (non-Javadoc)
@@ -777,20 +665,54 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	@Override
 	public void memoChanged(ChangeType cType, Memo[] memos, Facade facade)
 	{
-		if(cType == ChangeType.MODIFY || cType == ChangeType.DELETE)
+//		if(cType == ChangeType.MODIFY || cType == ChangeType.DELETE)
+//		{
+//			fProject = PersistenceManager.getInstance().getProject(fProject.getName());
+//			fTable.removeAll();
+//			fCodes.clear();
+//			for(Code code : fProject.getCodes())
+//			{
+//				fCodes.add(code);
+//			}
+//			clearModified();
+//			
+//			buildFormTable();
+//			updateSelection();
+//		}
+		
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Code[] getCodes()
+	{
+		if(fCurrentRow != null)
 		{
-			fProject = PersistenceManager.getInstance().getProject(fProject.getName());
-			fTable.removeAll();
-			fCodes.clear();
-			for(Code code : fProject.getCodes())
-			{
-				fCodes.add(code);
-			}
-			clearModified();
-			
-			buildFormTable();
-			updateSelection();
+			fCurrentRow.setName(fName.getText().trim());
+			fCurrentRow.setDescription(fDescription.getText().trim());
+			fTableViewer.refresh(fCurrentRow);
 		}
 		
+		List<Code> codes = new ArrayList<Code>();
+		
+		int index = 0;
+		CodeTableRow row = (CodeTableRow) fTableViewer.getElementAt(index);
+		
+		while(row != null)
+		{
+			Code codeToSave = row.getCodeToSave();
+			if(codeToSave != null)
+			{
+				codes.add(codeToSave);
+			}
+			
+			index++;
+			row = (CodeTableRow) fTableViewer.getElementAt(index);
+		}
+		
+		return codes.toArray(new Code[0]);
+			
 	}
 }

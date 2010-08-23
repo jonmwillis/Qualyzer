@@ -61,7 +61,7 @@ public class CodeEditor extends FormEditor
 	@Override
 	public void doSave(IProgressMonitor monitor)
 	{
-		Code[] codes = fPage.getModifiedCodes();
+		Code[] codes = fPage.getCodes();
 		Facade.getInstance().saveCodes(codes);
 		fPage.notDirty();
 		
