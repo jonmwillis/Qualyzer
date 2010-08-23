@@ -20,6 +20,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.KeyAdapter;
@@ -35,12 +36,16 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.eclipse.ui.navigator.CommonNavigator;
 
+import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
+import ca.mcgill.cs.swevo.qualyzer.dialogs.NewCodeDialog;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.CodeTableInput;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.CodeTableInput.CodeTableRow;
 import ca.mcgill.cs.swevo.qualyzer.model.Code;
@@ -68,9 +73,6 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 public class CodeEditorPage extends FormPage implements CodeListener, ProjectListener, TranscriptListener, MemoListener
 {
 
-	/**
-	 * 
-	 */
 	private static final int COL_WIDTH = 100;
 	private static final String EMPTY = ""; //$NON-NLS-1$
 	private static final int THRESHHOLD = 18;
@@ -156,8 +158,6 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		
 		fTableViewer.addSelectionChangedListener(createTableSelectionListener());
 		createTableContextMenu();
-		
-		//updateSelection();
 	}
 
 	/**
@@ -429,16 +429,15 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 			@Override
 			public void widgetSelected(SelectionEvent e)
 			{
-//				NewCodeDialog dialog = new NewCodeDialog(getEditor().getSite().getShell(), fProject);
-//				dialog.create();
-//				if(dialog.open() == Window.OK)
-//				{
-//					Facade.getInstance().createCode(dialog.getName(), dialog.getDescription(), fProject);
-//					fTable.setSelection(fCurrentSelection);
-//					CommonNavigator view = (CommonNavigator) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-//					.getActivePage().findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
-//					view.getCommonViewer().refresh();
-//				}
+				NewCodeDialog dialog = new NewCodeDialog(getEditor().getSite().getShell(), fProject);
+				dialog.create();
+				if(dialog.open() == Window.OK)
+				{
+					Facade.getInstance().createCode(dialog.getName(), dialog.getDescription(), fProject);
+					CommonNavigator view = (CommonNavigator) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+					.getActivePage().findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+					view.getCommonViewer().refresh();
+				}
 			}
 		};
 	}
