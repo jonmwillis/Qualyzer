@@ -31,8 +31,8 @@ import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 public class CodeTableInput
 {
 	private Project fProject;
-	private Map<String, Integer> fFreqs;
-	private Map<String, Code> fCodes;
+	private Map<Long, Integer> fFreqs;
+	private Map<Long, Code> fCodes;
 	
 	/**
 	 * 
@@ -41,12 +41,12 @@ public class CodeTableInput
 	public CodeTableInput(Project project)
 	{
 		fProject = project;
-		fFreqs = new HashMap<String, Integer>();
-		fCodes = new HashMap<String, Code>();
+		fFreqs = new HashMap<Long, Integer>();
+		fCodes = new HashMap<Long, Code>();
 		
 		for(Code code : fProject.getCodes())
 		{
-			fCodes.put(code.getCodeName(), code);
+			fCodes.put(code.getPersistenceId(), code);
 		}
 		
 		countFrequencies();	
@@ -56,7 +56,7 @@ public class CodeTableInput
 	{
 		for(Code code : fProject.getCodes())
 		{
-			fFreqs.put(code.getCodeName(), 0);
+			fFreqs.put(code.getPersistenceId(), 0);
 		}
 		
 		for(Transcript transcript : fProject.getTranscripts())
@@ -66,8 +66,8 @@ public class CodeTableInput
 			{
 				for(CodeEntry entry : fragment.getCodeEntries())
 				{
-					int count = fFreqs.get(entry.getCode().getCodeName());
-					fFreqs.put(entry.getCode().getCodeName(), ++count);
+					int count = fFreqs.get(entry.getCode().getPersistenceId());
+					fFreqs.put(entry.getCode().getPersistenceId(), ++count);
 				}
 			}
 		}
@@ -79,8 +79,8 @@ public class CodeTableInput
 			{
 				for(CodeEntry entry : fragment.getCodeEntries())
 				{
-					int count = fFreqs.get(entry.getCode().getCodeName());
-					fFreqs.put(entry.getCode().getCodeName(), ++count);
+					int count = fFreqs.get(entry.getCode().getPersistenceId());
+					fFreqs.put(entry.getCode().getPersistenceId(), ++count);
 				}
 			}
 		}
@@ -94,7 +94,7 @@ public class CodeTableInput
 	{
 		ArrayList<CodeTableRow> data = new ArrayList<CodeTableRow>();
 		
-		for(String key : fFreqs.keySet())
+		for(Long key : fFreqs.keySet())
 		{
 			data.add(new CodeTableRow(fCodes.get(key), fFreqs.get(key)));
 		}
@@ -109,6 +109,8 @@ public class CodeTableInput
 	public class CodeTableRow
 	{
 		private Code fCode;
+		private String fName;
+		private String fDescription;
 		private int fFreq;
 		
 		/**
@@ -119,6 +121,8 @@ public class CodeTableInput
 		public CodeTableRow(Code code, int count)
 		{
 			fCode = code;
+			fName = fCode.getCodeName();
+			fDescription = fCode.getDescription();
 			fFreq = count;
 		}
 		
@@ -128,7 +132,7 @@ public class CodeTableInput
 		 */
 		public String getName()
 		{
-			return fCode.getCodeName();
+			return fName;
 		}
 		
 		/**
@@ -146,7 +150,7 @@ public class CodeTableInput
 		 */
 		public void setName(String name)
 		{
-			fCode.setCodeName(name);
+			fName = name;
 		}
 		
 		/**
@@ -155,7 +159,7 @@ public class CodeTableInput
 		 */
 		public void setDescription(String desc)
 		{
-			fCode.setDescription(desc);
+			fDescription = desc;
 		}
 
 		/**
@@ -163,7 +167,37 @@ public class CodeTableInput
 		 */
 		public String getDescription()
 		{
-			return fCode.getDescription();
+			return fDescription;
+		}
+
+		/**
+		 * @return
+		 */
+		public Code getCodeToSave()
+		{
+			if(!fName.equals(fCode.getCodeName()) || !fDescription.equals(fCode.getDescription()))
+			{
+				fCode.setCodeName(fName);
+				fCode.setDescription(fDescription);
+				return fCode;
+			}
+			return null;
+		}
+
+		/**
+		 * @return
+		 */
+		public boolean isDirty()
+		{
+			return !fName.equals(fCode.getCodeName()) || !fDescription.equals(fCode.getDescription());
+		}
+
+		/**
+		 * @return
+		 */
+		public Code getCode()
+		{
+			return fCode;
 		}
 	}
 	
