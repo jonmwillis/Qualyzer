@@ -499,8 +499,8 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 			@Override
 			public void keyReleased(KeyEvent e)
 			{
-				if(!fIsDirty && (fName.getText().equals(fCurrentRow.getName()) || 
-						fDescription.getText().equals(fCurrentRow.getDescription())))
+				if(!fIsDirty && (!fName.getText().equals(fCurrentRow.getName()) || 
+						!fDescription.getText().equals(fCurrentRow.getDescription())))
 				{				
 					fIsDirty = true;
 					getEditor().editorDirtyStateChanged();
