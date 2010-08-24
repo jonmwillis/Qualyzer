@@ -74,6 +74,8 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 public class CodeEditorPage extends FormPage implements CodeListener, ProjectListener, TranscriptListener, MemoListener
 {
 
+	private static final GridData LARGE_LAYOUT = new GridData(SWT.FILL, SWT.FILL, true, true);
+	private static final GridData SMALL_LAYOUT = new GridData(SWT.FILL, SWT.NULL, true, false);
 	private static final int COL_WIDTH = 100;
 	private static final String EMPTY = ""; //$NON-NLS-1$
 	private static final int THRESHHOLD = 18;
@@ -128,11 +130,11 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 
 		if(fProject.getCodes().size() < THRESHHOLD)
 		{
-			fTableViewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
+			fTableViewer.getTable().setLayoutData(SMALL_LAYOUT);
 		}
 		else
 		{
-			fTableViewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+			fTableViewer.getTable().setLayoutData(LARGE_LAYOUT);
 		}
 		
 		Composite composite = toolkit.createComposite(body, SWT.BORDER);
@@ -577,6 +579,18 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		fTableViewer.setInput(new CodeTableInput(fProject));
 		
 		updateSelection();
+		
+		if(fProject.getCodes().size() > THRESHHOLD)
+		{
+			fTableViewer.getTable().setLayoutData(LARGE_LAYOUT);
+		}
+		else
+		{
+			fTableViewer.getTable().setLayoutData(SMALL_LAYOUT);
+		}
+		
+		fForm.getBody().layout();
+		fForm.getBody().redraw();
 	}
 
 	/**
@@ -606,7 +620,10 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 			row = (CodeTableRow) fTableViewer.getElementAt(0);
 		}
 		
-		fTableViewer.setSelection(new StructuredSelection(row));
+		if(row != null)
+		{
+			fTableViewer.setSelection(new StructuredSelection(row));
+		}
 	}
 
 	@Override
