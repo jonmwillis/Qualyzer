@@ -23,6 +23,7 @@ import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.jface.text.source.SourceViewer;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
@@ -85,6 +86,8 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 	private int fAudioLength;
 	
 	private Composite fTopBar;
+	
+	private int fSeekTime;
 
 	
 	/**
@@ -101,6 +104,10 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 		addImage(CODE_IMG, QualyzerActivator.PLUGIN_ID, "icons/code_obj.gif"); //$NON-NLS-1$
 		addImage(BACK_IMG, QualyzerActivator.PLUGIN_ID, "icons/seek-backward.png"); //$NON-NLS-1$
 		addImage(FORWARD_IMG, QualyzerActivator.PLUGIN_ID, "icons/seek-forward.png"); //$NON-NLS-1$
+		
+		fSeekTime = QualyzerActivator.getDefault().getPreferenceStore().getInt(
+				IQualyzerPreferenceConstants.SEEK_TIME);
+		QualyzerActivator.getDefault().getPreferenceStore().addPropertyChangeListener(this);
 	}
 	
 	/* (non-Javadoc)
@@ -489,8 +496,7 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 		if(fAudioPlayer != null)
 		{
 			int selection = fAudioSlider.getSelection();
-			selection -= QualyzerActivator.getDefault().getPreferenceStore().getInt(
-					IQualyzerPreferenceConstants.SEEK_TIME);
+			selection -= fSeekTime + 2;
 			fAudioPlayer.jumpToTime(selection >= 0 ? selection : 0);
 		}
 	}
@@ -503,8 +509,7 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 		if(fAudioPlayer != null)
 		{
 			int selection = fAudioSlider.getSelection();
-			selection += QualyzerActivator.getDefault().getPreferenceStore().getInt(
-					IQualyzerPreferenceConstants.SEEK_TIME);
+			selection += fSeekTime;
 			fAudioPlayer.jumpToTime(selection <= fAudioLength ? selection : fAudioLength);
 		}
 	}
@@ -527,6 +532,8 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 				if(fPlaying)
 				{
 					fAudioPlayer.pause();
+					//Handle slight delay.
+					fAudioPlayer.jumpToTime(fAudioSlider.getSelection() - 1); 
 					fPlayButton.setImage(fPLAY);
 					fPlaying = false;
 				}
@@ -546,6 +553,23 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 		public void stop()
 		{
 			fPlaying = false;
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.colorer.eclipse.editors.ColorerEditor#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
+	 */
+	@Override
+	public void propertyChange(PropertyChangeEvent e)
+	{
+		if(e == null || e.getProperty().equals(IQualyzerPreferenceConstants.SEEK_TIME))
+		{
+			fSeekTime = QualyzerActivator.getDefault().getPreferenceStore().getInt(
+					IQualyzerPreferenceConstants.SEEK_TIME);
+		}
+		else
+		{
+			super.propertyChange(e);
 		}
 	}
 
