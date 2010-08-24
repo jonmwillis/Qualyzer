@@ -267,9 +267,6 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 		fAudioSlider.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		fAudioSlider.addMouseListener(new MouseAdapter()
 		{
-			/* (non-Javadoc)
-			 * @see org.eclipse.swt.events.MouseAdapter#mouseUp(org.eclipse.swt.events.MouseEvent)
-			 */
 			@Override
 			public void mouseUp(MouseEvent e)
 			{
@@ -281,6 +278,16 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 				{
 					openErrorDialog(ex.getMessage());
 				}
+			}
+			
+		});
+		
+		fAudioSlider.addSelectionListener(new SelectionAdapter()
+		{
+			@Override
+			public void widgetSelected(SelectionEvent e)
+			{
+				setSeconds(fAudioSlider.getSelection());
 			}
 		});
 		
