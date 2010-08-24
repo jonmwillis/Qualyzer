@@ -247,11 +247,11 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 						fIsDirty = false;
 						getEditor().editorDirtyStateChanged();
 					}
-					fForm.setMessage(lValidator.getErrorMessage(), IMessageProvider.ERROR);
+					fForm.getForm().setMessage(lValidator.getErrorMessage(), IMessageProvider.ERROR);
 				}
 				else
 				{
-					fForm.setMessage(null, IMessageProvider.NONE);
+					fForm.getForm().setMessage(null, IMessageProvider.NONE);
 				}
 			}
 		};
