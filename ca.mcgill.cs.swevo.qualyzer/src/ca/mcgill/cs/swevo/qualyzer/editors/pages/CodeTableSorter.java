@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Jonathan Faubert
  *******************************************************************************/
 /**
  * 
@@ -19,7 +19,6 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.CodeTableInput.CodeTableRow;
 
 /**
- * @author Jonathan Faubert
  *
  */
 public class CodeTableSorter extends ViewerSorter
@@ -79,7 +78,7 @@ public class CodeTableSorter extends ViewerSorter
 		if(fColIndex == 1)
 		{
 			CodeTableRow row = (CodeTableRow) element;
-			return fDescending ? -row.getFrequency() : row.getFrequency();
+			return fDescending ? row.getFrequency() : -row.getFrequency();
 		}
 		
 		return 0;
