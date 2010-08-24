@@ -18,6 +18,7 @@ import static org.junit.Assert.fail;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.ui.PlatformUI;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,6 +48,7 @@ public class TranscriptPropertiesHandlerTest
 	@Before
 	public void setUp()
 	{
+		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
 		fProject = TestUtil.createProject(PROJECT, INV, PART, TRANSCRIPT);
 		fTranscript = fProject.getTranscripts().get(0);
 	}
