@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -314,42 +315,43 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 			@Override
 			public void widgetSelected(SelectionEvent e)
 			{
-//				Code toDelete = fCodes.get(fTable.getSelectionIndex());
-//				
-//				List<Memo> hardConflicts = detectHardConflicts(toDelete);
-//				if(!hardConflicts.isEmpty())
-//				{
-//					String message = buildErrorString(hardConflicts);
-//					MessageDialog.openError(getSite().getShell(), Messages.getString(
-//							"editors.pages.CodeEditorPage.unableToDelete"), message); //$NON-NLS-1$
-//					return;
-//				}
-//				
-//				List<Fragment> conflicts = detectConflicts(toDelete);
-//				boolean check = false;
-//				if(conflicts.size() == 0)
-//				{
-//					check = MessageDialog.openConfirm(getSite().getShell(), DELETE_CODE,
-//					Messages.getString("editors.pages.CodeEditorPage.confirm")); //$NON-NLS-1$
-//				}
-//				else
-//				{
-//					check = MessageDialog.openConfirm(getSite().getShell(), DELETE_CODE, 
-//							Messages.getString("editors.pages.CodeEditorPage.confirmMany") + //$NON-NLS-1$
-//							conflicts.size() + Messages.getString(
-//									"editors.pages.CodeEditorPage.confirmMany2")); //$NON-NLS-1$
-//					if(check)
-//					{
-//						removeCodeFromFragments(toDelete, conflicts);
-//					}
-//				}
-//				if(check)
-//				{
-//					Facade.getInstance().deleteCode(toDelete);
-//					CommonNavigator view = (CommonNavigator) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-//					.getActivePage().findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
-//					view.getCommonViewer().refresh();
-//				}
+				IStructuredSelection selection = (IStructuredSelection) fTableViewer.getSelection();
+				Code toDelete = ((CodeTableRow) selection.getFirstElement()).getCode();
+				
+				List<Memo> hardConflicts = detectHardConflicts(toDelete);
+				if(!hardConflicts.isEmpty())
+				{
+					String message = buildErrorString(hardConflicts);
+					MessageDialog.openError(getSite().getShell(), Messages.getString(
+							"editors.pages.CodeEditorPage.unableToDelete"), message); //$NON-NLS-1$
+					return;
+				}
+				
+				List<Fragment> conflicts = detectConflicts(toDelete);
+				boolean check = false;
+				if(conflicts.size() == 0)
+				{
+					check = MessageDialog.openConfirm(getSite().getShell(), DELETE_CODE,
+					Messages.getString("editors.pages.CodeEditorPage.confirm")); //$NON-NLS-1$
+				}
+				else
+				{
+					check = MessageDialog.openConfirm(getSite().getShell(), DELETE_CODE, 
+							Messages.getString("editors.pages.CodeEditorPage.confirmMany") + //$NON-NLS-1$
+							conflicts.size() + Messages.getString(
+									"editors.pages.CodeEditorPage.confirmMany2")); //$NON-NLS-1$
+					if(check)
+					{
+						removeCodeFromFragments(toDelete, conflicts);
+					}
+				}
+				if(check)
+				{
+					Facade.getInstance().deleteCode(toDelete);
+					CommonNavigator view = (CommonNavigator) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+					.getActivePage().findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+					view.getCommonViewer().refresh();
+				}
 			}
 		};
 	}
@@ -640,20 +642,14 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	@Override
 	public void transcriptChanged(ChangeType cType, Transcript[] transcripts, Facade facade)
 	{
-//		if(cType == ChangeType.MODIFY || cType == ChangeType.DELETE)
-//		{
-//			fProject = PersistenceManager.getInstance().getProject(fProject.getName());
-//			fTable.removeAll();
-//			fCodes.clear();
-//			for(Code code : fProject.getCodes())
-//			{
-//				fCodes.add(code);
-//			}
-//			clearModified();
-//			
-//			buildFormTable();
-//			updateSelection();
-//		}
+		if(cType == ChangeType.MODIFY || cType == ChangeType.DELETE)
+		{
+			fProject = PersistenceManager.getInstance().getProject(fProject.getName());
+			
+			fTableViewer.setInput(new CodeTableInput(fProject));
+			
+			updateSelection();
+		}
 	}
 
 	/* (non-Javadoc)
@@ -664,21 +660,14 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	@Override
 	public void memoChanged(ChangeType cType, Memo[] memos, Facade facade)
 	{
-//		if(cType == ChangeType.MODIFY || cType == ChangeType.DELETE)
-//		{
-//			fProject = PersistenceManager.getInstance().getProject(fProject.getName());
-//			fTable.removeAll();
-//			fCodes.clear();
-//			for(Code code : fProject.getCodes())
-//			{
-//				fCodes.add(code);
-//			}
-//			clearModified();
-//			
-//			buildFormTable();
-//			updateSelection();
-//		}
-		
+		if(cType == ChangeType.MODIFY || cType == ChangeType.DELETE)
+		{
+			fProject = PersistenceManager.getInstance().getProject(fProject.getName());
+			
+			fTableViewer.setInput(new CodeTableInput(fProject));
+			
+			updateSelection();
+		}
 	}
 	
 	/**
