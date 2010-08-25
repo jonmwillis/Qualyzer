@@ -20,9 +20,8 @@ import ca.mcgill.cs.swevo.qualyzer.editors.inputs.CodeTableInput.CodeTableRow;
  */
 public class Node
 {	
-	/**
-	 * 
-	 */
+	
+	private static final int CHILD_SPLIT_SIZE = 3;
 	private static final long ROOT_ID = -1L;
 	private static final String EMPTY = "";
 	private static final String SLASH = "/";
@@ -234,12 +233,21 @@ public class Node
 	public void addChild(String data)
 	{
 		String[] values = data.split(":");
-		if(values.length != 2)
+		if(values.length != CHILD_SPLIT_SIZE)
 		{
 			return;
 		}
 		
 		new Node(this, values[0], Long.parseLong(values[1]), Integer.parseInt(values[2]));
 		
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Long getPersistenceId()
+	{
+		return fPersistenceId;
 	}
 }

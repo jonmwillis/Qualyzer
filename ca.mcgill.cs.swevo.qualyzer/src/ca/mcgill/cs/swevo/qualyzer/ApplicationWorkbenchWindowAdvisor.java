@@ -24,9 +24,8 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
  */
 public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor
 {
-	public static final int DEFAULT_WIDTH = 800;
-	
-	public static final int DEFAULT_HEIGHT = 600;
+	public static final int DEFAULT_WIDTH = 1024;
+	public static final int DEFAULT_HEIGHT = 768;
 	
 	/**
 	 * Just calls the super for now.
