@@ -78,6 +78,7 @@ import ca.mcgill.cs.swevo.qualyzer.providers.CodeTableContentProvider;
 import ca.mcgill.cs.swevo.qualyzer.providers.CodeTableLabelProvider;
 import ca.mcgill.cs.swevo.qualyzer.providers.CodeTreeContentProvider;
 import ca.mcgill.cs.swevo.qualyzer.providers.CodeTreeLabelProvider;
+import ca.mcgill.cs.swevo.qualyzer.providers.Node;
 import ca.mcgill.cs.swevo.qualyzer.providers.TableDragListener;
 import ca.mcgill.cs.swevo.qualyzer.providers.TreeDropListener;
 import ca.mcgill.cs.swevo.qualyzer.providers.TreeModel;
@@ -245,7 +246,35 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		
 		fTreeViewer.setSorter(new ViewerSorter());
 		
+		createTreeContextMenu();
+		
 		return composite;
+	}
+
+	/**
+	 * 
+	 */
+	private void createTreeContextMenu()
+	{
+		Menu menu = new Menu(fTreeViewer.getTree());
+		
+		MenuItem item = new MenuItem(menu, SWT.PUSH);
+		item.setText("Remove Code");
+		item.addSelectionListener(new SelectionAdapter(){
+			
+			@Override
+			public void widgetSelected(SelectionEvent e)
+			{
+				IStructuredSelection selection = (IStructuredSelection) fTreeViewer.getSelection();
+				Node node = (Node) selection.getFirstElement();
+				
+				node.getParent().getChildren().remove(node.getPersistenceId());
+				fTreeViewer.refresh();
+				setDirty();
+			}
+		});
+		
+		fTreeViewer.getTree().setMenu(menu);
 	}
 
 	/**
