@@ -26,6 +26,9 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -71,6 +74,11 @@ import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
 import ca.mcgill.cs.swevo.qualyzer.model.validation.CodeValidator;
 import ca.mcgill.cs.swevo.qualyzer.providers.CodeTableContentProvider;
 import ca.mcgill.cs.swevo.qualyzer.providers.CodeTableLabelProvider;
+import ca.mcgill.cs.swevo.qualyzer.providers.CodeTreeContentProvider;
+import ca.mcgill.cs.swevo.qualyzer.providers.CodeTreeLabelProvider;
+import ca.mcgill.cs.swevo.qualyzer.providers.TableDragListener;
+import ca.mcgill.cs.swevo.qualyzer.providers.TreeDropListener;
+import ca.mcgill.cs.swevo.qualyzer.providers.TreeModel;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
@@ -222,10 +230,15 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		col.setText("Total Count");
 		col.setWidth(TREE_FREQ_WIDTH);
 		
-		
 		tree.setHeaderVisible(true);
 		tree.setLinesVisible(true);
 		tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		
+		fTreeViewer.setContentProvider(new CodeTreeContentProvider());
+		fTreeViewer.setLabelProvider(new CodeTreeLabelProvider());
+		fTreeViewer.setInput(TreeModel.getTreeModel(fProject).getRoot());
+		fTreeViewer.addDropSupport(DND.DROP_COPY | DND.DROP_MOVE, 
+				new Transfer[]{TextTransfer.getInstance()}, new TreeDropListener(fTreeViewer));
 		
 		return composite;
 	}
@@ -282,6 +295,8 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		fTableViewer.getTable().setHeaderVisible(true);
 		fSorter = new CodeTableSorter();
 		fTableViewer.setSorter(fSorter);
+		fTableViewer.addDragSupport(DND.DROP_COPY | DND.DROP_MOVE, 
+				new Transfer[]{TextTransfer.getInstance()}, new TableDragListener(fTableViewer));
 	}
 
 	/**
