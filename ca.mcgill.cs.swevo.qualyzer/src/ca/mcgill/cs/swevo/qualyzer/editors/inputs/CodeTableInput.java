@@ -51,6 +51,15 @@ public class CodeTableInput
 		
 		countFrequencies();	
 	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Project getProject()
+	{
+		return fProject;
+	}
 
 	private void countFrequencies()
 	{
@@ -112,6 +121,7 @@ public class CodeTableInput
 		private String fName;
 		private String fDescription;
 		private int fFreq;
+		private Long fPersistenceId;
 		
 		/**
 		 * 
@@ -123,9 +133,22 @@ public class CodeTableInput
 			fCode = code;
 			fName = fCode.getCodeName();
 			fDescription = fCode.getDescription();
+			fPersistenceId = fCode.getPersistenceId();
 			fFreq = count;
 		}
 		
+		/**
+		 * 
+		 */
+		public CodeTableRow(String name, Long persistenceId, int freq)
+		{
+			fCode = null;
+			fName = name;
+			fPersistenceId = persistenceId;
+			fFreq = freq;
+			fDescription = "";
+		}
+
 		/**
 		 * 
 		 * @return
@@ -198,6 +221,15 @@ public class CodeTableInput
 		public Code getCode()
 		{
 			return fCode;
+		}
+		
+		/**
+		 * 
+		 * @return
+		 */
+		public Long getPersistenceId()
+		{
+			return fPersistenceId;
 		}
 	}
 	
