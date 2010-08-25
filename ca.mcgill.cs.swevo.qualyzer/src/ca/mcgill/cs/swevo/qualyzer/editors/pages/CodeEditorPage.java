@@ -21,8 +21,10 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -32,11 +34,14 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
@@ -76,7 +81,10 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 
 	private static final GridData LARGE_LAYOUT = new GridData(SWT.FILL, SWT.FILL, true, true);
 	private static final GridData SMALL_LAYOUT = new GridData(SWT.FILL, SWT.NULL, true, false);
-	private static final int COL_WIDTH = 100;
+	private static final int NAME_WIDTH = 120;
+	private static final int FREQ_WIDTH = 80;
+	private static final int TREE_NAME_WIDTH = 100;
+	private static final int TREE_FREQ_WIDTH = 60;
 	private static final String EMPTY = ""; //$NON-NLS-1$
 	private static final int THRESHHOLD = 18;
 
@@ -95,6 +103,9 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	private boolean fIsDirty;
 
 	private ScrolledForm fForm;
+	private Composite fNameArea;
+	private TreeViewer fTreeViewer;
+	private Composite fTreeArea;
 
 	/**
 	 * Constructor.
@@ -126,7 +137,12 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		GridLayout layout = new GridLayout(2, true);
 		body.setLayout(layout);
 		
-		buildTableViewer(body);
+		Composite left = toolkit.createComposite(body);
+		left.setLayout(new GridLayout(1, true));
+		left.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		
+		Button button = toolkit.createButton(left, "Show Hierachies", SWT.TOGGLE);
+		buildTableViewer(left);
 
 		if(fProject.getCodes().size() < THRESHHOLD)
 		{
@@ -138,7 +154,90 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		}
 		
 		Composite composite = toolkit.createComposite(body, SWT.BORDER);
-		layout = new GridLayout();
+		StackLayout sLayout = new StackLayout();
+		composite.setLayout(sLayout);
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		
+		fNameArea = createNameDescriptionArea(toolkit, composite);
+		fTreeArea = createTreeViewer(toolkit, composite);
+		sLayout.topControl = fNameArea;
+		
+		toolkit.paintBordersFor(composite);
+		toolkit.paintBordersFor(body);
+		toolkit.paintBordersFor(fNameArea);
+		
+		fTableViewer.addSelectionChangedListener(createTableSelectionListener());
+		createTableContextMenu();
+		button.addSelectionListener(createToggleAdapter(button, sLayout, composite));
+	}
+
+	/**
+	 * @param sLayout
+	 * @return
+	 */
+	private SelectionListener createToggleAdapter(final Button button, final StackLayout sLayout,
+			final Composite composite)
+	{
+		return new SelectionAdapter(){
+			
+			@Override
+			public void widgetSelected(SelectionEvent e)
+			{
+				if(button.getSelection())
+				{
+					sLayout.topControl = fTreeArea;
+					composite.layout();
+				}
+				else
+				{
+					sLayout.topControl = fNameArea;
+					composite.layout();
+				}
+			}
+		};
+	}
+
+	/**
+	 * @param composite
+	 * @return
+	 */
+	private Composite createTreeViewer(FormToolkit toolkit, Composite parent)
+	{
+		Composite composite = toolkit.createComposite(parent);
+		composite.setLayout(new GridLayout(1, true));
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		
+		fTreeViewer = new TreeViewer(composite, SWT.SINGLE | SWT.FULL_SELECTION | SWT.V_SCROLL);
+		
+		Tree tree = fTreeViewer.getTree();
+		TreeColumn col = new TreeColumn(tree, SWT.NONE);
+		col.setText("Code");
+		col.setWidth(TREE_NAME_WIDTH);
+		
+		col = new TreeColumn(tree, SWT.NONE);
+		col.setText("Count");
+		col.setWidth(TREE_FREQ_WIDTH);
+		
+		col = new TreeColumn(tree, SWT.NONE);
+		col.setText("Total Count");
+		col.setWidth(TREE_FREQ_WIDTH);
+		
+		
+		tree.setHeaderVisible(true);
+		tree.setLinesVisible(true);
+		tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		
+		return composite;
+	}
+
+	/**
+	 * @param toolkit
+	 * @param composite
+	 */
+	private Composite createNameDescriptionArea(FormToolkit toolkit, Composite parent)
+	{
+		Composite composite = toolkit.createComposite(parent, SWT.NULL);
+		GridLayout layout = new GridLayout();
 		layout.numColumns = 1;
 		composite.setLayout(layout);
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -154,13 +253,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		fDescription.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		fDescription.addKeyListener(createKeyAdapter());
 		
-		body.pack();
-		
-		toolkit.paintBordersFor(composite);
-		toolkit.paintBordersFor(body);
-		
-		fTableViewer.addSelectionChangedListener(createTableSelectionListener());
-		createTableContextMenu();
+		return composite;
 	}
 
 	/**
@@ -173,13 +266,13 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		
 		TableColumn col = new TableColumn(fTableViewer.getTable(), SWT.NONE);
 		col.setText("Code Name");
-		col.setWidth(COL_WIDTH);
+		col.setWidth(NAME_WIDTH);
 		col.addSelectionListener(createColSortListener(0, col));
 		col.setMoveable(false);
 		
 		col = new TableColumn(fTableViewer.getTable(), SWT.NONE);
 		col.setText("Frequency");
-		col.setWidth(COL_WIDTH);
+		col.setWidth(FREQ_WIDTH);
 		col.addSelectionListener(createColSortListener(1, col));
 		col.setMoveable(false);
 		
