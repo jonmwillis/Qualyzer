@@ -14,6 +14,7 @@ package ca.mcgill.cs.swevo.qualyzer.editors.pages;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -22,6 +23,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
@@ -114,6 +116,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	private Composite fNameArea;
 	private TreeViewer fTreeViewer;
 	private Composite fTreeArea;
+	private Composite fTableArea;
 
 	/**
 	 * Constructor.
@@ -145,12 +148,12 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		GridLayout layout = new GridLayout(2, true);
 		body.setLayout(layout);
 		
-		Composite left = toolkit.createComposite(body);
-		left.setLayout(new GridLayout(1, true));
-		left.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		fTableArea = toolkit.createComposite(body);
+		fTableArea.setLayout(new GridLayout(1, true));
+		fTableArea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
-		Button button = toolkit.createButton(left, "Show Hierachies", SWT.TOGGLE);
-		buildTableViewer(left);
+		Button button = toolkit.createButton(fTableArea, "Show Hierachies", SWT.TOGGLE);
+		buildTableViewer(fTableArea);
 
 		if(fProject.getCodes().size() < THRESHHOLD)
 		{
@@ -238,7 +241,9 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		fTreeViewer.setLabelProvider(new CodeTreeLabelProvider());
 		fTreeViewer.setInput(TreeModel.getTreeModel(fProject).getRoot());
 		fTreeViewer.addDropSupport(DND.DROP_COPY | DND.DROP_MOVE, 
-				new Transfer[]{TextTransfer.getInstance()}, new TreeDropListener(fTreeViewer));
+				new Transfer[]{TextTransfer.getInstance()}, new TreeDropListener(fTreeViewer, this));
+		
+		fTreeViewer.setSorter(new ViewerSorter());
 		
 		return composite;
 	}
@@ -697,6 +702,8 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 			fTableViewer.getTable().setLayoutData(SMALL_LAYOUT);
 		}
 		
+		fTableArea.layout();
+		fTableArea.redraw();
 		fForm.getBody().layout();
 		fForm.getBody().redraw();
 	}
@@ -827,5 +834,27 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		
 		return codes.toArray(new Code[0]);
 			
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.forms.editor.FormPage#doSave(org.eclipse.core.runtime.IProgressMonitor)
+	 */
+	@Override
+	public void doSave(IProgressMonitor monitor)
+	{
+		TreeModel.getTreeModel(fProject).save();
+	}
+
+	/**
+	 * 
+	 */
+	public void setDirty()
+	{
+		if(!fIsDirty)
+		{
+			fIsDirty = true;
+			getEditor().editorDirtyStateChanged();
+		}
+		
 	}
 }
