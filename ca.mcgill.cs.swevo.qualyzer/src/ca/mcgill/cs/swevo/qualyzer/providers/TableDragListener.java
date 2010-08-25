@@ -13,7 +13,9 @@
  */
 package ca.mcgill.cs.swevo.qualyzer.providers;
 
+import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.DragSourceListener;
@@ -27,6 +29,10 @@ import ca.mcgill.cs.swevo.qualyzer.editors.inputs.CodeTableInput.CodeTableRow;
 public class TableDragListener implements DragSourceListener
 {
 
+	/**
+	 * 
+	 */
+	private static final String SPLIT = ":";
 	private final TableViewer fViewer;
 	
 	/**
@@ -57,7 +63,7 @@ public class TableDragListener implements DragSourceListener
 		
 		if(TextTransfer.getInstance().isSupportedType(event.dataType))
 		{
-			event.data = row.getName() + ":" + row.getPersistenceId() + ":" + row.getFrequency();
+			event.data = row.getName() + SPLIT + row.getPersistenceId() + SPLIT + row.getFrequency();
 		}
 	}
 
@@ -67,6 +73,12 @@ public class TableDragListener implements DragSourceListener
 	@Override
 	public void dragStart(DragSourceEvent event)
 	{
+		IStructuredSelection selection = (IStructuredSelection) fViewer.getSelection();
+		CodeTableRow row = (CodeTableRow) selection.getFirstElement();
+		String data = row.getName() + SPLIT + row.getPersistenceId() + SPLIT + row.getFrequency();
+		
+		LocalSelectionTransfer tran = LocalSelectionTransfer.getTransfer();
+		tran.setSelection(new StructuredSelection(data));
 	}
 
 }

@@ -13,6 +13,8 @@
  */
 package ca.mcgill.cs.swevo.qualyzer.providers;
 
+import org.eclipse.jface.util.LocalSelectionTransfer;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.swt.dnd.DropTargetEvent;
@@ -64,26 +66,9 @@ public class TreeDropListener extends ViewerDropAdapter
 	@Override
 	public boolean performDrop(Object data)
 	{
-		Long id = Long.parseLong(((String) data).split(":")[1]);
-		
+		//TODO add more complex checks for validity.
 		if(fTarget != null)
-		{
-			Node child = fTarget.getChild(id);
-			if(child != null)
-			{
-				return false;
-			}
-			
-			Node parent = fTarget;
-			while(parent != null)
-			{
-				if(parent.getPersistenceId() == id)
-				{
-					return false;
-				}
-				parent = parent.getParent();
-			}
-			
+		{	
 			fTarget.addChild((String) data);
 			Node root = (Node) fViewer.getInput();
 			root.computeFreq();
@@ -101,13 +86,38 @@ public class TreeDropListener extends ViewerDropAdapter
 	@Override
 	public boolean validateDrop(Object target, int operation, TransferData transferType)
 	{
+		LocalSelectionTransfer sel = LocalSelectionTransfer.getTransfer();
+		IStructuredSelection selection = (IStructuredSelection) sel.getSelection();
 		
+		String data = (String) selection.getFirstElement();
+		Long id = Long.parseLong(data.split(":")[1]);
 		
-		if(TextTransfer.getInstance().isSupportedType(transferType))
+		Node nTarget = (Node) target;
+		if(nTarget == null)
 		{
-			return true;
+			nTarget = (Node) fViewer.getInput();
 		}
-		return false;
+		
+		if(nTarget != null)
+		{
+			Node child = nTarget.getChild(id);
+			if(child != null)
+			{
+				return false;
+			}
+			
+			Node parent = nTarget;
+			while(parent != null)
+			{
+				if(parent.getPersistenceId() == id)
+				{
+					return false;
+				}
+				parent = parent.getParent();
+			}
+		}
+		
+		return TextTransfer.getInstance().isSupportedType(transferType);
 	}
 
 }
