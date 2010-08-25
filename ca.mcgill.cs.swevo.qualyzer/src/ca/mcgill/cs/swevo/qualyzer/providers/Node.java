@@ -26,6 +26,8 @@ public class Node
 	private static final String EMPTY = "";
 	private static final String SLASH = "/";
 	
+	private TreeModel fModel;
+	
 	private Node fParent;
 	private LinkedHashMap<Long, Node> fChildren;
 	private String fPathToRoot;
@@ -37,8 +39,10 @@ public class Node
 	/**
 	 * Build the root node.
 	 */
-	public Node()
+	public Node(TreeModel model)
 	{
+		fModel = model;
+		
 		fParent = null;
 		fChildren = new LinkedHashMap<Long, Node>();
 		fPathToRoot = EMPTY;
@@ -56,6 +60,8 @@ public class Node
 	public Node(Node parent, CodeTableRow row)
 	{
 		fParent = parent;
+		fModel = fParent.fModel;
+		
 		fParent.getChildren().put(row.getPersistenceId(), this);
 		fChildren = new LinkedHashMap<Long, Node>();
 		fPathToRoot = EMPTY;
@@ -77,6 +83,8 @@ public class Node
 		fLocalFreq = row.getFrequency();
 		fAggrFreq = fLocalFreq;
 		fPersistenceId = row.getPersistenceId();
+		
+		fModel.addNodeToCodes(this);
 	}
 	
 	/**
@@ -105,6 +113,7 @@ public class Node
 	public Node(Node parent, String name, long persistenceId, int frequency)
 	{
 		fParent = parent;
+		fModel = fParent.fModel;
 		fParent.getChildren().put(persistenceId, this);
 		fChildren = new LinkedHashMap<Long, Node>();
 		fPathToRoot = EMPTY;
@@ -126,6 +135,8 @@ public class Node
 		fLocalFreq = frequency;
 		fAggrFreq = fLocalFreq;
 		fPersistenceId = persistenceId;
+		
+		fModel.addNodeToCodes(this);
 	}
 
 	/**
@@ -135,7 +146,13 @@ public class Node
 	public void setParent(Node node)
 	{
 		fParent = node;
-		fParent.getChildren().put(fPersistenceId, this);
+		if(fParent != null)
+		{
+			fModel = fParent.fModel;
+			fParent.getChildren().put(fPersistenceId, this);
+			
+			fModel.addNodeToCodes(this);
+		}
 	}
 	
 	/**
@@ -249,5 +266,13 @@ public class Node
 	public Long getPersistenceId()
 	{
 		return fPersistenceId;
+	}
+
+	/**
+	 * @param codeName
+	 */
+	public void setCodeName(String codeName)
+	{
+		fCodeName = codeName;
 	}
 }

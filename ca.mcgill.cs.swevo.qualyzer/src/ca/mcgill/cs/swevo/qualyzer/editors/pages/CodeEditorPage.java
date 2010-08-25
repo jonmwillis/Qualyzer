@@ -240,7 +240,9 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		
 		fTreeViewer.setContentProvider(new CodeTreeContentProvider());
 		fTreeViewer.setLabelProvider(new CodeTreeLabelProvider());
-		fTreeViewer.setInput(TreeModel.getTreeModel(fProject).getRoot());
+		TreeModel treeModel = TreeModel.getTreeModel(fProject);
+		fTreeViewer.setInput(treeModel.getRoot());
+		treeModel.addListener(fTreeViewer);
 		fTreeViewer.addDropSupport(DND.DROP_COPY | DND.DROP_MOVE, 
 				new Transfer[]{TextTransfer.getInstance()}, new TreeDropListener(fTreeViewer, this));
 		
@@ -792,6 +794,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		listenerManager.unregisterProjectListener(fProject, this);
 		listenerManager.unregisterTranscriptListener(fProject, this);
 		listenerManager.unregisterMemoListener(fProject, this);
+		TreeModel.getTreeModel(fProject).removeListener(fTreeViewer);
 		super.dispose();
 	}
 
