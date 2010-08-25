@@ -13,10 +13,14 @@
  */
 package ca.mcgill.cs.swevo.qualyzer.providers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+
+import org.eclipse.jface.viewers.TreeViewer;
 
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.CodeTableInput;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.CodeTableInput.CodeTableRow;
@@ -47,13 +51,16 @@ public final class TreeModel implements CodeListener, MemoListener, TranscriptLi
 	
 	private LinkedList<Node> fNewLocalList;
 	private Node fTreeRoot;
+	private HashMap<Long, List<Node>> fCodes;
+	private List<TreeViewer> fListeners;
 	
 	private TreeModel(CodeTableInput input)
 	{
 		fProject = input.getProject();
 		fInput = input;
 		fNewLocalList = new LinkedList<Node>();
-		fTreeRoot = new Node();
+		fTreeRoot = new Node(this);
+		fCodes = new HashMap<Long, List<Node>>();
 		
 		for(CodeTableRow row : fInput.getData())
 		{
@@ -73,6 +80,8 @@ public final class TreeModel implements CodeListener, MemoListener, TranscriptLi
 		listenerManager.registerMemoListener(fProject, this);
 		listenerManager.registerProjectListener(fProject, this);
 		listenerManager.registerTranscriptListener(fProject, this);
+		
+		fListeners = new ArrayList<TreeViewer>();
 	}
 	
 	/**
@@ -295,7 +304,53 @@ public final class TreeModel implements CodeListener, MemoListener, TranscriptLi
 	@Override
 	public void codeChanged(ChangeType cType, Code[] codes, Facade facade)
 	{
-		// TODO Auto-generated method stub
+		if(cType == ChangeType.MODIFY)
+		{
+			for(Code code : codes)
+			{
+				List<Node> list = fCodes.get(code.getPersistenceId());
+				if(list != null)
+				{
+					for(Node node : list)
+					{
+						node.setCodeName(code.getCodeName());
+					}
+				}
+			}
+			modelChanged();
+		}
+		else if(cType == ChangeType.DELETE)
+		{
+			for(Code code : codes)
+			{
+				List<Node> list = fCodes.get(code.getPersistenceId());
+				if(list != null)
+				{
+					for(Node node : list)
+					{
+						depthFirstRemove(node);
+					}
+					list.clear();
+					fCodes.put(code.getPersistenceId(), list);
+				}
+			}
+			modelChanged();
+		}
+		
+	}
+
+	/**
+	 * @param node
+	 */
+	private void depthFirstRemove(Node node)
+	{
+		node.getParent().getChildren().remove(node.getPersistenceId());
+		node.setParent(null);
+		
+		for(Node child : node.getChildren().values())
+		{
+			depthFirstRemove(child);
+		}
 		
 	}
 
@@ -351,5 +406,49 @@ public final class TreeModel implements CodeListener, MemoListener, TranscriptLi
 		listenerManager.unregisterTranscriptListener(fProject, this);
 		
 		gModels.remove(fProject.getName());
+	}
+	
+	/**
+	 * Add a node to the master set of codes.
+	 * @param node
+	 */
+	public void addNodeToCodes(Node node)
+	{
+		List<Node> list = fCodes.get(node.getPersistenceId());
+		if(list == null)
+		{
+			list = new ArrayList<Node>();
+		}
+		list.add(node);
+		fCodes.put(node.getPersistenceId(), list);
+	}
+	
+	/**
+	 * 
+	 * @param viewer
+	 */
+	public void addListener(TreeViewer viewer)
+	{
+		if(!fListeners.contains(viewer))
+		{
+			fListeners.add(viewer);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param viewer
+	 */
+	public void removeListener(TreeViewer viewer)
+	{
+		fListeners.remove(viewer);
+	}
+	
+	private void modelChanged()
+	{
+		for(TreeViewer viewer : fListeners)
+		{
+			viewer.refresh();
+		}
 	}
 }
