@@ -64,6 +64,7 @@ public class CodeEditor extends FormEditor
 		Code[] codes = fPage.getCodes();
 		Facade.getInstance().saveCodes(codes);
 		fPage.notDirty();
+		fPage.doSave(monitor);
 		
 		CommonNavigator view = (CommonNavigator) getSite().getPage().findView(
 				QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);

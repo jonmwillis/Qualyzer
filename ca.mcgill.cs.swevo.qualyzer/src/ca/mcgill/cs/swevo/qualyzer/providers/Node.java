@@ -66,7 +66,7 @@ public class Node
 			{
 				fPathToRoot = parent.fPathToRoot + SLASH;
 			}
-			fPathToRoot += parent.fCodeName;
+			fPathToRoot += parent.getPersistenceId().toString();
 		}
 		else
 		{
@@ -115,7 +115,7 @@ public class Node
 			{
 				fPathToRoot = parent.fPathToRoot + SLASH;
 			}
-			fPathToRoot += parent.fCodeName;
+			fPathToRoot += parent.getPersistenceId().toString();
 		}
 		else
 		{

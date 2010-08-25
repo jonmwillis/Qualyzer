@@ -21,6 +21,8 @@ import java.util.Map;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.CodeTableInput;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.CodeTableInput.CodeTableRow;
 import ca.mcgill.cs.swevo.qualyzer.model.Code;
+import ca.mcgill.cs.swevo.qualyzer.model.Facade;
+import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 
 /**
@@ -167,7 +169,7 @@ public final class TreeModel
 	{
 		for(Code code : fProject.getCodes())
 		{
-			if(code.getCodeName().equals(node.getCodeName()))
+			if(code.getPersistenceId().equals(node.getPersistenceId()))
 			{
 				String pathToRoot = node.getPathToRoot();
 				if(!pathToRoot.isEmpty())
@@ -220,23 +222,26 @@ public final class TreeModel
 		if(start == end)
 		{
 			Node node = fNewLocalList.get(start);
+			int toReturn;
 			if(node.getPathToRoot().split(SLASH).length >= length)
 			{
-				return start;
+				toReturn = start;
 			}
 			else
 			{
-				return start + 1;
+				toReturn = start + 1;
 			}
+			return toReturn;
 		}
 		else
 		{
 			int index = (start + end)/2;
 			Node node = fNewLocalList.get(index);
 			int nodeLength = node.getPathToRoot().split(SLASH).length;
+			int toReturn;
 			if(nodeLength == length)
 			{
-				return index;
+				toReturn = index;
 			}
 			else if(nodeLength > length)
 			{
@@ -244,7 +249,7 @@ public final class TreeModel
 				{
 					index--;
 				}
-				return binarySearch(length, start, index);
+				toReturn = binarySearch(length, start, index);
 			}
 			else
 			{
@@ -252,8 +257,19 @@ public final class TreeModel
 				{
 					index++;
 				}
-				return binarySearch(length, index, end);
+				toReturn = binarySearch(length, index, end);
 			}
+			return toReturn;
 		}
+	}
+	
+	/**
+	 * Save the hierarchy data.
+	 */
+	public void save()
+	{
+		fProject = PersistenceManager.getInstance().getProject(fProject.getName());
+		updatePaths();
+		Facade.getInstance().saveCodes(fProject.getCodes().toArray(new Code[0]));
 	}
 }

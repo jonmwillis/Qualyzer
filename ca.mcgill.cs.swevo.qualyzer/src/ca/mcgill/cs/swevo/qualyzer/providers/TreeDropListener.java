@@ -21,6 +21,8 @@ import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.TransferData;
 
+import ca.mcgill.cs.swevo.qualyzer.editors.pages.CodeEditorPage;
+
 /**
  *
  */
@@ -28,15 +30,18 @@ public class TreeDropListener extends ViewerDropAdapter
 {
 
 	private Viewer fViewer;
+	private CodeEditorPage fPage;
 	private Node fTarget;
 
 	/**
 	 * @param viewer
+	 * @param codeEditorPage 
 	 */
-	public TreeDropListener(Viewer viewer)
+	public TreeDropListener(Viewer viewer, CodeEditorPage codeEditorPage)
 	{
 		super(viewer);
 		fViewer = viewer;
+		fPage = codeEditorPage;
 	}
 
 	/* (non-Javadoc)
@@ -73,6 +78,7 @@ public class TreeDropListener extends ViewerDropAdapter
 			Node root = (Node) fViewer.getInput();
 			root.computeFreq();
 			fViewer.refresh();
+			fPage.setDirty();
 			return true;
 		}
 		
