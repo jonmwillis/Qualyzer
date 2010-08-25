@@ -21,14 +21,22 @@ import java.util.Map;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.CodeTableInput;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.CodeTableInput.CodeTableRow;
 import ca.mcgill.cs.swevo.qualyzer.model.Code;
+import ca.mcgill.cs.swevo.qualyzer.model.CodeListener;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
+import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager;
+import ca.mcgill.cs.swevo.qualyzer.model.Memo;
+import ca.mcgill.cs.swevo.qualyzer.model.MemoListener;
 import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
+import ca.mcgill.cs.swevo.qualyzer.model.ProjectListener;
+import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
+import ca.mcgill.cs.swevo.qualyzer.model.TranscriptListener;
+import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
 
 /**
  *
  */
-public final class TreeModel
+public final class TreeModel implements CodeListener, MemoListener, TranscriptListener, ProjectListener
 {
 	private static final String SLASH = "/";
 	
@@ -59,6 +67,12 @@ public final class TreeModel
 		buildModel();
 		
 		aggregateFreqs();
+		
+		ListenerManager listenerManager = Facade.getInstance().getListenerManager();
+		listenerManager.registerCodeListener(fProject, this);
+		listenerManager.registerMemoListener(fProject, this);
+		listenerManager.registerProjectListener(fProject, this);
+		listenerManager.registerTranscriptListener(fProject, this);
 	}
 	
 	/**
@@ -271,5 +285,71 @@ public final class TreeModel
 		fProject = PersistenceManager.getInstance().getProject(fProject.getName());
 		updatePaths();
 		Facade.getInstance().saveCodes(fProject.getCodes().toArray(new Code[0]));
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.model.CodeListener#codeChanged(
+	 * ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType, 
+	 * ca.mcgill.cs.swevo.qualyzer.model.Code[], ca.mcgill.cs.swevo.qualyzer.model.Facade)
+	 */
+	@Override
+	public void codeChanged(ChangeType cType, Code[] codes, Facade facade)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.model.MemoListener#memoChanged(
+	 * ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType, 
+	 * ca.mcgill.cs.swevo.qualyzer.model.Memo[], ca.mcgill.cs.swevo.qualyzer.model.Facade)
+	 */
+	@Override
+	public void memoChanged(ChangeType cType, Memo[] memos, Facade facade)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.model.TranscriptListener#transcriptChanged(
+	 * ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType, 
+	 * ca.mcgill.cs.swevo.qualyzer.model.Transcript[], ca.mcgill.cs.swevo.qualyzer.model.Facade)
+	 */
+	@Override
+	public void transcriptChanged(ChangeType cType, Transcript[] transcripts, Facade facade)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.model.ProjectListener#projectChanged(
+	 * ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType, 
+	 * ca.mcgill.cs.swevo.qualyzer.model.Project, ca.mcgill.cs.swevo.qualyzer.model.Facade)
+	 */
+	@Override
+	public void projectChanged(ChangeType cType, Project project, Facade facade)
+	{
+		if(cType == ChangeType.DELETE)
+		{
+			dispose();
+		}
+		else if(cType == ChangeType.RENAME)
+		{
+			
+			
+		}
+	}
+	
+	private void dispose()
+	{
+		ListenerManager listenerManager = Facade.getInstance().getListenerManager();
+		listenerManager.unregisterCodeListener(fProject, this);
+		listenerManager.unregisterMemoListener(fProject, this);
+		listenerManager.unregisterProjectListener(fProject, this);
+		listenerManager.unregisterTranscriptListener(fProject, this);
+		
+		gModels.remove(fProject.getName());
 	}
 }
