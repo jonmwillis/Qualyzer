@@ -29,8 +29,7 @@ import ca.mcgill.cs.swevo.qualyzer.editors.pages.CodeEditorPage;
 public class TreeDropListener extends ViewerDropAdapter
 {
 
-	
-	private static final String SPLIT = ":";
+	private static final String SPLIT = ":"; //$NON-NLS-1$
 	private static final int TREE_DATA_SIZE = 2;
 	private static final int TABLE_DATA_SIZE = 3;
 	
@@ -106,9 +105,6 @@ public class TreeDropListener extends ViewerDropAdapter
 		return false;
 	}
 
-	/**
-	 * 
-	 */
 	private void refreshEditor()
 	{
 		Node root = (Node) fViewer.getInput();
@@ -181,7 +177,7 @@ public class TreeDropListener extends ViewerDropAdapter
 	private Node findNode(String path, Long id)
 	{
 		Node node = (Node) fViewer.getInput();
-		for(String next : path.split("/"))
+		for(String next : path.split("/")) //$NON-NLS-1$
 		{
 			node = node.getChild(Long.parseLong(next));
 		}

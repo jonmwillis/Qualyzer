@@ -146,7 +146,7 @@ public class CodeTableInput
 			fName = name;
 			fPersistenceId = persistenceId;
 			fFreq = freq;
-			fDescription = "";
+			fDescription = ""; //$NON-NLS-1$
 		}
 
 		/**

@@ -23,8 +23,8 @@ public class Node
 	
 	private static final int CHILD_SPLIT_SIZE = 3;
 	private static final long ROOT_ID = -1L;
-	private static final String EMPTY = "";
-	private static final String SLASH = "/";
+	private static final String EMPTY = ""; //$NON-NLS-1$
+	private static final String SLASH = "/"; //$NON-NLS-1$
 	
 	private TreeModel fModel;
 	
@@ -207,7 +207,7 @@ public class Node
 	@Override
 	public String toString()
 	{	
-		return fCodeName + ":" + fPathToRoot;
+		return fCodeName + ":" + fPathToRoot; //$NON-NLS-1$
 	}
 
 	/**
@@ -249,7 +249,7 @@ public class Node
 	 */
 	public void addChild(String data)
 	{
-		String[] values = data.split(":");
+		String[] values = data.split(":"); //$NON-NLS-1$
 		if(values.length != CHILD_SPLIT_SIZE)
 		{
 			return;

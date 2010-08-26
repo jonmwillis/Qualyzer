@@ -26,7 +26,7 @@ public class TreeDragListener implements DragSourceListener
 	/**
 	 * 
 	 */
-	private static final String SPLIT = ":";
+	private static final String SPLIT = ":"; //$NON-NLS-1$
 	private TreeViewer fViewer;
 	
 	/**

@@ -32,7 +32,7 @@ public class TableDragListener implements DragSourceListener
 	/**
 	 * 
 	 */
-	private static final String SPLIT = ":";
+	private static final String SPLIT = ":"; //$NON-NLS-1$
 	private final TableViewer fViewer;
 	
 	/**
