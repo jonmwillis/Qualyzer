@@ -21,6 +21,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
@@ -44,6 +45,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Scale;
+import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 
 import ca.mcgill.cs.swevo.qualyzer.IQualyzerPreferenceConstants;
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
@@ -92,8 +94,9 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 	private Composite fTopBar;
 	
 	private int fSeekTime;
-
 	
+	private Action fAddTimeStampAction;
+
 	/**
 	 * Constructor.
 	 */
@@ -111,7 +114,22 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 		
 		fSeekTime = QualyzerActivator.getDefault().getPreferenceStore().getInt(
 				IQualyzerPreferenceConstants.SEEK_TIME);
-		QualyzerActivator.getDefault().getPreferenceStore().addPropertyChangeListener(this);
+		QualyzerActivator.getDefault().getPreferenceStore().addPropertyChangeListener(this);		
+	}
+
+	/**
+	 * 
+	 */
+	private void createTimeStampAction()
+	{
+		fAddTimeStampAction = new Action("Add Time Stamp")
+		{
+			@Override
+			public void run()
+			{
+				addTimeStamp();
+			}
+		};
 	}
 	
 	/* (non-Javadoc)
@@ -587,18 +605,49 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 		IFile file = ((RTFEditorInput) getEditorInput()).getFile();
 		IMarker marker = null;
 		
+		String pos = getCursorPosition();
+		int line = Integer.parseInt(pos.split(" : ")[0]);
+		
 		try
 		{
 			marker = file.createMarker("ca.mcgill.cs.swevo.qualyzer.marker.timestamp");
 			marker.setAttribute("time", fAudioSlider.getSelection());
-			marker.setAttribute(IMarker.LINE_NUMBER, 2);
+			marker.setAttribute(IMarker.LINE_NUMBER, line);
 			marker.setAttribute(IMarker.MESSAGE, getTimeString(fAudioSlider.getSelection()));
 		}
 		catch (CoreException e)
 		{
 			e.printStackTrace();
 		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.editors.RTFEditor#editorContextMenuAboutToShow(
+	 * org.eclipse.jface.action.IMenuManager)
+	 */
+	@Override
+	protected void editorContextMenuAboutToShow(IMenuManager menu)
+	{
+		super.editorContextMenuAboutToShow(menu);
 		
+		if(fAudioPlayer != null)
+		{
+			addAction(menu, ITextEditorActionConstants.GROUP_EDIT, RTFConstants.ADD_TIMESTAMP_ACTION_ID);
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.editors.RTFEditor#createActions()
+	 */
+	@Override
+	protected void createActions()
+	{
+		super.createActions();
+		
+		createTimeStampAction();
+		
+		setAction(RTFConstants.ADD_TIMESTAMP_ACTION_ID, fAddTimeStampAction);
 	}
 
 }
+
