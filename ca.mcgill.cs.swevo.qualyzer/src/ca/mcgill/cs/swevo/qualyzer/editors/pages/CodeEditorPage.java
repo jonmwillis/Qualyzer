@@ -154,7 +154,8 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		fTableArea.setLayout(new GridLayout(1, true));
 		fTableArea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
-		Button button = toolkit.createButton(fTableArea, "Show Hierachies", SWT.TOGGLE);
+		Button button = toolkit.createButton(fTableArea, 
+				Messages.getString("editors.pages.CodeEditorPage.showHierarchies"), SWT.TOGGLE); //$NON-NLS-1$
 		buildTableViewer(fTableArea);
 
 		if(fProject.getCodes().size() < THRESHHOLD)
@@ -224,15 +225,15 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		
 		Tree tree = fTreeViewer.getTree();
 		TreeColumn col = new TreeColumn(tree, SWT.NONE);
-		col.setText("Code");
+		col.setText(Messages.getString("editors.pages.CodeEditorPage.code")); //$NON-NLS-1$
 		col.setWidth(TREE_NAME_WIDTH);
 		
 		col = new TreeColumn(tree, SWT.NONE);
-		col.setText("Count");
+		col.setText(Messages.getString("editors.pages.CodeEditorPage.count")); //$NON-NLS-1$
 		col.setWidth(TREE_FREQ_WIDTH);
 		
 		col = new TreeColumn(tree, SWT.NONE);
-		col.setText("Total Count");
+		col.setText(Messages.getString("editors.pages.CodeEditorPage.totalCount")); //$NON-NLS-1$
 		col.setWidth(TREE_FREQ_WIDTH);
 		
 		tree.setHeaderVisible(true);
@@ -264,7 +265,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		Menu menu = new Menu(fTreeViewer.getTree());
 		
 		MenuItem item = new MenuItem(menu, SWT.PUSH);
-		item.setText("Remove Code");
+		item.setText(Messages.getString("editors.pages.CodeEditorPage.removeCode")); //$NON-NLS-1$
 		item.addSelectionListener(new SelectionAdapter(){
 			
 			@Override
@@ -317,13 +318,13 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		fTableViewer = new TableViewer(body, SWT.SINGLE |  SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL);
 		
 		TableColumn col = new TableColumn(fTableViewer.getTable(), SWT.NONE);
-		col.setText("Code Name");
+		col.setText(Messages.getString("editors.pages.CodeEditorPage.codeName")); //$NON-NLS-1$
 		col.setWidth(NAME_WIDTH);
 		col.addSelectionListener(createColSortListener(0, col));
 		col.setMoveable(false);
 		
 		col = new TableColumn(fTableViewer.getTable(), SWT.NONE);
-		col.setText("Frequency");
+		col.setText(Messages.getString("editors.pages.CodeEditorPage.frequency")); //$NON-NLS-1$
 		col.setWidth(FREQ_WIDTH);
 		col.addSelectionListener(createColSortListener(1, col));
 		col.setMoveable(false);

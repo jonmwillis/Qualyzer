@@ -40,7 +40,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
 public final class FileUtil
 {
 	public static final String ACTIVE_INV = "activeInv"; //$NON-NLS-1$
-	public static final String PROJECT_VERSION = "projectVersion";
+	public static final String PROJECT_VERSION = "projectVersion"; //$NON-NLS-1$
 	private static final String DELIMITER = ";"; //$NON-NLS-1$
 	private static final String EQUAL = "="; //$NON-NLS-1$
 

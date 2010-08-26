@@ -38,17 +38,17 @@ public class CodeTreeLabelProvider extends LabelProvider implements ITableLabelP
 	@Override
 	public String getColumnText(Object element, int columnIndex)
 	{
-		String text = "";
+		String text = ""; //$NON-NLS-1$
 		switch(columnIndex)
 		{
 		case 0:
 			text = ((Node) element).getCodeName();
 			break;
 		case 2:
-			text = "" + ((Node) element).getAggragateFreq();
+			text = "" + ((Node) element).getAggragateFreq(); //$NON-NLS-1$
 			break;
 		case 1:
-			text = "" + ((Node) element).getLocalFreq();
+			text = "" + ((Node) element).getLocalFreq(); //$NON-NLS-1$
 			break;
 		default:
 			break;

@@ -42,7 +42,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
  */
 public final class TreeModel implements CodeListener, MemoListener, TranscriptListener, ProjectListener
 {
-	private static final String SLASH = "/";
+	private static final String SLASH = "/"; //$NON-NLS-1$
 	
 	private static Map<String, TreeModel> gModels = new HashMap<String, TreeModel>();
 	
@@ -201,7 +201,7 @@ public final class TreeModel implements CodeListener, MemoListener, TranscriptLi
 				}
 				else if(!node.getChildren().isEmpty())
 				{
-					code.getParents().add("/");
+					code.getParents().add(SLASH);
 				}
 				break;
 			}

@@ -44,7 +44,7 @@ public class CodeTableLabelProvider extends LabelProvider implements ITableLabel
 		case 0:
 			return data.getName();
 		case 1:
-			return "" + data.getFrequency();
+			return "" + data.getFrequency(); //$NON-NLS-1$
 		default:
 			break;
 		}
