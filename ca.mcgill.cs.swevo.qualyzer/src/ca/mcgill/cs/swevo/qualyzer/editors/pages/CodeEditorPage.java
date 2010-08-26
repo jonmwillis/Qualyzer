@@ -148,15 +148,20 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		Composite body = fForm.getBody();
 		fForm.setText(Messages.getString("editors.pages.CodeEditorPage.codes")); //$NON-NLS-1$
 		
-		GridLayout layout = new GridLayout(2, true);
+		GridLayout layout = new GridLayout(1, true);
 		body.setLayout(layout);
 		
-		fTableArea = toolkit.createComposite(body);
+		Button button = toolkit.createButton(body, 
+				Messages.getString("editors.pages.CodeEditorPage.showHierarchies"), SWT.TOGGLE); //$NON-NLS-1$
+		
+		Composite mainArea = toolkit.createComposite(body);
+		mainArea.setLayout(new GridLayout(2, true));
+		mainArea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		
+		fTableArea = toolkit.createComposite(mainArea);
 		fTableArea.setLayout(new GridLayout(1, true));
 		fTableArea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
-		Button button = toolkit.createButton(fTableArea, 
-				Messages.getString("editors.pages.CodeEditorPage.showHierarchies"), SWT.TOGGLE); //$NON-NLS-1$
 		buildTableViewer(fTableArea);
 
 		if(fProject.getCodes().size() < THRESHHOLD)
@@ -168,7 +173,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 			fTableViewer.getTable().setLayoutData(LARGE_LAYOUT);
 		}
 		
-		Composite composite = toolkit.createComposite(body, SWT.BORDER);
+		Composite composite = toolkit.createComposite(mainArea, SWT.BORDER);
 		StackLayout sLayout = new StackLayout();
 		composite.setLayout(sLayout);
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
