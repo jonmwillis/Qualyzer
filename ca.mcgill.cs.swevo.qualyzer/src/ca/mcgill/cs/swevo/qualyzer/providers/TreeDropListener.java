@@ -29,18 +29,11 @@ import ca.mcgill.cs.swevo.qualyzer.editors.pages.CodeEditorPage;
 public class TreeDropListener extends ViewerDropAdapter
 {
 
-	/**
-	 * 
-	 */
+	
 	private static final String SPLIT = ":";
-	/**
-	 * 
-	 */
 	private static final int TREE_DATA_SIZE = 2;
-	/**
-	 * 
-	 */
 	private static final int TABLE_DATA_SIZE = 3;
+	
 	private Viewer fViewer;
 	private CodeEditorPage fPage;
 	private Node fTarget;
@@ -91,12 +84,7 @@ public class TreeDropListener extends ViewerDropAdapter
 			if(values.length == TREE_DATA_SIZE)
 			{
 				Long id = Long.parseLong(values[0]);
-				Node toMove = (Node) fViewer.getInput();
-				for(String next : values[1].split("/"))
-				{
-					toMove = toMove.getChild(Long.parseLong(next));
-				}
-				toMove = toMove.getChild(id);
+				Node toMove = findNode(values[1], id);
 				
 				Node oldParent = toMove.getParent();
 				oldParent.getChildren().remove(toMove.getPersistenceId());
@@ -139,44 +127,102 @@ public class TreeDropListener extends ViewerDropAdapter
 		LocalSelectionTransfer sel = LocalSelectionTransfer.getTransfer();
 		IStructuredSelection selection = (IStructuredSelection) sel.getSelection();
 		
+		Node nTarget = (Node) target;
+		if(nTarget == null)
+		{
+			nTarget = (Node) fViewer.getInput();
+		}
+		
 		String data = (String) selection.getFirstElement();
 		String[] values = data.split(SPLIT);
+		Long id = null;
 		
-		if(values.length == TABLE_DATA_SIZE)
+		boolean valid = true;
+		
+		if(nTarget != null)
 		{
-			Long id = Long.parseLong(values[1]);
-			
-			Node nTarget = (Node) target;
-			if(nTarget == null)
+			if(values.length == TABLE_DATA_SIZE)
 			{
-				nTarget = (Node) fViewer.getInput();
-			}
-			
-			if(nTarget != null)
-			{
-				Node child = nTarget.getChild(id);
-				if(child != null)
-				{
-					return false;
-				}
+				id = Long.parseLong(values[1]);
 				
-				Node parent = nTarget;
-				while(parent != null)
+				if(containsCycle(id, nTarget))
 				{
-					if(parent.getPersistenceId() == id)
-					{
-						return false;
-					}
-					parent = parent.getParent();
+					valid = false;
+				}
+			}
+			else if(values.length == TREE_DATA_SIZE)
+			{
+				id = Long.parseLong(values[0]);
+				
+				Node node = findNode(values[1], id);
+				
+				if(depthFirstContainsCycle(node, nTarget))
+				{
+					valid = false;
 				}
 			}
 			
-			return TextTransfer.getInstance().isSupportedType(transferType);
+			Node child = nTarget.getChild(id);
+			if(child != null)
+			{
+				valid = false;
+			}
+			
+			return valid && TextTransfer.getInstance().isSupportedType(transferType);
 		}
-		else if(values.length == TREE_DATA_SIZE)
+		return false;
+	}
+
+	/**
+	 * @param path
+	 * @param id
+	 * @return
+	 */
+	private Node findNode(String path, Long id)
+	{
+		Node node = (Node) fViewer.getInput();
+		for(String next : path.split("/"))
 		{
-			//TODO add checks.
-			return TextTransfer.getInstance().isSupportedType(transferType);
+			node = node.getChild(Long.parseLong(next));
+		}
+		node = node.getChild(id);
+		return node;
+	}
+
+	/**
+	 * @param id
+	 * @param nTarget
+	 * @param string
+	 * @return
+	 */
+	private boolean depthFirstContainsCycle(Node node, Node nTarget)
+	{
+		boolean hasCycle = false;
+		
+		hasCycle = hasCycle || containsCycle(node.getPersistenceId(), nTarget);
+		
+		for(Node child : node.getChildren().values())
+		{
+			hasCycle = hasCycle || depthFirstContainsCycle(child, nTarget);
+		}
+		
+		return hasCycle;
+	}
+
+	/**
+	 * @param id
+	 * @param nTarget
+	 */
+	private boolean containsCycle(Long id, Node nTarget)
+	{
+		Node parent = nTarget;
+		while(parent != null)
+		{
+			if(parent.getPersistenceId().equals(id))
+			{
+				return true;
+			}
+			parent = parent.getParent();
 		}
 		
 		return false;
