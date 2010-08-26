@@ -119,6 +119,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	private TreeViewer fTreeViewer;
 	private Composite fTreeArea;
 	private Composite fTableArea;
+	private TreeModel fTreeModel;
 
 	/**
 	 * Constructor.
@@ -242,9 +243,9 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		
 		fTreeViewer.setContentProvider(new CodeTreeContentProvider());
 		fTreeViewer.setLabelProvider(new CodeTreeLabelProvider());
-		TreeModel treeModel = TreeModel.getTreeModel(fProject);
-		fTreeViewer.setInput(treeModel.getRoot());
-		treeModel.addListener(fTreeViewer);
+		fTreeModel = TreeModel.getTreeModel(fProject);
+		fTreeViewer.setInput(fTreeModel.getRoot());
+		fTreeModel.addListener(fTreeViewer);
 		int operations = DND.DROP_COPY | DND.DROP_MOVE;
 		Transfer[] transferTypes = new Transfer[]{TextTransfer.getInstance()};
 		fTreeViewer.addDropSupport(operations, transferTypes, new TreeDropListener(fTreeViewer, this));
@@ -801,7 +802,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		listenerManager.unregisterProjectListener(fProject, this);
 		listenerManager.unregisterTranscriptListener(fProject, this);
 		listenerManager.unregisterMemoListener(fProject, this);
-		TreeModel.getTreeModel(fProject).removeListener(fTreeViewer);
+		fTreeModel.removeListener(fTreeViewer);
 		super.dispose();
 	}
 
@@ -817,7 +818,11 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		{
 			fProject = PersistenceManager.getInstance().getProject(fProject.getName());
 			
-			fTableViewer.setInput(new CodeTableInput(fProject));
+			CodeTableInput input = new CodeTableInput(fProject);
+			fTableViewer.setInput(input);
+			
+			fTreeModel.updateFrequencies(input);
+			fTreeViewer.refresh();
 			
 			updateSelection();
 		}
@@ -835,8 +840,12 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		{
 			fProject = PersistenceManager.getInstance().getProject(fProject.getName());
 			
-			fTableViewer.setInput(new CodeTableInput(fProject));
+			CodeTableInput input = new CodeTableInput(fProject);
+			fTableViewer.setInput(input);
 			
+			fTreeModel.updateFrequencies(input);
+			fTreeViewer.refresh();
+
 			updateSelection();
 		}
 	}
@@ -881,7 +890,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	@Override
 	public void doSave(IProgressMonitor monitor)
 	{
-		TreeModel.getTreeModel(fProject).save();
+		fTreeModel.save();
 	}
 
 	/**

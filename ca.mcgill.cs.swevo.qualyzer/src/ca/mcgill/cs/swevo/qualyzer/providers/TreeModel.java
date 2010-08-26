@@ -454,4 +454,27 @@ public final class TreeModel implements CodeListener, MemoListener, TranscriptLi
 			viewer.refresh();
 		}
 	}
+
+	/**
+	 * @param input
+	 */
+	public void updateFrequencies(CodeTableInput input)
+	{
+		Map<Long, Integer> freqs = input.getFrequencies();
+		
+		for(Long key : fCodes.keySet())
+		{
+			List<Node> list = fCodes.get(key);
+			Integer newFreq = freqs.get(key);
+			if(newFreq != null)
+			{
+				for(Node node : list)
+				{
+					node.setLocalFrequency(newFreq.intValue());
+				}
+			}
+		}
+		
+		fTreeRoot.computeFreq();
+	}
 }
