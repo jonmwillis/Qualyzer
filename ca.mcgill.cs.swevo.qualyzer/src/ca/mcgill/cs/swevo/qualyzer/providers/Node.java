@@ -275,4 +275,31 @@ public class Node
 	{
 		fCodeName = codeName;
 	}
+
+	/**
+	 * 
+	 */
+	public void updatePaths()
+	{
+		fPathToRoot = EMPTY;
+		
+		if(fParent.fPersistenceId != ROOT_ID)
+		{
+			if(!fParent.fPathToRoot.equals(SLASH))
+			{
+				fPathToRoot = fParent.fPathToRoot + SLASH;			
+			}
+			fPathToRoot += fParent.getPersistenceId().toString();
+		}
+		else
+		{
+			fPathToRoot = SLASH;
+		}
+		
+		for(Node child : fChildren.values())
+		{
+			child.updatePaths();
+		}
+		
+	}
 }
