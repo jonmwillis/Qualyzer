@@ -15,8 +15,11 @@ package ca.mcgill.cs.swevo.qualyzer.editors;
 
 import java.io.File;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.source.IAnnotationModel;
@@ -45,6 +48,7 @@ import org.eclipse.swt.widgets.Scale;
 import ca.mcgill.cs.swevo.qualyzer.IQualyzerPreferenceConstants;
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
+import ca.mcgill.cs.swevo.qualyzer.editors.inputs.RTFEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 import ca.mcgill.cs.swevo.qualyzer.model.TranscriptListener;
@@ -190,7 +194,7 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 	}
 	
 	/**
-	 * Sets the 2nd half of the passed continer to the enablement according to state.
+	 * Sets the 2nd half of the passed container to the enablement according to state.
 	 * Used to enable or disable the music bar.
 	 * @param container
 	 * @param state
@@ -573,6 +577,28 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 		{
 			super.propertyChange(e);
 		}
+	}
+
+	/**
+	 * 
+	 */
+	public void addTimeStamp()
+	{
+		IFile file = ((RTFEditorInput) getEditorInput()).getFile();
+		IMarker marker = null;
+		
+		try
+		{
+			marker = file.createMarker("ca.mcgill.cs.swevo.qualyzer.marker.timestamp");
+			marker.setAttribute("time", fAudioSlider.getSelection());
+			marker.setAttribute(IMarker.LINE_NUMBER, 2);
+			marker.setAttribute(IMarker.MESSAGE, getTimeString(fAudioSlider.getSelection()));
+		}
+		catch (CoreException e)
+		{
+			e.printStackTrace();
+		}
+		
 	}
 
 }
