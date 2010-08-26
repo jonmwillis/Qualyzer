@@ -302,4 +302,12 @@ public class Node
 		}
 		
 	}
+
+	/**
+	 * @param intValue
+	 */
+	public void setLocalFrequency(int intValue)
+	{
+		fLocalFreq = intValue;	
+	}
 }

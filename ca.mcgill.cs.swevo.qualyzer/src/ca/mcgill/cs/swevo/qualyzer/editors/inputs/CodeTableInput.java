@@ -113,6 +113,15 @@ public class CodeTableInput
 	
 	/**
 	 * 
+	 * @return
+	 */
+	public Map<Long, Integer> getFrequencies()
+	{
+		return fFreqs;
+	}
+	
+	/**
+	 * 
 	 *
 	 */
 	public class CodeTableRow
