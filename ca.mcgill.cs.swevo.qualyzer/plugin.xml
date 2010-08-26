@@ -1276,6 +1276,18 @@
             overviewRulerPreferenceValue="true"
             textPreferenceKey="fragment.text">
       </specification>
+      <specification
+            annotationType="org.eclipse.ui.workbench.texteditor.bookmark"
+            colorPreferenceKey="bookmark.color"
+            colorPreferenceValue="0,0,0"
+            includeOnPreferencePage="true"
+            label="Bookmark"
+            overviewRulerPreferenceKey="bookmark.overview"
+            overviewRulerPreferenceValue="false"
+            textPreferenceKey="bookmark.text"
+            verticalRulerPreferenceKey="bookmark.vertical"
+            verticalRulerPreferenceValue="true">
+      </specification>
    </extension>
    <extension
          point="org.eclipse.ui.bindings">
@@ -1339,6 +1351,28 @@
             id="ca.mcgill.cs.swevo.qualyzer.category.qualyzerExportWizards"
             name="%category.name.Qualyzer">
       </category>
+   </extension>
+   <extension
+         id="ca.mcgill.cs.swevo.qualyzer.marker.timestamp"
+         name="Timestamp"
+         point="org.eclipse.core.resources.markers">
+      <attribute
+            name="time">
+      </attribute>
+      <persistent
+            value="true">
+      </persistent>
+      <super
+            type="org.eclipse.core.resources.bookmark">
+      </super>
+   </extension>
+   <extension
+         point="org.eclipse.ui.ide.markerImageProviders">
+      <imageprovider
+            icon="icons/audio.png"
+            id="ca.mcgill.cs.swevo.qualyzer.imageprovider.timestamp"
+            markertype="ca.mcgill.cs.swevo.qualyzer.marker.timestamp">
+      </imageprovider>
    </extension>
 
 </plugin>
