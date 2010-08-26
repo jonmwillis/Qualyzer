@@ -92,9 +92,9 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 
 	private static final GridData LARGE_LAYOUT = new GridData(SWT.FILL, SWT.FILL, true, true);
 	private static final GridData SMALL_LAYOUT = new GridData(SWT.FILL, SWT.NULL, true, false);
-	private static final int NAME_WIDTH = 120;
+	private static final int NAME_WIDTH = 160;
 	private static final int FREQ_WIDTH = 80;
-	private static final int TREE_NAME_WIDTH = 100;
+	private static final int TREE_NAME_WIDTH = 150;
 	private static final int TREE_FREQ_WIDTH = 60;
 	private static final String EMPTY = ""; //$NON-NLS-1$
 	private static final int THRESHHOLD = 18;
@@ -333,6 +333,9 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		fTableViewer.setSorter(fSorter);
 		fTableViewer.addDragSupport(DND.DROP_COPY | DND.DROP_MOVE, 
 				new Transfer[]{TextTransfer.getInstance()}, new TableDragListener(fTableViewer));
+		
+		fTableViewer.getTable().setSortColumn(fTableViewer.getTable().getColumn(0));
+		fTableViewer.getTable().setSortDirection(SWT.DOWN);
 	}
 
 	/**
@@ -356,7 +359,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 				}
 				else
 				{
-					dir = SWT.UP;
+					dir = SWT.DOWN;
 				}
 				
 				fTableViewer.getTable().setSortColumn(column);

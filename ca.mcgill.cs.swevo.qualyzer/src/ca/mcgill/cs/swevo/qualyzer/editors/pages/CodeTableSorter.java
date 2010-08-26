@@ -78,7 +78,7 @@ public class CodeTableSorter extends ViewerSorter
 		if(fColIndex == 1)
 		{
 			CodeTableRow row = (CodeTableRow) element;
-			return fDescending ? row.getFrequency() : -row.getFrequency();
+			return fDescending ? -row.getFrequency() : row.getFrequency();
 		}
 		
 		return 0;
