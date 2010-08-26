@@ -419,7 +419,10 @@ public final class TreeModel implements CodeListener, MemoListener, TranscriptLi
 		{
 			list = new ArrayList<Node>();
 		}
-		list.add(node);
+		if(!list.contains(node))
+		{
+			list.add(node);
+		}
 		fCodes.put(node.getPersistenceId(), list);
 	}
 	

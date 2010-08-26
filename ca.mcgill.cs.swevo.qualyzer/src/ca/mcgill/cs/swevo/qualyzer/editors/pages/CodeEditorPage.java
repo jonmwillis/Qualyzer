@@ -80,6 +80,7 @@ import ca.mcgill.cs.swevo.qualyzer.providers.CodeTreeContentProvider;
 import ca.mcgill.cs.swevo.qualyzer.providers.CodeTreeLabelProvider;
 import ca.mcgill.cs.swevo.qualyzer.providers.Node;
 import ca.mcgill.cs.swevo.qualyzer.providers.TableDragListener;
+import ca.mcgill.cs.swevo.qualyzer.providers.TreeDragListener;
 import ca.mcgill.cs.swevo.qualyzer.providers.TreeDropListener;
 import ca.mcgill.cs.swevo.qualyzer.providers.TreeModel;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
@@ -92,9 +93,9 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 
 	private static final GridData LARGE_LAYOUT = new GridData(SWT.FILL, SWT.FILL, true, true);
 	private static final GridData SMALL_LAYOUT = new GridData(SWT.FILL, SWT.NULL, true, false);
-	private static final int NAME_WIDTH = 160;
+	private static final int NAME_WIDTH = 180;
 	private static final int FREQ_WIDTH = 80;
-	private static final int TREE_NAME_WIDTH = 150;
+	private static final int TREE_NAME_WIDTH = 170;
 	private static final int TREE_FREQ_WIDTH = 60;
 	private static final String EMPTY = ""; //$NON-NLS-1$
 	private static final int THRESHHOLD = 18;
@@ -243,8 +244,10 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		TreeModel treeModel = TreeModel.getTreeModel(fProject);
 		fTreeViewer.setInput(treeModel.getRoot());
 		treeModel.addListener(fTreeViewer);
-		fTreeViewer.addDropSupport(DND.DROP_COPY | DND.DROP_MOVE, 
-				new Transfer[]{TextTransfer.getInstance()}, new TreeDropListener(fTreeViewer, this));
+		int operations = DND.DROP_COPY | DND.DROP_MOVE;
+		Transfer[] transferTypes = new Transfer[]{TextTransfer.getInstance()};
+		fTreeViewer.addDropSupport(operations, transferTypes, new TreeDropListener(fTreeViewer, this));
+		fTreeViewer.addDragSupport(operations, transferTypes, new TreeDragListener(fTreeViewer));
 		
 		fTreeViewer.setSorter(new ViewerSorter());
 		
