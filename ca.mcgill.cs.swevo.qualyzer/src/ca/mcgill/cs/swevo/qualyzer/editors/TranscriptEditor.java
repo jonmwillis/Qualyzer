@@ -649,5 +649,7 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 		setAction(RTFConstants.ADD_TIMESTAMP_ACTION_ID, fAddTimeStampAction);
 	}
 
+	
+	
 }
 
