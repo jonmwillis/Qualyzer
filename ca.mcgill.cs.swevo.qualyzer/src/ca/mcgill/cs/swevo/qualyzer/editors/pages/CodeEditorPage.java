@@ -26,8 +26,6 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.StackLayout;
-import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
@@ -73,7 +71,6 @@ import ca.mcgill.cs.swevo.qualyzer.model.ProjectListener;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 import ca.mcgill.cs.swevo.qualyzer.model.TranscriptListener;
 import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
-import ca.mcgill.cs.swevo.qualyzer.model.validation.CodeValidator;
 import ca.mcgill.cs.swevo.qualyzer.providers.CodeTableContentProvider;
 import ca.mcgill.cs.swevo.qualyzer.providers.CodeTableLabelProvider;
 import ca.mcgill.cs.swevo.qualyzer.providers.CodeTreeContentProvider;
@@ -109,13 +106,11 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	private CodeTableSorter fSorter;
 	private CodeTableRow fCurrentRow;
 
-	private Text fName;
-	private StyledText fDescription;
+	private Text fDescription;
 
 	private boolean fIsDirty;
 
 	private ScrolledForm fForm;
-	private Composite fNameArea;
 	private TreeViewer fTreeViewer;
 	private Composite fTreeArea;
 	private Composite fTableArea;
@@ -140,6 +135,9 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		listenerManager.registerMemoListener(fProject, this);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.forms.editor.FormPage#createFormContent(org.eclipse.ui.forms.IManagedForm)
+	 */
 	@Override
 	protected void createFormContent(IManagedForm managedForm)
 	{
@@ -148,86 +146,119 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		Composite body = fForm.getBody();
 		fForm.setText(Messages.getString("editors.pages.CodeEditorPage.codes")); //$NON-NLS-1$
 		
-		GridLayout layout = new GridLayout(1, true);
-		body.setLayout(layout);
+		body.setLayout(new GridLayout(1, true));
 		
-		Button button = toolkit.createButton(body, 
-				Messages.getString("editors.pages.CodeEditorPage.showHierarchies"), SWT.TOGGLE); //$NON-NLS-1$
+		Button button = toolkit.createButton(body, "Switch Table/Tree", SWT.PUSH);
 		
-		Composite mainArea = toolkit.createComposite(body);
+		Composite mainArea = toolkit.createComposite(body, SWT.NULL);
 		mainArea.setLayout(new GridLayout(2, true));
 		mainArea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
-		fTableArea = toolkit.createComposite(mainArea);
-		fTableArea.setLayout(new GridLayout(1, true));
-		fTableArea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		Composite leftArea = toolkit.createComposite(mainArea, SWT.NULL);
+		leftArea.setLayout(new GridLayout(1, true));
+		leftArea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
-		buildTableViewer(fTableArea);
-
-		if(fProject.getCodes().size() < THRESHHOLD)
-		{
-			fTableViewer.getTable().setLayoutData(SMALL_LAYOUT);
-		}
-		else
-		{
-			fTableViewer.getTable().setLayoutData(LARGE_LAYOUT);
-		}
+		buildTableViewer(toolkit, leftArea);
 		
-		Composite composite = toolkit.createComposite(mainArea, SWT.BORDER);
-		StackLayout sLayout = new StackLayout();
-		composite.setLayout(sLayout);
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		Composite rightArea = toolkit.createComposite(mainArea, SWT.NULL);
+		rightArea.setLayout(new GridLayout(1, true));
+		rightArea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
-		fNameArea = createNameDescriptionArea(toolkit, composite);
-		fTreeArea = createTreeViewer(toolkit, composite);
-		sLayout.topControl = fNameArea;
+		createTreeViewer(toolkit, rightArea);
 		
-		toolkit.paintBordersFor(composite);
+		toolkit.createLabel(body, "Description:");
+		fDescription = toolkit.createText(body, "");
+		fDescription.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
+		
 		toolkit.paintBordersFor(body);
-		toolkit.paintBordersFor(fNameArea);
 		
 		fTableViewer.addSelectionChangedListener(createTableSelectionListener());
 		createTableContextMenu();
-		button.addSelectionListener(createToggleAdapter(button, sLayout, composite));
+		button.addSelectionListener(createToggleAdapter());
 	}
+	
+//	@Override
+//	protected void createFormContent(IManagedForm managedForm)
+//	{
+//		fForm = managedForm.getForm();
+//		FormToolkit toolkit = managedForm.getToolkit();
+//		Composite body = fForm.getBody();
+//		fForm.setText(Messages.getString("editors.pages.CodeEditorPage.codes")); //$NON-NLS-1$
+//		
+//		GridLayout layout = new GridLayout(1, true);
+//		body.setLayout(layout);
+//		
+//		Button button = toolkit.createButton(body, 
+//				Messages.getString("editors.pages.CodeEditorPage.showHierarchies"), SWT.TOGGLE); //$NON-NLS-1$
+//		
+//		Composite mainArea = toolkit.createComposite(body);
+//		mainArea.setLayout(new GridLayout(2, true));
+//		mainArea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+//		
+//		fTableArea = toolkit.createComposite(mainArea);
+//		fTableArea.setLayout(new GridLayout(1, true));
+//		fTableArea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+//		
+//		buildTableViewer(fTableArea);
+//
+//		if(fProject.getCodes().size() < THRESHHOLD)
+//		{
+//			fTableViewer.getTable().setLayoutData(SMALL_LAYOUT);
+//		}
+//		else
+//		{
+//			fTableViewer.getTable().setLayoutData(LARGE_LAYOUT);
+//		}
+//		
+//		Composite composite = toolkit.createComposite(mainArea, SWT.BORDER);
+//		StackLayout sLayout = new StackLayout();
+//		composite.setLayout(sLayout);
+//		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+//		
+//		fNameArea = createNameDescriptionArea(toolkit, composite);
+//		fTreeArea = createTreeViewer(toolkit, composite);
+//		sLayout.topControl = fNameArea;
+//		
+//		toolkit.paintBordersFor(composite);
+//		toolkit.paintBordersFor(body);
+//		toolkit.paintBordersFor(fNameArea);
+//		
+//		fTableViewer.addSelectionChangedListener(createTableSelectionListener());
+//		createTableContextMenu();
+//		button.addSelectionListener(createToggleAdapter(button, sLayout, composite));
+//	}
 
 	/**
-	 * @param sLayout
 	 * @return
 	 */
-	private SelectionListener createToggleAdapter(final Button button, final StackLayout sLayout,
-			final Composite composite)
+	private SelectionListener createToggleAdapter()
 	{
 		return new SelectionAdapter(){
 			
 			@Override
 			public void widgetSelected(SelectionEvent e)
 			{
-				if(button.getSelection())
-				{
-					sLayout.topControl = fTreeArea;
-					composite.layout();
-				}
-				else
-				{
-					sLayout.topControl = fNameArea;
-					composite.layout();
-				}
+				Composite lParent = fTreeArea.getParent();
+				Composite rParent = fTableArea.getParent();
+				
+				fTreeArea.setParent(rParent);
+				fTableArea.setParent(lParent);
 			}
 		};
 	}
 
 	/**
+	 * @param toolkit 
 	 * @param composite
 	 * @return
 	 */
-	private Composite createTreeViewer(FormToolkit toolkit, Composite parent)
+	private void createTreeViewer(FormToolkit toolkit, Composite parent)
 	{
-		Composite composite = toolkit.createComposite(parent);
-		composite.setLayout(new GridLayout(1, true));
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		fTreeArea = toolkit.createComposite(parent);
+		fTreeArea.setLayout(new GridLayout(1, true));
+		fTreeArea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
-		fTreeViewer = new TreeViewer(composite, SWT.SINGLE | SWT.FULL_SELECTION | SWT.V_SCROLL);
+		fTreeViewer = new TreeViewer(fTreeArea, SWT.SINGLE | SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.BORDER);
 		
 		Tree tree = fTreeViewer.getTree();
 		TreeColumn col = new TreeColumn(tree, SWT.NONE);
@@ -258,9 +289,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		
 		fTreeViewer.setSorter(new ViewerSorter());
 		
-		createTreeContextMenu();
-		
-		return composite;
+		createTreeContextMenu();		
 	}
 
 	/**
@@ -290,38 +319,16 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	}
 
 	/**
-	 * @param toolkit
-	 * @param composite
-	 */
-	private Composite createNameDescriptionArea(FormToolkit toolkit, Composite parent)
-	{
-		Composite composite = toolkit.createComposite(parent, SWT.NULL);
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 1;
-		composite.setLayout(layout);
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		
-		toolkit.createLabel(composite, Messages.getString("editors.pages.CodeEditorPage.name")); //$NON-NLS-1$
-		fName = toolkit.createText(composite, EMPTY); //$NON-NLS-1$
-		fName.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
-		fName.addKeyListener(createKeyAdapter());
-		fName.addKeyListener(createValidator());
-		
-		toolkit.createLabel(composite, Messages.getString("editors.pages.CodeEditorPage.description")); //$NON-NLS-1$
-		fDescription = new StyledText(composite, SWT.WRAP | SWT.BORDER); //$NON-NLS-1$
-		fDescription.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		fDescription.addKeyListener(createKeyAdapter());
-		
-		return composite;
-	}
-
-	/**
 	 * @param body 
 	 * 
 	 */
-	private void buildTableViewer(Composite body)
+	private void buildTableViewer(FormToolkit toolkit, Composite body)
 	{
-		fTableViewer = new TableViewer(body, SWT.SINGLE |  SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL);
+		fTableArea = toolkit.createComposite(body, SWT.NULL);
+		fTableArea.setLayout(new GridLayout(1, true));
+		fTableArea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		
+		fTableViewer = new TableViewer(fTableArea, SWT.SINGLE |  SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL);
 		
 		TableColumn col = new TableColumn(fTableViewer.getTable(), SWT.NONE);
 		col.setText(Messages.getString("editors.pages.CodeEditorPage.codeName")); //$NON-NLS-1$
@@ -346,6 +353,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		
 		fTableViewer.getTable().setSortColumn(fTableViewer.getTable().getColumn(0));
 		fTableViewer.getTable().setSortDirection(SWT.DOWN);
+		fTableViewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 	}
 
 	/**
@@ -376,40 +384,6 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 				fTableViewer.getTable().setSortDirection(dir);
 				
 				fTableViewer.refresh();
-			}
-		};
-	}
-
-	/**
-	 * @return A keyadapter that acts as a validator for the new code name.
-	 */
-	private KeyAdapter createValidator()
-	{
-		return new KeyAdapter(){
-			
-			@Override
-			public void keyReleased(KeyEvent e)
-			{
-				IStructuredSelection sel = (IStructuredSelection) fTableViewer.getSelection();
-				if(sel.getFirstElement() == null)
-				{
-					return;
-				}
-				CodeValidator lValidator = new CodeValidator(fName.getText().trim(), 
-						fCurrentRow.getCode().getCodeName(), fProject);
-				if(!lValidator.isValid())
-				{
-					if(fIsDirty)
-					{
-						fIsDirty = false;
-						getEditor().editorDirtyStateChanged();
-					}
-					fForm.getForm().setMessage(lValidator.getErrorMessage(), IMessageProvider.ERROR);
-				}
-				else
-				{
-					fForm.getForm().setMessage(null, IMessageProvider.NONE);
-				}
 			}
 		};
 	}
@@ -656,8 +630,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 			@Override
 			public void keyReleased(KeyEvent e)
 			{
-				if(!fIsDirty && (!fName.getText().equals(fCurrentRow.getName()) || 
-						!fDescription.getText().equals(fCurrentRow.getDescription())))
+				if(!fIsDirty && (!fDescription.getText().equals(fCurrentRow.getDescription())))
 				{				
 					fIsDirty = true;
 					getEditor().editorDirtyStateChanged();
@@ -693,7 +666,6 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 				
 				if(row == null)
 				{
-					fName.setText(EMPTY);
 					fDescription.setText(EMPTY);
 					return;
 				}
@@ -707,14 +679,12 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 				{
 					if(fCurrentRow != null)
 					{
-						fCurrentRow.setName(fName.getText().trim());
 						fCurrentRow.setDescription(fDescription.getText().trim());
 						fTableViewer.refresh(fCurrentRow);
 					}
 				}
 				
 				fCurrentRow = row;
-				fName.setText(fCurrentRow.getName());
 				fDescription.setText(fCurrentRow.getDescription());
 			}
 
@@ -863,7 +833,6 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	{
 		if(fCurrentRow != null)
 		{
-			fCurrentRow.setName(fName.getText().trim());
 			fCurrentRow.setDescription(fDescription.getText().trim());
 			fTableViewer.refresh(fCurrentRow);
 		}
