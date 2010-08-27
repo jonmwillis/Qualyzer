@@ -14,9 +14,10 @@
 package ca.mcgill.cs.swevo.qualyzer.editors;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -46,6 +47,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Scale;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
+import org.eclipse.ui.texteditor.MarkerUtilities;
 
 import ca.mcgill.cs.swevo.qualyzer.IQualyzerPreferenceConstants;
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
@@ -603,17 +605,17 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 	public void addTimeStamp()
 	{
 		IFile file = ((RTFEditorInput) getEditorInput()).getFile();
-		IMarker marker = null;
 		
 		String pos = getCursorPosition();
 		int line = Integer.parseInt(pos.split(" : ")[0]);
 		
 		try
 		{
-			marker = file.createMarker("ca.mcgill.cs.swevo.qualyzer.marker.timestamp");
-			marker.setAttribute("time", fAudioSlider.getSelection());
-			marker.setAttribute(IMarker.LINE_NUMBER, line);
-			marker.setAttribute(IMarker.MESSAGE, getTimeString(fAudioSlider.getSelection()));
+			Map<String, Object> map = new HashMap<String, Object>();
+			MarkerUtilities.setLineNumber(map, line);
+			MarkerUtilities.setMessage(map, getTimeString(fAudioSlider.getSelection()));
+			map.put("time", fAudioSlider.getSelection());
+			MarkerUtilities.createMarker(file, map, "ca.mcgill.cs.swevo.qualyzer.marker.timestamp");
 		}
 		catch (CoreException e)
 		{
@@ -670,8 +672,5 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 		int offset = getSourceViewer().getTextWidget().getOffsetAtLine(line);
 		getSourceViewer().setSelectedRange(offset, 0);
 	}
-	
-	
-	
 }
 
