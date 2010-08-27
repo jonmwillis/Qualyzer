@@ -649,6 +649,28 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 		setAction(RTFConstants.ADD_TIMESTAMP_ACTION_ID, fAddTimeStampAction);
 	}
 
+	/**
+	 * Seeks to the specified time. For use by the SelectTimestampAction.
+	 * @param seconds
+	 */
+	public void seekToTime(int seconds)
+	{
+		if(fAudioPlayer != null)
+		{
+			fAudioPlayer.jumpToTime(seconds);
+		}
+	}
+	
+	/**
+	 * Moves the cursor to the beginning of the line.
+	 * @param line 0 relative line number.
+	 */
+	public void moveCursorToLine(int line)
+	{
+		int offset = getSourceViewer().getTextWidget().getOffsetAtLine(line);
+		getSourceViewer().setSelectedRange(offset, 0);
+	}
+	
 	
 	
 }

@@ -1374,5 +1374,19 @@
             markertype="ca.mcgill.cs.swevo.qualyzer.marker.timestamp">
       </imageprovider>
    </extension>
+   <extension
+         point="org.eclipse.ui.editorActions">
+      <editorContribution
+            id="ca.mcgill.cs.swevo.qualyzer.editorContribution.timestampContribution"
+            targetID="ca.mcgill.cs.swevo.qualyzer.editors.transcriptEditor">
+         <action
+               actionID="RulerClick"
+               class="ca.mcgill.cs.swevo.qualyzer.editors.SelectTimestampDelegate"
+               id="ca.mcgill.cs.swevo.qualyzer.action.selectTimestamp"
+               label="Select Timestamp"
+               style="push">
+         </action>
+      </editorContribution>
+   </extension>
 
 </plugin>
