@@ -20,6 +20,8 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.source.IVerticalRulerInfo;
 import org.eclipse.ui.texteditor.SelectMarkerRulerAction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.RTFEditorInput;
 
@@ -29,6 +31,8 @@ import ca.mcgill.cs.swevo.qualyzer.editors.inputs.RTFEditorInput;
  */
 public class SelectTimestampAction extends SelectMarkerRulerAction
 {
+	private static Logger gLogger = LoggerFactory.getLogger(SelectTimestampAction.class);
+	
 	private TranscriptEditor fEditor;
 	private IVerticalRulerInfo fInfo;
 	
@@ -66,12 +70,15 @@ public class SelectTimestampAction extends SelectMarkerRulerAction
 					fEditor.seekToTime(time);
 					fEditor.moveCursorToLine(line);
 				}
+				else if(!marker.exists())
+				{
+					marker.delete();
+				}
 			}
 		}
 		catch (CoreException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			gLogger.error("Select Timestamp failed", e);
 		}
 	}
 	
