@@ -169,6 +169,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		toolkit.createLabel(body, "Description:");
 		fDescription = toolkit.createText(body, "");
 		fDescription.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
+		fDescription.addKeyListener(createKeyAdapter());
 		
 		toolkit.paintBordersFor(body);
 		
