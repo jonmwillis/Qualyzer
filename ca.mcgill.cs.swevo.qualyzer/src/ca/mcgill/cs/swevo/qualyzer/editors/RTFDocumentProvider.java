@@ -685,6 +685,13 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		{
 			
 		}
+		
+		FileInfo info = (FileInfo) getElementInfo(element);
+		if(info != null)
+		{
+			RTFAnnotationModel rtfModel = (RTFAnnotationModel) info.fModel;
+			rtfModel.updateMarkers(info.fDocument);
+		}
 				
 		Iterator<Annotation> iter = model.getAnnotationIterator();
 		while(iter.hasNext())
