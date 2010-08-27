@@ -672,5 +672,15 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 		int offset = getSourceViewer().getTextWidget().getOffsetAtLine(line);
 		getSourceViewer().setSelectedRange(offset, 0);
 	}
+	
+	/* (non-Javadoc)
+	 * @see ca.mcgill.cs.swevo.qualyzer.editors.RTFEditor#rulerContextMenuAboutToShow(
+	 * org.eclipse.jface.action.IMenuManager)
+	 */
+	@Override
+	protected void rulerContextMenuAboutToShow(IMenuManager menu)
+	{
+		//TODO add something.
+	}
 }
 
