@@ -149,7 +149,8 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		
 		body.setLayout(new GridLayout(1, true));
 		
-		Button button = toolkit.createButton(body, "Swap Table/Tree", SWT.PUSH);
+		Button button = toolkit.createButton(body, Messages.getString(
+				"editors.pages.CodeEditorPage.swap"), SWT.PUSH); //$NON-NLS-1$
 		
 		Composite mainArea = toolkit.createComposite(body, SWT.NULL);
 		mainArea.setLayout(new GridLayout(2, true));
@@ -167,8 +168,8 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		
 		createTreeViewer(toolkit, rightArea);
 		
-		toolkit.createLabel(body, "Description:");
-		fDescription = toolkit.createText(body, "");
+		toolkit.createLabel(body, Messages.getString("editors.pages.CodeEditorPage.description")); //$NON-NLS-1$
+		fDescription = toolkit.createText(body, ""); //$NON-NLS-1$
 		fDescription.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 		fDescription.addKeyListener(createKeyAdapter());
 		
@@ -260,7 +261,8 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 			public void widgetSelected(SelectionEvent e)
 			{
 				boolean check = MessageDialog.openConfirm(getSite().getShell(), 
-						"Remove Code", "Do you want to remove this code and all its children from the hierarchy?");
+						Messages.getString("editors.pages.CodeEditorPage.removeCode"), //$NON-NLS-1$
+						Messages.getString("editors.pages.CodeEditorPage.removeConfirm")); //$NON-NLS-1$ 
 				
 				if(check)
 				{
@@ -367,7 +369,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		item.addSelectionListener(viewFragmentsSelected());
 		
 		item = new MenuItem(menu, SWT.PUSH);
-		item.setText("Rename Code");
+		item.setText(Messages.getString("editors.pages.CodeEditorPage.renameCode")); //$NON-NLS-1$
 		item.addSelectionListener(renameCodeSelected());
 		
 		fTableViewer.getTable().setMenu(menu);

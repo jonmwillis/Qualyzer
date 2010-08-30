@@ -1369,7 +1369,7 @@
    <extension
          point="org.eclipse.ui.ide.markerImageProviders">
       <imageprovider
-            icon="icons/audio.png"
+            icon="icons/time.png"
             id="ca.mcgill.cs.swevo.qualyzer.imageprovider.timestamp"
             markertype="ca.mcgill.cs.swevo.qualyzer.marker.timestamp">
       </imageprovider>
