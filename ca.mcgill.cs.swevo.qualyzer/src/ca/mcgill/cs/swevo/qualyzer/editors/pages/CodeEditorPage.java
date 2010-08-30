@@ -55,6 +55,7 @@ import org.eclipse.ui.navigator.CommonNavigator;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.dialogs.NewCodeDialog;
+import ca.mcgill.cs.swevo.qualyzer.dialogs.RenameCodeDialog;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.CodeTableInput;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.CodeTableInput.CodeTableRow;
 import ca.mcgill.cs.swevo.qualyzer.model.Code;
@@ -414,7 +415,40 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		item.setText(Messages.getString("editors.pages.CodeEditorPage.viewFragments")); //$NON-NLS-1$
 		item.addSelectionListener(viewFragmentsSelected());
 		
+		item = new MenuItem(menu, SWT.PUSH);
+		item.setText("Rename Code");
+		item.addSelectionListener(renameCodeSelected());
+		
 		fTableViewer.getTable().setMenu(menu);
+	}
+
+	/**
+	 * @return
+	 */
+	private SelectionListener renameCodeSelected()
+	{
+		return new SelectionAdapter()
+		{
+			@Override
+			public void widgetSelected(SelectionEvent e)
+			{
+				IStructuredSelection selection = (IStructuredSelection) fTableViewer.getSelection();
+				Code code = ((CodeTableRow) selection.getFirstElement()).getCodeToSave();
+				if(code == null)
+				{
+					code = ((CodeTableRow) selection.getFirstElement()).getCode();
+				}
+				RenameCodeDialog dialog = new RenameCodeDialog(getSite().getShell(), code);
+				dialog.open();
+				if(dialog.getReturnCode() == Window.OK)
+				{
+					String name = dialog.getName();
+					code.setCodeName(name);
+					Facade.getInstance().saveCodes(new Code[]{code});
+				}
+				
+			}
+		};
 	}
 
 	/**
