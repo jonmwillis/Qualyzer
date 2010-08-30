@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -98,6 +99,7 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 	private int fSeekTime;
 	
 	private Action fAddTimeStampAction;
+	private Action fRemoveTimeStampAction;
 
 	/**
 	 * Constructor.
@@ -647,8 +649,47 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 		super.createActions();
 		
 		createTimeStampAction();
+		createRemoveTimeStampAction();
 		
 		setAction(RTFConstants.ADD_TIMESTAMP_ACTION_ID, fAddTimeStampAction);
+		setAction(RTFConstants.REMOVE_TIMESTAMP_ACTION_ID, fRemoveTimeStampAction);
+	}
+
+	/**
+	 * 
+	 */
+	private void createRemoveTimeStampAction()
+	{
+		fRemoveTimeStampAction = new Action("Remove Timestamp")
+		{
+			
+			@Override
+			public void run()
+			{
+				int line = getVerticalRuler().getLineOfLastMouseButtonActivity();
+				try
+				{
+					for(IMarker marker : ((RTFEditorInput) getEditorInput()).getFile().
+							findMarkers(RTFConstants.TIMESTAMP_MARKER_ID, false, 0))
+					{
+						if(marker.exists() && line + 1 == marker.getAttribute(IMarker.LINE_NUMBER, 0))
+						{
+							marker.delete();
+							break;
+						}
+						else if(!marker.exists())
+						{
+							marker.delete();
+						}
+					}
+				}
+				catch (CoreException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		};
 	}
 
 	/**
@@ -680,7 +721,7 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 	@Override
 	protected void rulerContextMenuAboutToShow(IMenuManager menu)
 	{
-		//TODO add something.
+		addAction(menu, RTFConstants.REMOVE_TIMESTAMP_ACTION_ID);
 	}
 }
 
