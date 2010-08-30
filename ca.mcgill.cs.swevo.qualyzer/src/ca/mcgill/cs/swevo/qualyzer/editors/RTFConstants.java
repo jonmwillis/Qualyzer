@@ -35,8 +35,10 @@ public final class RTFConstants
 	public static final String REMOVE_CODE_ACTION_ID = "action.removeCode"; //$NON-NLS-1$
 	public static final String VIEW_FRAGMENTS_ACTION_ID = "action.viewFragments"; //$NON-NLS-1$
 	public static final String ADD_TIMESTAMP_ACTION_ID = "action.addTimeStamp"; //$NON-NLS-1$
+	public static final String REMOVE_TIMESTAMP_ACTION_ID = "action.removeTimeStamp";
 	
 	public static final String TIMESTAMP_MARKER_ID = "ca.mcgill.cs.swevo.qualyzer.marker.timestamp";
+	
 	
 	private RTFConstants(){}
 }
