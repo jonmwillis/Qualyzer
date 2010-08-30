@@ -49,6 +49,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Scale;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.texteditor.MarkerUtilities;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ca.mcgill.cs.swevo.qualyzer.IQualyzerPreferenceConstants;
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
@@ -65,6 +67,8 @@ import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
 public class TranscriptEditor extends RTFEditor implements TranscriptListener
 {	
 	public static final String ID = "ca.mcgill.cs.swevo.qualyzer.editors.transcriptEditor"; //$NON-NLS-1$
+	
+	private static Logger gLogger = LoggerFactory.getLogger(TranscriptEditor.class);
 	
 	private static final int NUM_COLS = 10;
 	private static final int SECONDS_PER_MINUTE = 60;
@@ -685,8 +689,7 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 				}
 				catch (CoreException e)
 				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					gLogger.error("Unable to access marker", e);
 				}
 			}
 		};
@@ -721,7 +724,26 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 	@Override
 	protected void rulerContextMenuAboutToShow(IMenuManager menu)
 	{
-		addAction(menu, RTFConstants.REMOVE_TIMESTAMP_ACTION_ID);
+		if(fAudioPlayer != null)
+		{
+			int line = getVerticalRuler().getLineOfLastMouseButtonActivity() + 1;
+			IFile file = ((RTFEditorInput) getEditorInput()).getFile();
+			try
+			{
+				for(IMarker marker : file.findMarkers(RTFConstants.TIMESTAMP_MARKER_ID, false, 0))
+				{
+					if(marker.exists() && marker.getAttribute(IMarker.LINE_NUMBER, 0) == line)
+					{
+						addAction(menu, RTFConstants.REMOVE_TIMESTAMP_ACTION_ID);
+						break;
+					}
+				}
+			}
+			catch (CoreException e)
+			{
+				gLogger.error("Unable to access marker", e);
+			}
+		}
 	}
 }
 
