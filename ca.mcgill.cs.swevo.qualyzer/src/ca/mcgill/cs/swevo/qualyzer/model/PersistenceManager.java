@@ -46,7 +46,7 @@ public final class PersistenceManager
 	public static final String DB_DRIVER = "org.h2.Driver"; //$NON-NLS-1$
 
 	private static final PersistenceManager INSTANCE = new PersistenceManager();
-	private static final String PER_S = "%s";
+	private static final String PER_S = "%s"; //$NON-NLS-1$
 
 	private final QualyzerActivator fActivator;
 

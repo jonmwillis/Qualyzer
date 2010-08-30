@@ -98,7 +98,7 @@ public class TreeDropListener extends ViewerDropAdapter
 			else if(values.length == TABLE_DATA_SIZE)
 			{
 				fTarget.addChild((String) data);
-				Node child = fTarget.getChild(Long.parseLong(((String) data).split(":")[1]));
+				Node child = fTarget.getChild(Long.parseLong(((String) data).split(":")[1])); //$NON-NLS-1$
 				refreshEditor();
 				fViewer.setSelection(new StructuredSelection(child), true);
 				return true;

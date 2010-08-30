@@ -130,7 +130,7 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 	 */
 	private void createTimeStampAction()
 	{
-		fAddTimeStampAction = new Action("Add Time Stamp")
+		fAddTimeStampAction = new Action(Messages.getString("editors.TranscriptEditor.addTimeStamp")) //$NON-NLS-1$
 		{
 			@Override
 			public void run()
@@ -613,15 +613,15 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 		IFile file = ((RTFEditorInput) getEditorInput()).getFile();
 		
 		String pos = getCursorPosition();
-		int line = Integer.parseInt(pos.split(" : ")[0]);
+		int line = Integer.parseInt(pos.split(" : ")[0]); //$NON-NLS-1$
 		
 		try
 		{
 			Map<String, Object> map = new HashMap<String, Object>();
 			MarkerUtilities.setLineNumber(map, line);
 			MarkerUtilities.setMessage(map, getTimeString(fAudioSlider.getSelection()));
-			map.put("time", fAudioSlider.getSelection());
-			MarkerUtilities.createMarker(file, map, "ca.mcgill.cs.swevo.qualyzer.marker.timestamp");
+			map.put("time", fAudioSlider.getSelection()); //$NON-NLS-1$
+			MarkerUtilities.createMarker(file, map, "ca.mcgill.cs.swevo.qualyzer.marker.timestamp"); //$NON-NLS-1$
 		}
 		catch (CoreException e)
 		{
@@ -664,7 +664,8 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 	 */
 	private void createRemoveTimeStampAction()
 	{
-		fRemoveTimeStampAction = new Action("Remove Timestamp")
+		fRemoveTimeStampAction = new Action(
+				Messages.getString("editors.TranscriptEditor.removeTimeStamp")) //$NON-NLS-1$
 		{
 			
 			@Override
@@ -689,7 +690,7 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 				}
 				catch (CoreException e)
 				{
-					gLogger.error("Unable to access marker", e);
+					gLogger.error("Unable to access marker", e); //$NON-NLS-1$
 				}
 			}
 		};
@@ -741,7 +742,7 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 			}
 			catch (CoreException e)
 			{
-				gLogger.error("Unable to access marker", e);
+				gLogger.error("Unable to access marker", e); //$NON-NLS-1$
 			}
 		}
 	}

@@ -64,7 +64,7 @@ public class SelectTimestampAction extends SelectMarkerRulerAction
 			for(IMarker marker : file.findMarkers(RTFConstants.TIMESTAMP_MARKER_ID, false, 0))
 			{
 				int theLine = marker.getAttribute(IMarker.LINE_NUMBER, -1);
-				int time = marker.getAttribute("time", 0);
+				int time = marker.getAttribute("time", 0); //$NON-NLS-1$
 				if(marker.exists() &&  theLine == line + 1)
 				{
 					fEditor.seekToTime(time);
@@ -78,7 +78,7 @@ public class SelectTimestampAction extends SelectMarkerRulerAction
 		}
 		catch (CoreException e)
 		{
-			gLogger.error("Select Timestamp failed", e);
+			gLogger.error("Select Timestamp failed", e); //$NON-NLS-1$
 		}
 	}
 	

@@ -31,8 +31,9 @@ public class SelectTimestampDelegate extends AbstractRulerActionDelegate
 	@Override
 	protected IAction createAction(ITextEditor editor, IVerticalRulerInfo rulerInfo)
 	{
-		return new SelectTimestampAction(ResourceBundle.getBundle("ca.mcgill.cs.swevo.qualyzer.editors.messages"), 
-				"SelectTimestampAction.", (TranscriptEditor) editor, rulerInfo);
+		return new SelectTimestampAction(ResourceBundle.getBundle(
+				"ca.mcgill.cs.swevo.qualyzer.editors.messages"),  //$NON-NLS-1$
+				"SelectTimestampAction.", (TranscriptEditor) editor, rulerInfo); //$NON-NLS-1$
 	}
 
 	
