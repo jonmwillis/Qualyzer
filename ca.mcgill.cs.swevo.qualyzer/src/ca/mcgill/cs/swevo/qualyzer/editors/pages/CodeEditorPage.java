@@ -39,6 +39,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.TableColumn;
@@ -107,6 +108,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	private CodeTableSorter fSorter;
 	private CodeTableRow fCurrentRow;
 
+	private Label fCodeName;
 	private Text fDescription;
 
 	private boolean fIsDirty;
@@ -167,6 +169,9 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		rightArea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
 		createTreeViewer(toolkit, rightArea);
+		
+		fCodeName = toolkit.createLabel(body, "Currently Selected Code:");
+		fCodeName.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 		
 		toolkit.createLabel(body, Messages.getString("editors.pages.CodeEditorPage.description")); //$NON-NLS-1$
 		fDescription = toolkit.createText(body, ""); //$NON-NLS-1$
@@ -241,9 +246,41 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		fTreeViewer.addDropSupport(operations, transferTypes, new TreeDropListener(fTreeViewer, this));
 		fTreeViewer.addDragSupport(operations, transferTypes, new TreeDragListener(fTreeViewer));
 		
+		fTreeViewer.addSelectionChangedListener(createTreeSelectionListener());
 		fTreeViewer.setSorter(new ViewerSorter());
 		
 		createTreeContextMenu();		
+	}
+
+	/**
+	 * @return
+	 */
+	private ISelectionChangedListener createTreeSelectionListener()
+	{
+		return new ISelectionChangedListener()
+		{
+			@Override
+			public void selectionChanged(SelectionChangedEvent event)
+			{
+				Node node = (Node) ((IStructuredSelection) fTreeViewer.getSelection()).getFirstElement();
+				if(node != null)
+				{
+					int i = 0;
+					CodeTableRow row = (CodeTableRow) fTableViewer.getElementAt(i);
+					while(row != null)
+					{
+						if(node.getPersistenceId().equals(row.getPersistenceId()))
+						{
+							fTableViewer.setSelection(new StructuredSelection(row));
+							break;
+						}
+						
+						i++;
+						row = (CodeTableRow) fTableViewer.getElementAt(i);
+					}
+				}
+			}
+		};
 	}
 
 	/**
@@ -269,8 +306,9 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 					IStructuredSelection selection = (IStructuredSelection) fTreeViewer.getSelection();
 				
 					Node node = (Node) selection.getFirstElement();
-				
-					node.getParent().getChildren().remove(node.getPersistenceId());
+					
+					fTreeModel.removeNode(node);
+					//node.getParent().getChildren().remove(node.getPersistenceId());
 					fTreeViewer.refresh();
 					setDirty();
 				}
@@ -681,6 +719,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 				
 				fCurrentRow = row;
 				fDescription.setText(fCurrentRow.getDescription());
+				fCodeName.setText("Currently Selected Code: " + fCurrentRow.getName());
 			}
 
 		};
@@ -874,5 +913,13 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 			getEditor().editorDirtyStateChanged();
 		}
 		
+	}
+
+	/**
+	 * @return
+	 */
+	public TreeModel getTreeModel()
+	{
+		return fTreeModel;
 	}
 }
