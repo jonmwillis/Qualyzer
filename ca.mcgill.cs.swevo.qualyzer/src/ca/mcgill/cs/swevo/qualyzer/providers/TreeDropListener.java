@@ -15,6 +15,7 @@ package ca.mcgill.cs.swevo.qualyzer.providers;
 
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.swt.dnd.DropTargetEvent;
@@ -97,7 +98,9 @@ public class TreeDropListener extends ViewerDropAdapter
 			else if(values.length == TABLE_DATA_SIZE)
 			{
 				fTarget.addChild((String) data);
+				Node child = fTarget.getChild(Long.parseLong(((String) data).split(":")[1]));
 				refreshEditor();
+				fViewer.setSelection(new StructuredSelection(child), true);
 				return true;
 			}
 		}
