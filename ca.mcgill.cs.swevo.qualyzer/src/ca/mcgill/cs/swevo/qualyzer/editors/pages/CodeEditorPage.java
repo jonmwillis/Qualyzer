@@ -89,13 +89,13 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 {
 
 	private static final GridData LARGE_LAYOUT = new GridData(SWT.FILL, SWT.FILL, true, true);
-	private static final GridData SMALL_LAYOUT = new GridData(SWT.FILL, SWT.NULL, true, false);
+	//private static final GridData SMALL_LAYOUT = new GridData(SWT.FILL, SWT.NULL, true, false);
 	private static final int NAME_WIDTH = 180;
 	private static final int FREQ_WIDTH = 80;
 	private static final int TREE_NAME_WIDTH = 170;
 	private static final int TREE_FREQ_WIDTH = 60;
 	private static final String EMPTY = ""; //$NON-NLS-1$
-	private static final int THRESHHOLD = 18;
+	//private static final int THRESHHOLD = 18;
 
 	private static final String DELETE_CODE = Messages.getString(
 			"editors.pages.CodeEditorPage.deleteCode"); //$NON-NLS-1$
@@ -148,7 +148,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		
 		body.setLayout(new GridLayout(1, true));
 		
-		Button button = toolkit.createButton(body, "Switch Table/Tree", SWT.PUSH);
+		Button button = toolkit.createButton(body, "Swap Table/Tree", SWT.PUSH);
 		
 		Composite mainArea = toolkit.createComposite(body, SWT.NULL);
 		mainArea.setLayout(new GridLayout(2, true));
@@ -307,12 +307,19 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 			@Override
 			public void widgetSelected(SelectionEvent e)
 			{
-				IStructuredSelection selection = (IStructuredSelection) fTreeViewer.getSelection();
-				Node node = (Node) selection.getFirstElement();
+				boolean check = MessageDialog.openConfirm(getSite().getShell(), 
+						"Remove Code", "Do you want to remove this code and all its children from the hierarchy?");
 				
-				node.getParent().getChildren().remove(node.getPersistenceId());
-				fTreeViewer.refresh();
-				setDirty();
+				if(check)
+				{
+					IStructuredSelection selection = (IStructuredSelection) fTreeViewer.getSelection();
+				
+					Node node = (Node) selection.getFirstElement();
+				
+					node.getParent().getChildren().remove(node.getPersistenceId());
+					fTreeViewer.refresh();
+					setDirty();
+				}
 			}
 		});
 		
@@ -708,14 +715,15 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		
 		updateSelection();
 		
-		if(fProject.getCodes().size() > THRESHHOLD)
-		{
-			fTableViewer.getTable().setLayoutData(LARGE_LAYOUT);
-		}
-		else
-		{
-			fTableViewer.getTable().setLayoutData(SMALL_LAYOUT);
-		}
+		fTableViewer.getTable().setLayoutData(LARGE_LAYOUT);
+//		if(fProject.getCodes().size() > THRESHHOLD)
+//		{
+//			fTableViewer.getTable().setLayoutData(LARGE_LAYOUT);
+//		}
+//		else
+//		{
+//			fTableViewer.getTable().setLayoutData(SMALL_LAYOUT);
+//		}
 		
 		fTableArea.layout();
 		fTableArea.redraw();
