@@ -97,14 +97,34 @@ public class TreeDropListener extends ViewerDropAdapter
 			}
 			else if(values.length == TABLE_DATA_SIZE)
 			{
+				long childID = Long.parseLong(((String) data).split(":")[1]); //$NON-NLS-1$
 				fTarget.addChild((String) data);
-				Node child = fTarget.getChild(Long.parseLong(((String) data).split(":")[1])); //$NON-NLS-1$
+				Node child = fTarget.getChild(childID); 
 				refreshEditor();
 				fViewer.setSelection(new StructuredSelection(child), true);
 				return true;
 			}
 		}
 		
+		return false;
+	}
+
+	/**
+	 * @param parent
+	 * @param childID
+	 * @return
+	 */
+	private boolean hardCycleExists(Node parent, long childID, TreeModel model)
+	{
+		Node current = parent;
+		while(current != null)
+		{
+			if(model.isReachable(childID, current.getPersistenceId()))
+			{
+				return true;
+			}
+			current = current.getParent();
+		}
 		return false;
 	}
 
@@ -144,7 +164,7 @@ public class TreeDropListener extends ViewerDropAdapter
 			{
 				id = Long.parseLong(values[1]);
 				
-				if(containsCycle(id, nTarget))
+				if(hardCycleExists(nTarget, id, fPage.getTreeModel()))
 				{
 					valid = false;
 				}
