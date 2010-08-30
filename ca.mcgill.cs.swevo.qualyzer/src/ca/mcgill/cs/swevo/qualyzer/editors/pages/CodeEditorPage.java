@@ -177,59 +177,10 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		fTableViewer.addSelectionChangedListener(createTableSelectionListener());
 		createTableContextMenu();
 		button.addSelectionListener(createToggleAdapter());
+		
+		updateSelection();
 	}
 	
-//	@Override
-//	protected void createFormContent(IManagedForm managedForm)
-//	{
-//		fForm = managedForm.getForm();
-//		FormToolkit toolkit = managedForm.getToolkit();
-//		Composite body = fForm.getBody();
-//		fForm.setText(Messages.getString("editors.pages.CodeEditorPage.codes")); //$NON-NLS-1$
-//		
-//		GridLayout layout = new GridLayout(1, true);
-//		body.setLayout(layout);
-//		
-//		Button button = toolkit.createButton(body, 
-//				Messages.getString("editors.pages.CodeEditorPage.showHierarchies"), SWT.TOGGLE); //$NON-NLS-1$
-//		
-//		Composite mainArea = toolkit.createComposite(body);
-//		mainArea.setLayout(new GridLayout(2, true));
-//		mainArea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-//		
-//		fTableArea = toolkit.createComposite(mainArea);
-//		fTableArea.setLayout(new GridLayout(1, true));
-//		fTableArea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-//		
-//		buildTableViewer(fTableArea);
-//
-//		if(fProject.getCodes().size() < THRESHHOLD)
-//		{
-//			fTableViewer.getTable().setLayoutData(SMALL_LAYOUT);
-//		}
-//		else
-//		{
-//			fTableViewer.getTable().setLayoutData(LARGE_LAYOUT);
-//		}
-//		
-//		Composite composite = toolkit.createComposite(mainArea, SWT.BORDER);
-//		StackLayout sLayout = new StackLayout();
-//		composite.setLayout(sLayout);
-//		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-//		
-//		fNameArea = createNameDescriptionArea(toolkit, composite);
-//		fTreeArea = createTreeViewer(toolkit, composite);
-//		sLayout.topControl = fNameArea;
-//		
-//		toolkit.paintBordersFor(composite);
-//		toolkit.paintBordersFor(body);
-//		toolkit.paintBordersFor(fNameArea);
-//		
-//		fTableViewer.addSelectionChangedListener(createTableSelectionListener());
-//		createTableContextMenu();
-//		button.addSelectionListener(createToggleAdapter(button, sLayout, composite));
-//	}
-
 	/**
 	 * @return
 	 */
