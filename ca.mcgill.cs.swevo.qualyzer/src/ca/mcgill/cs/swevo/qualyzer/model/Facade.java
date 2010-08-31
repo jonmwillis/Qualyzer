@@ -95,6 +95,7 @@ public final class Facade
 		try
 		{
 			FileUtil.setProjectProperty(wProject, FileUtil.ACTIVE_INV, nickname);
+			FileUtil.setProjectProperty(wProject, FileUtil.PROJECT_VERSION, QualyzerActivator.CURRENT_VERSION);
 		}
 		catch (CoreException e)
 		{

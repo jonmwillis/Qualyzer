@@ -38,6 +38,8 @@ public class QualyzerActivator extends AbstractUIPlugin
 
 	public static final String PROJECT_EXPLORER_VIEW_ID = "ca.mcgill.cs.swevo.qualyzer.projectexplorer"; //$NON-NLS-1$
 	
+	public static final String CURRENT_VERSION = "1.0.0"; //$NON-NLS-1$
+	
 	// The shared instance
 	private static QualyzerActivator gPlugin;
 
