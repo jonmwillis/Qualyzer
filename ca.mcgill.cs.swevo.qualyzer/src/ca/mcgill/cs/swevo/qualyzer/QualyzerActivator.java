@@ -170,14 +170,11 @@ public class QualyzerActivator extends AbstractUIPlugin
 	private void checkVersion(IProject project, List<String> upgradedWell,
 			List<String> upgradedBad) 
 	{
-		System.out.println("UPgrading: " + project.getName());
 		try
 		{
 			String projectVersion = FileUtil.getProjectProperty(project, FileUtil.PROJECT_VERSION);
-			System.out.println("PV" + projectVersion);
 			if (projectVersion.isEmpty() || !projectVersion.equals(CURRENT_VERSION)) 
 			{
-				System.out.println("Upgrading for real");
 				Facade.getInstance().updateProject(project);
 				upgradedWell.add(project.getName());
 			}
