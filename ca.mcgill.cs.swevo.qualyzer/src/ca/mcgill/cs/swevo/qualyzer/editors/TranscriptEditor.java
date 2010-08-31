@@ -50,7 +50,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Scale;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.texteditor.MarkerUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,6 +72,7 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 	
 	private static Logger gLogger = LoggerFactory.getLogger(TranscriptEditor.class);
 	
+	private static final String UNABLE_TO_ACCESS_MARKER = "Unable to access marker"; //$NON-NLS-1$
 	private static final int NUM_COLS = 10;
 	private static final int SECONDS_PER_MINUTE = 60;
 	private static final int TEN = 10;
@@ -108,6 +108,8 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 	
 	private Action fAddTimeStampAction;
 	private Action fRemoveTimeStampAction;
+	
+	private boolean fInRuler;
 
 	/**
 	 * Constructor.
@@ -126,7 +128,8 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 		
 		fSeekTime = QualyzerActivator.getDefault().getPreferenceStore().getInt(
 				IQualyzerPreferenceConstants.SEEK_TIME);
-		QualyzerActivator.getDefault().getPreferenceStore().addPropertyChangeListener(this);		
+		QualyzerActivator.getDefault().getPreferenceStore().addPropertyChangeListener(this);	
+		fInRuler = false;
 	}
 
 	/**
@@ -135,7 +138,7 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 	private void createTimeStampAction()
 	{
 		fAddTimeStampAction = new Action(Messages.getString("editors.TranscriptEditor.addTimeStamp")) //$NON-NLS-1$
-		{
+		{			
 			@Override
 			public void run()
 			{
@@ -356,7 +359,7 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 		
 		fLengthLabel = new Text(composite, SWT.READ_ONLY);
 		fLengthLabel.setLayoutData(new GridData(SWT.NULL, SWT.NULL, false, false));
-		fLengthLabel.setText("/ 0:00");
+		fLengthLabel.setText("/ 0:00"); //$NON-NLS-1$
 		fLengthLabel.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 	}
 
@@ -373,7 +376,7 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 			{
 				if(e.keyCode == SWT.CR || e.keyCode == SWT.KEYPAD_CR)
 				{
-					String[] time = fTimeLabel.getText().split(":");
+					String[] time = fTimeLabel.getText().split(":"); //$NON-NLS-1$
 					if(time.length != 2)
 					{
 						setSeconds(fAudioSlider.getSelection());
@@ -678,8 +681,17 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 	{
 		IFile file = ((RTFEditorInput) getEditorInput()).getFile();
 		
-		String pos = getCursorPosition();
-		int line = Integer.parseInt(pos.split(" : ")[0]); //$NON-NLS-1$
+		int line;
+		if(fInRuler)
+		{
+			line = getVerticalRuler().getLineOfLastMouseButtonActivity() + 1;
+		}
+		else
+		{
+			String pos = getCursorPosition();
+			line = Integer.parseInt(pos.split(" : ")[0]); //$NON-NLS-1$
+		}
+		
 		
 		try
 		{
@@ -693,6 +705,8 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 		{
 			e.printStackTrace();
 		}
+		
+		fInRuler = false;
 	}
 	
 	/* (non-Javadoc)
@@ -702,11 +716,35 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 	@Override
 	protected void editorContextMenuAboutToShow(IMenuManager menu)
 	{
+		fInRuler = false;
+		
 		super.editorContextMenuAboutToShow(menu);
+		
+		int line = Integer.parseInt(getCursorPosition().split(" : ")[0]);
+		IFile file = ((RTFEditorInput) getEditorInput()).getFile();
 		
 		if(fAudioPlayer != null)
 		{
-			addAction(menu, ITextEditorActionConstants.GROUP_EDIT, RTFConstants.ADD_TIMESTAMP_ACTION_ID);
+			try
+			{
+				boolean found = false;
+				for(IMarker marker : file.findMarkers(RTFConstants.TIMESTAMP_MARKER_ID, false, 0))
+				{
+					if(marker.exists() && marker.getAttribute(IMarker.LINE_NUMBER, 0) == line)
+					{
+						found = true;
+						break;
+					}
+				}
+				if(!found)
+				{
+					addAction(menu, RTFConstants.ADD_TIMESTAMP_ACTION_ID);
+				}
+			}
+			catch (CoreException e)
+			{
+				gLogger.error(UNABLE_TO_ACCESS_MARKER, e);
+			}
 		}
 	}
 	
@@ -756,7 +794,7 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 				}
 				catch (CoreException e)
 				{
-					gLogger.error("Unable to access marker", e); //$NON-NLS-1$
+					gLogger.error(UNABLE_TO_ACCESS_MARKER, e); //$NON-NLS-1$
 				}
 			}
 		};
@@ -791,24 +829,32 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 	@Override
 	protected void rulerContextMenuAboutToShow(IMenuManager menu)
 	{
+		fInRuler = true;
+		
 		if(fAudioPlayer != null)
-		{
+		{	
 			int line = getVerticalRuler().getLineOfLastMouseButtonActivity() + 1;
 			IFile file = ((RTFEditorInput) getEditorInput()).getFile();
 			try
 			{
+				boolean found = false;
 				for(IMarker marker : file.findMarkers(RTFConstants.TIMESTAMP_MARKER_ID, false, 0))
 				{
 					if(marker.exists() && marker.getAttribute(IMarker.LINE_NUMBER, 0) == line)
 					{
 						addAction(menu, RTFConstants.REMOVE_TIMESTAMP_ACTION_ID);
+						found = true;
 						break;
 					}
+				}
+				if(!found)
+				{
+					addAction(menu, RTFConstants.ADD_TIMESTAMP_ACTION_ID);
 				}
 			}
 			catch (CoreException e)
 			{
-				gLogger.error("Unable to access marker", e); //$NON-NLS-1$
+				gLogger.error(UNABLE_TO_ACCESS_MARKER, e); //$NON-NLS-1$
 			}
 		}
 	}
