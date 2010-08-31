@@ -26,6 +26,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
@@ -43,7 +44,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.PlatformUI;
@@ -90,14 +90,13 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 public class CodeEditorPage extends FormPage implements CodeListener, ProjectListener, TranscriptListener, MemoListener
 {
 
+	private static final int DESCRIPTION_HEIGHT = 20;
 	private static final GridData LARGE_LAYOUT = new GridData(SWT.FILL, SWT.FILL, true, true);
-	//private static final GridData SMALL_LAYOUT = new GridData(SWT.FILL, SWT.NULL, true, false);
 	private static final int NAME_WIDTH = 180;
 	private static final int FREQ_WIDTH = 80;
 	private static final int TREE_NAME_WIDTH = 170;
 	private static final int TREE_FREQ_WIDTH = 60;
 	private static final String EMPTY = ""; //$NON-NLS-1$
-	//private static final int THRESHHOLD = 18;
 
 	private static final String DELETE_CODE = Messages.getString(
 			"editors.pages.CodeEditorPage.deleteCode"); //$NON-NLS-1$
@@ -109,7 +108,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	private CodeTableRow fCurrentRow;
 
 	private Label fCodeName;
-	private Text fDescription;
+	private StyledText fDescription;
 
 	private boolean fIsDirty;
 
@@ -174,9 +173,8 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 				"editors.pages.CodeEditorPage.selectedCode")); //$NON-NLS-1$
 		fCodeName.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 		
-		toolkit.createLabel(body, Messages.getString("editors.pages.CodeEditorPage.description")); //$NON-NLS-1$
-		fDescription = toolkit.createText(body, ""); //$NON-NLS-1$
-		fDescription.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
+		fDescription = new StyledText(body, SWT.WRAP | SWT.V_SCROLL | SWT.BORDER);
+		fDescription.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, DESCRIPTION_HEIGHT));
 		fDescription.addKeyListener(createKeyAdapter());
 		
 		toolkit.paintBordersFor(body);
@@ -721,7 +719,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 				fCurrentRow = row;
 				fDescription.setText(fCurrentRow.getDescription());
 				fCodeName.setText(Messages.getString(
-						"editors.pages.CodeEditorPage.selectedCode2") + fCurrentRow.getName()); //$NON-NLS-1$
+						"editors.pages.CodeEditorPage.selectedCode") + fCurrentRow.getName()); //$NON-NLS-1$
 			}
 
 		};
@@ -744,14 +742,6 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		updateSelection();
 		
 		fTableViewer.getTable().setLayoutData(LARGE_LAYOUT);
-//		if(fProject.getCodes().size() > THRESHHOLD)
-//		{
-//			fTableViewer.getTable().setLayoutData(LARGE_LAYOUT);
-//		}
-//		else
-//		{
-//			fTableViewer.getTable().setLayoutData(SMALL_LAYOUT);
-//		}
 		
 		fTableArea.layout();
 		fTableArea.redraw();
