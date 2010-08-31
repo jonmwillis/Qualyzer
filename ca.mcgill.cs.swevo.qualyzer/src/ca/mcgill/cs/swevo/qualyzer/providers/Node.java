@@ -36,6 +36,18 @@ public class Node
 	private int fLocalFreq;
 	private int fAggrFreq;
 	
+	private Node()
+	{
+		fParent = null;
+		fModel = null;
+		fChildren = new LinkedHashMap<Long, Node>();
+		fPathToRoot = EMPTY;
+		fCodeName = EMPTY;
+		fPersistenceId = null;
+		fLocalFreq = 0;
+		fAggrFreq = 0;
+	}
+	
 	/**
 	 * Build the root node.
 	 */
@@ -309,5 +321,28 @@ public class Node
 	public void setLocalFrequency(int intValue)
 	{
 		fLocalFreq = intValue;	
+	}
+
+	/**
+	 * @return
+	 */
+	public Node copy()
+	{
+		Node copy = new Node();
+		copy.fModel = fModel;
+		copy.fCodeName = fCodeName;
+		copy.fPersistenceId = fPersistenceId;
+		copy.fLocalFreq = fLocalFreq;
+		copy.fAggrFreq = fAggrFreq;
+		copy.fParent = fParent;
+		
+		for(Node child : fChildren.values())
+		{
+			Node childCopy = child.copy();
+			childCopy.setParent(copy);
+			copy.fChildren.put(childCopy.getPersistenceId(), childCopy);
+		}
+		
+		return copy;
 	}
 }

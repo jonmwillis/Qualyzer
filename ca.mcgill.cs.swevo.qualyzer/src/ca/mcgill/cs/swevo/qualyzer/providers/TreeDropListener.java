@@ -18,6 +18,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
+import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.TransferData;
@@ -37,6 +38,7 @@ public class TreeDropListener extends ViewerDropAdapter
 	private Viewer fViewer;
 	private CodeEditorPage fPage;
 	private Node fTarget;
+	private boolean fCopy;
 
 	/**
 	 * @param viewer
@@ -55,6 +57,8 @@ public class TreeDropListener extends ViewerDropAdapter
 	@Override
 	public void drop(DropTargetEvent event)
 	{
+		fCopy = event.detail == DND.DROP_COPY;
+		
 		Node target = (Node) determineTarget(event);
 		Node root = (Node) fViewer.getInput();
 		
@@ -86,8 +90,15 @@ public class TreeDropListener extends ViewerDropAdapter
 				Long id = Long.parseLong(values[0]);
 				Node toMove = findNode(values[1], id);
 				
-				Node oldParent = toMove.getParent();
-				oldParent.getChildren().remove(toMove.getPersistenceId());
+				if(fCopy)
+				{
+					toMove = toMove.copy();
+				}
+				else
+				{
+					Node oldParent = toMove.getParent();
+					oldParent.getChildren().remove(toMove.getPersistenceId());
+				}
 				
 				toMove.setParent(fTarget);
 				toMove.updatePaths();
