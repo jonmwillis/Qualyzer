@@ -216,6 +216,8 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		fTreeArea.setLayout(new GridLayout(1, true));
 		fTreeArea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
+		toolkit.createLabel(fTreeArea, "Hierarchy");
+		
 		fTreeViewer = new TreeViewer(fTreeArea, SWT.SINGLE | SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.BORDER);
 		
 		Tree tree = fTreeViewer.getTree();
@@ -326,6 +328,8 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		fTableArea = toolkit.createComposite(body, SWT.NULL);
 		fTableArea.setLayout(new GridLayout(1, true));
 		fTableArea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		
+		toolkit.createLabel(fTableArea, "List");
 		
 		fTableViewer = new TableViewer(fTableArea, SWT.SINGLE |  SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL);
 		
