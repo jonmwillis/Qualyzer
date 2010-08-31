@@ -33,6 +33,9 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -45,8 +48,8 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Scale;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.texteditor.MarkerUtilities;
 import org.slf4j.Logger;
@@ -94,7 +97,8 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 	private Button fForwardButton;
 	private AudioPlayer fAudioPlayer;
 
-	private Label fTimeLabel;
+	private Text fTimeLabel;
+	private Text fLengthLabel;
 	private Scale fAudioSlider;
 	private int fAudioLength;
 	
@@ -331,11 +335,73 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 		fForwardButton = new Button(parent, SWT.PUSH);
 		fForwardButton.setImage(getImage(FORWARD_IMG, QualyzerActivator.PLUGIN_ID));
 		
-		fTimeLabel = new Label(parent, SWT.NULL);
-		fTimeLabel.setLayoutData(new GridData(SWT.NULL, SWT.FILL, false, false));
-		fTimeLabel.setText("0:00/0:00"); //$NON-NLS-1$
+		createTimeDisplay(parent);
 	
 		return parent;
+	}
+
+	/**
+	 * @param parent
+	 */
+	private void createTimeDisplay(Composite parent)
+	{
+		Composite composite = new Composite(parent, SWT.NULL);
+		composite.setLayout(new GridLayout(2, false));
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
+		
+		fTimeLabel = new Text(composite, SWT.NULL);
+		fTimeLabel.setLayoutData(new GridData(SWT.NULL, SWT.FILL, false, false));
+		fTimeLabel.setText("0:00"); //$NON-NLS-1$
+		fTimeLabel.addKeyListener(createGotoListener());
+		
+		fLengthLabel = new Text(composite, SWT.READ_ONLY);
+		fLengthLabel.setLayoutData(new GridData(SWT.NULL, SWT.NULL, false, false));
+		fLengthLabel.setText("/ 0:00");
+		fLengthLabel.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+	}
+
+	/**
+	 * @return
+	 */
+	private KeyListener createGotoListener()
+	{
+		return new KeyAdapter()
+		{
+			
+			@Override
+			public void keyPressed(KeyEvent e)
+			{
+				if(e.keyCode == SWT.CR || e.keyCode == SWT.KEYPAD_CR)
+				{
+					String[] time = fTimeLabel.getText().split(":");
+					if(time.length != 2)
+					{
+						setSeconds(fAudioSlider.getSelection());
+						return;
+					}
+					try
+					{
+						int seconds = Integer.parseInt(time[0]) * SECONDS_PER_MINUTE;
+						seconds += Integer.parseInt(time[1]);
+						
+						if(seconds > fAudioLength)
+						{
+							seconds = fAudioLength;
+						}
+						else if(seconds < 0)
+						{
+							seconds = 0;
+						}
+						
+						seekToTime(seconds);
+					}
+					catch(NumberFormatException ex)
+					{
+						setSeconds(fAudioSlider.getSelection());
+					}
+				}
+			}
+		};
 	}
 
 	private Control createFormatButtonBar(Composite parent)
@@ -477,8 +543,8 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 	{
 		fAudioLength = (int) length;
 		fAudioSlider.setMaximum(fAudioLength);
-		String label = "0:00/" + getTimeString(fAudioLength); //$NON-NLS-1$
-		fTimeLabel.setText(label);
+		String label = "/ " + getTimeString(fAudioLength); //$NON-NLS-1$
+		fLengthLabel.setText(label);
 	}
 	
 	/**
@@ -505,7 +571,7 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 			@Override
 			public void run()
 			{
-				String label = getTimeString(seconds) +	"/" + getTimeString(fAudioLength); //$NON-NLS-1$
+				String label = getTimeString(seconds);
 				fTimeLabel.setText(label);
 				fAudioSlider.setSelection(seconds);
 			}
