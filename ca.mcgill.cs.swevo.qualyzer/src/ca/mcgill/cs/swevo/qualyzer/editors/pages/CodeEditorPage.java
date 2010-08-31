@@ -218,7 +218,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		fTreeArea.setLayout(new GridLayout(1, true));
 		fTreeArea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
-		toolkit.createLabel(fTreeArea, "Hierarchy");
+		toolkit.createLabel(fTreeArea, Messages.getString("editors.pages.CodeEditorPage.hierarchy")); //$NON-NLS-1$
 		
 		fTreeViewer = new TreeViewer(fTreeArea, SWT.SINGLE | SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.BORDER);
 		
@@ -295,6 +295,14 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		Menu menu = new Menu(fTreeViewer.getTree());
 		
 		MenuItem item = new MenuItem(menu, SWT.PUSH);
+		item.setText(Messages.getString(Messages.getString("editors.pages.CodeEditorPage.1"))); //$NON-NLS-1$
+		item.addSelectionListener(renameCodeSelected());
+		
+		item = new MenuItem(menu, SWT.PUSH);
+		item.setText(Messages.getString(Messages.getString("editors.pages.CodeEditorPage.2"))); //$NON-NLS-1$
+		item.addSelectionListener(viewFragmentsSelected());
+		
+		item = new MenuItem(menu, SWT.PUSH);
 		item.setText(Messages.getString("editors.pages.CodeEditorPage.removeCode")); //$NON-NLS-1$
 		item.addSelectionListener(new SelectionAdapter(){
 			
@@ -334,7 +342,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		fTableArea.setLayout(new GridLayout(1, true));
 		fTableArea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
-		toolkit.createLabel(fTableArea, "List");
+		toolkit.createLabel(fTableArea, Messages.getString("editors.pages.CodeEditorPage.list")); //$NON-NLS-1$
 		
 		fTableViewer = new TableViewer(fTableArea, SWT.SINGLE |  SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL);
 		
@@ -434,12 +442,12 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		item.addSelectionListener(deleteCodeSelected());
 		
 		item = new MenuItem(menu, SWT.PUSH);
-		item.setText(Messages.getString("editors.pages.CodeEditorPage.viewFragments")); //$NON-NLS-1$
-		item.addSelectionListener(viewFragmentsSelected());
-		
-		item = new MenuItem(menu, SWT.PUSH);
 		item.setText(Messages.getString("editors.pages.CodeEditorPage.renameCode")); //$NON-NLS-1$
 		item.addSelectionListener(renameCodeSelected());
+		
+		item = new MenuItem(menu, SWT.PUSH);
+		item.setText(Messages.getString("editors.pages.CodeEditorPage.viewFragments")); //$NON-NLS-1$
+		item.addSelectionListener(viewFragmentsSelected());
 		
 		fTableViewer.getTable().setMenu(menu);
 	}
