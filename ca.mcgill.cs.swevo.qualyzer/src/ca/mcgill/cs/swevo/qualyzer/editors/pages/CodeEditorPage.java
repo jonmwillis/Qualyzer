@@ -17,6 +17,8 @@ import java.util.List;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -249,6 +251,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		
 		fTreeViewer.addSelectionChangedListener(createTreeSelectionListener());
 		fTreeViewer.setSorter(new ViewerSorter());
+		fTreeViewer.addDoubleClickListener(createDoubleClickListener());
 		
 		createTreeContextMenu();		
 	}
@@ -355,10 +358,33 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		fTableViewer.setSorter(fSorter);
 		fTableViewer.addDragSupport(DND.DROP_COPY | DND.DROP_MOVE, 
 				new Transfer[]{TextTransfer.getInstance()}, new TableDragListener(fTableViewer));
+		fTableViewer.addDoubleClickListener(createDoubleClickListener());
 		
 		fTableViewer.getTable().setSortColumn(fTableViewer.getTable().getColumn(0));
 		fTableViewer.getTable().setSortDirection(SWT.DOWN);
 		fTableViewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+	}
+
+	/**
+	 * @return
+	 */
+	private IDoubleClickListener createDoubleClickListener()
+	{
+		return new IDoubleClickListener()
+		{
+			@Override
+			public void doubleClick(DoubleClickEvent event)
+			{
+				IStructuredSelection selection = (IStructuredSelection) fTableViewer.getSelection();
+				CodeTableRow row = (CodeTableRow) selection.getFirstElement();
+				Code code = row.getCode();
+				
+				if(code != null)
+				{
+					ResourcesUtil.openEditor(getSite().getPage(), code);
+				}
+			}
+		};
 	}
 
 	/**
