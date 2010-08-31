@@ -109,25 +109,6 @@ public class TreeDropListener extends ViewerDropAdapter
 		return false;
 	}
 
-	/**
-	 * @param parent
-	 * @param childID
-	 * @return
-	 */
-	private boolean hardCycleExists(Node parent, long childID, TreeModel model)
-	{
-		Node current = parent;
-		while(current != null)
-		{
-			if(model.isReachable(childID, current.getPersistenceId()))
-			{
-				return true;
-			}
-			current = current.getParent();
-		}
-		return false;
-	}
-
 	private void refreshEditor()
 	{
 		Node root = (Node) fViewer.getInput();

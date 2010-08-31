@@ -85,7 +85,6 @@ public class Node
 		fPersistenceId = row.getPersistenceId();
 		
 		fModel.addNodeToCodes(this);
-		fModel.setReachability(this);
 	}
 	
 	/**
@@ -138,7 +137,6 @@ public class Node
 		fPersistenceId = persistenceId;
 		
 		fModel.addNodeToCodes(this);
-		fModel.setReachability(this);
 	}
 
 	/**
@@ -146,7 +144,7 @@ public class Node
 	 * @param node
 	 */
 	public void setParent(Node node)
-	{//TODO what about deep duplicates?
+	{
 		fParent = node;
 		if(fParent != null)
 		{
@@ -154,7 +152,6 @@ public class Node
 			fParent.getChildren().put(fPersistenceId, this);
 			
 			fModel.addNodeToCodes(this);
-			fModel.setReachability(this);
 		}
 	}
 	

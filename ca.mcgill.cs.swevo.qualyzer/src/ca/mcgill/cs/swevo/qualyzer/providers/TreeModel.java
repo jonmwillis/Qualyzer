@@ -50,13 +50,6 @@ public final class TreeModel implements CodeListener, ProjectListener
 	private HashMap<Long, List<Node>> fCodes;
 	private List<TreeViewer> fListeners;
 	
-	/**
-	 * String of the form "x,y" where x and y are Longs representing code persistence id's. 
-	 * The entry ("x,y", true) means that y is reachable from x.
-	 * The entry ("x,y", false) or ("x,y", null) means that y is not reachable from x. 
-	 */
-	private HashMap<String, Boolean> fReachables;
-	
 	private TreeModel(CodeTableInput input)
 	{
 		fProject = input.getProject();
@@ -64,7 +57,6 @@ public final class TreeModel implements CodeListener, ProjectListener
 		fNewLocalList = new LinkedList<Node>();
 		fTreeRoot = new Node(this);
 		fCodes = new HashMap<Long, List<Node>>();
-		fReachables = new HashMap<String, Boolean>();
 		
 		for(CodeTableRow row : fInput.getData())
 		{
@@ -455,51 +447,6 @@ public final class TreeModel implements CodeListener, ProjectListener
 	}
 	
 	/**
-	 * Check to see if toCode is reachable from fromCode.
-	 * A convenience method for isReachable(fromCode.getPersistenceId(), toCode.getPersistenceId())
-	 * @param fromCode
-	 * @param toCode
-	 * @return
-	 */
-	public boolean isReachable(Code fromCode, Code toCode)
-	{
-		if(fromCode == null || toCode == null)
-		{
-			return false;
-		}
-		return isReachable(fromCode.getPersistenceId(), toCode.getPersistenceId());
-	}
-	
-	/**
-	 * Check to see if the code represented by toID is reachable from the code represented by fromID.
-	 * @param fromID
-	 * @param toID
-	 * @return
-	 */
-	public boolean isReachable(Long fromID, Long toID)
-	{
-		Boolean reach = fReachables.get(fromID + "," + toID); //$NON-NLS-1$
-		
-		return reach != null && reach == Boolean.TRUE;
-	}
-
-	/**
-	 * @param node
-	 */
-	protected void setReachability(Node node)
-	{
-		String keyHalf = "," + node.getPersistenceId(); //$NON-NLS-1$
-		
-		Node parent = node;
-		while(parent != fTreeRoot)
-		{
-			fReachables.put(parent.getPersistenceId() + keyHalf, Boolean.TRUE);
-			parent = parent.getParent();
-		}
-		
-	}
-
-	/**
 	 * @param node
 	 */
 	public void removeNode(Node node)
@@ -510,7 +457,9 @@ public final class TreeModel implements CodeListener, ProjectListener
 		parent.getChildren().remove(node.getPersistenceId());
 		fCodes.get(node.getPersistenceId()).remove(node);
 		
-		//TODO update reachability.
-		
+		for(Node child : node.getChildren().values())
+		{
+			removeNode(child);
+		}
 	}
 }
