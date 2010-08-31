@@ -10,9 +10,11 @@
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceNode;
 import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
@@ -66,6 +68,23 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor
 			if(sub.getId().equals("org.eclipse.ui.preferencePages.Keys")) //$NON-NLS-1$
 			{
 				pm.addToRoot(sub);
+			}
+		}
+		
+		String upgradeMessage = QualyzerActivator.getDefault().getUpgradeMessage();
+		if (upgradeMessage != null)
+		{
+			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+			boolean error = QualyzerActivator.getDefault().isUpgradeMessageError();
+			if (error)
+			{
+				MessageDialog.openError(shell, Messages.getString("QualyzerActivator.upgradedTitle"), 
+						upgradeMessage); //$NON-NLS-1$
+			}
+			else
+			{
+				MessageDialog.openInformation(shell, Messages.getString("QualyzerActivator.upgradedTitle"), 
+						upgradeMessage); //$NON-NLS-1$
 			}
 		}
 	}
