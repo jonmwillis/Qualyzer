@@ -726,7 +726,7 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 		
 		super.editorContextMenuAboutToShow(menu);
 		
-		int line = Integer.parseInt(getCursorPosition().split(" : ")[0]);
+		int line = Integer.parseInt(getCursorPosition().split(" : ")[0]); //$NON-NLS-1$
 		
 		if(fAudioPlayer != null && !markerExists(line))
 		{

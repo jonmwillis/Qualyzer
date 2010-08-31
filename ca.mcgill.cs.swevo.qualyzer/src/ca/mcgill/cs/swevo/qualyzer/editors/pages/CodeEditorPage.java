@@ -177,7 +177,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		
 		fCodeName = toolkit.createLabel(body, Messages.getString(
 				"editors.pages.CodeEditorPage.selectedCode")); //$NON-NLS-1$
-		fCodeName.setFont(new Font(Display.getCurrent(), new FontData("", FONT_SIZE, SWT.BOLD)));
+		fCodeName.setFont(new Font(Display.getCurrent(), new FontData("", FONT_SIZE, SWT.BOLD))); //$NON-NLS-1$
 		fCodeName.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 		
 		fDescription = new StyledText(body, SWT.WRAP | SWT.V_SCROLL | SWT.BORDER);
