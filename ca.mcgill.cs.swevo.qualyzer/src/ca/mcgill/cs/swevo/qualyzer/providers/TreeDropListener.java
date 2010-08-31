@@ -164,7 +164,8 @@ public class TreeDropListener extends ViewerDropAdapter
 			{
 				id = Long.parseLong(values[1]);
 				
-				if(hardCycleExists(nTarget, id, fPage.getTreeModel()))
+				//if(hardCycleExists(nTarget, id, fPage.getTreeModel()))
+				if(containsCycle(id, nTarget))
 				{
 					valid = false;
 				}
