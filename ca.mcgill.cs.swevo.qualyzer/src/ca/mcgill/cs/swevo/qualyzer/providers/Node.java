@@ -36,6 +36,9 @@ public class Node
 	private int fLocalFreq;
 	private int fAggrFreq;
 	
+	/**
+	 * Makes a "null" node. To be used only by the copy method. 
+	 */
 	private Node()
 	{
 		fParent = null;

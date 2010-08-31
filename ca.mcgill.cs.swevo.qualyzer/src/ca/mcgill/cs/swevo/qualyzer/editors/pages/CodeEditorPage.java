@@ -298,18 +298,21 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 			@Override
 			public void widgetSelected(SelectionEvent e)
 			{
-				boolean check = MessageDialog.openConfirm(getSite().getShell(), 
-						Messages.getString("editors.pages.CodeEditorPage.removeCode"), //$NON-NLS-1$
-						Messages.getString("editors.pages.CodeEditorPage.removeConfirm")); //$NON-NLS-1$ 
+				IStructuredSelection selection = (IStructuredSelection) fTreeViewer.getSelection();
+				Node node = (Node) selection.getFirstElement();
+				
+				boolean check = true;
+				if(!node.getChildren().isEmpty())
+				{
+					check = MessageDialog.openConfirm(getSite().getShell(), 
+							Messages.getString("editors.pages.CodeEditorPage.removeCode"), //$NON-NLS-1$
+							Messages.getString("editors.pages.CodeEditorPage.removeConfirm")); //$NON-NLS-1$ 
+					
+				}
 				
 				if(check)
 				{
-					IStructuredSelection selection = (IStructuredSelection) fTreeViewer.getSelection();
-				
-					Node node = (Node) selection.getFirstElement();
-					
 					fTreeModel.removeNode(node);
-					//node.getParent().getChildren().remove(node.getPersistenceId());
 					fTreeViewer.refresh();
 					setDirty();
 				}
