@@ -38,10 +38,13 @@ import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -92,6 +95,7 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 public class CodeEditorPage extends FormPage implements CodeListener, ProjectListener, TranscriptListener, MemoListener
 {
 
+	private static final int FONT_SIZE = 10;
 	private static final int DESCRIPTION_HEIGHT = 20;
 	private static final GridData LARGE_LAYOUT = new GridData(SWT.FILL, SWT.FILL, true, true);
 	private static final int NAME_WIDTH = 180;
@@ -173,6 +177,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		
 		fCodeName = toolkit.createLabel(body, Messages.getString(
 				"editors.pages.CodeEditorPage.selectedCode")); //$NON-NLS-1$
+		fCodeName.setFont(new Font(Display.getCurrent(), new FontData("", FONT_SIZE, SWT.BOLD)));
 		fCodeName.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 		
 		fDescription = new StyledText(body, SWT.WRAP | SWT.V_SCROLL | SWT.BORDER);
@@ -395,10 +400,6 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		};
 	}
 
-	/**
-	 * @param i
-	 * @return
-	 */
 	private SelectionListener createColSortListener(final int colIndex, final TableColumn column)
 	{
 		return new SelectionAdapter()
