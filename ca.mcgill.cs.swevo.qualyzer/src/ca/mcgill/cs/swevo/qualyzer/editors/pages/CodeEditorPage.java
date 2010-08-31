@@ -307,7 +307,6 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 					check = MessageDialog.openConfirm(getSite().getShell(), 
 							Messages.getString("editors.pages.CodeEditorPage.removeCode"), //$NON-NLS-1$
 							Messages.getString("editors.pages.CodeEditorPage.removeConfirm")); //$NON-NLS-1$ 
-					
 				}
 				
 				if(check)
