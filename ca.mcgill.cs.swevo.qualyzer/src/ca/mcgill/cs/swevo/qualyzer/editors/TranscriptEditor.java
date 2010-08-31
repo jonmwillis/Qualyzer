@@ -679,34 +679,40 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 	 */
 	public void addTimeStamp()
 	{
-		IFile file = ((RTFEditorInput) getEditorInput()).getFile();
-		
-		int line;
-		if(fInRuler)
+		if(fAudioPlayer != null)
 		{
-			line = getVerticalRuler().getLineOfLastMouseButtonActivity() + 1;
+			IFile file = ((RTFEditorInput) getEditorInput()).getFile();
+			
+			int line;
+			if(fInRuler)
+			{
+				line = getVerticalRuler().getLineOfLastMouseButtonActivity() + 1;
+			}
+			else
+			{
+				String pos = getCursorPosition();
+				line = Integer.parseInt(pos.split(" : ")[0]); //$NON-NLS-1$
+			}
+			
+			if(!markerExists(line))
+			{
+				try
+				{
+					Map<String, Object> map = new HashMap<String, Object>();
+					MarkerUtilities.setLineNumber(map, line);
+					MarkerUtilities.setMessage(map, getTimeString(fAudioSlider.getSelection()));
+					map.put("time", fAudioSlider.getSelection()); //$NON-NLS-1$
+					MarkerUtilities.createMarker(file, map, 
+							"ca.mcgill.cs.swevo.qualyzer.marker.timestamp"); //$NON-NLS-1$
+				}
+				catch (CoreException e)
+				{
+					e.printStackTrace();
+				}
+			}
+			
+			fInRuler = false;
 		}
-		else
-		{
-			String pos = getCursorPosition();
-			line = Integer.parseInt(pos.split(" : ")[0]); //$NON-NLS-1$
-		}
-		
-		
-		try
-		{
-			Map<String, Object> map = new HashMap<String, Object>();
-			MarkerUtilities.setLineNumber(map, line);
-			MarkerUtilities.setMessage(map, getTimeString(fAudioSlider.getSelection()));
-			map.put("time", fAudioSlider.getSelection()); //$NON-NLS-1$
-			MarkerUtilities.createMarker(file, map, "ca.mcgill.cs.swevo.qualyzer.marker.timestamp"); //$NON-NLS-1$
-		}
-		catch (CoreException e)
-		{
-			e.printStackTrace();
-		}
-		
-		fInRuler = false;
 	}
 	
 	/* (non-Javadoc)
@@ -721,30 +727,10 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 		super.editorContextMenuAboutToShow(menu);
 		
 		int line = Integer.parseInt(getCursorPosition().split(" : ")[0]);
-		IFile file = ((RTFEditorInput) getEditorInput()).getFile();
 		
-		if(fAudioPlayer != null)
+		if(fAudioPlayer != null && !markerExists(line))
 		{
-			try
-			{
-				boolean found = false;
-				for(IMarker marker : file.findMarkers(RTFConstants.TIMESTAMP_MARKER_ID, false, 0))
-				{
-					if(marker.exists() && marker.getAttribute(IMarker.LINE_NUMBER, 0) == line)
-					{
-						found = true;
-						break;
-					}
-				}
-				if(!found)
-				{
-					addAction(menu, RTFConstants.ADD_TIMESTAMP_ACTION_ID);
-				}
-			}
-			catch (CoreException e)
-			{
-				gLogger.error(UNABLE_TO_ACCESS_MARKER, e);
-			}
+			addAction(menu, RTFConstants.ADD_TIMESTAMP_ACTION_ID);
 		}
 	}
 	
@@ -834,29 +820,52 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 		if(fAudioPlayer != null)
 		{	
 			int line = getVerticalRuler().getLineOfLastMouseButtonActivity() + 1;
-			IFile file = ((RTFEditorInput) getEditorInput()).getFile();
-			try
+			
+			if(markerExists(line))
 			{
-				boolean found = false;
-				for(IMarker marker : file.findMarkers(RTFConstants.TIMESTAMP_MARKER_ID, false, 0))
-				{
-					if(marker.exists() && marker.getAttribute(IMarker.LINE_NUMBER, 0) == line)
-					{
-						addAction(menu, RTFConstants.REMOVE_TIMESTAMP_ACTION_ID);
-						found = true;
-						break;
-					}
-				}
-				if(!found)
-				{
-					addAction(menu, RTFConstants.ADD_TIMESTAMP_ACTION_ID);
-				}
+				addAction(menu, RTFConstants.REMOVE_TIMESTAMP_ACTION_ID);
 			}
-			catch (CoreException e)
+			else
 			{
-				gLogger.error(UNABLE_TO_ACCESS_MARKER, e); //$NON-NLS-1$
+				addAction(menu, RTFConstants.ADD_TIMESTAMP_ACTION_ID);
 			}
 		}
+	}
+
+	private boolean markerExists(int line)
+	{
+		boolean found = false;
+		
+		IFile file = ((RTFEditorInput) getEditorInput()).getFile();
+		
+		try
+		{
+			for(IMarker marker : file.findMarkers(RTFConstants.TIMESTAMP_MARKER_ID, false, 0))
+			{
+				if(marker.exists() && marker.getAttribute(IMarker.LINE_NUMBER, 0) == line)
+				{
+					return true;
+				}
+				else if(!marker.exists())
+				{
+					marker.delete();
+				}
+			}
+		}
+		catch (CoreException e)
+		{
+			
+		}
+		
+		return found;
+	}
+	
+	/**
+	 * Notify the editor that you aren't in the ruler.
+	 */
+	public void notInRuler()
+	{
+		fInRuler = false;
 	}
 }
 
