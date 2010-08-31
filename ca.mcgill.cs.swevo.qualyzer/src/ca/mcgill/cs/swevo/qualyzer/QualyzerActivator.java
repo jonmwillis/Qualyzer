@@ -11,7 +11,9 @@
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
@@ -23,8 +25,10 @@ import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
 import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
+import ca.mcgill.cs.swevo.qualyzer.util.FileUtil;
 
 /**
  * The activator class controls the plug-in life cycle.
@@ -38,7 +42,7 @@ public class QualyzerActivator extends AbstractUIPlugin
 
 	public static final String PROJECT_EXPLORER_VIEW_ID = "ca.mcgill.cs.swevo.qualyzer.projectexplorer"; //$NON-NLS-1$
 	
-	public static final String CURRENT_VERSION = "1.0.0"; //$NON-NLS-1$
+	public static final String CURRENT_VERSION = "1.2.0"; //$NON-NLS-1$
 	
 	// The shared instance
 	private static QualyzerActivator gPlugin;
@@ -53,6 +57,16 @@ public class QualyzerActivator extends AbstractUIPlugin
 	 */
 	private boolean fCreatingProject;
 
+	/**
+	 * Used by ApplicationWorkbench advisor to display a message when the workspace is upgraded.
+	 */
+	private String fUpgradeMessage;
+	
+	/**
+	 * Used by ApplicationWorkbench advisor to display a message when the workspace is upgraded.
+	 */
+	private boolean fUpgradeMessageError;
+	
 	/**
 	 * The constructor.
 	 */
@@ -92,12 +106,90 @@ public class QualyzerActivator extends AbstractUIPlugin
 		
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		
+		List<String> upgradedWell = new ArrayList<String>();
+		List<String> upgradedBad = new ArrayList<String>();
+		
 		for(IProject project : root.getProjects())
 		{
+			checkVersion(project, upgradedWell, upgradedBad);
+			
 			PersistenceManager.getInstance().refreshManager(project);
 		}
 		
+		if (!upgradedWell.isEmpty() || !upgradedBad.isEmpty()) 
+		{
+			computeUpgradeMessage(upgradedWell, upgradedBad);
+		}
+		
 		fLogger.info("Qualyzer Started"); //$NON-NLS-1$
+	}
+
+	private void computeUpgradeMessage(List<String> upgradedWell,
+			List<String> upgradedBad) 
+	{
+		boolean error = !upgradedBad.isEmpty();
+		
+		
+		StringBuilder builder = new StringBuilder();
+		if (!upgradedWell.isEmpty())
+		{
+			builder.append(Messages.getString("QualyzerActivator.upgradedWell")); //$NON-NLS-1$
+			builder.append(buildList(upgradedWell));
+		}
+		
+		if (error)
+		{
+			if (builder.toString().length() > 0)
+			{
+				builder.append("\n"); //$NON-NLS-1$
+			}
+			builder.append(Messages.getString("QualyzerActivator.upgradedBad")); //$NON-NLS-1$
+			builder.append(buildList(upgradedBad));
+		}
+		
+			fUpgradeMessage = builder.toString();
+			fUpgradeMessageError = error;
+	}
+	
+	private String buildList(List<String> list) 
+	{
+		int size = list.size();
+		StringBuilder builder = new StringBuilder();
+		for (int i = 0; i<size-1; i++)
+		{
+			builder.append(list.get(i));
+			builder.append(", "); //$NON-NLS-1$
+		}
+		
+		builder.append(list.get(size-1));
+		builder.append(".");
+		
+		return builder.toString();
+	}
+
+	private void checkVersion(IProject project, List<String> upgradedWell,
+			List<String> upgradedBad) 
+	{
+		System.out.println("UPgrading: " + project.getName());
+		try
+		{
+			String projectVersion = FileUtil.getProjectProperty(project, FileUtil.PROJECT_VERSION);
+			System.out.println("PV" + projectVersion);
+			if (projectVersion.isEmpty() || !projectVersion.equals(CURRENT_VERSION)) 
+			{
+				System.out.println("Upgrading for real");
+				Facade.getInstance().updateProject(project);
+				upgradedWell.add(project.getName());
+			}
+		}
+		// CSOFF:
+		// We really don't want to let an exception slip outside this method.
+		catch(Exception e) 
+		{
+			fLogger.error("Error while checking project version.", e);
+			upgradedBad.add(project.getName());
+		}
+		// CSON:
 	}
 
 	/*
@@ -143,5 +235,23 @@ public class QualyzerActivator extends AbstractUIPlugin
 	public Map<String, HibernateDBManager> getHibernateDBManagers()
 	{
 		return fHibernateManagers;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public String getUpgradeMessage()
+	{
+		return fUpgradeMessage;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean isUpgradeMessageError()
+	{
+		return fUpgradeMessageError;
 	}
 }

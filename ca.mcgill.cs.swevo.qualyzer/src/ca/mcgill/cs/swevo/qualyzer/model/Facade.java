@@ -868,8 +868,9 @@ public final class Facade
 	 * Update a project database when the project's version does not match the current version.
 	 * @param project
 	 */
-	public void updateProject(IProject project) 
+	public void updateProject(IProject project) throws CoreException, QualyzerException
 	{
-		
+		PersistenceManager.getInstance().updateDB(project);
+		FileUtil.setProjectProperty(project, FileUtil.PROJECT_VERSION, QualyzerActivator.CURRENT_VERSION);
 	}
 }
