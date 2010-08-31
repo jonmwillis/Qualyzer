@@ -170,7 +170,8 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		
 		createTreeViewer(toolkit, rightArea);
 		
-		fCodeName = toolkit.createLabel(body, "Currently Selected Code:");
+		fCodeName = toolkit.createLabel(body, Messages.getString(
+				"editors.pages.CodeEditorPage.selectedCode")); //$NON-NLS-1$
 		fCodeName.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 		
 		toolkit.createLabel(body, Messages.getString("editors.pages.CodeEditorPage.description")); //$NON-NLS-1$
@@ -719,7 +720,8 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 				
 				fCurrentRow = row;
 				fDescription.setText(fCurrentRow.getDescription());
-				fCodeName.setText("Currently Selected Code: " + fCurrentRow.getName());
+				fCodeName.setText(Messages.getString(
+						"editors.pages.CodeEditorPage.selectedCode2") + fCurrentRow.getName()); //$NON-NLS-1$
 			}
 
 		};

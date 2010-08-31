@@ -478,7 +478,7 @@ public final class TreeModel implements CodeListener, ProjectListener
 	 */
 	public boolean isReachable(Long fromID, Long toID)
 	{
-		Boolean reach = fReachables.get(fromID + "," + toID);
+		Boolean reach = fReachables.get(fromID + "," + toID); //$NON-NLS-1$
 		
 		return reach != null && reach == Boolean.TRUE;
 	}
@@ -488,7 +488,7 @@ public final class TreeModel implements CodeListener, ProjectListener
 	 */
 	protected void setReachability(Node node)
 	{
-		String keyHalf = "," + node.getPersistenceId();
+		String keyHalf = "," + node.getPersistenceId(); //$NON-NLS-1$
 		
 		Node parent = node;
 		while(parent != fTreeRoot)
