@@ -10,6 +10,7 @@
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.model.validation;
 
+import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 
 /**
@@ -42,7 +43,7 @@ public class BasicNameValidator extends AbstractValidator
 		fLabel = pLabel;
 		fName = pName;
 		fOldName = pOldName;
-		fProject = pProject;
+		fProject = PersistenceManager.getInstance().getProject(pProject.getName());
 	}
 	
 	/**
