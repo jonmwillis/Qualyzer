@@ -203,6 +203,12 @@
             id="ca.mcgill.cs.swevo.qualyzer.commands.exportCodes"
             name="Export Codes">
       </command>
+      <command
+            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.AddTimeStampHandler"
+            description="Add a timestamp at the current line and time"
+            id="ca.mcgill.cs.swevo.qualyzer.commands.addTimestamp"
+            name="Add Timestamp">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -1310,6 +1316,11 @@
             commandId="ca.mcgill.cs.swevo.qualyzer.commands.seekForward"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="F8">
+      </key>
+      <key
+            commandId="ca.mcgill.cs.swevo.qualyzer.commands.addTimestamp"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="Ctrl+T">
       </key>
    </extension>
    <extension
