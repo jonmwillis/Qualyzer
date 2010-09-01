@@ -343,7 +343,8 @@ public final class TreeModel implements CodeListener, ProjectListener
 		
 		parent.getChildren().remove(node.getPersistenceId());
 		
-		for(Node child : node.getChildren().values())
+		Node[] children = node.getChildren().values().toArray(new Node[0]);
+		for(Node child : children)
 		{
 			removeNodeNoList(child);
 		}
@@ -457,7 +458,8 @@ public final class TreeModel implements CodeListener, ProjectListener
 		parent.getChildren().remove(node.getPersistenceId());
 		fCodes.get(node.getPersistenceId()).remove(node);
 		
-		for(Node child : node.getChildren().values())
+		Node[] children = node.getChildren().values().toArray(new Node[0]);
+		for(Node child : children)
 		{
 			removeNode(child);
 		}

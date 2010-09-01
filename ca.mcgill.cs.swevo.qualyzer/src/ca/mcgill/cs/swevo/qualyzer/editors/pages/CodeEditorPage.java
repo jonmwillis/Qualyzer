@@ -364,6 +364,11 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 					IStructuredSelection selection = (IStructuredSelection) fTreeViewer.getSelection();
 					Node node = (Node) selection.getFirstElement();
 					
+					if(node == null)
+					{
+						node = fTreeModel.getRoot();
+					}
+					
 					new Node(node, code.getCodeName(), code.getPersistenceId(), 0);
 					fTreeViewer.refresh();
 					fTreeViewer.expandToLevel(node, 1);
