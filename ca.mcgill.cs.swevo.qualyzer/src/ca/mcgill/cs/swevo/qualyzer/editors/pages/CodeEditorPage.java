@@ -96,7 +96,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 {
 
 	private static final int FONT_SIZE = 10;
-	private static final int DESCRIPTION_HEIGHT = 20;
+	private static final int DESCRIPTION_HEIGHT = 15;
 	private static final GridData LARGE_LAYOUT = new GridData(SWT.FILL, SWT.FILL, true, true);
 	private static final int NAME_WIDTH = 180;
 	private static final int FREQ_WIDTH = 80;

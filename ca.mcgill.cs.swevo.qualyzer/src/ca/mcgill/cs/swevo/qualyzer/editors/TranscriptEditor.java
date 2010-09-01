@@ -794,7 +794,18 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 	{
 		if(fAudioPlayer != null)
 		{
-			fAudioPlayer.jumpToTime(seconds);
+			if(seconds < 0)
+			{
+				fAudioPlayer.jumpToTime(0);
+			}
+			else if(seconds > fAudioLength)
+			{
+				fAudioPlayer.jumpToTime(fAudioLength);
+			}
+			else
+			{
+				fAudioPlayer.jumpToTime(seconds);
+			}
 		}
 	}
 	
