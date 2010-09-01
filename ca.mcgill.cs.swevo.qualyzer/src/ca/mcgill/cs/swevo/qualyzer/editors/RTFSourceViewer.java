@@ -476,7 +476,8 @@ public class RTFSourceViewer extends ProjectionViewer
 			Annotation next = iter.next();
 			Position pos = model.getPosition(next);
 			
-			if(!(next instanceof FragmentAnnotation))
+			if(!(next instanceof FragmentAnnotation) && 
+					!next.getType().equals("org.eclipse.ui.workbench.texteditor.bookmark")) //$NON-NLS-1$
 			{
 				if(position.overlapsWith(pos.offset, pos.length))
 				{

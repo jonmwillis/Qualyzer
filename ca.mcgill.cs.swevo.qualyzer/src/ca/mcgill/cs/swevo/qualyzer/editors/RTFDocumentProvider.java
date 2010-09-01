@@ -740,7 +740,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 			Annotation annotation = iter.next();
 			String type = annotation.getType();
 			if(!(annotation instanceof FragmentAnnotation) && 
-					!type.equals("org.eclipse.ui.workbench.texteditor.bookmark"))
+					!type.equals("org.eclipse.ui.workbench.texteditor.bookmark")) //$NON-NLS-1$
 			{
 				annotations.add(annotation);
 				positions.add(model.getPosition(annotation));
