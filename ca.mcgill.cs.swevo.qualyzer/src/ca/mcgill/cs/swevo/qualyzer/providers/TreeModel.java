@@ -464,4 +464,16 @@ public final class TreeModel implements CodeListener, ProjectListener
 			removeNode(child);
 		}
 	}
+	
+	/**
+	 * Check if the code represented by the persistenceId is in the hierarchy.
+	 * @param persistenceId
+	 * @return
+	 */
+	public boolean isInHierarchy(Code code)
+	{
+		List<Node> nodes = fCodes.get(code.getPersistenceId());
+		
+		return nodes != null && !nodes.isEmpty();
+	}
 }
