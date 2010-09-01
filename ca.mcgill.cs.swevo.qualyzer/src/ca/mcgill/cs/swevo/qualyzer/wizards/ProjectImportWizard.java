@@ -117,7 +117,6 @@ public class ProjectImportWizard extends Wizard implements IImportWizard
 			 * Verify that it is a Qualyzer Project,
 			 * Recreate it's sub-folders.
 			 * If it was not then show an error message and delete it from the workspace.
-			 * 
 			 */
 			PersistenceManager.getInstance().refreshManager(project);
 			Project qProject = PersistenceManager.getInstance().getProject(project.getName());
