@@ -46,7 +46,7 @@ public class CodeEditor extends FormEditor
 		{
 			Project project = ((CodeEditorInput) input).getProject();
 			
-			setPartName("Code Editor: " + project.getName());
+			setPartName(Messages.getString("editors.pages.CodeEditor.codeEditor") + project.getName()); //$NON-NLS-1$
 			
 			fPage = new CodeEditorPage(this, project);
 			try
