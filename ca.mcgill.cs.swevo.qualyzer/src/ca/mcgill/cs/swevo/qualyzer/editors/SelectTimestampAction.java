@@ -67,7 +67,7 @@ public class SelectTimestampAction extends SelectMarkerRulerAction
 				int time = marker.getAttribute("time", 0); //$NON-NLS-1$
 				if(marker.exists() &&  theLine == line + 1)
 				{
-					fEditor.seekToTime(time);
+					fEditor.seekToTime(time - 1);
 					fEditor.moveCursorToLine(line);
 				}
 				else if(!marker.exists())
