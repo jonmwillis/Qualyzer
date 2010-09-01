@@ -46,6 +46,8 @@ public class CodeEditor extends FormEditor
 		{
 			Project project = ((CodeEditorInput) input).getProject();
 			
+			setPartName("Code Editor: " + project.getName());
+			
 			fPage = new CodeEditorPage(this, project);
 			try
 			{
