@@ -22,10 +22,14 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.eclipse.ui.internal.wizards.datatransfer.DataTransferMessages;
 import org.eclipse.ui.internal.wizards.datatransfer.WizardProjectsImportPage;
+import org.eclipse.ui.navigator.CommonNavigator;
 
+import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
 import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
@@ -115,7 +119,6 @@ public class ProjectImportWizard extends Wizard implements IImportWizard
 			 * If it was not then show an error message and delete it from the workspace.
 			 * 
 			 */
-			
 			PersistenceManager.getInstance().refreshManager(project);
 			Project qProject = PersistenceManager.getInstance().getProject(project.getName());
 			if(qProject != null)
@@ -137,7 +140,6 @@ public class ProjectImportWizard extends Wizard implements IImportWizard
 				toDelete.add(project);
 			}
 		}
-		
 		for(IProject wProject : toDelete)
 		{
 			try
@@ -150,6 +152,10 @@ public class ProjectImportWizard extends Wizard implements IImportWizard
 						Messages.getString("wizards.ProjectImportWizard.deleteFailed")); //$NON-NLS-1$
 			}
 		}
+		
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		CommonNavigator view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+		view.getCommonViewer().refresh();
 		return toReturn;
 	}
 
