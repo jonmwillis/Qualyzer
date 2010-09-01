@@ -738,8 +738,13 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		while(iter.hasNext())
 		{
 			Annotation annotation = iter.next();
-			annotations.add(annotation);
-			positions.add(model.getPosition(annotation));
+			String type = annotation.getType();
+			if(!(annotation instanceof FragmentAnnotation) && 
+					!type.equals("org.eclipse.ui.workbench.texteditor.bookmark"))
+			{
+				annotations.add(annotation);
+				positions.add(model.getPosition(annotation));
+			}
 		}
 		
 		Position position = null;
