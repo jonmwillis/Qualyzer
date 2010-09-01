@@ -162,7 +162,7 @@ public class QualyzerActivator extends AbstractUIPlugin
 		}
 		
 		builder.append(list.get(size-1));
-		builder.append(".");
+		builder.append("."); //$NON-NLS-1$
 		
 		return builder.toString();
 	}
@@ -183,7 +183,7 @@ public class QualyzerActivator extends AbstractUIPlugin
 		// We really don't want to let an exception slip outside this method.
 		catch(Exception e) 
 		{
-			fLogger.error("Error while checking project version.", e);
+			fLogger.error("Error while checking project version.", e); //$NON-NLS-1$
 			upgradedBad.add(project.getName());
 		}
 		// CSON:
