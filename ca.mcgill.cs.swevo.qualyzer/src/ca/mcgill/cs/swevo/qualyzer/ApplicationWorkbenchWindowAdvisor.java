@@ -83,8 +83,9 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor
 			}
 			else
 			{
-				MessageDialog.openInformation(shell, Messages.getString("QualyzerActivator.upgradedTitle"),  //$NON-NLS-1$
-						upgradeMessage); //$NON-NLS-1$
+				MessageDialog.openInformation(shell, 
+						Messages.getString("QualyzerActivator.upgradedTitle"),  //$NON-NLS-1$
+						upgradeMessage); 
 			}
 		}
 	}
