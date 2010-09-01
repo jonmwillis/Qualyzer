@@ -74,14 +74,13 @@ public class RenameProjectHandler extends AbstractHandler implements ITestableHa
 						String oldFolderName = project.getFolderName();
 						Facade.getInstance().renameProject(project, dialog.getNewName());
 						
-						view.getCommonViewer().refresh();
-						
 						FileUtil.renameProject(oldFolderName, dialog.getNewName());
 						
 						IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(
 								dialog.getNewName().replace(' ', '_'));
 						PersistenceManager.getInstance().refreshManager(wProject);
 						
+						view.getCommonViewer().refresh();
 					}
 					catch(QualyzerException e)
 					{

@@ -363,8 +363,7 @@ public final class TreeModel implements CodeListener, ProjectListener
 		}
 		else if(cType == ChangeType.RENAME)
 		{
-			
-			
+			dispose();
 		}
 	}
 	
