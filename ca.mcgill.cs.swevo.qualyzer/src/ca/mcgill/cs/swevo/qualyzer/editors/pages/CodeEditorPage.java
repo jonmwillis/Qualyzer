@@ -308,10 +308,6 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		item.addSelectionListener(renameCodeSelected());
 		
 		item = new MenuItem(menu, SWT.PUSH);
-		item.setText(Messages.getString("editors.pages.CodeEditorPage.viewFragments")); //$NON-NLS-1$
-		item.addSelectionListener(viewFragmentsSelected());
-		
-		item = new MenuItem(menu, SWT.PUSH);
 		item.setText(Messages.getString("editors.pages.CodeEditorPage.removeCode")); //$NON-NLS-1$
 		item.addSelectionListener(new SelectionAdapter(){
 			
@@ -337,6 +333,10 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 				}
 			}
 		});
+		
+		item = new MenuItem(menu, SWT.PUSH);
+		item.setText(Messages.getString("editors.pages.CodeEditorPage.viewFragments")); //$NON-NLS-1$
+		item.addSelectionListener(viewFragmentsSelected());
 		
 		fTreeViewer.getTree().setMenu(menu);
 	}
@@ -475,12 +475,12 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		item.addSelectionListener(newCodeSelected()); 
 		
 		item = new MenuItem(menu, SWT.PUSH);
-		item.setText(DELETE_CODE);
-		item.addSelectionListener(deleteCodeSelected());
-		
-		item = new MenuItem(menu, SWT.PUSH);
 		item.setText(Messages.getString("editors.pages.CodeEditorPage.renameCode")); //$NON-NLS-1$
 		item.addSelectionListener(renameCodeSelected());
+		
+		item = new MenuItem(menu, SWT.PUSH);
+		item.setText(DELETE_CODE);
+		item.addSelectionListener(deleteCodeSelected());
 		
 		item = new MenuItem(menu, SWT.PUSH);
 		item.setText(Messages.getString("editors.pages.CodeEditorPage.viewFragments")); //$NON-NLS-1$
