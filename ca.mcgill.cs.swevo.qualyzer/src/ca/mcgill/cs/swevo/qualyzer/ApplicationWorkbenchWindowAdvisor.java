@@ -78,12 +78,12 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor
 			boolean error = QualyzerActivator.getDefault().isUpgradeMessageError();
 			if (error)
 			{
-				MessageDialog.openError(shell, Messages.getString("QualyzerActivator.upgradedTitle"), 
+				MessageDialog.openError(shell, Messages.getString("QualyzerActivator.upgradedTitle"),  //$NON-NLS-1$
 						upgradeMessage); //$NON-NLS-1$
 			}
 			else
 			{
-				MessageDialog.openInformation(shell, Messages.getString("QualyzerActivator.upgradedTitle"), 
+				MessageDialog.openInformation(shell, Messages.getString("QualyzerActivator.upgradedTitle"),  //$NON-NLS-1$
 						upgradeMessage); //$NON-NLS-1$
 			}
 		}

@@ -300,11 +300,15 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		Menu menu = new Menu(fTreeViewer.getTree());
 		
 		MenuItem item = new MenuItem(menu, SWT.PUSH);
-		item.setText(Messages.getString(Messages.getString("editors.pages.CodeEditorPage.1"))); //$NON-NLS-1$
+		item.setText(Messages.getString("editors.pages.CodeEditorPage.newSubCode")); //$NON-NLS-1$
+		item.addSelectionListener(createSubCodeSelected());
+		
+		item = new MenuItem(menu, SWT.PUSH);
+		item.setText(Messages.getString("editors.pages.CodeEditorPage.renameCode")); //$NON-NLS-1$
 		item.addSelectionListener(renameCodeSelected());
 		
 		item = new MenuItem(menu, SWT.PUSH);
-		item.setText(Messages.getString(Messages.getString("editors.pages.CodeEditorPage.2"))); //$NON-NLS-1$
+		item.setText(Messages.getString("editors.pages.CodeEditorPage.viewFragments")); //$NON-NLS-1$
 		item.addSelectionListener(viewFragmentsSelected());
 		
 		item = new MenuItem(menu, SWT.PUSH);
@@ -335,6 +339,38 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		});
 		
 		fTreeViewer.getTree().setMenu(menu);
+	}
+
+	/**
+	 * @return
+	 */
+	private SelectionListener createSubCodeSelected()
+	{
+		return new SelectionAdapter()
+		{
+			
+			@Override
+			public void widgetSelected(SelectionEvent e)
+			{
+				NewCodeDialog dialog = new NewCodeDialog(getEditor().getSite().getShell(), fProject);
+				dialog.create();
+				if(dialog.open() == Window.OK)
+				{
+					Code code = Facade.getInstance().createCode(dialog.getName(), dialog.getDescription(), fProject);
+					CommonNavigator view = (CommonNavigator) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+					.getActivePage().findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+					view.getCommonViewer().refresh();
+					
+					IStructuredSelection selection = (IStructuredSelection) fTreeViewer.getSelection();
+					Node node = (Node) selection.getFirstElement();
+					
+					new Node(node, code.getCodeName(), code.getPersistenceId(), 0);
+					fTreeViewer.refresh();
+					fTreeViewer.expandToLevel(node, 1);
+					setDirty();
+				}
+			}
+		};
 	}
 
 	/**
