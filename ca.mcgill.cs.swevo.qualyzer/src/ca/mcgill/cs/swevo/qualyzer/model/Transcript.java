@@ -10,9 +10,15 @@
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.MapKey;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -28,7 +34,7 @@ public class Transcript extends AnnotatedDocument implements Comparable<Transcri
 	private static final int NUM2 = 67;
 
 	private AudioFile fAudioFile;
-	
+	private Map<Integer, Timestamp> fTimestamps = new HashMap<Integer, Timestamp>();
 
 	/**
 	 * @return
@@ -47,7 +53,24 @@ public class Transcript extends AnnotatedDocument implements Comparable<Transcri
 		this.fAudioFile = audioFile;
 	}
 
-	
+	/**
+	 *
+	 * @return
+	 */
+	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "transcript")
+	@MapKey(name = "lineNumber")
+	public Map<Integer, Timestamp> getTimestamps()
+	{
+		return fTimestamps;
+	}
+
+	/**
+	 * @param fragments
+	 */
+	public void setTimestamps(Map<Integer, Timestamp> timestamps)
+	{
+		this.fTimestamps = timestamps;
+	}
 
 	@Override
 	public int compareTo(Transcript transcript)
