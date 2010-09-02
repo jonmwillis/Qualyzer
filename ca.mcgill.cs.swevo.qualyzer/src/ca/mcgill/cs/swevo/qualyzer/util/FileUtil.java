@@ -500,7 +500,7 @@ public final class FileUtil
 	{
 		Project qProject = PersistenceManager.getInstance().getProject(project.getName());
 		
-		IFolder folder = project.getFolder("transcripts");
+		IFolder folder = project.getFolder("transcripts"); //$NON-NLS-1$
 		
 		for(Transcript transcript : qProject.getTranscripts())
 		{
@@ -520,13 +520,13 @@ public final class FileUtil
 					Map<String, Object> map = new HashMap<String, Object>();
 					MarkerUtilities.setLineNumber(map, timestamp.getLineNumber());
 					MarkerUtilities.setMessage(map, getTimeString(timestamp.getSeconds()));
-					map.put("time", timestamp.getSeconds());
+					map.put("time", timestamp.getSeconds()); //$NON-NLS-1$
 					MarkerUtilities.createMarker(file, map, RTFConstants.TIMESTAMP_MARKER_ID);
 				}
 			}
 			catch (CoreException e)
 			{
-				gLogger.error("Could not update timestamps", e);
+				gLogger.error("Could not update timestamps", e); //$NON-NLS-1$
 			}
 		}
 	}
