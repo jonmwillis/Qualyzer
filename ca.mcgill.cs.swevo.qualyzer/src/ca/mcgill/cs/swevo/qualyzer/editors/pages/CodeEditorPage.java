@@ -393,8 +393,9 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		
 		Label label = toolkit.createLabel(fTableArea, Messages.getString(
 				"editors.pages.CodeEditorPage.list")); //$NON-NLS-1$
-		label.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
+		label.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, true, false, 1, 1));
 		fFilterButton = toolkit.createButton(fTableArea, "Filter", SWT.TOGGLE);
+		fFilterButton.setLayoutData(new GridData(SWT.RIGHT, SWT.BOTTOM, false, false, 1, 1));
 		
 		fTableViewer = new TableViewer(fTableArea, SWT.SINGLE |  SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL);
 		
