@@ -98,7 +98,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 
 	private static final int FONT_SIZE = 10;
 	private static final int DESCRIPTION_HEIGHT = 15;
-	private static final GridData LARGE_LAYOUT = new GridData(SWT.FILL, SWT.FILL, true, true);
+	private static final GridData LARGE_LAYOUT = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1);
 	private static final int NAME_WIDTH = 180;
 	private static final int FREQ_WIDTH = 80;
 	private static final int TREE_NAME_WIDTH = 180;
@@ -125,6 +125,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	private Composite fTableArea;
 	private TreeModel fTreeModel;
 	private Button fFilterButton;
+	private MenuItem fSubCodeItem;
 
 	/**
 	 * Constructor.
@@ -290,11 +291,25 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 						if(node.getPersistenceId().equals(row.getPersistenceId()))
 						{
 							fTableViewer.setSelection(new StructuredSelection(row));
+							fSubCodeItem.setEnabled(true);
 							break;
 						}
 						
 						i++;
 						row = (CodeTableRow) fTableViewer.getElementAt(i);
+					}
+				}
+				else
+				{
+					Node[] elements = fTreeModel.getRoot().getChildren().values().toArray(new Node[0]);
+					if(elements.length > 0)
+					{
+						fTreeViewer.setSelection(new StructuredSelection(elements[0]));
+						fSubCodeItem.setEnabled(true);
+					}
+					else
+					{
+						fSubCodeItem.setEnabled(false);
 					}
 				}
 			}
@@ -309,8 +324,13 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		Menu menu = new Menu(fTreeViewer.getTree());
 		
 		MenuItem item = new MenuItem(menu, SWT.PUSH);
-		item.setText(Messages.getString("editors.pages.CodeEditorPage.newSubCode")); //$NON-NLS-1$
-		item.addSelectionListener(createSubCodeSelected());
+		item.setText("New Root Code");
+		item.addSelectionListener(newRootCodeSelected());
+		
+		fSubCodeItem = new MenuItem(menu, SWT.PUSH);
+		fSubCodeItem.setText(Messages.getString("editors.pages.CodeEditorPage.newSubCode")); //$NON-NLS-1$
+		fSubCodeItem.addSelectionListener(createSubCodeSelected());
+		fSubCodeItem.setEnabled(false);
 		
 		item = new MenuItem(menu, SWT.PUSH);
 		item.setText(Messages.getString("editors.pages.CodeEditorPage.renameCode")); //$NON-NLS-1$
@@ -353,14 +373,20 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	/**
 	 * @return
 	 */
-	private SelectionListener createSubCodeSelected()
+	private SelectionListener newRootCodeSelected()
 	{
 		return new SelectionAdapter()
 		{
-			
 			@Override
 			public void widgetSelected(SelectionEvent e)
 			{
+				Node node = fTreeModel.getRoot();
+				
+				if(node == null)
+				{
+					return;
+				}
+				
 				NewCodeDialog dialog = new NewCodeDialog(getEditor().getSite().getShell(), fProject);
 				dialog.create();
 				if(dialog.open() == Window.OK)
@@ -370,13 +396,41 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 					.getActivePage().findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
 					view.getCommonViewer().refresh();
 					
-					IStructuredSelection selection = (IStructuredSelection) fTreeViewer.getSelection();
-					Node node = (Node) selection.getFirstElement();
-					
-					if(node == null)
-					{
-						node = fTreeModel.getRoot();
-					}
+					new Node(node, code.getCodeName(), code.getPersistenceId(), 0);
+					fTreeViewer.refresh();
+					fTreeViewer.expandToLevel(node, 1);
+					setDirty();
+				}
+			}
+		};
+	}
+
+	/**
+	 * @return
+	 */
+	private SelectionListener createSubCodeSelected()
+	{
+		return new SelectionAdapter()
+		{
+			@Override
+			public void widgetSelected(SelectionEvent e)
+			{
+				IStructuredSelection selection = (IStructuredSelection) fTreeViewer.getSelection();
+				Node node = (Node) selection.getFirstElement();
+				
+				if(node == null)
+				{
+					return;
+				}
+				
+				NewCodeDialog dialog = new NewCodeDialog(getEditor().getSite().getShell(), fProject);
+				dialog.create();
+				if(dialog.open() == Window.OK)
+				{
+					Code code = Facade.getInstance().createCode(dialog.getName(), dialog.getDescription(), fProject);
+					CommonNavigator view = (CommonNavigator) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+					.getActivePage().findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+					view.getCommonViewer().refresh();
 					
 					new Node(node, code.getCodeName(), code.getPersistenceId(), 0);
 					fTreeViewer.refresh();
@@ -429,9 +483,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		
 		fTableViewer.getTable().setSortColumn(fTableViewer.getTable().getColumn(0));
 		fTableViewer.getTable().setSortDirection(SWT.DOWN);
-		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
-		gd.horizontalSpan = 2;
-		fTableViewer.getTable().setLayoutData(gd);
+		fTableViewer.getTable().setLayoutData(LARGE_LAYOUT);
 	}
 
 	/**
