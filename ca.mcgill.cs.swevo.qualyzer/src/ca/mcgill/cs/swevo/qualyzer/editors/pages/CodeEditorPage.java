@@ -125,7 +125,9 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	private Composite fTableArea;
 	private TreeModel fTreeModel;
 	private Button fFilterButton;
-	private MenuItem fSubCodeItem;
+	
+	private ArrayList<MenuItem> fTableCanDisable;
+	private ArrayList<MenuItem> fTreeCanDisable;
 
 	/**
 	 * Constructor.
@@ -138,7 +140,9 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		fProject = project;
 				
 		fIsDirty = false;
-						
+		fTableCanDisable = new ArrayList<MenuItem>();
+		fTreeCanDisable = new ArrayList<MenuItem>();
+		
 		ListenerManager listenerManager = Facade.getInstance().getListenerManager();
 		listenerManager.registerCodeListener(fProject, this);
 		listenerManager.registerProjectListener(fProject, this);
@@ -291,7 +295,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 						if(node.getPersistenceId().equals(row.getPersistenceId()))
 						{
 							fTableViewer.setSelection(new StructuredSelection(row));
-							fSubCodeItem.setEnabled(true);
+							setTreeItemsEnabled(true);
 							break;
 						}
 						
@@ -305,15 +309,38 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 					if(elements.length > 0)
 					{
 						fTreeViewer.setSelection(new StructuredSelection(elements[0]));
-						fSubCodeItem.setEnabled(true);
+						setTreeItemsEnabled(true);
 					}
 					else
 					{
-						fSubCodeItem.setEnabled(false);
+						setTreeItemsEnabled(false);
 					}
 				}
 			}
 		};
+	}
+
+	/**
+	 * @param b
+	 */
+	protected void setTreeItemsEnabled(boolean b)
+	{
+		for(MenuItem item : fTreeCanDisable)
+		{
+			item.setEnabled(b);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param b
+	 */
+	protected void setTableItemsEnabled(boolean b)
+	{
+		for(MenuItem item : fTableCanDisable)
+		{
+			item.setEnabled(b);
+		}
 	}
 
 	/**
@@ -327,18 +354,37 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		item.setText("New Root Code");
 		item.addSelectionListener(newRootCodeSelected());
 		
-		fSubCodeItem = new MenuItem(menu, SWT.PUSH);
-		fSubCodeItem.setText(Messages.getString("editors.pages.CodeEditorPage.newSubCode")); //$NON-NLS-1$
-		fSubCodeItem.addSelectionListener(createSubCodeSelected());
-		fSubCodeItem.setEnabled(false);
+		item = new MenuItem(menu, SWT.PUSH);
+		item.setText(Messages.getString("editors.pages.CodeEditorPage.newSubCode")); //$NON-NLS-1$
+		item.addSelectionListener(createSubCodeSelected());
+		fTreeCanDisable.add(item);
 		
 		item = new MenuItem(menu, SWT.PUSH);
 		item.setText(Messages.getString("editors.pages.CodeEditorPage.renameCode")); //$NON-NLS-1$
 		item.addSelectionListener(renameCodeSelected());
+		fTreeCanDisable.add(item);
 		
 		item = new MenuItem(menu, SWT.PUSH);
 		item.setText(Messages.getString("editors.pages.CodeEditorPage.removeCode")); //$NON-NLS-1$
-		item.addSelectionListener(new SelectionAdapter(){
+		item.addSelectionListener(removeCodeSelected());
+		fTreeCanDisable.add(item);
+		
+		item = new MenuItem(menu, SWT.PUSH);
+		item.setText(Messages.getString("editors.pages.CodeEditorPage.viewFragments")); //$NON-NLS-1$
+		item.addSelectionListener(viewFragmentsSelected());
+		fTreeCanDisable.add(item);
+		
+		fTreeViewer.getTree().setMenu(menu);
+		
+		setTreeItemsEnabled(false);
+	}
+
+	/**
+	 * @return
+	 */
+	private SelectionAdapter removeCodeSelected()
+	{
+		return new SelectionAdapter(){
 			
 			@Override
 			public void widgetSelected(SelectionEvent e)
@@ -361,13 +407,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 					setDirty();
 				}
 			}
-		});
-		
-		item = new MenuItem(menu, SWT.PUSH);
-		item.setText(Messages.getString("editors.pages.CodeEditorPage.viewFragments")); //$NON-NLS-1$
-		item.addSelectionListener(viewFragmentsSelected());
-		
-		fTreeViewer.getTree().setMenu(menu);
+		};
 	}
 
 	/**
@@ -502,11 +542,13 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 				{
 					fTableViewer.addFilter(fFilter);
 					fTableViewer.refresh();
+					updateSelection();
 				}
 				else
 				{
 					fTableViewer.removeFilter(fFilter);
 					fTableViewer.refresh();
+					updateSelection();
 				}
 			}
 		};
@@ -575,16 +617,21 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		item = new MenuItem(menu, SWT.PUSH);
 		item.setText(Messages.getString("editors.pages.CodeEditorPage.renameCode")); //$NON-NLS-1$
 		item.addSelectionListener(renameCodeSelected());
+		fTableCanDisable.add(item);
 		
 		item = new MenuItem(menu, SWT.PUSH);
 		item.setText(DELETE_CODE);
 		item.addSelectionListener(deleteCodeSelected());
+		fTableCanDisable.add(item);
 		
 		item = new MenuItem(menu, SWT.PUSH);
 		item.setText(Messages.getString("editors.pages.CodeEditorPage.viewFragments")); //$NON-NLS-1$
 		item.addSelectionListener(viewFragmentsSelected());
+		fTableCanDisable.add(item);
 		
 		fTableViewer.getTable().setMenu(menu);
+		
+		setTableItemsEnabled(false);
 	}
 
 	/**
@@ -954,6 +1001,11 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		if(row != null)
 		{
 			fTableViewer.setSelection(new StructuredSelection(row));
+			setTableItemsEnabled(true);
+		}
+		else
+		{
+			setTableItemsEnabled(false);
 		}
 	}
 
@@ -1078,6 +1130,8 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		{
 			fIsDirty = true;
 			getEditor().editorDirtyStateChanged();
+			fTableViewer.refresh();
+			fTreeViewer.refresh();
 		}
 		
 	}

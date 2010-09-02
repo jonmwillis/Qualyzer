@@ -104,6 +104,7 @@ public class TreeDropListener extends ViewerDropAdapter
 				toMove.updatePaths();
 				
 				refreshEditor();
+				fViewer.setSelection(new StructuredSelection(toMove), true);
 				return true;
 			}
 			else if(values.length == TABLE_DATA_SIZE)
