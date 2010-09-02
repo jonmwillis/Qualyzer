@@ -33,6 +33,9 @@ import ca.mcgill.cs.swevo.qualyzer.model.Project;
 public class CodeEditor extends FormEditor
 {
 	public static final String ID = "ca.mcgill.cs.swevo.qualyzer.editors.codeEditor"; //$NON-NLS-1$
+	
+	private static final int MAX_LENGTH = 15;
+	private static final String DOTS = "...";
 
 	private static Logger gLogger = LoggerFactory.getLogger(CodeEditor.class);
 	
@@ -46,7 +49,12 @@ public class CodeEditor extends FormEditor
 		{
 			Project project = ((CodeEditorInput) input).getProject();
 			
-			setPartName(Messages.getString("editors.pages.CodeEditor.codeEditor") + project.getName()); //$NON-NLS-1$
+			String name = Messages.getString("editors.pages.CodeEditor.codeEditor") + project.getName(); //$NON-NLS-1$
+			if(name.length() > MAX_LENGTH)
+			{
+				name = name.substring(0, MAX_LENGTH) + DOTS;
+			}
+			setPartName(name); 
 			
 			fPage = new CodeEditorPage(this, project);
 			try

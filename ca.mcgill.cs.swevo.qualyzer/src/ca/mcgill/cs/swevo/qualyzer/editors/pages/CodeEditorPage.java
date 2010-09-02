@@ -84,6 +84,7 @@ import ca.mcgill.cs.swevo.qualyzer.providers.CodeTreeContentProvider;
 import ca.mcgill.cs.swevo.qualyzer.providers.CodeTreeLabelProvider;
 import ca.mcgill.cs.swevo.qualyzer.providers.Node;
 import ca.mcgill.cs.swevo.qualyzer.providers.TableDragListener;
+import ca.mcgill.cs.swevo.qualyzer.providers.TableFilter;
 import ca.mcgill.cs.swevo.qualyzer.providers.TreeDragListener;
 import ca.mcgill.cs.swevo.qualyzer.providers.TreeDropListener;
 import ca.mcgill.cs.swevo.qualyzer.providers.TreeModel;
@@ -100,7 +101,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	private static final GridData LARGE_LAYOUT = new GridData(SWT.FILL, SWT.FILL, true, true);
 	private static final int NAME_WIDTH = 180;
 	private static final int FREQ_WIDTH = 80;
-	private static final int TREE_NAME_WIDTH = 170;
+	private static final int TREE_NAME_WIDTH = 180;
 	private static final int TREE_FREQ_WIDTH = 60;
 	private static final String EMPTY = ""; //$NON-NLS-1$
 
@@ -123,6 +124,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	private Composite fTreeArea;
 	private Composite fTableArea;
 	private TreeModel fTreeModel;
+	private Button fFilterButton;
 
 	/**
 	 * Constructor.
@@ -187,6 +189,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		toolkit.paintBordersFor(body);
 		
 		fTableViewer.addSelectionChangedListener(createTableSelectionListener());
+		fFilterButton.addSelectionListener(setFilter(fFilterButton));
 		createTableContextMenu();
 		button.addSelectionListener(createToggleAdapter());
 		
@@ -385,10 +388,13 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	private void buildTableViewer(FormToolkit toolkit, Composite body)
 	{
 		fTableArea = toolkit.createComposite(body, SWT.NULL);
-		fTableArea.setLayout(new GridLayout(1, true));
+		fTableArea.setLayout(new GridLayout(2, false));
 		fTableArea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
-		toolkit.createLabel(fTableArea, Messages.getString("editors.pages.CodeEditorPage.list")); //$NON-NLS-1$
+		Label label = toolkit.createLabel(fTableArea, Messages.getString(
+				"editors.pages.CodeEditorPage.list")); //$NON-NLS-1$
+		label.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
+		fFilterButton = toolkit.createButton(fTableArea, "Filter", SWT.TOGGLE);
 		
 		fTableViewer = new TableViewer(fTableArea, SWT.SINGLE |  SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL);
 		
@@ -399,7 +405,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		col.setMoveable(false);
 		
 		col = new TableColumn(fTableViewer.getTable(), SWT.NONE);
-		col.setText(Messages.getString("editors.pages.CodeEditorPage.frequency")); //$NON-NLS-1$
+		col.setText(Messages.getString("editors.pages.CodeEditorPage.count")); //$NON-NLS-1$
 		col.setWidth(FREQ_WIDTH);
 		col.addSelectionListener(createColSortListener(1, col));
 		col.setMoveable(false);
@@ -416,7 +422,35 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		
 		fTableViewer.getTable().setSortColumn(fTableViewer.getTable().getColumn(0));
 		fTableViewer.getTable().setSortDirection(SWT.DOWN);
-		fTableViewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
+		gd.horizontalSpan = 2;
+		fTableViewer.getTable().setLayoutData(gd);
+	}
+
+	/**
+	 * @return
+	 */
+	private SelectionListener setFilter(final Button button)
+	{
+		return new SelectionAdapter()
+		{
+			private TableFilter fFilter = new TableFilter(fTreeModel);
+			
+			@Override
+			public void widgetSelected(SelectionEvent e)
+			{
+				if(button.getSelection())
+				{
+					fTableViewer.addFilter(fFilter);
+					fTableViewer.refresh();
+				}
+				else
+				{
+					fTableViewer.removeFilter(fFilter);
+					fTableViewer.refresh();
+				}
+			}
+		};
 	}
 
 	/**
