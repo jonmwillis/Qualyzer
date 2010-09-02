@@ -704,6 +704,9 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 					map.put("time", fAudioSlider.getSelection()); //$NON-NLS-1$
 					MarkerUtilities.createMarker(file, map, 
 							"ca.mcgill.cs.swevo.qualyzer.marker.timestamp"); //$NON-NLS-1$
+					
+					Facade.getInstance().createTimestamp((Transcript) getDocument(), line, fAudioSlider.getSelection());
+					Facade.getInstance().saveDocument(getDocument());
 				}
 				catch (CoreException e)
 				{
