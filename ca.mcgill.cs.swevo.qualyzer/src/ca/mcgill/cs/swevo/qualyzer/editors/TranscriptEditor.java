@@ -851,30 +851,10 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 
 	private boolean markerExists(int line)
 	{
-		boolean found = false;
 		
-		IFile file = ((RTFEditorInput) getEditorInput()).getFile();
+		Transcript transcript = (Transcript) getDocument();
 		
-		try
-		{
-			for(IMarker marker : file.findMarkers(RTFConstants.TIMESTAMP_MARKER_ID, false, 0))
-			{
-				if(marker.exists() && marker.getAttribute(IMarker.LINE_NUMBER, 0) == line)
-				{
-					return true;
-				}
-				else if(!marker.exists())
-				{
-					marker.delete();
-				}
-			}
-		}
-		catch (CoreException e)
-		{
-			
-		}
-		
-		return found;
+		return transcript.getTimestamps().get(line) != null;
 	}
 	
 	/**
