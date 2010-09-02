@@ -700,19 +700,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 			Annotation annotation = iter.next();
 			if(annotation instanceof FragmentAnnotation)
 			{
-				Fragment fragment = ((FragmentAnnotation) annotation).getFragment();
-				Position position = model.getPosition(annotation);
-				if(position.length == 0)
-				{
-					model.removeAnnotation(annotation);
-				}
-				else
-				{
-					fragment.setOffset(position.offset);
-					fragment.setLength(position.length);
-					rtfDoc.getFragments().remove(position.offset);
-					rtfDoc.getFragments().put(position.offset, fragment);
-				}
+				updateFragment(model, rtfDoc, annotation);
 			}
 			else
 			{
@@ -727,28 +715,38 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	}
 
 	/**
+	 * @param model
+	 * @param rtfDoc
+	 * @param annotation
+	 */
+	private void updateFragment(IAnnotationModel model, IAnnotatedDocument rtfDoc, Annotation annotation)
+	{
+		Fragment fragment = ((FragmentAnnotation) annotation).getFragment();
+		Position position = model.getPosition(annotation);
+		if(position.length == 0)
+		{
+			model.removeAnnotation(annotation);
+		}
+		else
+		{
+			fragment.setOffset(position.offset);
+			fragment.setLength(position.length);
+			rtfDoc.getFragments().remove(position.offset);
+			rtfDoc.getFragments().put(position.offset, fragment);
+		}
+	}
+
+	/**
 	 * @param contents
 	 * @param model
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	private String buildRTFString(String contents, IAnnotationModel model)
 	{
 		String output = RTFTags.HEADER; 
 		ArrayList<Position> positions = new ArrayList<Position>();
 		ArrayList<Annotation> annotations = new ArrayList<Annotation>();
-		Iterator<Annotation> iter = model.getAnnotationIterator();
-		while(iter.hasNext())
-		{
-			Annotation annotation = iter.next();
-			String type = annotation.getType();
-			if(!(annotation instanceof FragmentAnnotation) && 
-					!type.equals("org.eclipse.ui.workbench.texteditor.bookmark")) //$NON-NLS-1$
-			{
-				annotations.add(annotation);
-				positions.add(model.getPosition(annotation));
-			}
-		}
+		prepareAnnotationLists(model, positions, annotations);
 		
 		Position position = null;
 		Annotation annotation = null;
@@ -761,8 +759,12 @@ public class RTFDocumentProvider extends FileDocumentProvider
 				{
 					if(positions.get(j).offset == i)
 					{
-						position = positions.get(j);
-						annotation = annotations.get(j);
+						position = positions.remove(j);
+						annotation = annotations.remove(j);
+						break;
+					}
+					else if(positions.get(j).offset > i)
+					{
 						break;
 					}
 				}
@@ -787,6 +789,55 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		}
 					
 		return output + RTFTags.FOOTER; 
+	}
+
+	/**
+	 * @param model
+	 * @param positions
+	 * @param annotations
+	 */
+	@SuppressWarnings("unchecked")
+	private void prepareAnnotationLists(IAnnotationModel model, ArrayList<Position> positions,
+			ArrayList<Annotation> annotations)
+	{
+		Iterator<Annotation> iter = model.getAnnotationIterator();
+		while(iter.hasNext())
+		{
+			Annotation annotation = iter.next();
+			String type = annotation.getType();
+			if(!(annotation instanceof FragmentAnnotation) && 
+					!type.equals("org.eclipse.ui.workbench.texteditor.bookmark")) //$NON-NLS-1$
+			{
+				
+				if(positions.isEmpty())
+				{
+					annotations.add(annotation);
+					positions.add(model.getPosition(annotation));
+				}
+				else
+				{
+					Position position = model.getPosition(annotation);
+					int i;
+					for(i = 0; i < positions.size(); i++)
+					{
+						Position curPos = positions.get(i);
+						if(position.offset < curPos.offset)
+						{
+							annotations.add(i, annotation);
+							positions.add(i, position);
+							break;
+						}
+					}
+					
+					if(i >= positions.size())
+					{
+						annotations.add(annotation);
+						positions.add(position);
+					}
+				}
+				
+			}
+		}
 	}
 	
 	private String getEndChar(char c)
