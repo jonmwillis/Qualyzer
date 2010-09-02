@@ -16,18 +16,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.ui.texteditor.MarkerUtilities;
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ca.mcgill.cs.swevo.qualyzer.editors.RTFConstants;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.HibernateDBManager;
 import ca.mcgill.cs.swevo.qualyzer.model.PersistenceManager;
+import ca.mcgill.cs.swevo.qualyzer.model.Project;
+import ca.mcgill.cs.swevo.qualyzer.model.Timestamp;
+import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 import ca.mcgill.cs.swevo.qualyzer.util.FileUtil;
 
 /**
@@ -43,6 +52,10 @@ public class QualyzerActivator extends AbstractUIPlugin
 	public static final String PROJECT_EXPLORER_VIEW_ID = "ca.mcgill.cs.swevo.qualyzer.projectexplorer"; //$NON-NLS-1$
 	
 	public static final String CURRENT_VERSION = "1.0.0"; //$NON-NLS-1$
+
+	private static final int SECONDS_PER_MINUTE = 60;
+
+	private static final int TEN = 10;
 	
 	// The shared instance
 	private static QualyzerActivator gPlugin;
@@ -121,7 +134,58 @@ public class QualyzerActivator extends AbstractUIPlugin
 			computeUpgradeMessage(upgradedWell, upgradedBad);
 		}
 		
+		for(IProject project : root.getProjects())
+		{
+			renewTimestamps(project);
+		}
+		
 		fLogger.info("Qualyzer Started"); //$NON-NLS-1$
+	}
+
+	/**
+	 * @param project
+	 */
+	private void renewTimestamps(IProject project)
+	{
+		Project qProject = PersistenceManager.getInstance().getProject(project.getName());
+		
+		IFolder folder = project.getFolder("transcripts");
+		
+		for(Transcript transcript : qProject.getTranscripts())
+		{
+			IFile file = folder.getFile(transcript.getFileName());
+			
+			try
+			{
+				for(IMarker marker : file.findMarkers(RTFConstants.TIMESTAMP_MARKER_ID, false, 0))
+				{
+					marker.delete();
+				}
+				
+				Transcript lTranscript = Facade.getInstance().forceTranscriptLoad(transcript);
+				
+				for(Timestamp timestamp : lTranscript.getTimestamps().values())
+				{
+					Map<String, Object> map = new HashMap<String, Object>();
+					MarkerUtilities.setLineNumber(map, timestamp.getLineNumber());
+					MarkerUtilities.setMessage(map, getTimeString(timestamp.getSeconds()));
+					map.put("time", timestamp.getSeconds());
+					MarkerUtilities.createMarker(file, map, RTFConstants.TIMESTAMP_MARKER_ID);
+				}
+			}
+			catch (CoreException e)
+			{
+				fLogger.error("Could not update timestamps", e);
+			}
+		}
+	}
+	
+	private String getTimeString(int seconds)
+	{
+		int minutes = seconds / SECONDS_PER_MINUTE;
+		int secondsRemaining = seconds % SECONDS_PER_MINUTE;
+		String secs = (secondsRemaining < TEN) ? "0"+secondsRemaining : ""+secondsRemaining; //$NON-NLS-1$ //$NON-NLS-2$
+		return minutes + ":" + secs; //$NON-NLS-1$
 	}
 
 	private void computeUpgradeMessage(List<String> upgradedWell,
