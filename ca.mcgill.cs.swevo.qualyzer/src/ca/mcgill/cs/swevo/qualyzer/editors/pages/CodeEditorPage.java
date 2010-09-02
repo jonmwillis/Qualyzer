@@ -270,7 +270,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		
 		fTreeViewer.addSelectionChangedListener(createTreeSelectionListener());
 		fTreeViewer.setSorter(new ViewerSorter());
-		fTreeViewer.addDoubleClickListener(createDoubleClickListener());
+		fTreeViewer.addDoubleClickListener(createDoubleClickListenerTree());
 		
 		createTreeContextMenu();		
 	}
@@ -288,6 +288,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 				Node node = (Node) ((IStructuredSelection) fTreeViewer.getSelection()).getFirstElement();
 				if(node != null)
 				{
+					setTreeItemsEnabled(true);
 					int i = 0;
 					CodeTableRow row = (CodeTableRow) fTableViewer.getElementAt(i);
 					while(row != null)
@@ -295,7 +296,6 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 						if(node.getPersistenceId().equals(row.getPersistenceId()))
 						{
 							fTableViewer.setSelection(new StructuredSelection(row));
-							setTreeItemsEnabled(true);
 							break;
 						}
 						
@@ -361,7 +361,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		
 		item = new MenuItem(menu, SWT.PUSH);
 		item.setText(Messages.getString("editors.pages.CodeEditorPage.renameCode")); //$NON-NLS-1$
-		item.addSelectionListener(renameCodeSelected());
+		item.addSelectionListener(renameCodeSelectedTree());
 		fTreeCanDisable.add(item);
 		
 		item = new MenuItem(menu, SWT.PUSH);
@@ -371,12 +371,100 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		
 		item = new MenuItem(menu, SWT.PUSH);
 		item.setText(Messages.getString("editors.pages.CodeEditorPage.viewFragments")); //$NON-NLS-1$
-		item.addSelectionListener(viewFragmentsSelected());
+		item.addSelectionListener(viewFragmentsSelectedTree());
 		fTreeCanDisable.add(item);
 		
 		fTreeViewer.getTree().setMenu(menu);
 		
 		setTreeItemsEnabled(false);
+	}
+
+	/**
+	 * @return
+	 */
+	private SelectionListener viewFragmentsSelectedTree()
+	{
+		return new SelectionAdapter()
+		{
+			@Override
+			public void widgetSelected(SelectionEvent e)
+			{
+				Code toView = null;
+				if(fFilterButton.getSelection())
+				{
+					Node node = (Node) ((IStructuredSelection) fTreeViewer.getSelection()).getFirstElement();
+					for(Code aCode : fProject.getCodes())
+					{
+						if(aCode.getCodeName().equals(node.getCodeName()))
+						{
+							toView = aCode;
+							break;
+						}
+					}
+				}
+				else
+				{
+					IStructuredSelection selection = (IStructuredSelection) fTableViewer.getSelection();
+					toView = ((CodeTableRow) selection.getFirstElement()).getCodeToSave();
+					
+					if(toView == null)
+					{
+						toView = ((CodeTableRow) selection.getFirstElement()).getCode();
+					}
+				}
+				
+				if(toView != null)
+				{
+					ResourcesUtil.openEditor(getSite().getPage(), toView);
+				}
+			}
+		};
+	}
+
+	/**
+	 * @return
+	 */
+	private SelectionListener renameCodeSelectedTree()
+	{
+		return new SelectionAdapter()
+		{
+			@Override
+			public void widgetSelected(SelectionEvent e)
+			{
+				Code code = null;
+				if(fFilterButton.getSelection())
+				{
+					Node node = (Node) ((IStructuredSelection) fTreeViewer.getSelection()).getFirstElement();
+					for(Code aCode : fProject.getCodes())
+					{
+						if(aCode.getCodeName().equals(node.getCodeName()))
+						{
+							code = aCode;
+							break;
+						}
+					}
+				}
+				else
+				{
+					IStructuredSelection selection = (IStructuredSelection) fTableViewer.getSelection();
+					code = ((CodeTableRow) selection.getFirstElement()).getCodeToSave();
+					
+					if(code == null)
+					{
+						code = ((CodeTableRow) selection.getFirstElement()).getCode();
+					}
+				}
+				
+				RenameCodeDialog dialog = new RenameCodeDialog(getSite().getShell(), code);
+				dialog.open();
+				if(dialog.getReturnCode() == Window.OK)
+				{
+					String name = dialog.getName();
+					code.setCodeName(name);
+					Facade.getInstance().saveCodes(new Code[]{code});
+				}
+			}
+		};
 	}
 
 	/**
@@ -519,11 +607,33 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		fTableViewer.setSorter(fSorter);
 		fTableViewer.addDragSupport(DND.DROP_COPY | DND.DROP_MOVE, 
 				new Transfer[]{TextTransfer.getInstance()}, new TableDragListener(fTableViewer));
-		fTableViewer.addDoubleClickListener(createDoubleClickListener());
+		fTableViewer.addDoubleClickListener(createDoubleClickListenerTable());
 		
 		fTableViewer.getTable().setSortColumn(fTableViewer.getTable().getColumn(0));
 		fTableViewer.getTable().setSortDirection(SWT.DOWN);
 		fTableViewer.getTable().setLayoutData(LARGE_LAYOUT);
+	}
+
+	/**
+	 * @return
+	 */
+	private IDoubleClickListener createDoubleClickListenerTable()
+	{
+		return new IDoubleClickListener()
+		{
+			@Override
+			public void doubleClick(DoubleClickEvent event)
+			{
+				IStructuredSelection selection = (IStructuredSelection) fTableViewer.getSelection();
+				CodeTableRow row = (CodeTableRow) selection.getFirstElement();
+				Code code = row.getCode();
+				
+				if(code != null)
+				{
+					ResourcesUtil.openEditor(getSite().getPage(), code);
+				}
+			}
+		};
 	}
 
 	/**
@@ -557,20 +667,35 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	/**
 	 * @return
 	 */
-	private IDoubleClickListener createDoubleClickListener()
+	private IDoubleClickListener createDoubleClickListenerTree()
 	{
 		return new IDoubleClickListener()
 		{
 			@Override
 			public void doubleClick(DoubleClickEvent event)
 			{
-				IStructuredSelection selection = (IStructuredSelection) fTableViewer.getSelection();
-				CodeTableRow row = (CodeTableRow) selection.getFirstElement();
-				Code code = row.getCode();
-				
-				if(code != null)
+				Code toView = null;
+				if(fFilterButton.getSelection())
 				{
-					ResourcesUtil.openEditor(getSite().getPage(), code);
+					Node node = (Node) ((IStructuredSelection) fTreeViewer.getSelection()).getFirstElement();
+					for(Code aCode : fProject.getCodes())
+					{
+						if(aCode.getCodeName().equals(node.getCodeName()))
+						{
+							toView = aCode;
+							break;
+						}
+					}
+				}
+				else
+				{
+					IStructuredSelection selection = (IStructuredSelection) fTableViewer.getSelection();
+					toView = ((CodeTableRow) selection.getFirstElement()).getCode();
+				}
+				
+				if(toView != null)
+				{
+					ResourcesUtil.openEditor(getSite().getPage(), toView);
 				}
 			}
 		};
