@@ -29,12 +29,15 @@ public class RTFDocument extends Document
 	 */
 	private HashMap<Position, Annotation> fAnnotations;
 	
+	private HashMap<Position, FragmentAnnotation> fFragments;
+	
 	/**
 	 * 
 	 */
 	public RTFDocument()
 	{
 		fAnnotations = new HashMap<Position, Annotation>();
+		fFragments = new HashMap<Position, FragmentAnnotation>();
 	}
 	
 	/**
@@ -44,16 +47,32 @@ public class RTFDocument extends Document
 	 */
 	public void addAnnotation(Position position, Annotation annotation)
 	{
-		fAnnotations.put(position, annotation);
+		if(annotation instanceof FragmentAnnotation)
+		{
+			fFragments.put(position, (FragmentAnnotation) annotation);
+		}
+		else
+		{
+			fAnnotations.put(position, annotation);
+		}
 	}
 	
 	/**
 	 * Get the set of positions that have annotations.
 	 * @return
 	 */
-	public Set<Position> getKeys()
+	public Set<Position> getKeysForAnnotations()
 	{
 		return fAnnotations.keySet();
+	}
+	
+	/**
+	 * Get the set of positions that have fragments.
+	 * @return
+	 */
+	public Set<Position> getKeysForFragments()
+	{
+		return fFragments.keySet();
 	}
 	
 	/**
@@ -64,6 +83,16 @@ public class RTFDocument extends Document
 	public Annotation getAnnotation(Position position)
 	{
 		return fAnnotations.get(position);
+	}
+	
+	/**
+	 * Get the fragment for the given position.
+	 * @param position
+	 * @return
+	 */
+	public FragmentAnnotation getFragment(Position position)
+	{
+		return fFragments.get(position);
 	}
 
 }
