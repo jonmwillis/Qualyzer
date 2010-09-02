@@ -223,10 +223,16 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	private void createTreeViewer(FormToolkit toolkit, Composite parent)
 	{
 		fTreeArea = toolkit.createComposite(parent);
-		fTreeArea.setLayout(new GridLayout(1, true));
+		fTreeArea.setLayout(new GridLayout(2, false));
 		fTreeArea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
-		toolkit.createLabel(fTreeArea, Messages.getString("editors.pages.CodeEditorPage.hierarchy")); //$NON-NLS-1$
+		Label label = toolkit.createLabel(fTreeArea, 
+				Messages.getString("editors.pages.CodeEditorPage.hierarchy")); //$NON-NLS-1$
+		label.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, true, false, 1, 1));
+		Button button = toolkit.createButton(fTreeArea, "", SWT.PUSH);
+		button.setLayoutData(new GridData(SWT.RIGHT, SWT.BOTTOM, false, false, 1, 1));
+		button.setVisible(false);
+		button.setEnabled(false);
 		
 		fTreeViewer = new TreeViewer(fTreeArea, SWT.SINGLE | SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.BORDER);
 		
@@ -245,7 +251,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		
 		tree.setHeaderVisible(true);
 		tree.setLinesVisible(true);
-		tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		
 		fTreeViewer.setContentProvider(new CodeTreeContentProvider());
 		fTreeViewer.setLabelProvider(new CodeTreeLabelProvider());
