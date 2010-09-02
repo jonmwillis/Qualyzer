@@ -35,7 +35,7 @@ public class CodeEditor extends FormEditor
 	public static final String ID = "ca.mcgill.cs.swevo.qualyzer.editors.codeEditor"; //$NON-NLS-1$
 	
 	private static final int MAX_LENGTH = 15;
-	private static final String DOTS = "...";
+	private static final String DOTS = "..."; //$NON-NLS-1$
 
 	private static Logger gLogger = LoggerFactory.getLogger(CodeEditor.class);
 	

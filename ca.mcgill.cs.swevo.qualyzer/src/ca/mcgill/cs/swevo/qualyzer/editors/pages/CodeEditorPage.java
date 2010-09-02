@@ -234,7 +234,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		Label label = toolkit.createLabel(fTreeArea, 
 				Messages.getString("editors.pages.CodeEditorPage.hierarchy")); //$NON-NLS-1$
 		label.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, true, false, 1, 1));
-		Button button = toolkit.createButton(fTreeArea, "", SWT.PUSH);
+		Button button = toolkit.createButton(fTreeArea, "", SWT.PUSH); //$NON-NLS-1$
 		button.setLayoutData(new GridData(SWT.RIGHT, SWT.BOTTOM, false, false, 1, 1));
 		button.setVisible(false);
 		button.setEnabled(false);
@@ -351,7 +351,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		Menu menu = new Menu(fTreeViewer.getTree());
 		
 		MenuItem item = new MenuItem(menu, SWT.PUSH);
-		item.setText("New Root Code");
+		item.setText(Messages.getString("editors.pages.CodeEditorPage.newRootCode")); //$NON-NLS-1$
 		item.addSelectionListener(newRootCodeSelected());
 		
 		item = new MenuItem(menu, SWT.PUSH);
@@ -582,7 +582,8 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		Label label = toolkit.createLabel(fTableArea, Messages.getString(
 				"editors.pages.CodeEditorPage.list")); //$NON-NLS-1$
 		label.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, true, false, 1, 1));
-		fFilterButton = toolkit.createButton(fTableArea, "Filter", SWT.TOGGLE);
+		fFilterButton = toolkit.createButton(fTableArea, 
+				Messages.getString("editors.pages.CodeEditorPage.filter"), SWT.TOGGLE); //$NON-NLS-1$
 		fFilterButton.setLayoutData(new GridData(SWT.RIGHT, SWT.BOTTOM, false, false, 1, 1));
 		
 		fTableViewer = new TableViewer(fTableArea, SWT.SINGLE |  SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL);
