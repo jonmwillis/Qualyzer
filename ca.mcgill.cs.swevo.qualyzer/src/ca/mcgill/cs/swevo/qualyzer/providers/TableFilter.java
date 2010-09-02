@@ -42,7 +42,7 @@ public class TableFilter extends ViewerFilter
 	{
 		CodeTableRow row = (CodeTableRow) element;
 		
-		return fTree.isInHierarchy(row.getCode());
+		return !fTree.isInHierarchy(row.getCode());
 	}
 
 }
