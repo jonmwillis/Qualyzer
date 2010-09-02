@@ -692,7 +692,8 @@ public class RTFDocumentProvider extends FileDocumentProvider
 			RTFAnnotationModel rtfModel = (RTFAnnotationModel) info.fModel;
 			rtfModel.updateMarkers(info.fDocument);
 		}
-				
+		
+		IAnnotatedDocument rtfDoc = ((RTFEditorInput) element).getDocument();
 		Iterator<Annotation> iter = model.getAnnotationIterator();
 		while(iter.hasNext())
 		{
@@ -709,6 +710,8 @@ public class RTFDocumentProvider extends FileDocumentProvider
 				{
 					fragment.setOffset(position.offset);
 					fragment.setLength(position.length);
+					rtfDoc.getFragments().remove(position.offset);
+					rtfDoc.getFragments().put(position.offset, fragment);
 				}
 			}
 			else
@@ -720,7 +723,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 			}
 		}
 		
-		Facade.getInstance().saveDocument(((RTFEditorInput) element).getDocument());
+		Facade.getInstance().saveDocument(rtfDoc);
 	}
 
 	/**
