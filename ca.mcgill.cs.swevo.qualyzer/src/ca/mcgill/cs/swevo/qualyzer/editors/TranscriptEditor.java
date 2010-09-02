@@ -59,6 +59,7 @@ import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.RTFEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
+import ca.mcgill.cs.swevo.qualyzer.model.Timestamp;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 import ca.mcgill.cs.swevo.qualyzer.model.TranscriptListener;
 import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
@@ -773,6 +774,8 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 						if(marker.exists() && line + 1 == marker.getAttribute(IMarker.LINE_NUMBER, 0))
 						{
 							marker.delete();
+							Timestamp timestamp = ((Transcript) getDocument()).getTimestamps().get(line + 1);
+							Facade.getInstance().deleteTimestamp(timestamp);
 							break;
 						}
 						else if(!marker.exists())
