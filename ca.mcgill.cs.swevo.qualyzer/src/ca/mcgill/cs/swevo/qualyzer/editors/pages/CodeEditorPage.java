@@ -390,26 +390,13 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 			public void widgetSelected(SelectionEvent e)
 			{
 				Code toView = null;
-				if(fFilterButton.getSelection())
+				Node node = (Node) ((IStructuredSelection) fTreeViewer.getSelection()).getFirstElement();
+				for(Code aCode : fProject.getCodes())
 				{
-					Node node = (Node) ((IStructuredSelection) fTreeViewer.getSelection()).getFirstElement();
-					for(Code aCode : fProject.getCodes())
+					if(aCode.getCodeName().equals(node.getCodeName()))
 					{
-						if(aCode.getCodeName().equals(node.getCodeName()))
-						{
-							toView = aCode;
-							break;
-						}
-					}
-				}
-				else
-				{
-					IStructuredSelection selection = (IStructuredSelection) fTableViewer.getSelection();
-					toView = ((CodeTableRow) selection.getFirstElement()).getCodeToSave();
-					
-					if(toView == null)
-					{
-						toView = ((CodeTableRow) selection.getFirstElement()).getCode();
+						toView = aCode;
+						break;
 					}
 				}
 				
@@ -432,26 +419,13 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 			public void widgetSelected(SelectionEvent e)
 			{
 				Code code = null;
-				if(fFilterButton.getSelection())
+				Node node = (Node) ((IStructuredSelection) fTreeViewer.getSelection()).getFirstElement();
+				for(Code aCode : fProject.getCodes())
 				{
-					Node node = (Node) ((IStructuredSelection) fTreeViewer.getSelection()).getFirstElement();
-					for(Code aCode : fProject.getCodes())
+					if(aCode.getCodeName().equals(node.getCodeName()))
 					{
-						if(aCode.getCodeName().equals(node.getCodeName()))
-						{
-							code = aCode;
-							break;
-						}
-					}
-				}
-				else
-				{
-					IStructuredSelection selection = (IStructuredSelection) fTableViewer.getSelection();
-					code = ((CodeTableRow) selection.getFirstElement()).getCodeToSave();
-					
-					if(code == null)
-					{
-						code = ((CodeTableRow) selection.getFirstElement()).getCode();
+						code = aCode;
+						break;
 					}
 				}
 				
