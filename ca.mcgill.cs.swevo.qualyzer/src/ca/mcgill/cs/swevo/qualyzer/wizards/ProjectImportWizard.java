@@ -125,6 +125,7 @@ public class ProjectImportWizard extends Wizard implements IImportWizard
 				try
 				{
 					FileUtil.refreshSubFolders(project);
+					FileUtil.renewTimestamps(project);
 				}
 				catch(QualyzerException e)
 				{
