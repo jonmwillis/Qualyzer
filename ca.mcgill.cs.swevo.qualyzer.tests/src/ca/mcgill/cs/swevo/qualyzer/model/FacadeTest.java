@@ -531,7 +531,7 @@ public class FacadeTest
 		String newDescription = "Hello World";
 		Code code = fFacade.createCode("c1", "", fProject);
 		code.setDescription(newDescription);
-		fFacade.saveCode(code);
+		fFacade.saveCodes(new Code[] {code});
 		ListenerEvent event = fListener.getEvents().get(1);
 
 		// Test DB
@@ -741,6 +741,49 @@ public class FacadeTest
 		ListenerEvent event = fListener.getEvents().get(3);
 		assertEquals(ChangeType.MODIFY, event.getChangeType());
 		
+	}
+	
+	@Test
+	public void testCreateTimestamp()
+	{
+		int lineNumber = 10;
+		int seconds = 93;
+		String pId = "p1";
+		String pName = "Toto";
+		String transcriptName = "t1";
+		Participant participant = fFacade.createParticipant(pId, pName, fProject);
+		List<Participant> participants = new ArrayList<Participant>();
+		participants.add(participant);
+		Transcript transcript = fFacade.createTranscript(transcriptName, "6/26/2010", "", participants, fProject);
+		
+		Timestamp tstamp = fFacade.createTimestamp(transcript, lineNumber, seconds);
+		fFacade.saveTranscript(transcript);
+		
+		Transcript newTranscript = fFacade.forceTranscriptLoad(transcript);
+		assertNotNull(tstamp);
+		assertEquals(newTranscript.getTimestamps().get(lineNumber).getSeconds(),seconds);
+	}
+	
+	@Test
+	public void testDeleteTimestamp()
+	{
+		int lineNumber = 10;
+		int seconds = 93;
+		String pId = "p1";
+		String pName = "Toto";
+		String transcriptName = "t1";
+		Participant participant = fFacade.createParticipant(pId, pName, fProject);
+		List<Participant> participants = new ArrayList<Participant>();
+		participants.add(participant);
+		Transcript transcript = fFacade.createTranscript(transcriptName, "6/26/2010", "", participants, fProject);
+		
+		Timestamp tstamp = fFacade.createTimestamp(transcript, lineNumber, seconds);
+		fFacade.saveTranscript(transcript);
+		
+		
+		fFacade.deleteTimestamp(tstamp);
+		Transcript newTranscript = fFacade.forceTranscriptLoad(transcript);
+		assertTrue(newTranscript.getTimestamps().isEmpty());
 	}
 	
 	

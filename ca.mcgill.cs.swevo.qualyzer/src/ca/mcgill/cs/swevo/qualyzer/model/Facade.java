@@ -293,6 +293,38 @@ public final class Facade
 
 		return fragment;
 	}
+	
+	/**
+	 * Create a new Timestamp. Must be called with a properly loaded transcript.
+	 * 
+	 * @param transcript
+	 * @param lineNumber
+	 * @param seconds
+	 * @return
+	 */
+	public Timestamp createTimestamp(Transcript transcript, int lineNumber, int seconds)
+	{
+		Timestamp timestamp = new Timestamp();
+
+		timestamp.setLineNumber(lineNumber);
+		timestamp.setSeconds(seconds);
+		try
+		{
+			timestamp.setTranscript(transcript);
+			transcript.getTimestamps().put(lineNumber, timestamp);
+		}
+		catch (HibernateException he)
+		{
+			String key = "model.Facade.Timestamp.cannotCreate"; //$NON-NLS-1$
+			String errorMessage = Messages.getString(key);
+			fLogger.error(key, he);
+			throw new QualyzerException(errorMessage, he);
+		}
+		
+			
+		fListenerManager.notifyTranscriptListeners(ChangeType.MODIFY, new Transcript[] { transcript}, this);
+		return timestamp;
+	}
 
 	/**
 	 * Try to delete a project.
@@ -530,8 +562,8 @@ public final class Facade
 			toReturn = (Transcript) object;
 
 			Hibernate.initialize(toReturn.getParticipants());
-
 			Hibernate.initialize(toReturn.getFragments());
+			Hibernate.initialize(toReturn.getTimestamps());
 		}
 		finally
 		{
@@ -577,19 +609,6 @@ public final class Facade
 		return fListenerManager;
 	}
 
-	/**
-	 * Save a code.
-	 * @param code
-	 * @deprecated use saveCodes(Code[])
-	 */
-	public void saveCode(Code code)
-	{
-		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(
-				code.getProject().getFolderName());
-		HibernateUtil.quietSave(manager, code);
-
-		fListenerManager.notifyCodeListeners(ChangeType.MODIFY, new Code[] { code }, this);
-	}
 
 	/**
 	 * Save an investigator.
@@ -739,6 +758,48 @@ public final class Facade
 		{
 			HibernateUtil.quietRollback(t);
 			String errorMessage = Messages.getString("model.Facade.fragment.cannotDelete"); //$NON-NLS-1$
+			fLogger.error(errorMessage, e);
+			throw new QualyzerException(errorMessage, e);
+		}
+		finally
+		{
+			HibernateUtil.quietClose(session);
+		}
+	}
+	
+	/**
+	 * Delete a timestamp.
+	 * @param timestamp
+	 */
+	public void deleteTimestamp(Timestamp timestamp)
+	{
+		Transcript transcript = timestamp.getTranscript();
+		HibernateDBManager manager = QualyzerActivator.getDefault().getHibernateDBManagers().get(
+				transcript.getProject().getFolderName());
+		Session session = null;
+		Transaction t = null;
+
+		try
+		{
+			session = manager.openSession();
+			t = session.beginTransaction();
+
+			/*
+			 * The following is ALL required in order to delete the object from the database. Don't ask me why, I don't
+			 * really understand it myself -JF.
+			 */
+			transcript.getTimestamps().remove(timestamp.getLineNumber());
+			session.delete(timestamp);
+			session.saveOrUpdate(transcript);
+			session.flush();
+			t.commit();
+
+			fListenerManager.notifyTranscriptListeners(ChangeType.MODIFY, new Transcript[] { transcript }, this);
+		}
+		catch (HibernateException e)
+		{
+			HibernateUtil.quietRollback(t);
+			String errorMessage = Messages.getString("model.Facade.Timestamp.cannotDelete"); //$NON-NLS-1$
 			fLogger.error(errorMessage, e);
 			throw new QualyzerException(errorMessage, e);
 		}
