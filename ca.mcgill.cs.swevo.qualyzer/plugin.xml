@@ -1280,7 +1280,9 @@
             label="%specification.label.fragment"
             overviewRulerPreferenceKey="fragment.overview"
             overviewRulerPreferenceValue="true"
-            textPreferenceKey="fragment.text">
+            textPreferenceKey="fragment.text"
+            verticalRulerPreferenceKey="fragment.vertical"
+            verticalRulerPreferenceValue="false">
       </specification>
       <specification
             annotationType="org.eclipse.ui.workbench.texteditor.bookmark"

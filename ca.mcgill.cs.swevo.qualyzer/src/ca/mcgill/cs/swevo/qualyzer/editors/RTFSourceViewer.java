@@ -83,9 +83,14 @@ public class RTFSourceViewer extends ProjectionViewer
 		RTFDocument rtfDoc = (RTFDocument) document;
 		
 		//Adds all the annotations that were found when the document was parsed.
-		for(Position position : rtfDoc.getKeys())
+		for(Position position : rtfDoc.getKeysForAnnotations())
 		{
 			annotationModel.addAnnotation(rtfDoc.getAnnotation(position), position);
+		}
+		
+		for(Position position : rtfDoc.getKeysForFragments())
+		{
+			annotationModel.addAnnotation(rtfDoc.getFragment(position), position);
 		}
 
 	}
