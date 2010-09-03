@@ -466,7 +466,10 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 				{
 					fTreeModel.removeNode(node);
 					fTreeViewer.refresh();
-					fTableViewer.refresh();
+					if(fFilterButton.getSelection())
+					{
+						fTableViewer.refresh();
+					}
 					setDirty();
 				}
 			}
@@ -502,7 +505,10 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 					new Node(node, code.getCodeName(), code.getPersistenceId(), 0);
 					fTreeViewer.refresh();
 					fTreeViewer.expandToLevel(node, 1);
-					fTableViewer.refresh();
+					if(fFilterButton.getSelection())
+					{
+						fTableViewer.refresh();
+					}
 					setDirty();
 				}
 			}
@@ -539,7 +545,10 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 					new Node(node, code.getCodeName(), code.getPersistenceId(), 0);
 					fTreeViewer.refresh();
 					fTreeViewer.expandToLevel(node, 1);
-					fTableViewer.refresh();
+					if(fFilterButton.getSelection())
+					{
+						fTableViewer.refresh();
+					}
 					setDirty();
 				}
 			}
