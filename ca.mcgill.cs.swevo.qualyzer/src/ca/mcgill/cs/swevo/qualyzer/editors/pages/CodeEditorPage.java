@@ -465,6 +465,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 				if(check)
 				{
 					fTreeModel.removeNode(node);
+					fTreeModel.getRoot().computeFreq();
 					fTreeViewer.refresh();
 					if(fFilterButton.getSelection())
 					{
@@ -1074,9 +1075,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		fTableViewer.setInput(new CodeTableInput(fProject));
 		
 		updateSelection();
-		
-		fTableViewer.getTable().setLayoutData(LARGE_LAYOUT);
-		
+				
 		fTableArea.layout();
 		fTableArea.redraw();
 		fForm.getBody().layout();
@@ -1143,7 +1142,10 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		listenerManager.unregisterProjectListener(fProject, this);
 		listenerManager.unregisterTranscriptListener(fProject, this);
 		listenerManager.unregisterMemoListener(fProject, this);
-		fTreeModel.removeListener(fTreeViewer);
+		if(fTreeModel != null)
+		{
+			fTreeModel.removeListener(fTreeViewer);
+		}
 		super.dispose();
 	}
 

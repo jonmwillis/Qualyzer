@@ -131,6 +131,10 @@ public final class TreeModel implements CodeListener, ProjectListener
 			model = new TreeModel(new CodeTableInput(project));
 			gModels.put(project.getName(), model);
 		}
+		else
+		{
+			model.updateFrequencies(new CodeTableInput(project));
+		}
 		return model;
 	}
 	
@@ -146,6 +150,10 @@ public final class TreeModel implements CodeListener, ProjectListener
 		{
 			model = new TreeModel(input);
 			gModels.put(input.getProject().getName(), model);
+		}
+		else
+		{
+			model.updateFrequencies(input);
 		}
 		return model;
 	}
@@ -328,6 +336,7 @@ public final class TreeModel implements CodeListener, ProjectListener
 					fCodes.put(code.getPersistenceId(), list);
 				}
 			}
+			save();
 			modelChanged();
 		}
 		

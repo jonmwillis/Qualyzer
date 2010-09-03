@@ -36,6 +36,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Memo;
 import ca.mcgill.cs.swevo.qualyzer.model.MemoListener;
 import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
+import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
  *
@@ -84,7 +85,7 @@ public class MemoEditor extends RTFEditor implements MemoListener
 			{
 				if(memo.equals(getDocument()))
 				{
-					close(false);
+					ResourcesUtil.closeEditor(getSite().getPage(), getEditorInput().getName());
 					break;
 				}
 			}
