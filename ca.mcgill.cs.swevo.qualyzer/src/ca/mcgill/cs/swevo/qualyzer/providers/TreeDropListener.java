@@ -125,7 +125,7 @@ public class TreeDropListener extends ViewerDropAdapter
 	{
 		Node root = (Node) fViewer.getInput();
 		root.computeFreq();
-		fViewer.refresh();
+		fPage.refresh();
 		fPage.setDirty();
 	}
 
