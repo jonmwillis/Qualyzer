@@ -13,6 +13,7 @@
  */
 package ca.mcgill.cs.swevo.qualyzer.editors;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.window.Window;
@@ -100,6 +101,11 @@ public class MarkTextAction extends Action implements ITestableAction
 	@Override
 	public void run()
 	{
+		if(fEditor.isDirty())
+		{
+			fEditor.doSave(new NullProgressMonitor());
+		}
+		
 		IAnnotatedDocument document = fEditor.getDocument();
 		Point selection = fSourceViewer.getSelectedRange();
 		Position position = new Position(selection.x, selection.y);
