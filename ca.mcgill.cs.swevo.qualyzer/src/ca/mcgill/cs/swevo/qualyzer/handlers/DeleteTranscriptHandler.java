@@ -55,7 +55,7 @@ public class DeleteTranscriptHandler extends AbstractHandler implements ITestabl
 
 	private IDialogTester fTester = new NullTester();
 
-	private boolean fTesting = true;
+	private boolean fTesting = false;
 	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
