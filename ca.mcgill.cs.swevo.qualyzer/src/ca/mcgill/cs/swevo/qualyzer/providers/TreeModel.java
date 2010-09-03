@@ -355,7 +355,7 @@ public final class TreeModel implements CodeListener, ProjectListener
 		Node[] children = node.getChildren().values().toArray(new Node[0]);
 		for(Node child : children)
 		{
-			removeNodeNoList(child);
+			removeNode(child);
 		}
 	}
 
