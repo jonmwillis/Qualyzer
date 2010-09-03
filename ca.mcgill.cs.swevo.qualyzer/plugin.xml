@@ -1248,6 +1248,7 @@
             name="RTFEditor.annotation.boldItalicUnderline">
       </type>
       <type
+            markerSeverity="1"
             markerType="org.eclipse.core.resources.textmarker"
             name="RTFEditor.annotation.fragment">
       </type>
