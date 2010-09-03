@@ -63,6 +63,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Timestamp;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 import ca.mcgill.cs.swevo.qualyzer.model.TranscriptListener;
 import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
+import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
  *	Extends the RTFEditor with a formatting bar and an audio bar.
@@ -467,7 +468,7 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 			{
 				if(transcript.equals(getDocument()))
 				{
-					close(false);
+					ResourcesUtil.closeEditor(getSite().getPage(), getEditorInput().getName());
 					break;
 				}
 			}
