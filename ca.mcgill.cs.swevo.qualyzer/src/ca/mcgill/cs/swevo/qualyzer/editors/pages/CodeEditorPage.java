@@ -758,11 +758,8 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 			public void widgetSelected(SelectionEvent e)
 			{
 				IStructuredSelection selection = (IStructuredSelection) fTableViewer.getSelection();
-				Code code = ((CodeTableRow) selection.getFirstElement()).getCodeToSave();
-				if(code == null)
-				{
-					code = ((CodeTableRow) selection.getFirstElement()).getCode();
-				}
+				Code code = ((CodeTableRow) selection.getFirstElement()).getCode();
+				
 				RenameCodeDialog dialog = new RenameCodeDialog(getSite().getShell(), code);
 				dialog.open();
 				if(dialog.getReturnCode() == Window.OK)
@@ -1070,9 +1067,20 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	@Override
 	public void codeChanged(ChangeType cType, Code[] codes, Facade facade)
 	{
+		List<CodeTableRow> list = null;
+		if(fIsDirty)
+		{
+			list = getDirtyRows();
+		}
+		
 		fProject = PersistenceManager.getInstance().getProject(fProject.getName());
 
 		fTableViewer.setInput(new CodeTableInput(fProject));
+		
+		if(fIsDirty)
+		{
+			updateDescriptions(list);
+		}
 		
 		updateSelection();
 				
@@ -1159,10 +1167,21 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	{
 		if(cType == ChangeType.MODIFY || cType == ChangeType.DELETE)
 		{
+			List<CodeTableRow> list = null;
+			if(fIsDirty)
+			{
+				list = getDirtyRows();
+			}
+			
 			fProject = PersistenceManager.getInstance().getProject(fProject.getName());
 			
 			CodeTableInput input = new CodeTableInput(fProject);
 			fTableViewer.setInput(input);
+			
+			if(fIsDirty)
+			{
+				updateDescriptions(list);
+			}
 			
 			fTreeModel.updateFrequencies(input);
 			fTreeViewer.refresh();
@@ -1181,10 +1200,21 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	{
 		if(cType == ChangeType.MODIFY || cType == ChangeType.DELETE)
 		{
+			List<CodeTableRow> list = null;
+			if(fIsDirty)
+			{
+				list = getDirtyRows();
+			}
+			
 			fProject = PersistenceManager.getInstance().getProject(fProject.getName());
 			
 			CodeTableInput input = new CodeTableInput(fProject);
 			fTableViewer.setInput(input);
+			
+			if(fIsDirty)
+			{
+				updateDescriptions(list);
+			}
 			
 			fTreeModel.updateFrequencies(input);
 			fTreeViewer.refresh();
@@ -1202,7 +1232,6 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		if(fCurrentRow != null)
 		{
 			fCurrentRow.setDescription(fDescription.getText().trim());
-			fTableViewer.refresh(fCurrentRow);
 		}
 		
 		List<Code> codes = new ArrayList<Code>();
@@ -1224,6 +1253,49 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		
 		return codes.toArray(new Code[0]);
 			
+	}
+	
+	private List<CodeTableRow> getDirtyRows()
+	{
+		if(fCurrentRow != null)
+		{
+			fCurrentRow.setDescription(fDescription.getText().trim());
+		}
+		
+		ArrayList<CodeTableRow> list = new ArrayList<CodeTableRow>();
+		
+		int i = 0;
+		CodeTableRow row = (CodeTableRow) fTableViewer.getElementAt(i);
+		while(row != null)
+		{
+			if(row.isDirty())
+			{
+				list.add(row);
+			}
+			i++;
+			row = (CodeTableRow) fTableViewer.getElementAt(i);
+		}
+		
+		return list;
+	}
+	
+	private void updateDescriptions(List<CodeTableRow> list)
+	{
+		for(CodeTableRow row : list)
+		{
+			int i = 0;
+			CodeTableRow tableRow = (CodeTableRow) fTableViewer.getElementAt(i);
+			while(tableRow != null)
+			{
+				if(tableRow.getPersistenceId().equals(row.getPersistenceId()))
+				{
+					tableRow.setDescription(row.getDescription());
+					break;
+				}
+				i++;
+				tableRow = (CodeTableRow) fTableViewer.getElementAt(i);
+			}
+		}
 	}
 	
 	/* (non-Javadoc)
