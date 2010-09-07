@@ -19,7 +19,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
-import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.swt.graphics.Point;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
@@ -64,7 +63,7 @@ public class RemoveAllCodesAction extends Action
 		}
 		
 		Point selection = fSourceViewer.getSelectedRange();
-		IAnnotationModel model = fSourceViewer.getAnnotationModel();
+		RTFAnnotationModel model = (RTFAnnotationModel) fSourceViewer.getAnnotationModel();
 		Iterator<Annotation> iter = model.getAnnotationIterator();
 		while(iter.hasNext())
 		{
@@ -74,7 +73,7 @@ public class RemoveAllCodesAction extends Action
 				Position pos = model.getPosition(annotation);
 				if(pos.offset == selection.x && pos.length == selection.y)
 				{
-					model.removeAnnotation(annotation);
+					model.removeAnnotationOnly(annotation);
 					Fragment fragment = ((FragmentAnnotation) annotation).getFragment();
 					Facade.getInstance().deleteFragment(fragment);
 					fEditor.setDirty();

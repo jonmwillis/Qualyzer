@@ -18,7 +18,6 @@ import java.util.Iterator;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
-import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
@@ -58,7 +57,7 @@ public class RemoveCodeAction extends Action
 	{
 		Annotation annotation = null;
 		Fragment fragment = null;
-		IAnnotationModel model = fSourceViewer.getAnnotationModel();
+		RTFAnnotationModel model = (RTFAnnotationModel) fSourceViewer.getAnnotationModel();
 		Point selection = fSourceViewer.getSelectedRange();
 		Iterator<Annotation> iter = model.getAnnotationIterator();
 		
@@ -83,7 +82,7 @@ public class RemoveCodeAction extends Action
 			deleteCodes(fragment, codesToDelete);
 			
 			Position p = model.getPosition(annotation);
-			model.removeAnnotation(annotation);
+			model.removeAnnotationOnly(annotation);
 			
 			if(fragment.getCodeEntries().isEmpty())
 			{
