@@ -13,7 +13,6 @@
  */
 package ca.mcgill.cs.swevo.qualyzer.editors;
 
-import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonNavigator;
@@ -40,15 +39,21 @@ public class RTFAnnotationModel extends ResourceMarkerAnnotationModel
 	}
 	
 	/**
-	 * If a fragment is being removed and has length zero then also removes the fragment from the document.
-	 * @see org.eclipse.jface.text.source.AnnotationModel#removeAnnotation(org.eclipse.jface.text.source.Annotation)
+	 * Remove a (fragment) annotation with or without removing it from the DB.
+	 */
+	public void removeAnnotationOnly(Annotation annotation)
+	{
+		super.removeAnnotation(annotation, true);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.text.source.AnnotationModel#removeAnnotation(
+	 * org.eclipse.jface.text.source.Annotation, boolean)
 	 */
 	@Override
-	public void removeAnnotation(Annotation annotation)
+	protected void removeAnnotation(Annotation annotation, boolean fireModelChanged)
 	{
-		Position position = getPosition(annotation);
-		
-		if(position.length == 0 && annotation instanceof FragmentAnnotation)
+		if(annotation instanceof FragmentAnnotation)
 		{
 			Fragment fragment = ((FragmentAnnotation) annotation).getFragment();
 			Facade.getInstance().deleteFragment(fragment);
@@ -56,9 +61,7 @@ public class RTFAnnotationModel extends ResourceMarkerAnnotationModel
 		CommonNavigator view = (CommonNavigator) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 		.getActivePage().findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
 		
-		super.removeAnnotation(annotation);
+		super.removeAnnotation(annotation, fireModelChanged);
 		view.getCommonViewer().refresh();
 	}
-	
-	
 }

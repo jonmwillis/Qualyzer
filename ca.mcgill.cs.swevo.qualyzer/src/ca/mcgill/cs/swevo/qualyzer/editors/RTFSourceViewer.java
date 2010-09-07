@@ -101,7 +101,7 @@ public class RTFSourceViewer extends ProjectionViewer
 	 */
 	public void toggleBold(Position position)
 	{
-		IAnnotationModel model = getAnnotationModel();
+		RTFAnnotationModel model = (RTFAnnotationModel) getAnnotationModel();
 		ArrayList<Annotation> current = new ArrayList<Annotation>();
 		ArrayList<Position> currentPos = new ArrayList<Position>();
 		
@@ -424,7 +424,7 @@ public class RTFSourceViewer extends ProjectionViewer
 	 */
 	public void toggleItalic(Position position)
 	{
-		IAnnotationModel model = getAnnotationModel();
+		RTFAnnotationModel model = (RTFAnnotationModel) getAnnotationModel();
 		ArrayList<Annotation> current = new ArrayList<Annotation>();
 		ArrayList<Position> currentPos = new ArrayList<Position>();
 		
@@ -471,7 +471,7 @@ public class RTFSourceViewer extends ProjectionViewer
 	 * @param currentPos
 	 */
 	@SuppressWarnings("unchecked")
-	private void findOverlaps(Position position, IAnnotationModel model, ArrayList<Annotation> current,
+	private void findOverlaps(Position position, RTFAnnotationModel model, ArrayList<Annotation> current,
 			ArrayList<Position> currentPos)
 	{
 		Iterator<Annotation> iter = model.getAnnotationIterator();
@@ -488,7 +488,7 @@ public class RTFSourceViewer extends ProjectionViewer
 				{
 					current.add(next);
 					currentPos.add(pos);
-					model.removeAnnotation(next);
+					model.removeAnnotationOnly(next);
 				}
 			}
 		}
@@ -548,7 +548,7 @@ public class RTFSourceViewer extends ProjectionViewer
 	 */
 	public void toggleUnderline(Position position)
 	{
-		IAnnotationModel model = getAnnotationModel();
+		RTFAnnotationModel model = (RTFAnnotationModel) getAnnotationModel();
 		ArrayList<Annotation> current = new ArrayList<Annotation>();
 		ArrayList<Position> currentPos = new ArrayList<Position>();
 		
@@ -593,7 +593,7 @@ public class RTFSourceViewer extends ProjectionViewer
 	@SuppressWarnings("unchecked")
 	public void markFragment(Fragment fragment)
 	{
-		IAnnotationModel model = getAnnotationModel();
+		RTFAnnotationModel model = (RTFAnnotationModel) getAnnotationModel();
 		Position position = new Position(fragment.getOffset(), fragment.getLength());
 		
 		Iterator<Annotation> iter = model.getAnnotationIterator();
@@ -606,7 +606,7 @@ public class RTFSourceViewer extends ProjectionViewer
 				Position pos = model.getPosition(annot);
 				if(pos.offset == position.offset)
 				{
-					model.removeAnnotation(annot);
+					model.removeAnnotationOnly(annot);
 					break;
 				}
 			}
