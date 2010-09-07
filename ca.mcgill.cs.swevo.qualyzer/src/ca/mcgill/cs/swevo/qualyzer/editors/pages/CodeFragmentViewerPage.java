@@ -66,6 +66,10 @@ import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 public class CodeFragmentViewerPage extends FormPage implements ProjectListener, CodeListener
 {
 	
+	private static final String GREATER_CODE = "&gt;"; //$NON-NLS-1$
+	private static final String GREATER = ">"; //$NON-NLS-1$
+	private static final String LESS_CODE = "&lt;"; //$NON-NLS-1$
+	private static final String LESS = "<"; //$NON-NLS-1$
 	private static final String VIEW_FRAGMENTS = Messages.getString(
 			"editors.pages.CodeFragmentViewerPage.viewFragments"); //$NON-NLS-1$
 	private Code fCode;
@@ -232,13 +236,16 @@ public class CodeFragmentViewerPage extends FormPage implements ProjectListener,
 		int fragStart = fragment.getOffset() - start - (fragText.length() - newText.length());
 		int fragEnd = fragStart + fragment.getLength();
 		
-		buffer.append(newText.substring(0, fragStart));
+		String temp = newText.substring(0, fragStart).replace(LESS, LESS_CODE);
+		buffer.append(temp.replace(GREATER, GREATER_CODE));
 		
-		buffer.append(FormTextConstants.LINK_START_HEAD + FormTextConstants.LINK_START_TAIL); 
-		buffer.append(newText.substring(fragStart, fragEnd));
+		buffer.append(FormTextConstants.LINK_START_HEAD + FormTextConstants.LINK_START_TAIL);
+		temp = newText.substring(fragStart, fragEnd).replace(LESS, LESS_CODE);
+		buffer.append(temp.replace(GREATER, GREATER_CODE));
 		buffer.append(FormTextConstants.LINK_END); 
 		
-		buffer.append(newText.substring(fragEnd, newText.length()));
+		temp = newText.substring(fragEnd, newText.length()).replace(LESS, LESS_CODE);
+		buffer.append(temp.replace(GREATER, GREATER_CODE));
 		
 		buffer.append(FormTextConstants.PARAGRAPH_END); 
 		buffer.append(FormTextConstants.FORM_END); 
