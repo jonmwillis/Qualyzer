@@ -207,7 +207,7 @@ public class CodeTableInput
 		 */
 		public Code getCodeToSave()
 		{
-			if(!fName.equals(fCode.getCodeName()) || !fDescription.equals(fCode.getDescription()))
+			if(isDirty())
 			{
 				fCode.setCodeName(fName);
 				fCode.setDescription(fDescription);
