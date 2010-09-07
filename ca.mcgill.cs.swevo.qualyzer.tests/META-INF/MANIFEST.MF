@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Qualyzer Tests
 Bundle-SymbolicName: ca.mcgill.cs.swevo.qualyzer.tests
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.1.0.qualifier
 Bundle-Vendor: McGill University
 Fragment-Host: ca.mcgill.cs.swevo.qualyzer;bundle-version="0.1.0"
 Require-Bundle: org.eclipse.ui,
