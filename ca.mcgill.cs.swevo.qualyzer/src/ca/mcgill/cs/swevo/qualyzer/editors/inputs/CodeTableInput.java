@@ -15,6 +15,7 @@ package ca.mcgill.cs.swevo.qualyzer.editors.inputs;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Code;
@@ -33,6 +34,7 @@ public class CodeTableInput
 	private Project fProject;
 	private Map<Long, Integer> fFreqs;
 	private Map<Long, Code> fCodes;
+	private List<CodeTableRow> fData;
 	
 	/**
 	 * 
@@ -43,6 +45,7 @@ public class CodeTableInput
 		fProject = project;
 		fFreqs = new HashMap<Long, Integer>();
 		fCodes = new HashMap<Long, Code>();
+		fData = null;
 		
 		for(Code code : fProject.getCodes())
 		{
@@ -101,14 +104,17 @@ public class CodeTableInput
 	 */
 	public CodeTableRow[] getData()
 	{
-		ArrayList<CodeTableRow> data = new ArrayList<CodeTableRow>();
-		
-		for(Long key : fFreqs.keySet())
+		if(fData == null)
 		{
-			data.add(new CodeTableRow(fCodes.get(key), fFreqs.get(key)));
+			fData = new ArrayList<CodeTableRow>();
+			
+			for(Long key : fFreqs.keySet())
+			{
+				fData.add(new CodeTableRow(fCodes.get(key), fFreqs.get(key)));
+			}
 		}
 		
-		return data.toArray(new CodeTableRow[0]);
+		return fData.toArray(new CodeTableRow[0]);
 	}
 	
 	/**
