@@ -830,7 +830,7 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 	@Override
 	public void codeChanged(ChangeType cType, Code[] codes, Facade facade)
 	{
-		IAnnotationModel model = getSourceViewer().getAnnotationModel();
+		RTFAnnotationModel model = (RTFAnnotationModel) getSourceViewer().getAnnotationModel();
 		Iterator<Annotation> iter = model.getAnnotationIterator();
 		fDocument.setProject(codes[0].getProject());
 
@@ -848,7 +848,7 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 					Fragment fragment = ((FragmentAnnotation) annotation).getFragment();
 					if(!newMap.containsKey(fragment.getOffset()))
 					{
-						model.removeAnnotation(annotation);
+						model.removeAnnotationOnly(annotation);
 					}
 					else
 					{
