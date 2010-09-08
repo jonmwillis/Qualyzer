@@ -50,7 +50,19 @@ public class RTFSourceViewerConfiguration extends ColorerSourceViewerConfigurati
 	@Override
 	public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType)
 	{
-		return new DefaultTextHover(sourceViewer);
+		return new DefaultTextHover(sourceViewer)
+		{
+			/* (non-Javadoc)
+			 * @see org.eclipse.jface.text.DefaultTextHover#isIncluded(org.eclipse.jface.text.source.Annotation)
+			 */
+			@Override
+			protected boolean isIncluded(Annotation annotation)
+			{
+				//This makes it so that the text hover does not include the time stamps which
+				// were displaying over the code name.
+				return annotation instanceof FragmentAnnotation;
+			}
+		};
 	}
 	
 	/* (non-Javadoc)
