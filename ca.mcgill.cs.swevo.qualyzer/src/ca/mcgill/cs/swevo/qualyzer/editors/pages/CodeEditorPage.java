@@ -643,6 +643,11 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 						fCurrentRow.setDescription(fDescription.getText());
 					}
 					
+					if(!fFilter.select(fTableViewer, null, fCurrentRow))
+					{
+						fCurrentRow = null;
+					}
+					
 					fTableViewer.addFilter(fFilter);
 					fTableViewer.refresh();
 					updateSelection();
