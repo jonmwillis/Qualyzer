@@ -1056,12 +1056,12 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 						fCurrentRow.setDescription(fDescription.getText().trim());
 						fTableViewer.refresh(fCurrentRow);
 					}
+					
+					fCurrentRow = row;
+					fDescription.setText(fCurrentRow.getDescription());
+					fCodeName.setText(Messages.getString(
+							"editors.pages.CodeEditorPage.selectedCode") + fCurrentRow.getName()); //$NON-NLS-1$
 				}
-				
-				fCurrentRow = row;
-				fDescription.setText(fCurrentRow.getDescription());
-				fCodeName.setText(Messages.getString(
-						"editors.pages.CodeEditorPage.selectedCode") + fCurrentRow.getName()); //$NON-NLS-1$
 			}
 
 		};
