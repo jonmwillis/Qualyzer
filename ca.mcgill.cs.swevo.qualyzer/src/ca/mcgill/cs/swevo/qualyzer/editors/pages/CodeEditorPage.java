@@ -1101,8 +1101,6 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 				
 		fTableArea.layout();
 		fTableArea.redraw();
-		fForm.getBody().layout();
-		fForm.getBody().redraw();
 	}
 
 	/**
@@ -1111,6 +1109,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	private void updateSelection()
 	{
 		CodeTableRow row;
+		
 		if(fCurrentRow == null)
 		{
 			row = (CodeTableRow) fTableViewer.getElementAt(0);
