@@ -1252,6 +1252,10 @@
             markerType="org.eclipse.core.resources.textmarker"
             name="RTFEditor.annotation.fragment">
       </type>
+      <type
+            markerType="ca.mcgill.cs.swevo.qualyzer.marker.timestamp"
+            name="ca.mcgill.cs.swevo.qualyzer.annotation.timestamp">
+      </type>
    </extension>
    <extension
          point="org.eclipse.ui.editors.markerAnnotationSpecification">
@@ -1286,15 +1290,15 @@
             verticalRulerPreferenceValue="false">
       </specification>
       <specification
-            annotationType="org.eclipse.ui.workbench.texteditor.bookmark"
-            colorPreferenceKey="bookmark.color"
+            annotationType="ca.mcgill.cs.swevo.qualyzer.annotation.timestamp"
+            colorPreferenceKey="timestamp.color"
             colorPreferenceValue="0,0,0"
             includeOnPreferencePage="true"
-            label="Bookmark"
-            overviewRulerPreferenceKey="bookmark.overview"
+            label="Timestamps"
+            overviewRulerPreferenceKey="timestamp.overview"
             overviewRulerPreferenceValue="false"
-            textPreferenceKey="bookmark.text"
-            verticalRulerPreferenceKey="bookmark.vertical"
+            textPreferenceKey="timestamp.text"
+            verticalRulerPreferenceKey="timestamp.vertical"
             verticalRulerPreferenceValue="true">
       </specification>
    </extension>
