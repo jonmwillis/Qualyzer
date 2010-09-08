@@ -232,7 +232,7 @@ public class NewMemoPage extends WizardPage
 	private void createTable()
 	{
 		GridData gd;
-		fTable = new Table(fContainer, SWT.MULTI | SWT.BORDER);
+		fTable = new Table(fContainer, SWT.MULTI | SWT.BORDER | SWT.FULL_SELECTION);
 		gd = new GridData(SWT.FILL, SWT.FILL, true, false);
 		gd.horizontalSpan = 2;
 		fTable.setLayoutData(gd);
