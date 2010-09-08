@@ -75,6 +75,15 @@ public class RTFSourceViewerConfiguration extends ColorerSourceViewerConfigurati
 		return new FragmentDoubleClickStrategy();
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.editors.text.TextSourceViewerConfiguration#isShowInOverviewRuler(
+	 * org.eclipse.jface.text.source.Annotation)
+	 */
+	@Override
+	protected boolean isShowInOverviewRuler(Annotation annotation)
+	{
+		return annotation instanceof FragmentAnnotation;
+	}
 	/**
 	 * DoubleClickStrategy for marked fragments. Selects the entire fragment.
 	 */
