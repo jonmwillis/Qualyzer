@@ -120,7 +120,10 @@ public class ImportMemoPage extends NewMemoPage
 				dialog.setFilterNames(new String[]{"Rich Text Files (.rtf)"}); //$NON-NLS-1$
 				
 				String file = dialog.open();
-				fMemoFile.setText(file);
+				if(file != null)
+				{
+					fMemoFile.setText(file);
+				}
 				
 				if(!fileDoesNotExist())
 				{

@@ -499,6 +499,10 @@ public final class FileUtil
 	public static void renewTimestamps(IProject project)
 	{
 		Project qProject = PersistenceManager.getInstance().getProject(project.getName());
+		if(qProject == null)
+		{
+			return;
+		}
 		
 		IFolder folder = project.getFolder("transcripts"); //$NON-NLS-1$
 		
