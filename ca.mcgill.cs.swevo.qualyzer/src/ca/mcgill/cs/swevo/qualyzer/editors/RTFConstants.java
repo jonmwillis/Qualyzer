@@ -26,6 +26,7 @@ public final class RTFConstants
 	public static final String ITALIC_UNDERLINE_TYPE = "RTFEditor.annotation.italicUnderline"; //$NON-NLS-1$
 	public static final String BOLD_ITALIC_UNDERLINE_TYPE = "RTFEditor.annotation.boldItalicUnderline"; //$NON-NLS-1$
 	public static final String FRAGMENT_TYPE = "RTFEditor.annotation.fragment"; //$NON-NLS-1$
+	public static final String TIMESTAMP_TYPE = "ca.mcgill.cs.swevo.qualyzer.annotation.timestamp"; //$NON-NLS-1$
 	
 	public static final String BOLD_ACTION_ID = "action.bold"; //$NON-NLS-1$
 	public static final String ITALIC_ACTION_ID = "action.italic"; //$NON-NLS-1$
