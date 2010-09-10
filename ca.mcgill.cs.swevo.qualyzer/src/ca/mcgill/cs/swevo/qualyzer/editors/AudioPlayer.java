@@ -255,4 +255,30 @@ public class AudioPlayer
 		fMicSecondsPerByte = 0;
 	}
 	
+	/**
+	 * 
+	 */
+	public void close()
+	{
+		
+		try
+		{
+			fPlayer.stop();
+		}
+		catch (BasicPlayerException e1)
+		{
+			System.out.println("ate stop exception");
+		}
+		
+		try
+		{
+			File file = new File("");
+			fPlayer.open(file);
+		}
+		catch (BasicPlayerException e)
+		{
+			System.out.println("ate open fake file exception");
+		}
+	}
+	
 }

@@ -534,6 +534,7 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 		if(fAudioPlayer != null)
 		{
 			fAudioPlayer.stop();
+			fAudioPlayer.close();
 		}
 		
 		QualyzerActivator.getDefault().getPreferenceStore().removePropertyChangeListener(this);

@@ -333,6 +333,8 @@ public final class Facade
 	 */
 	public void deleteProject(Project project)
 	{
+		fListenerManager.notifyProjectListeners(ChangeType.DELETE, project, this);
+		
 		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(project.getFolderName());
 
 		try
@@ -353,8 +355,6 @@ public final class Facade
 			fLogger.error(key, e);
 			throw new QualyzerException(errorMessage, e);
 		}
-
-		fListenerManager.notifyProjectListeners(ChangeType.DELETE, project, this);
 	}
 
 	/**
