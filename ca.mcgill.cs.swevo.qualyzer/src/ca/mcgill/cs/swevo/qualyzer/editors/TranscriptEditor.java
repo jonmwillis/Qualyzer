@@ -532,7 +532,6 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 		Facade.getInstance().getListenerManager().unregisterTranscriptListener(getDocument().getProject(), this);
 		if(fAudioPlayer != null)
 		{
-			fAudioPlayer.stop();
 			fAudioPlayer.close();
 		}
 		

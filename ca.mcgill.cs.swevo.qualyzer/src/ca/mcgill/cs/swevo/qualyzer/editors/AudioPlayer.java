@@ -35,7 +35,7 @@ public class AudioPlayer
 	
 	private Logger fLogger;
 	
-	private BasicPlayer fPlayer;
+	private MyPlayer fPlayer;
 	private long fMicroSecondsPos;
 	private int fSecondsPos;
 	private double fLength;
@@ -57,7 +57,7 @@ public class AudioPlayer
 	{
 		fLogger = LoggerFactory.getLogger(AudioPlayer.class);
 		
-		fPlayer = new BasicPlayer();
+		fPlayer = new MyPlayer();
 		fEditor = editor;
 		fAudioFile = audioFile;
 		
@@ -270,15 +270,23 @@ public class AudioPlayer
 			System.out.println("ate stop exception");
 		}
 		
-		try
+		fPlayer.closeStream();
+	}
+	
+	/**
+	 * This gives me access to the close stream method.
+	 * @author Jonathan Faubert
+	 *
+	 */
+	private class MyPlayer extends BasicPlayer
+	{
+		/* (non-Javadoc)
+		 * @see javazoom.jlgui.basicplayer.BasicPlayer#closeStream()
+		 */
+		@Override
+		public void closeStream()
 		{
-			File file = new File("");
-			fPlayer.open(file);
-		}
-		catch (BasicPlayerException e)
-		{
-			//This closes the stream.
-			//System.out.println("ate open fake file exception");
+			super.closeStream();
 		}
 	}
 	
