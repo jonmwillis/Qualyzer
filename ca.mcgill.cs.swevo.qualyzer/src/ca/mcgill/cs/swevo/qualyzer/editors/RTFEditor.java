@@ -772,7 +772,7 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 	{
 		if(ChangeType.DELETE == cType)
 		{
-			close(false);
+			getSite().getPage().closeEditor(this, false);
 		}
 		else if(ChangeType.RENAME == cType)
 		{
