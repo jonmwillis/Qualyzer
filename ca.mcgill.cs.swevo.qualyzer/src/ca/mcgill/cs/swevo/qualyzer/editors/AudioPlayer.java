@@ -267,7 +267,8 @@ public class AudioPlayer
 		}
 		catch (BasicPlayerException e1)
 		{
-			System.out.println("ate stop exception");
+			//Just keep on going.
+			//System.out.println("ate stop exception");
 		}
 		
 		fPlayer.closeStream();
@@ -275,7 +276,6 @@ public class AudioPlayer
 	
 	/**
 	 * This gives me access to the close stream method.
-	 * @author Jonathan Faubert
 	 *
 	 */
 	private class MyPlayer extends BasicPlayer
