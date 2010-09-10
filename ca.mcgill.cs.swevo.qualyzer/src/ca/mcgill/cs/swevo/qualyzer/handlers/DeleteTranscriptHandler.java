@@ -205,17 +205,10 @@ public class DeleteTranscriptHandler extends AbstractHandler implements ITestabl
 			codes = deleteCodes(transcript);
 		}
 		
+		File audioFile = null;
 		if(transcript.getAudioFile() != null)
 		{
-			File file = new File(wProject.getLocation() + transcript.getAudioFile().getRelativePath());
-			if(!file.delete())
-			{
-				String warningMessage = Messages.getString(
-						"handlers.DeleteTranscriptHandler.audioDeleteFailed"); //$NON-NLS-1$
-				fLogger.warn(warningMessage);
-				MessageDialog.openWarning(shell, Messages.getString(
-						"handlers.DeleteTranscriptHandler.fileAccess"), warningMessage); //$NON-NLS-1$
-			}
+			audioFile = new File(wProject.getLocation() + transcript.getAudioFile().getRelativePath());
 		}
 		
 		File file = new File(wProject.getLocation() + TRANSCRIPT + transcript.getFileName());
@@ -230,6 +223,15 @@ public class DeleteTranscriptHandler extends AbstractHandler implements ITestabl
 		
 		Facade.getInstance().deleteTranscript(transcript);
 		deleteCodesAndParticipants(codes, participants);
+		
+		if(audioFile != null && !audioFile.delete())
+		{
+			String warningMessage = Messages.getString(
+					"handlers.DeleteTranscriptHandler.audioDeleteFailed"); //$NON-NLS-1$
+			fLogger.warn(warningMessage);
+			MessageDialog.openWarning(shell, Messages.getString(
+					"handlers.DeleteTranscriptHandler.fileAccess"), warningMessage); //$NON-NLS-1$
+		}
 	}
 
 	/**

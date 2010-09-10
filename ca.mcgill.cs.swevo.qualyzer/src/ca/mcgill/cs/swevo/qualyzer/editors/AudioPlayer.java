@@ -277,7 +277,8 @@ public class AudioPlayer
 		}
 		catch (BasicPlayerException e)
 		{
-			System.out.println("ate open fake file exception");
+			//This closes the stream.
+			//System.out.println("ate open fake file exception");
 		}
 	}
 	
