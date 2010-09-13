@@ -165,9 +165,9 @@ public class DeleteMemoHandler extends AbstractHandler implements ITestableHandl
 	 */
 	private ArrayList<Code> findCodesToDelete(Memo memo)
 	{
-		Project project = memo.getProject();
 		ArrayList<Code> codes = new ArrayList<Code>();
 		Memo lMemo = Facade.getInstance().forceMemoLoad(memo);
+		Project project = lMemo.getProject();
 		for(Fragment fragment : lMemo.getFragments().values())
 		{
 			for(CodeEntry entry : fragment.getCodeEntries())
