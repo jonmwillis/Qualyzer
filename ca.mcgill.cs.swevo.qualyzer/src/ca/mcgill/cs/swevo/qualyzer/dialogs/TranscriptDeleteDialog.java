@@ -90,12 +90,15 @@ public class TranscriptDeleteDialog extends TitleAreaDialog
 		
 		label.setLayoutData(gd);
 		
-		fCodeButton = new Button(composite, SWT.CHECK);
-		fCodeButton.setText(Messages.getString("dialogs.TranscriptDeleteDialog.deleteCodes")); //$NON-NLS-1$
-		
-		fParticipantButton = new Button(composite, SWT.CHECK);
-		fParticipantButton.setText(Messages.getString(
-				"dialogs.TranscriptDeleteDialog.deleteParticipants")); //$NON-NLS-1$
+		if(!fIsPlural)
+		{
+			fCodeButton = new Button(composite, SWT.CHECK);
+			fCodeButton.setText(Messages.getString("dialogs.TranscriptDeleteDialog.deleteCodes")); //$NON-NLS-1$
+			
+			fParticipantButton = new Button(composite, SWT.CHECK);
+			fParticipantButton.setText(Messages.getString(
+					"dialogs.TranscriptDeleteDialog.deleteParticipants")); //$NON-NLS-1$
+		}
 		
 		return parent;
 	}
@@ -103,8 +106,8 @@ public class TranscriptDeleteDialog extends TitleAreaDialog
 	@Override
 	public void okPressed()
 	{
-		fDeleteParticipants = fParticipantButton.getSelection();
-		fDeleteCodes = fCodeButton.getSelection();
+		fDeleteParticipants = !fIsPlural && fParticipantButton.getSelection();
+		fDeleteCodes = !fIsPlural && fCodeButton.getSelection();
 		
 		super.okPressed();
 	}

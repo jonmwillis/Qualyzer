@@ -264,9 +264,9 @@ public class DeleteTranscriptHandler extends AbstractHandler implements ITestabl
 	 */
 	private ArrayList<Code> deleteCodes(Transcript transcript)
 	{
-		Project project = transcript.getProject();
 		ArrayList<Code> codes = new ArrayList<Code>();
 		Transcript lTranscript = Facade.getInstance().forceTranscriptLoad(transcript);
+		Project project = lTranscript.getProject();
 		for(Fragment fragment : lTranscript.getFragments().values())
 		{
 			for(CodeEntry entry : fragment.getCodeEntries())
@@ -321,10 +321,10 @@ public class DeleteTranscriptHandler extends AbstractHandler implements ITestabl
 	 */
 	private ArrayList<Participant> deleteParticipants(Transcript transcript)
 	{
-		Project project = transcript.getProject();
 		ArrayList<Participant> toDelete = new ArrayList<Participant>();
 				
 		Transcript lTranscript = Facade.getInstance().forceTranscriptLoad(transcript);
+		Project project = lTranscript.getProject();
 		for(Participant participant : lTranscript.getParticipants())
 		{
 			boolean found = false;

@@ -86,9 +86,12 @@ public class MemoDeleteDialog extends TitleAreaDialog
 		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, false);
 		label.setLayoutData(gd);
 		
-		fButton = new Button(container, SWT.CHECK);
-		fButton.setSelection(false);
-		fButton.setText(Messages.getString("dialogs.MemoDeleteDialog.deleteCodes")); //$NON-NLS-1$
+		if(!fIsPlural)
+		{
+			fButton = new Button(container, SWT.CHECK);
+			fButton.setSelection(false);
+			fButton.setText(Messages.getString("dialogs.MemoDeleteDialog.deleteCodes")); //$NON-NLS-1$
+		}
 		
 		return parent;
 	}
@@ -99,7 +102,7 @@ public class MemoDeleteDialog extends TitleAreaDialog
 	@Override
 	public void okPressed()
 	{
-		fCodes = fButton.getSelection();
+		fCodes = !fIsPlural && fButton.getSelection();
 		super.okPressed();
 	}
 	
