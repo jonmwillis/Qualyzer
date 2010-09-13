@@ -34,16 +34,18 @@ public class TranscriptDeleteDialog extends TitleAreaDialog
 	
 	private Button fParticipantButton;
 	private Button fCodeButton;
+	private boolean fIsPlural;
 	
 	/**
 	 * Constructor.
 	 * @param shell
 	 */
-	public TranscriptDeleteDialog(Shell shell)
+	public TranscriptDeleteDialog(Shell shell, boolean isPlural)
 	{
 		super(shell);
 		fDeleteParticipants = false;
 		fDeleteCodes = false;
+		fIsPlural = isPlural;
 	}
 	
 	@Override
@@ -51,8 +53,17 @@ public class TranscriptDeleteDialog extends TitleAreaDialog
 	{
 		super.create();
 		setTitle(Messages.getString("dialogs.TranscriptDeleteDialog.deleteTrancript")); //$NON-NLS-1$
-		setMessage(Messages.getString("dialogs.TranscriptDeleteDialog.warning"),  //$NON-NLS-1$
-				IMessageProvider.WARNING);
+		if(fIsPlural)
+		{
+			setMessage(Messages.getString("dialogs.TranscriptDeleteDialog.warning_plural"),  //$NON-NLS-1$
+					IMessageProvider.WARNING);
+		}
+		else
+		{
+			setMessage(Messages.getString("dialogs.TranscriptDeleteDialog.warning"),  //$NON-NLS-1$
+					IMessageProvider.WARNING);
+		}
+		
 	}
 	
 	@Override
@@ -68,7 +79,14 @@ public class TranscriptDeleteDialog extends TitleAreaDialog
 		composite.setLayoutData(gd);
 		
 		Label label = new Label(composite, SWT.NULL);
-		label.setText(Messages.getString("dialogs.TranscriptDeleteDialog.confirm")); //$NON-NLS-1$
+		if(fIsPlural)
+		{
+			label.setText(Messages.getString("dialogs.TranscriptDeleteDialog.confirm_plural")); //$NON-NLS-1$
+		}
+		else
+		{
+			label.setText(Messages.getString("dialogs.TranscriptDeleteDialog.confirm")); //$NON-NLS-1$
+		}
 		
 		label.setLayoutData(gd);
 		
