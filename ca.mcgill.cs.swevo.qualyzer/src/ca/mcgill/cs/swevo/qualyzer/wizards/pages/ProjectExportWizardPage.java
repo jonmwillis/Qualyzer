@@ -36,6 +36,8 @@ public class ProjectExportWizardPage extends WizardArchiveFileResourceExportPage
 	public ProjectExportWizardPage(IStructuredSelection selection)
 	{
 		super(selection);
+		//Save the dirty editors here. No longer done later, since it doesn't work there for some reason.
+		saveDirtyEditors();
 	}
 	
 	/* (non-Javadoc)
@@ -55,10 +57,6 @@ public class ProjectExportWizardPage extends WizardArchiveFileResourceExportPage
 				{
 					((IResource) obj).refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
 				}
-				else
-				{
-					System.out.println(obj.getClass());
-				}
 			}
 		}
 		catch(CoreException e)
@@ -66,14 +64,11 @@ public class ProjectExportWizardPage extends WizardArchiveFileResourceExportPage
 			e.printStackTrace();
 		}
 		
-    	
         if (!ensureTargetIsValid()) 
         {
 			return false;
 		}
 
-        //Save dirty editors if possible but do not stop if not all are saved
-        saveDirtyEditors();
         // about to invoke the operation so save our state
         saveWidgetValues();
 
