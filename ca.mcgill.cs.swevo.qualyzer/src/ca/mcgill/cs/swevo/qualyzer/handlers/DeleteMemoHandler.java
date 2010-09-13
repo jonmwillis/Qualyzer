@@ -103,7 +103,7 @@ public class DeleteMemoHandler extends AbstractHandler implements ITestableHandl
 	 */
 	private void proceedWithDeletion(IWorkbenchPage page, Shell shell, List<Memo> toDelete)
 	{
-		MemoDeleteDialog dialog = new MemoDeleteDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
+		MemoDeleteDialog dialog = new MemoDeleteDialog(shell, toDelete.size() > 1);
 		dialog.create();
 		dialog.setBlockOnOpen(!fTesting);
 		dialog.open();
@@ -111,16 +111,17 @@ public class DeleteMemoHandler extends AbstractHandler implements ITestableHandl
 			
 		if(dialog.getReturnCode() == Window.OK)
 		{	
+			CommonNavigator view;
+			view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+			
 			for(Memo memo : toDelete)
 			{
 				delete(memo, shell, dialog.deleteCodes());
-									
-				CommonNavigator view;
-				view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
 				view.getCommonViewer().refresh();
 			}
-		}
-		
+			
+			view.getCommonViewer().refresh();
+		}	
 	}
 
 	/**

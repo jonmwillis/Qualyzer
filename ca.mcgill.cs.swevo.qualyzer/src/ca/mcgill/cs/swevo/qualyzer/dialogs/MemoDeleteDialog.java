@@ -31,14 +31,16 @@ public class MemoDeleteDialog extends TitleAreaDialog
 {
 	private boolean fCodes;
 	private Button fButton;
+	private boolean fIsPlural;
 	/**
 	 * Constructor.
 	 * @param shell
 	 */
-	public MemoDeleteDialog(Shell shell)
+	public MemoDeleteDialog(Shell shell, boolean isPlural)
 	{
 		super(shell);
 		fCodes = false;
+		fIsPlural = isPlural;
 	}
 	
 	/* (non-Javadoc)
@@ -49,8 +51,16 @@ public class MemoDeleteDialog extends TitleAreaDialog
 	{
 		super.create();
 		setTitle(Messages.getString("dialogs.MemoDeleteDialog.deleteMemo")); //$NON-NLS-1$
-		setMessage(Messages.getString("dialogs.MemoDeleteDialog.warning"),  //$NON-NLS-1$
-				IMessageProvider.WARNING);
+		if(fIsPlural)
+		{
+			setMessage(Messages.getString("dialogs.MemoDeleteDialog.warning_plural"),  //$NON-NLS-1$
+					IMessageProvider.WARNING);
+		}
+		else
+		{
+			setMessage(Messages.getString("dialogs.MemoDeleteDialog.warning"),  //$NON-NLS-1$
+					IMessageProvider.WARNING);
+		}		
 	}
 	
 	/* (non-Javadoc)
@@ -65,7 +75,14 @@ public class MemoDeleteDialog extends TitleAreaDialog
 		container.setLayout(layout);
 		
 		Label label = new Label(container, SWT.NULL);
-		label.setText(Messages.getString("dialogs.MemoDeleteDialog.confirm")); //$NON-NLS-1$
+		if(fIsPlural)
+		{
+			label.setText(Messages.getString("dialogs.MemoDeleteDialog.confirm_plural")); //$NON-NLS-1$
+		}
+		else
+		{
+			label.setText(Messages.getString("dialogs.MemoDeleteDialog.confirm")); //$NON-NLS-1$
+		}
 		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, false);
 		label.setLayoutData(gd);
 		

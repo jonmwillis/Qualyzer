@@ -159,7 +159,7 @@ public class DeleteTranscriptHandler extends AbstractHandler implements ITestabl
 	 */
 	private void proceedWithDeletion(IWorkbenchPage page, Shell shell, List<Transcript> toDelete)
 	{	
-		TranscriptDeleteDialog dialog = new TranscriptDeleteDialog(shell);
+		TranscriptDeleteDialog dialog = new TranscriptDeleteDialog(shell, toDelete.size() > 1);
 		dialog.create();
 		dialog.setBlockOnOpen(!fTesting);
 		dialog.open();
