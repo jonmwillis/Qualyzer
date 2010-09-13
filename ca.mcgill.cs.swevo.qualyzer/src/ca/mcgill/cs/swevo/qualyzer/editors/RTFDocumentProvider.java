@@ -1058,7 +1058,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 			status = x.getStatus();
 		}
 		String newContent = document.get(); //HACK the replacement below fixes the windows bug.
-		if (!newContent.equals(info.fDocument.get().replace("\r\n", "\n"))) 
+		if (!newContent.equals(info.fDocument.get().replace("\r\n", "\n")))  //$NON-NLS-1$ //$NON-NLS-2$
 		{
 			// set the new content and fire content related events
 			fireElementContentAboutToBeReplaced(fileEditorInput);

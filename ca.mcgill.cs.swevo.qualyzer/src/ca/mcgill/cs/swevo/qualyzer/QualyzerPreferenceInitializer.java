@@ -16,10 +16,13 @@ package ca.mcgill.cs.swevo.qualyzer;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.ui.internal.editors.text.EditorsPlugin;
 
 /**
  * Initialises all the Preference values for the Qualyzer Preference Page.
  */
+@SuppressWarnings("restriction")
 public class QualyzerPreferenceInitializer extends AbstractPreferenceInitializer
 {
 
@@ -36,7 +39,9 @@ public class QualyzerPreferenceInitializer extends AbstractPreferenceInitializer
 		node.put(IQualyzerPreferenceConstants.DEFAULT_INVESTIGATOR, System.getProperty("user.name")); //$NON-NLS-1$
 		node.put(IQualyzerPreferenceConstants.FRAGMENT_COLOR, DEFAULT_COLOR); 
 		node.putInt(IQualyzerPreferenceConstants.SEEK_TIME, DEFAULT_SEEK_TIME);
-
+		
+		String value = EditorsPlugin.getDefault().getPreferenceStore().getDefaultString(JFaceResources.TEXT_FONT);
+		node.put(IQualyzerPreferenceConstants.FONT, value);
 	}
 
 }

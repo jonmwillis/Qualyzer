@@ -28,17 +28,22 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.jface.text.source.SourceViewer;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
@@ -48,6 +53,7 @@ import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 
+import ca.mcgill.cs.swevo.qualyzer.IQualyzerPreferenceConstants;
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.RTFEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.model.Code;
@@ -105,6 +111,7 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 		fRegistry = QualyzerActivator.getDefault().getImageRegistry();
 								
 		getPreferenceStore().setValue(AbstractDecoratedTextEditorPreferenceConstants.QUICK_DIFF_ALWAYS_ON, false);
+		QualyzerActivator.getDefault().getPreferenceStore().addPropertyChangeListener(this);
 	}
 	
 	/**
@@ -818,6 +825,7 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 		ListenerManager listenerManager = Facade.getInstance().getListenerManager();
 		listenerManager.unregisterProjectListener(fDocument.getProject(), this);
 		listenerManager.unregisterCodeListener(fDocument.getProject(), this);
+		QualyzerActivator.getDefault().getPreferenceStore().removePropertyChangeListener(this);
 		super.dispose();
 	}
 
@@ -920,5 +928,26 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 	public Action getRemoveAllCodesAction()
 	{
 		return fRemoveAllCodesAction;
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.colorer.eclipse.editors.ColorerEditor#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
+	 */
+	@Override
+	public void propertyChange(PropertyChangeEvent e)
+	{
+		if(e == null || e.getProperty().equals(IQualyzerPreferenceConstants.FONT))
+		{
+			IPreferenceStore pref = getPreferenceStore();
+			FontData oldFont = PreferenceConverter.getFontData(pref, JFaceResources.TEXT_FONT);
+			FontData font = PreferenceConverter.getFontData(QualyzerActivator.getDefault().getPreferenceStore(), 
+					IQualyzerPreferenceConstants.FONT);
+			PreferenceConverter.setValue(pref, JFaceResources.TEXT_FONT, font);
+			pref.firePropertyChangeEvent(JFaceResources.TEXT_FONT, oldFont, font);
+		}
+		else
+		{
+			super.propertyChange(e);
+		}
 	}
 }
