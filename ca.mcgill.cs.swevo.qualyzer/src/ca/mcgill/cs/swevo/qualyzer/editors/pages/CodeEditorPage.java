@@ -841,21 +841,12 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 				
 				List<Fragment> conflicts = detectConflicts(toDelete);
 				boolean check = false;
-				if(conflicts.size() == 0)
+				
+				check = MessageDialog.openConfirm(getSite().getShell(), DELETE_CODE, 
+							getConfirmMessage(conflicts.size())); 
+				if(check && conflicts.size() > 0)
 				{
-					check = MessageDialog.openConfirm(getSite().getShell(), DELETE_CODE,
-					Messages.getString("editors.pages.CodeEditorPage.confirm")); //$NON-NLS-1$
-				}
-				else
-				{
-					check = MessageDialog.openConfirm(getSite().getShell(), DELETE_CODE, 
-							Messages.getString("editors.pages.CodeEditorPage.confirmMany") + //$NON-NLS-1$
-							conflicts.size() + Messages.getString(
-									"editors.pages.CodeEditorPage.confirmMany2")); //$NON-NLS-1$
-					if(check)
-					{
-						removeCodeFromFragments(toDelete, conflicts);
-					}
+					removeCodeFromFragments(toDelete, conflicts);
 				}
 				if(check)
 				{
@@ -866,6 +857,34 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 				}
 			}
 		};
+	}
+	
+	/**
+	 * @param conflicts
+	 * @return
+	 */
+	private String getConfirmMessage(int size)
+	{
+		String message;
+		if(size < 0)
+		{
+			message = "";
+		}
+		else if(size == 0)
+		{
+			message = Messages.getString("editors.pages.CodeEditorPage.confirm"); //$NON-NLS-1$
+		}
+		else if(size == 1)
+		{
+			message = Messages.getString("editors.pages.CodeEditorPage.confirmOne"); //$NON-NLS-1$
+		}
+		else
+		{
+			message = Messages.getString("editors.pages.CodeEditorPage.confirmMany") + //$NON-NLS-1$
+			size + Messages.getString("editors.pages.CodeEditorPage.confirmMany2"); //$NON-NLS-1$
+		}
+		
+		return message;
 	}
 	
 	/**
