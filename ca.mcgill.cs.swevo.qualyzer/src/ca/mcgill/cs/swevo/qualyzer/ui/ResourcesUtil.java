@@ -126,20 +126,21 @@ public final class ResourcesUtil
 	 */
 	public static Project getProject(Object element)
 	{
-		Project project = null;
+		String projectName = "";
 		if(element instanceof IProject)
 		{
-			project = PersistenceManager.getInstance().getProject(((IProject) element).getName());
+			projectName = ((IProject) element).getName();
 		}
 		else if(element instanceof ProjectWrapper)
 		{
-			project = ((ProjectWrapper) element).getProject();
+			projectName = ((ProjectWrapper) element).getProject().getName();
 		}
 		else 
 		{
-			project = checkBaseTypes(element);
+			projectName = checkBaseTypes(element).getName();
 		}
-		return project;
+		
+		return PersistenceManager.getInstance().getProject(projectName);
 	}
 	
 	private static Project checkBaseTypes(Object element)
