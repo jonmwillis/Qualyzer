@@ -112,6 +112,9 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 								
 		getPreferenceStore().setValue(AbstractDecoratedTextEditorPreferenceConstants.QUICK_DIFF_ALWAYS_ON, false);
 		QualyzerActivator.getDefault().getPreferenceStore().addPropertyChangeListener(this);
+		FontData font = PreferenceConverter.getFontData(QualyzerActivator.getDefault().getPreferenceStore(),
+				IQualyzerPreferenceConstants.FONT);
+		PreferenceConverter.setValue(getPreferenceStore(), JFaceResources.TEXT_FONT, font);
 	}
 	
 	/**
