@@ -22,5 +22,6 @@ public interface IQualyzerPreferenceConstants
 	String DEFAULT_INVESTIGATOR = "DEFAULT_INVESTIGATOR"; //$NON-NLS-1$
 	String FRAGMENT_COLOR = "FRAGMENT_COLOR"; //$NON-NLS-1$
 	String SEEK_TIME = "SEEK_TIME"; //$NON-NLS-1$
+	String FONT = "EDITOR_FONT"; //$NON-NLS-1$
 }
 // CSON:

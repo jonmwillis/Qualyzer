@@ -126,7 +126,7 @@ public final class ResourcesUtil
 	 */
 	public static Project getProject(Object element)
 	{
-		String projectName = "";
+		String projectName = ""; //$NON-NLS-1$
 		if(element instanceof IProject)
 		{
 			projectName = ((IProject) element).getName();

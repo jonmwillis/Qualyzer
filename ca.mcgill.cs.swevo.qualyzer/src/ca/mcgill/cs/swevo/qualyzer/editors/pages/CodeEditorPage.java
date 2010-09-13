@@ -868,7 +868,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		String message;
 		if(size < 0)
 		{
-			message = "";
+			message = ""; //$NON-NLS-1$
 		}
 		else if(size == 0)
 		{

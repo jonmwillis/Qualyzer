@@ -128,8 +128,7 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 		addImage(FORWARD_IMG, QualyzerActivator.PLUGIN_ID, "icons/seek-forward.png"); //$NON-NLS-1$
 		
 		fSeekTime = QualyzerActivator.getDefault().getPreferenceStore().getInt(
-				IQualyzerPreferenceConstants.SEEK_TIME);
-		QualyzerActivator.getDefault().getPreferenceStore().addPropertyChangeListener(this);	
+				IQualyzerPreferenceConstants.SEEK_TIME);	
 		fInRuler = false;
 	}
 
@@ -535,7 +534,6 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 			fAudioPlayer.close();
 		}
 		
-		QualyzerActivator.getDefault().getPreferenceStore().removePropertyChangeListener(this);
 		super.dispose();
 	}
 	
