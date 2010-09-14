@@ -67,7 +67,7 @@ public class RenameDialog extends TitleAreaDialog
 		layout = new GridLayout();
 		layout.numColumns = 2;
 		composite.setLayout(layout);
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
 		Label label = new Label(composite, SWT.NULL);
 		label.setText(Messages.getString("dialogs.RenameDialog.newName")); //$NON-NLS-1$

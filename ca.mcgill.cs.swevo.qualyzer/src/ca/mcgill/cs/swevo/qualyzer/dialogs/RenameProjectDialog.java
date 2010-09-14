@@ -68,7 +68,7 @@ public class RenameProjectDialog extends TitleAreaDialog
 		
 		Composite body = new Composite(parent, SWT.NULL);
 		body.setLayout(new GridLayout(2, false));
-		body.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
+		body.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
 		Label label = new Label(body, SWT.NULL);
 		label.setText(Messages.getString("dialogs.RenameProjectDialog.newName")); //$NON-NLS-1$
