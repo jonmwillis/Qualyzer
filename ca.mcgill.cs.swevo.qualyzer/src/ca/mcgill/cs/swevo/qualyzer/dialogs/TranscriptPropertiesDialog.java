@@ -134,34 +134,34 @@ public class TranscriptPropertiesDialog extends TitleAreaDialog
 	public Control createDialogArea(Composite parent)
 	{
 		GridLayout layout = new GridLayout(2, false);
-		parent.setLayout(layout);
+		Composite body =  new Composite(parent, SWT.NULL);
+		body.setLayout(layout);
+		body.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
-		Label label = createLabel(parent, Messages.getString("dialogs.TranscriptPropertiesDialog.name")); //$NON-NLS-1$
-		label = new Label(parent, SWT.BORDER);
+		Label label = createLabel(body, Messages.getString("dialogs.TranscriptPropertiesDialog.name")); //$NON-NLS-1$
+		label = new Label(body, SWT.BORDER);
 		label.setText(fTranscript.getName());
 		label.setLayoutData(createTextGridData());
 		
-		label = createLabel(parent, Messages.getString("dialogs.TranscriptPropertiesDialog.path")); //$NON-NLS-1$
-		label = new Label(parent, SWT.BORDER);
+		label = createLabel(body, Messages.getString("dialogs.TranscriptPropertiesDialog.path")); //$NON-NLS-1$
+		label = new Label(body, SWT.BORDER);
 		label.setText(fProjectName + TRANSCRIPT + fTranscript.getFileName());
 		label.setLayoutData(createTextGridData());
 		
-		label = createLabel(parent, Messages.getString("dialogs.TranscriptPropertiesDialog.date")); //$NON-NLS-1$
-		fDate = createDate(fTranscript.getDate(), parent);
+		label = createLabel(body, Messages.getString("dialogs.TranscriptPropertiesDialog.date")); //$NON-NLS-1$
+		fDate = createDate(fTranscript.getDate(), body);
 		
-		Composite composite = createComposite(parent);
-		
+		Composite composite = createComposite(body);
 		Button button;
 		createParticipantButtonBar(composite);
 		
-		fTable = new Table(parent, SWT.MULTI);
+		fTable = new Table(body, SWT.MULTI);
 		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gd.horizontalSpan = 2;
 		fTable.setLayoutData(gd);
 		buildParticipants();
 		
-		composite = createComposite(parent);
-		
+		composite = createComposite(body);
 		label = createLabel(composite, 
 				Messages.getString("dialogs.TranscriptPropertiesDialog.audioPath")); //$NON-NLS-1$
 		

@@ -87,6 +87,7 @@ public class ProjectPropertiesDialog extends TitleAreaDialog
 	{
 		Composite composite = new Composite(parent, SWT.NULL);
 		composite.setLayout(new GridLayout(2, false));
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
 		Label label = new Label(composite, SWT.NULL);
 		label.setText(Messages.getString("dialogs.ProjectPropertiesDialog.projectPath")); //$NON-NLS-1$

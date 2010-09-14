@@ -73,6 +73,7 @@ public class MemoDeleteDialog extends TitleAreaDialog
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 1;
 		container.setLayout(layout);
+		container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
 		Label label = new Label(container, SWT.NULL);
 		if(fIsPlural)

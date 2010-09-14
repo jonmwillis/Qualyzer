@@ -88,19 +88,21 @@ public class CodeChooserDialog extends TitleAreaDialog
 	protected Control createDialogArea(Composite parent)
 	{
 		GridLayout layout = new GridLayout(2, false);
-		parent.setLayout(layout);
+		Composite body = new Composite(parent, SWT.NULL);
+		body.setLayout(layout);
+		body.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
-		Label label = new Label(parent, SWT.NULL);
+		Label label = new Label(body, SWT.NULL);
 		label.setText(Messages.getString("dialogs.CodeChooserDialog.code")); //$NON-NLS-1$
 		
-		fCodeName = new Combo(parent, SWT.BORDER | SWT.DROP_DOWN);
+		fCodeName = new Combo(body, SWT.BORDER | SWT.DROP_DOWN);
 		fCodeName.setText(""); //$NON-NLS-1$
 		fCodeName.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 		
-		label = new Label(parent, SWT.NULL);
+		label = new Label(body, SWT.NULL);
 		label.setText(Messages.getString("dialogs.CodeChooserDialog.description")); //$NON-NLS-1$
 		
-		fDescription = new StyledText(parent, SWT.WRAP | SWT.BORDER);
+		fDescription = new StyledText(body, SWT.WRAP | SWT.BORDER);
 		fDescription.setText(""); //$NON-NLS-1$
 		fDescription.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		

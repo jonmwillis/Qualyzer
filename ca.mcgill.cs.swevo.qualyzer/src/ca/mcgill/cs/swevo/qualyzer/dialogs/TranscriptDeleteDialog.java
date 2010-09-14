@@ -76,7 +76,7 @@ public class TranscriptDeleteDialog extends TitleAreaDialog
 		GridData gd = new GridData(SWT.FILL, SWT.NULL, true, false);
 		composite.setLayout(layout);
 		parent.setLayout(layout);
-		composite.setLayoutData(gd);
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
 		Label label = new Label(composite, SWT.NULL);
 		if(fIsPlural)

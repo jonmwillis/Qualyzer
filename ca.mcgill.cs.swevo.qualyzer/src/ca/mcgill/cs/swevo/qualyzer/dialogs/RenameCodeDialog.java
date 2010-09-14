@@ -76,7 +76,7 @@ public class RenameCodeDialog extends TitleAreaDialog
 		Composite container = new Composite(parent, SWT.NULL);
 		layout = new GridLayout(2, false);
 		container.setLayout(layout);
-		container.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
+		container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
 		Label label = new Label(container, SWT.NULL);
 		label.setText("Code Name"); //$NON-NLS-1$
