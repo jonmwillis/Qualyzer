@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Jonathan Faubert
  *******************************************************************************/
 
 package ca.mcgill.cs.swevo.qualyzer.providers;
@@ -17,7 +17,6 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.CodeTableInput.CodeTableRow;
 
 /**
- * @author Jonathan Faubert
  *
  */
 public class TableFilter extends ViewerFilter

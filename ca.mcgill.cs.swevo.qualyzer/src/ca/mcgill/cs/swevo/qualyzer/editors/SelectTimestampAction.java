@@ -6,11 +6,9 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     McGill University - initial API and implementation
+ *     Jonathan Faubert
  *******************************************************************************/
-/**
- * 
- */
+
 package ca.mcgill.cs.swevo.qualyzer.editors;
 
 import java.util.ResourceBundle;
@@ -26,7 +24,6 @@ import org.slf4j.LoggerFactory;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.RTFEditorInput;
 
 /**
- * @author Jonathan Faubert
  *
  */
 public class SelectTimestampAction extends SelectMarkerRulerAction
