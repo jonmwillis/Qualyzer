@@ -436,6 +436,9 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 					String name = dialog.getName();
 					code.setCodeName(name);
 					Facade.getInstance().saveCodes(new Code[]{code});
+					CommonNavigator view = (CommonNavigator) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+					.getActivePage().findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+					view.getCommonViewer().refresh();
 				}
 			}
 		};
@@ -782,8 +785,10 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 					String name = dialog.getName();
 					code.setCodeName(name);
 					Facade.getInstance().saveCodes(new Code[]{code});
+					CommonNavigator view = (CommonNavigator) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+						.getActivePage().findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
+					view.getCommonViewer().refresh();
 				}
-				
 			}
 		};
 	}
