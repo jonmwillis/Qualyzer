@@ -6,14 +6,13 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Name - Initial Contribution
+ *     Barthelemy Dagenais (bart@cs.mcgill.ca)
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.editors;
 
 import org.eclipse.jface.action.IAction;
 
 /**
- * @author Barthelemy Dagenais (bart@cs.mcgill.ca)
  *
  */
 public interface ITestableAction extends IAction
