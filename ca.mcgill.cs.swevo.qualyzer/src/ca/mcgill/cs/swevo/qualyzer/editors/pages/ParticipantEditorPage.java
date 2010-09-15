@@ -33,6 +33,7 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
+import ca.mcgill.cs.swevo.qualyzer.editors.ParticipantFormEditor;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.ParticipantEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.IAnnotatedDocument;
@@ -458,17 +459,16 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 		
 		for(Participant participant : project.getParticipants())
 		{
-			if(fParticipant.equals(participant))
+			if(fParticipant.getPersistenceId().equals(participant.getPersistenceId()))
 			{
 				setInput(new ParticipantEditorInput(participant));
+				fParticipant = participant;
+				((ParticipantFormEditor) getEditor()).setParticipant(fParticipant);
 				break;
 			}
 		}
 		
-		fParticipant = ((ParticipantEditorInput) getEditorInput()).getParticipant();
-		
 		buildInterviews();
-		
 	}
 	
 	/* (non-Javadoc)
@@ -526,14 +526,14 @@ public class ParticipantEditorPage extends FormPage implements ProjectListener, 
 		
 		for(Participant participant : project.getParticipants())
 		{
-			if(fParticipant.equals(participant))
+			if(fParticipant.getPersistenceId().equals(participant.getPersistenceId()))
 			{
 				setInput(new ParticipantEditorInput(participant));
+				fParticipant = participant;
+				((ParticipantFormEditor) getEditor()).setParticipant(fParticipant);
 				break;
 			}
 		}
-		
-		fParticipant = ((ParticipantEditorInput) getEditorInput()).getParticipant();
 		
 		buildMemos();
 		

@@ -87,5 +87,14 @@ public class InvestigatorFormEditor extends FormEditor
 	    	((CTabFolder) getContainer()).setTabHeight(0);
 	    }
 	}
+	
+	/**
+	 * This allows the page to update the editor.
+	 * @param investigator
+	 */
+	public void setInvestigator(Investigator investigator)
+	{
+		fInvestigator = investigator;
+	}
 
 }

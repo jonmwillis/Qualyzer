@@ -36,6 +36,7 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
+import ca.mcgill.cs.swevo.qualyzer.editors.InvestigatorFormEditor;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.InvestigatorEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.model.CodeEntry;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
@@ -567,14 +568,14 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 		
 		for(Investigator investigator : project.getInvestigators())
 		{
-			if(fInvestigator.equals(investigator))
+			if(fInvestigator.getPersistenceId().equals(investigator.getPersistenceId()))
 			{
 				setInput(new InvestigatorEditorInput(investigator));
+				fInvestigator = investigator;
+				((InvestigatorFormEditor) getEditor()).setInvestigator(fInvestigator);
 				break;
 			}
 		}
-		
-		fInvestigator = ((InvestigatorEditorInput) getEditorInput()).getInvestigator();
 		
 		buildMemos();
 		
@@ -602,14 +603,14 @@ public class InvestigatorEditorPage extends FormPage implements ProjectListener,
 			
 			for(Investigator investigator : project.getInvestigators())
 			{
-				if(fInvestigator.equals(investigator))
+				if(fInvestigator.getPersistenceId().equals(investigator.getPersistenceId()))
 				{
 					setInput(new InvestigatorEditorInput(investigator));
+					fInvestigator = investigator;
+					((InvestigatorFormEditor) getEditor()).setInvestigator(fInvestigator);
 					break;
 				}
 			}
-			
-			fInvestigator = ((InvestigatorEditorInput) getEditorInput()).getInvestigator();
 			
 			buildTranscripts();
 		}
