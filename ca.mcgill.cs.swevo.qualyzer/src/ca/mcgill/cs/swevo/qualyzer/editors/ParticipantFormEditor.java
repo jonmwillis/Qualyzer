@@ -97,4 +97,13 @@ public class ParticipantFormEditor extends FormEditor
 	    	((CTabFolder) getContainer()).setTabHeight(0);
 	    }
 	}
+	
+	/**
+	 * Allows the page to update the editor.
+	 * @param participant
+	 */
+	public void setParticipant(Participant participant)
+	{
+		fParticipant = participant;
+	}
 }
