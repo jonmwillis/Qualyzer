@@ -30,6 +30,7 @@ import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.VerifyKeyListener;
 import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.widgets.Composite;
 
 import ca.mcgill.cs.swevo.qualyzer.model.Fragment;
@@ -65,6 +66,22 @@ public class RTFSourceViewer extends ProjectionViewer
 					if(event.keyCode == 'i')
 					{ //remove the insert tab action!!! - JF
 						event.doit = false;
+					}
+				}
+			}
+		});
+		
+		getTextWidget().addVerifyListener(new VerifyListener()
+		{
+			
+			@Override
+			public void verifyText(VerifyEvent e)
+			{
+				if(e.character == 0 && e.keyCode == 0)
+				{
+					if(e.text.equals("\r\n"))
+					{
+						e.text = "\n";
 					}
 				}
 			}

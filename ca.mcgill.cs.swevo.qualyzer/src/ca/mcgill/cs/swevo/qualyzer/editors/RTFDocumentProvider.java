@@ -24,13 +24,11 @@ import org.apache.commons.lang.CharUtils;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.IAnnotationModel;
-import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.editors.text.FileDocumentProvider;
 import org.eclipse.ui.part.FileEditorInput;
 import org.slf4j.Logger;
@@ -1021,63 +1019,6 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		if(state.isUnderline())
 		{
 			handleTag(RTFTags.UNDERLINE_START, document, text, stream);
-		}
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.editors.text.FileDocumentProvider#handleElementContentChanged(
-	 * org.eclipse.ui.IFileEditorInput)
-	 */
-	@Override
-	protected void handleElementContentChanged(IFileEditorInput fileEditorInput)
-	{
-		FileInfo info = (FileInfo) getElementInfo(fileEditorInput);
-		if (info == null)
-		{
-			return;
-		}
-		IDocument document = createEmptyDocument();
-		IStatus status = null;
-		try
-		{
-			try 
-			{
-				refreshFile(fileEditorInput.getFile());
-			}
-			catch (CoreException x) 
-			{
-				handleCoreException(x, "FileDocumentProvider.handleElementContentChanged"); //$NON-NLS-1$
-			}
-			cacheEncodingState(fileEditorInput);
-			setDocumentContent(document, fileEditorInput, info.fEncoding);
-		} 
-		catch (CoreException x) 
-		{
-			status = x.getStatus();
-		}
-		String newContent = document.get(); //HACK the replacement below fixes the windows bug.
-		if (!newContent.equals(info.fDocument.get().replace("\r\n", "\n")))  //$NON-NLS-1$ //$NON-NLS-2$
-		{
-			// set the new content and fire content related events
-			fireElementContentAboutToBeReplaced(fileEditorInput);
-			removeUnchangedElementListeners(fileEditorInput, info);
-			info.fDocument.removeDocumentListener(info);
-			info.fDocument.set(newContent);
-			info.fCanBeSaved = false;
-			info.fModificationStamp = computeModificationStamp(fileEditorInput.getFile());
-			info.fStatus = status;
-			addUnchangedElementListeners(fileEditorInput, info);
-			fireElementContentReplaced(fileEditorInput);
-		} 
-		else 
-		{
-			removeUnchangedElementListeners(fileEditorInput, info);
-			// fires only the dirty state related event
-			info.fCanBeSaved = false;
-			info.fModificationStamp = computeModificationStamp(fileEditorInput.getFile());
-			info.fStatus = status;
-			addUnchangedElementListeners(fileEditorInput, info);
-			fireElementDirtyStateChanged(fileEditorInput, false);
 		}
 	}
 }
