@@ -325,6 +325,9 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 
 	/**
 	 * Deal with the various cases of the selection overlapping any number of existing positions.
+	 * True if there are no overlapping positions or if there is one that completely spans the selection,
+	 * or if there are many that span the selection with no gaps.
+	 * False otherwise.
 	 * @param positions
 	 * @param selection
 	 * @return
@@ -366,6 +369,7 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 	}
 
 	/**
+	 * Sort an arraylist of positions.
 	 * @param overlap
 	 * @param positions
 	 */
@@ -395,6 +399,7 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 	}
 
 	/**
+	 * Checks if an annotation is bold.
 	 * @param annotation
 	 * @return
 	 */
@@ -406,6 +411,7 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 	}
 	
 	/**
+	 * Checks if an annotation is italic.
 	 * @param annotation
 	 * @return
 	 */
@@ -417,6 +423,7 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 	}
 
 	/**
+	 * Checks if an annotation is underlined.
 	 * @param annotation
 	 * @return
 	 */
@@ -454,7 +461,7 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 	}
 	
 	/**
-	 * Initailizes all the actions and their key bindings.
+	 * Initialises all the actions and their key bindings.
 	 * @see org.eclipse.ui.editors.text.TextEditor#createActions()
 	 */
 	@Override
@@ -524,7 +531,6 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 	
 	/**
 	 * Check the project description to find out who the active investigator is.
-	 * @param fDocument2
 	 * @return
 	 */
 	private Investigator recoverActiveInvestigator()
@@ -618,10 +624,10 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 		fBoldAction.setChecked(isBoldChecked());
 		fItalicAction.setChecked(isItalicChecked());
 		fUnderlineAction.setChecked(isUnderlineChecked());
-		
 	}
 	
 	/**
+	 * The Remove Code actions should only be visible when a fragment is selected.
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
@@ -780,15 +786,15 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 	@Override
 	public void projectChanged(ChangeType cType, Project project, Facade facade)
 	{
-		if(ChangeType.DELETE == cType)
+		if(ChangeType.DELETE == cType) //Close without saving.
 		{
 			getSite().getPage().closeEditor(this, false);
 		}
-		else if(ChangeType.RENAME == cType)
+		else if(ChangeType.RENAME == cType) //Close and save ask to save.
 		{
 			ResourcesUtil.closeEditor(getSite().getPage(), getEditorInput().getName());
 		}
-		else if(ChangeType.MODIFY == cType)
+		else if(ChangeType.MODIFY == cType) //Active investigator has changed.
 		{
 			fDocument.setProject(project);
 			refreshInput();
@@ -832,10 +838,8 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 		super.dispose();
 	}
 
-	/* (non-Javadoc)
-	 * @see ca.mcgill.cs.swevo.qualyzer.model.CodeListener#codeChanged(
-	 * ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType, ca.mcgill.cs.swevo.qualyzer.model.Code[],
-	 *  ca.mcgill.cs.swevo.qualyzer.model.Facade)
+	/**
+	 * If a code has been modified or deleted, goes through all the fragments and updates them.
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
@@ -872,6 +876,7 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 	}
 
 	/**
+	 * Get the Transcript or Memo.
 	 * @return
 	 */
 	public IAnnotatedDocument getDocument()
@@ -933,8 +938,8 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 		return fRemoveAllCodesAction;
 	}
 	
-	/* (non-Javadoc)
-	 * @see net.sf.colorer.eclipse.editors.ColorerEditor#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
+	/**
+	 * Propagates a change in the font preference to the editor preference store.
 	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent e)

@@ -33,7 +33,7 @@ import ca.mcgill.cs.swevo.qualyzer.IQualyzerPreferenceConstants;
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 
 /**
- * Defines all the painting strategies for our annotations.
+ * Defines all the painting strategies for our annotations. And assigns them to each annotation type.
  *
  */
 @SuppressWarnings("restriction")
@@ -118,7 +118,6 @@ public class RTFDecorationSupport extends SourceViewerDecorationSupport implemen
 	private ColorManager fManager;
 	private IPreferenceStore fStore;
 
-
 	/**
 	 * @param sourceViewer
 	 * @param overviewRuler
@@ -133,8 +132,9 @@ public class RTFDecorationSupport extends SourceViewerDecorationSupport implemen
 		fStore = EditorsPlugin.getDefault().getPreferenceStore();
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.texteditor.SourceViewerDecorationSupport#createAnnotationPainter()
+	/**
+	 * Registers all the painting strategies and assigns them to the various annotations.
+	 * Also adds itself as a listener to the preference store so it can detect changes to the Fragment Color.
 	 */
 	@Override
 	protected AnnotationPainter createAnnotationPainter()

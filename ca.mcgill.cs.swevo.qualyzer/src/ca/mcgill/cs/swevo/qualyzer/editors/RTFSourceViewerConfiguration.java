@@ -30,7 +30,7 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.swt.graphics.Point;
 
 /**
- *
+ * Implements our text hover strategy, our double click strategy, and defines what is shown in the overview ruler.
  */
 public class RTFSourceViewerConfiguration extends ColorerSourceViewerConfiguration
 {

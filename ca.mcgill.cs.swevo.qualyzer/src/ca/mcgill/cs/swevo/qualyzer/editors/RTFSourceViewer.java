@@ -37,6 +37,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Fragment;
 
 /**
  * The SourceViewer for our editor. Displays Rich Text qualities from annotations.
+ * Handles the setting of new rich text areas or fragments given a position.
  *
  */
 public class RTFSourceViewer extends ProjectionViewer
@@ -45,6 +46,8 @@ public class RTFSourceViewer extends ProjectionViewer
 	private static final String EMPTY = "";  //$NON-NLS-1$
 
 	/**
+	 * The Constructor, adds a VerifyKeyListener to intercept the Ctrl+I action (insert tab).
+	 * Adds a VerifyListener to intercept the writing of "\r\n" in Windows.
 	 * @param parent
 	 * @param verticalRuler
 	 * @param overviewRuler
@@ -114,6 +117,8 @@ public class RTFSourceViewer extends ProjectionViewer
 	
 	/**
 	 * Toggle bold for the text at the given position.
+	 * Finds all other annotations that overlap with the given position (if they will be affected by the change).
+	 * Then for all the annotations in the range it toggles their bold state. 
 	 * @param position
 	 */
 	public void toggleBold(Position position)
@@ -159,6 +164,9 @@ public class RTFSourceViewer extends ProjectionViewer
 	
 	/**
 	 * Handles toggling when there is only 1 position overlapping.
+	 * Finds the areas that are covered by the overlapping position. Creates empty annotations for the 
+	 * remaining areas. Then returns a map of annotations and positions that need to have their state
+	 * toggled.
 	 * @param model
 	 * @param position
 	 * @param currentPos
@@ -204,7 +212,9 @@ public class RTFSourceViewer extends ProjectionViewer
 	}
 	
 	/**
-	 * Handles toggling when the is more than one position overlapping.
+	 * Handles toggling when there is more than one position overlapping.
+	 * Walks through the overlapping positions finding all areas that are uncovered creating empty annotations
+	 * for those areas. Add then returns the complete set of annotations that need to be toggled.
 	 * @param current
 	 * @param currentPos
 	 * @param position
@@ -244,6 +254,8 @@ public class RTFSourceViewer extends ProjectionViewer
 	}
 
 	/**
+	 * Handles the end of the annotation by properly breaking up the existing annotation if it extends too far, 
+	 * or by creating an empty annotation if the tail segment is uncovered.
 	 * @param current
 	 * @param currentPos
 	 * @param position
@@ -281,6 +293,8 @@ public class RTFSourceViewer extends ProjectionViewer
 	}
 
 	/**
+	 *  Handles the front of the annotation by properly breaking up the existing annotation if it extends too far, 
+	 * or by creating an empty annotation if the head segment is uncovered.
 	 * @param current
 	 * @param currentPos
 	 * @param position
@@ -316,6 +330,7 @@ public class RTFSourceViewer extends ProjectionViewer
 	}
 	
 	/**
+	 * Given an annotation toggles it's bold state.
 	 * @param annotation
 	 * @return
 	 */
@@ -356,6 +371,7 @@ public class RTFSourceViewer extends ProjectionViewer
 	}
 	
 	/**
+	 * Given an annotation toggles its italic state.
 	 * @param annotation
 	 * @return
 	 */
@@ -396,6 +412,7 @@ public class RTFSourceViewer extends ProjectionViewer
 	}
 
 	/**
+	 * Given an annotation toggles its underlined state.
 	 * @param annotation
 	 * @return
 	 */
@@ -437,6 +454,8 @@ public class RTFSourceViewer extends ProjectionViewer
 	
 	/**
 	 * Toggle italics for the text at the given position.
+	 * Finds all the existing annotations that overlap the positions and handles toggling their states. 
+	 * Also creates new annoations for regions that don't already have annotations. 
 	 * @param position
 	 */
 	public void toggleItalic(Position position)
@@ -482,6 +501,8 @@ public class RTFSourceViewer extends ProjectionViewer
 	}
 
 	/**
+	 * Given a position finds all the rtf annotations that overlap it. Updates current and currentPos to
+	 * contains the annotations and their positions.
 	 * @param position
 	 * @param model
 	 * @param current
@@ -560,7 +581,8 @@ public class RTFSourceViewer extends ProjectionViewer
 	}
 
 	/**
-	 * Toggle underlining for the text at the given position.
+	 * Toggle underlining for the text at the given position. Finds all overlapping regions that already contain
+	 * annotations and toggles their state as well as creating new annotations for empty regions.
 	 * @param position
 	 */
 	public void toggleUnderline(Position position)
@@ -605,6 +627,8 @@ public class RTFSourceViewer extends ProjectionViewer
 	}
 
 	/**
+	 * Creates a Fragment annotation representing the given fragment. Or removes an old one and updates it if 
+	 * there already exists one for that position.
 	 * @param fragment
 	 */
 	@SuppressWarnings("unchecked")

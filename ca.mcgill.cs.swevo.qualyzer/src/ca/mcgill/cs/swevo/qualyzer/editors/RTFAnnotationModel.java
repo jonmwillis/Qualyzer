@@ -24,7 +24,8 @@ import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Fragment;
 
 /**
- *
+ * The annotation model for our RTF Editor. It handles removing Fragments from the DB when
+ * they are removed from the model. Otherwise it delegates all tasks to the ResourceMarkerAnnotationModel.
  */
 public class RTFAnnotationModel extends ResourceMarkerAnnotationModel
 {
@@ -39,7 +40,8 @@ public class RTFAnnotationModel extends ResourceMarkerAnnotationModel
 	}
 	
 	/**
-	 * Remove a (fragment) annotation with or without removing it from the DB.
+	 * Remove a (fragment) annotation from the AnnotationModel without removing it from the DB.
+	 * Skips the overridden version of removeAnnotation and goes straight to its super.
 	 */
 	public void removeAnnotationOnly(Annotation annotation)
 	{
