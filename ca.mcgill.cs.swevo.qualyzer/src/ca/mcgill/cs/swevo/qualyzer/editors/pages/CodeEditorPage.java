@@ -202,6 +202,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	}
 	
 	/**
+	 * Swaps the list and the hierarchy.
 	 * @return
 	 */
 	private SelectionListener createToggleAdapter()
@@ -221,6 +222,8 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	}
 
 	/**
+	 * Create the layout for the TreeViewer. Defines all the columns and adds drag and drop
+	 * support, the sorter, and the various listeners.
 	 * @param toolkit 
 	 * @param composite
 	 * @return
@@ -276,6 +279,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	}
 
 	/**
+	 * Whenever the selection changes in the tree change the selection in the table to the same code.
 	 * @return
 	 */
 	private ISelectionChangedListener createTreeSelectionListener()
@@ -321,6 +325,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	}
 
 	/**
+	 * Change the enablement of the tree context menu items that are dependent on the selection.
 	 * @param b
 	 */
 	protected void setTreeItemsEnabled(boolean b)
@@ -332,7 +337,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	}
 	
 	/**
-	 * 
+	 * Change the enablement of the table context menu items that are dependent on the selection.
 	 * @param b
 	 */
 	protected void setTableItemsEnabled(boolean b)
@@ -344,7 +349,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	}
 
 	/**
-	 * 
+	 * Define the actions for the tree context menu.
 	 */
 	private void createTreeContextMenu()
 	{
@@ -380,6 +385,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	}
 
 	/**
+	 * The action to take if view fragment is selected on the tree.
 	 * @return
 	 */
 	private SelectionListener viewFragmentsSelectedTree()
@@ -409,6 +415,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	}
 
 	/**
+	 * The action to take if rename code is selected on the tree.
 	 * @return
 	 */
 	private SelectionListener renameCodeSelectedTree()
@@ -445,6 +452,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	}
 
 	/**
+	 * The action to take if remove code is selected (on the tree).
 	 * @return
 	 */
 	private SelectionAdapter removeCodeSelected()
@@ -481,6 +489,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	}
 
 	/**
+	 * The action to take if New Root Code is created (on the tree).
 	 * @return
 	 */
 	private SelectionListener newRootCodeSelected()
@@ -520,6 +529,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	}
 
 	/**
+	 * The action to take if New Sub-Code is selected (on the tree).
 	 * @return
 	 */
 	private SelectionListener createSubCodeSelected()
@@ -560,6 +570,8 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	}
 
 	/**
+	 * Create the layout for the table viewer and attach all the listeners, the sorter, and
+	 * drag and drop support.
 	 * @param body 
 	 * 
 	 */
@@ -606,6 +618,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	}
 
 	/**
+	 * The action to take on double click on the table.
 	 * @return
 	 */
 	private IDoubleClickListener createDoubleClickListenerTable()
@@ -628,6 +641,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	}
 
 	/**
+	 * Toggle the filter (on the table) whenever the filter button is pressed.
 	 * @return
 	 */
 	private SelectionListener setFilter(final Button button)
@@ -671,6 +685,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	}
 
 	/**
+	 * The double click action on the tree.
 	 * @return
 	 */
 	private IDoubleClickListener createDoubleClickListenerTree()
@@ -707,6 +722,12 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		};
 	}
 
+	/**
+	 * Toggles sorting on the table whenever a column header is clicked.
+	 * @param colIndex
+	 * @param column
+	 * @return
+	 */
 	private SelectionListener createColSortListener(final int colIndex, final TableColumn column)
 	{
 		return new SelectionAdapter()
@@ -736,7 +757,9 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	}
 
 	/**
-	 * Builds the context menu that gives access to the New Code, Delete Code, and View Fragments actions.
+	 * Builds the context menu that gives access to the New Code, Delete Code, View Fragments, and 
+	 * Rename Code actions on the table.
+	 * .
 	 */
 	private void createTableContextMenu()
 	{
@@ -766,6 +789,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	}
 
 	/**
+	 * The action taken when rename code is selected on the table.
 	 * @return
 	 */
 	private SelectionListener renameCodeSelected()
@@ -794,7 +818,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	}
 
 	/**
-	 * Handles the selection of the View Associated Fragments Action.
+	 * Handles the selection of the View Associated Fragments Action on the table.
 	 * @return
 	 */
 	private SelectionListener viewFragmentsSelected()
@@ -819,7 +843,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	}
 
 	/**
-	 * Handles the selection of the Delete Code Action.
+	 * Handles the selection of the Delete Code Action on the table.
 	 * Checks if there are any memos stopping the deletion.
 	 * Then finds all the fragments that contain the code.
 	 * Displays a warning/confirmation.
@@ -865,6 +889,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	}
 	
 	/**
+	 * Returns the proper confirmation dialog message for the code deletion. Based on the size of the conflicts.
 	 * @param conflicts
 	 * @return
 	 */
@@ -893,6 +918,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	}
 	
 	/**
+	 * Builds the string displayed in the error message if the code cannot be deleted.
 	 * @param conflicts 
 	 * @return
 	 */
@@ -955,7 +981,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	}
 
 	/**
-	 * Handles the selection of the new code action.
+	 * Handles the selection of the new code action on the table.
 	 * @return
 	 */
 	private SelectionAdapter newCodeSelected()
@@ -1053,7 +1079,8 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	}
 	
 	/**
-	 * Updates the Name and Description boxes on the right as the selected item in the table changes.
+	 * Updates Description boxes as the selected item in the table changes. Also updates the local
+	 * information so that changes are not lost.
 	 * @return
 	 */
 	private ISelectionChangedListener createTableSelectionListener()
@@ -1128,7 +1155,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	}
 
 	/**
-	 * 
+	 * Makes sure that something is selected in the table. Preferably the same thing that was before.
 	 */
 	private void updateSelection()
 	{
@@ -1262,7 +1289,7 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 	}
 	
 	/**
-	 * 
+	 * Gets the codes that need to be saved with their new descriptions.
 	 * @return
 	 */
 	public Code[] getCodes()
@@ -1292,7 +1319,10 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		return codes.toArray(new Code[0]);
 			
 	}
-	
+	/**
+	 * Finds all the rows in the table that have been modified since the last save.
+	 * @return
+	 */
 	private List<CodeTableRow> getDirtyRows()
 	{
 		if(fCurrentRow != null)
@@ -1317,6 +1347,11 @@ public class CodeEditorPage extends FormPage implements CodeListener, ProjectLis
 		return list;
 	}
 	
+	/**
+	 * Updates the descriptions of the codes in the table to match the previously dirty descriptions.
+	 * This is called when there are dirty rows that would be lost due to an update from elsewhere.
+	 * @param list
+	 */
 	private void updateDescriptions(List<CodeTableRow> list)
 	{
 		for(CodeTableRow row : list)

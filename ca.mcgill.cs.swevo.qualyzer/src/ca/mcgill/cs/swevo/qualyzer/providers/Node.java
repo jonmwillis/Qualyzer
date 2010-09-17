@@ -16,7 +16,7 @@ import java.util.Map;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.CodeTableInput.CodeTableRow;
 
 /**
- * 
+ * Represents a node in the TreeModel.
  */
 public class Node
 {	
@@ -120,6 +120,7 @@ public class Node
 	}
 	
 	/**
+	 * Create a new node with the given data if it doesn't already exist in the CodeTable.
 	 * @param node
 	 * @param string
 	 * @param parseLong
@@ -155,12 +156,12 @@ public class Node
 	}
 
 	/**
-	 * 
-	 * @param node
+	 * Sets this nodes parent to pNode (and adds this node to the parent's (pNode) children.
+	 * @param pNode
 	 */
-	public void setParent(Node node)
+	public void setParent(Node pNode)
 	{
-		fParent = node;
+		fParent = pNode;
 		if(fParent != null)
 		{
 			fModel = fParent.fModel;
@@ -171,7 +172,9 @@ public class Node
 	}
 	
 	/**
-	 * 
+	 * Get the node's path to root. Where "/" represents a root node. "/n" means that the code with 
+	 * persistence id n is this nodes parent and n is a root node. "/n/m" means the code with persistence id m
+	 * is this nodes parent and its parent is the code with persistence id n. etc.
 	 * @return
 	 */
 	public String getPathToRoot()
@@ -198,8 +201,8 @@ public class Node
 	}
 	
 	/**
-	 * 
-	 * @param name
+	 * Get the child with persistence id id.
+	 * @param id
 	 * @return
 	 */
 	public Node getChild(Long id)
@@ -226,7 +229,7 @@ public class Node
 	}
 
 	/**
-	 * 
+	 * Calculates the aggregate frequency of this node and all its children.
 	 * @return
 	 */
 	public int computeFreq()
@@ -260,6 +263,7 @@ public class Node
 	}
 
 	/**
+	 * Adds a child to this node given the data string passed from the drop listener (when coming from the tree).
 	 * @param data
 	 */
 	public void addChild(String data)
@@ -292,7 +296,7 @@ public class Node
 	}
 
 	/**
-	 * 
+	 *  Update the path to root of this node and all its children based on the parent's path to root.
 	 */
 	public void updatePaths()
 	{
@@ -327,6 +331,7 @@ public class Node
 	}
 
 	/**
+	 * Create a deep copy of this node.
 	 * @return
 	 */
 	public Node copy()
