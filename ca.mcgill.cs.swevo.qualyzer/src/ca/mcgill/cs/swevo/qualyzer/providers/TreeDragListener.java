@@ -19,7 +19,7 @@ import org.eclipse.swt.dnd.TextTransfer;
 
 
 /**
- *
+ * Creates the data when dragging from the tree.
  */
 public class TreeDragListener implements DragSourceListener
 {
@@ -49,8 +49,8 @@ public class TreeDragListener implements DragSourceListener
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.swt.dnd.DragSourceListener#dragSetData(org.eclipse.swt.dnd.DragSourceEvent)
+	/**
+	 * Builds the drag data so that the drop listener knows it's coming from the tree and can build the node.
 	 */
 	@Override
 	public void dragSetData(DragSourceEvent event)
@@ -65,8 +65,8 @@ public class TreeDragListener implements DragSourceListener
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.swt.dnd.DragSourceListener#dragStart(org.eclipse.swt.dnd.DragSourceEvent)
+	/**
+	 * Sets the selection transfer so that the validate drop method can work.
 	 */
 	@Override
 	public void dragStart(DragSourceEvent event)

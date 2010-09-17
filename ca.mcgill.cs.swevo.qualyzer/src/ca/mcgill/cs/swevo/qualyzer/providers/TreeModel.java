@@ -34,7 +34,9 @@ import ca.mcgill.cs.swevo.qualyzer.model.ProjectListener;
 import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
 
 /**
- *
+ * Builds and maintains a tree of Node objects based on a project or a CodeTableInput.
+ * Listens for updates to the codes and the project so that it can keep all the information in sync with
+ * the database.
  */
 public final class TreeModel implements CodeListener, ProjectListener
 {
@@ -50,6 +52,10 @@ public final class TreeModel implements CodeListener, ProjectListener
 	private HashMap<Long, List<Node>> fCodes;
 	private List<TreeViewer> fListeners;
 	
+	/**
+	 * Creates the TreeModel based on CodeTableInput which contains frequency data as well as code data.
+	 * @param input
+	 */
 	private TreeModel(CodeTableInput input)
 	{
 		fProject = input.getProject();
@@ -79,7 +85,7 @@ public final class TreeModel implements CodeListener, ProjectListener
 	}
 	
 	/**
-	 * 
+	 * Counts up the Total frequency values.
 	 */
 	private void aggregateFreqs()
 	{
@@ -90,6 +96,10 @@ public final class TreeModel implements CodeListener, ProjectListener
 		
 	}
 
+	/**
+	 * Builds the actual model. Goes through the nodes in order and attaches them to their parents based
+	 * on their paths.
+	 */
 	private void buildModel()
 	{	
 		Iterator<Node> iNode = fNewLocalList.iterator();
@@ -119,7 +129,8 @@ public final class TreeModel implements CodeListener, ProjectListener
 	}
 	
 	/**
-	 * Get the TreeModel for this project.
+	 * Get the TreeModel for this project. Factory method. Only one instance of a TreeModel
+	 * is allowed per project.
 	 * @param project
 	 * @return
 	 */
@@ -139,7 +150,8 @@ public final class TreeModel implements CodeListener, ProjectListener
 	}
 	
 	/**
-	 * Get the TreeModel for this input.
+	 * Get the TreeModel for this input. Factory method. Only one instance of a TreeModel
+	 * is allowed per project.
 	 * @param input
 	 * @return
 	 */
@@ -159,7 +171,7 @@ public final class TreeModel implements CodeListener, ProjectListener
 	}
 	
 	/**
-	 * 
+	 * Get the Tree Root.
 	 * @return
 	 */
 	public Node getRoot()
@@ -177,7 +189,7 @@ public final class TreeModel implements CodeListener, ProjectListener
 	}
 	
 	/**
-	 * 
+	 * Update the paths to root of all the nodes in the tree.
 	 */
 	public void updatePaths()
 	{
@@ -190,6 +202,10 @@ public final class TreeModel implements CodeListener, ProjectListener
 		
 	}
 	
+	/**
+	 * Updates a nodes path to root and then updates the paths of all its children.
+	 * @param node
+	 */
 	private void depthFirstUpdate(Node node)
 	{
 		for(Code code : fProject.getCodes())
@@ -215,6 +231,12 @@ public final class TreeModel implements CodeListener, ProjectListener
 		}
 	}
 	
+	/**
+	 * Creates a new node for the row given the pathToRoot and inserts it into the initial list
+	 * sorted by length of the path.
+	 * @param row
+	 * @param pathToRoot
+	 */
 	private void insertIntoList(CodeTableRow row, String pathToRoot)
 	{
 		Node node = new Node(row, pathToRoot);
@@ -343,6 +365,7 @@ public final class TreeModel implements CodeListener, ProjectListener
 	}
 
 	/**
+	 * Remove a node without affecting the list of nodes for that code.
 	 * @param node
 	 */
 	private void removeNodeNoList(Node node)
@@ -405,7 +428,7 @@ public final class TreeModel implements CodeListener, ProjectListener
 	}
 	
 	/**
-	 * 
+	 * Attaches a TreeViewer as a listener to this model.
 	 * @param viewer
 	 */
 	public void addListener(TreeViewer viewer)
@@ -417,7 +440,7 @@ public final class TreeModel implements CodeListener, ProjectListener
 	}
 	
 	/**
-	 * 
+	 * Remove a TreeViewer from the list of listeners.
 	 * @param viewer
 	 */
 	public void removeListener(TreeViewer viewer)
@@ -425,6 +448,9 @@ public final class TreeModel implements CodeListener, ProjectListener
 		fListeners.remove(viewer);
 	}
 	
+	/**
+	 * Notify all the listeners that this model has changed. Force them to refresh.
+	 */
 	private void modelChanged()
 	{
 		for(TreeViewer viewer : fListeners)
@@ -434,6 +460,7 @@ public final class TreeModel implements CodeListener, ProjectListener
 	}
 
 	/**
+	 * Update the frequencies of the nodes in the model to match the input. The get all the aggregate frequencies.
 	 * @param input
 	 */
 	public void updateFrequencies(CodeTableInput input)
@@ -457,6 +484,8 @@ public final class TreeModel implements CodeListener, ProjectListener
 	}
 	
 	/**
+	 * Remove a node from the model, and remove it from the master set of nodes for each code.
+	 * Do the same for all of it's children as well.
 	 * @param node
 	 */
 	public void removeNode(Node node)

@@ -26,7 +26,7 @@ import org.eclipse.swt.dnd.TransferData;
 import ca.mcgill.cs.swevo.qualyzer.editors.pages.CodeEditorPage;
 
 /**
- *
+ * Handles dropping of codes onto the treeViewer.
  */
 public class TreeDropListener extends ViewerDropAdapter
 {
@@ -51,8 +51,8 @@ public class TreeDropListener extends ViewerDropAdapter
 		fPage = codeEditorPage;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.ViewerDropAdapter#drop(org.eclipse.swt.dnd.DropTargetEvent)
+	/**
+	 * Checks to see if we are copying and finds the target of the drop. If it is null, makes it the root.
 	 */
 	@Override
 	public void drop(DropTargetEvent event)
@@ -74,8 +74,9 @@ public class TreeDropListener extends ViewerDropAdapter
 		super.drop(event);
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.ViewerDropAdapter#performDrop(java.lang.Object)
+	/**
+	 * Performs the drop based on the data. The length of the data determines where the data is coming from 
+	 * (the tree or the table). Parses the data and then creates, copies or moves any necessary nodes.
 	 */
 	@Override
 	public boolean performDrop(Object data)
@@ -121,6 +122,9 @@ public class TreeDropListener extends ViewerDropAdapter
 		return false;
 	}
 
+	/**
+	 * Updates the frequencies and then tells the page to update the table and tree.
+	 */
 	private void refreshEditor()
 	{
 		Node root = (Node) fViewer.getInput();
@@ -129,9 +133,8 @@ public class TreeDropListener extends ViewerDropAdapter
 		fPage.setDirty();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.ViewerDropAdapter#validateDrop(
-	 * java.lang.Object, int, org.eclipse.swt.dnd.TransferData)
+	/**
+	 * Verifies that the drop is allowed by checking for cycles and duplicates.
 	 */
 	@Override
 	public boolean validateDrop(Object target, int operation, TransferData transferType)
@@ -187,6 +190,7 @@ public class TreeDropListener extends ViewerDropAdapter
 	}
 
 	/**
+	 * Get the node specified by the path and the id.
 	 * @param path
 	 * @param id
 	 * @return
@@ -203,6 +207,7 @@ public class TreeDropListener extends ViewerDropAdapter
 	}
 
 	/**
+	 * Checks a node and all of its children for the existence of a cycle with the target node.
 	 * @param id
 	 * @param nTarget
 	 * @param string
@@ -223,6 +228,7 @@ public class TreeDropListener extends ViewerDropAdapter
 	}
 
 	/**
+	 * Checks if the given node forms a cycle with the target node.
 	 * @param id
 	 * @param nTarget
 	 */

@@ -24,7 +24,7 @@ import org.eclipse.swt.dnd.TextTransfer;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.CodeTableInput.CodeTableRow;
 
 /**
- *
+ * Creates the Drag data so that the drop listener knows the data comes from the table.
  */
 public class TableDragListener implements DragSourceListener
 {
@@ -52,8 +52,8 @@ public class TableDragListener implements DragSourceListener
 	{
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.swt.dnd.DragSourceListener#dragSetData(org.eclipse.swt.dnd.DragSourceEvent)
+	/**
+	 * Build the drag data.
 	 */
 	@Override
 	public void dragSetData(DragSourceEvent event)
@@ -67,8 +67,8 @@ public class TableDragListener implements DragSourceListener
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.swt.dnd.DragSourceListener#dragStart(org.eclipse.swt.dnd.DragSourceEvent)
+	/**
+	 * Defines the SelectionTransfer so that ValidateDrop can work.
 	 */
 	@Override
 	public void dragStart(DragSourceEvent event)

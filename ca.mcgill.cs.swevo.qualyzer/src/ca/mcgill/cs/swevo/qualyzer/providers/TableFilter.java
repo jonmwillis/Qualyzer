@@ -17,7 +17,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.CodeTableInput.CodeTableRow;
 
 /**
- *
+ * Defines the filter on the table which filters out all the elements that are in the tree.
  */
 public class TableFilter extends ViewerFilter
 {

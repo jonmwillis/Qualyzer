@@ -28,6 +28,9 @@ import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 
 /**
  * Input for the TableViewer in CodeEditorPage.
+ * Contains all the codes as well their frequencies. Also keeps the CodeTableRows so that
+ * any changes made to them will be properly reflected.
+ * Also used by the TreeModel to easily get the frequencies.
  */
 public class CodeTableInput
 {
@@ -37,7 +40,7 @@ public class CodeTableInput
 	private List<CodeTableRow> fData;
 	
 	/**
-	 * 
+	 * Creates the model from a project.
 	 * @param project
 	 */
 	public CodeTableInput(Project project)
@@ -64,6 +67,9 @@ public class CodeTableInput
 		return fProject;
 	}
 
+	/**
+	 * Traverses all the memos and transcripts to build the frequency data for all the codes.
+	 */
 	private void countFrequencies()
 	{
 		for(Code code : fProject.getCodes())
@@ -100,7 +106,8 @@ public class CodeTableInput
 	
 	/**
 	 * Get the data represented by this input.
-	 * @return
+	 * @return The array of CodeTableRows that will be used by the table to display the code information. It
+	 * is also used by the TreeModel whenever updates to the frequency values in the TreeViewer might be needed.
 	 */
 	public CodeTableRow[] getData()
 	{
@@ -118,7 +125,7 @@ public class CodeTableInput
 	}
 	
 	/**
-	 * 
+	 * Get all the code frequencies indexed by persistence id.
 	 * @return
 	 */
 	public Map<Long, Integer> getFrequencies()
@@ -127,7 +134,7 @@ public class CodeTableInput
 	}
 	
 	/**
-	 * 
+	 * The actual data used by the TableViewer and to create Nodes.
 	 *
 	 */
 	public class CodeTableRow
@@ -209,6 +216,7 @@ public class CodeTableInput
 		}
 
 		/**
+		 * Gets the code with its description and name modified if the local copies were modified.
 		 * @return
 		 */
 		public Code getCodeToSave()
@@ -231,6 +239,7 @@ public class CodeTableInput
 		}
 
 		/**
+		 * Gets the original code.
 		 * @return
 		 */
 		public Code getCode()

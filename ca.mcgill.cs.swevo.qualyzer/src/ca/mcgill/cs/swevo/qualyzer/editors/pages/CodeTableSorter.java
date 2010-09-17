@@ -19,7 +19,7 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.CodeTableInput.CodeTableRow;
 
 /**
- *
+ * Handles the sorting of the Code Table in the Code Editor.
  */
 public class CodeTableSorter extends ViewerSorter
 {
@@ -36,7 +36,8 @@ public class CodeTableSorter extends ViewerSorter
 	}
 	
 	/**
-	 * Change the column to sort by.
+	 * Change the column to sort by. If setting the column to the current column
+	 * then the sort direction will be changed as well.
 	 * @param col
 	 */
 	public void setColumn(int col)
@@ -52,7 +53,8 @@ public class CodeTableSorter extends ViewerSorter
 		}
 	}
 	
-	/* (non-Javadoc)
+	/**
+	 * Uses the default bahaviour, but toggles the direction if the sort order demands it.
 	 * @see org.eclipse.jface.viewers.ViewerComparator#compare(
 	 * org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
 	 */
@@ -69,7 +71,9 @@ public class CodeTableSorter extends ViewerSorter
 		return val;
 	}
 	
-	/* (non-Javadoc)
+	/**
+	 * If sorting by the first column then all elements are in the same category. 
+	 * Otherwise their categories are defined by their frequency.
 	 * @see org.eclipse.jface.viewers.ViewerComparator#category(java.lang.Object)
 	 */
 	@Override
