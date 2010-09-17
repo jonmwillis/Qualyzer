@@ -117,6 +117,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	
 	/**
 	 * Parses the document for all the rtf tags and creates all necessary annotations.
+	 * This method should be changed very carefully. Preferably not at all.
 	 * @see org.eclipse.ui.editors.text.StorageDocumentProvider#setDocumentContent(
 	 * org.eclipse.jface.text.IDocument, java.io.InputStream, java.lang.String)
 	 */
