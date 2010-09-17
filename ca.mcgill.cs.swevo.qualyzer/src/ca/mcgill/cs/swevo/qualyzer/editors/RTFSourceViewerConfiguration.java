@@ -82,10 +82,12 @@ public class RTFSourceViewerConfiguration extends ColorerSourceViewerConfigurati
 	@Override
 	protected boolean isShowInOverviewRuler(Annotation annotation)
 	{
+		//Only allows Fragment annotations to be shown in the overview ruler.
 		return annotation instanceof FragmentAnnotation;
 	}
 	/**
-	 * DoubleClickStrategy for marked fragments. Selects the entire fragment.
+	 * DoubleClickStrategy for marked fragments. Selects the entire fragment. If double clicking on something 
+	 * else then it uses the default double click strategy.
 	 */
 	private class FragmentDoubleClickStrategy extends DefaultTextDoubleClickStrategy
 	{	
