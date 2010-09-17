@@ -48,6 +48,11 @@ import ca.mcgill.cs.swevo.qualyzer.model.IAnnotatedDocument;
  * IDocument parsedDocument = provider.getCreatedDocument(input);
  * 
  * String paresedText = parsedDocument.getText();
+ * 
+ * If you need to add a tag definition include the information in RTFTags and then add the behaviour
+ * to the handleTag(...) method. The tag should already be parsed properly. If not then it may be defined in 
+ * RTFTags.IGNORE_GROUPS or it may occur within one of the ignored groups. If this is the case then you are better off 
+ * not using the tag as not ignore the group would lead to major changes to the parsing mechanism.
  *
  */
 public class RTFDocumentProvider extends FileDocumentProvider
@@ -64,8 +69,8 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	private int fUnderlineTag;
 	private Stack<ParserState> fStack;
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.editors.text.StorageDocumentProvider#createDocument(java.lang.Object)
+	/**
+	 * Given the RTFEditorInput creates the document and then attaches all the fragments to the document.
 	 */
 	@Override
 	protected IDocument createDocument(Object element) throws CoreException
@@ -224,6 +229,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 
 	/**
 	 * Handles the various tags.
+	 * Any new tag behaviour should be added here.
 	 * @param escape The tag to handle.
 	 * @param document The document being parsed.
 	 * @param currentText The parsed text so far.
@@ -320,6 +326,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	}
 
 	/**
+	 * Handles the various annotation tags.
 	 * @param document
 	 * @param currentText
 	 * @param string
@@ -606,6 +613,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	
 	/**
 	 * Find the next tag that needs to be handled. Assumes that the text at the start of the stream forms a tag.
+	 * (i.e. assumes that the last character read was a '\\')
 	 * @param ioStream
 	 * @return
 	 * @throws IOException
@@ -686,6 +694,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 			
 		}
 		
+		//This seems to be necessary for the timestamp markers to persist across saves.
 		FileInfo info = (FileInfo) getElementInfo(element);
 		if(info != null)
 		{
@@ -693,6 +702,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 			rtfModel.updateMarkers(info.fDocument);
 		}
 		
+		//Updates all of the fragment positions, and removes any annotations that have length 0.
 		IAnnotatedDocument rtfDoc = ((RTFEditorInput) element).getDocument();
 		Iterator<Annotation> iter = model.getAnnotationIterator();
 		while(iter.hasNext())
@@ -715,6 +725,9 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	}
 
 	/**
+	 * Updates the given annotation's fragment to match it's new offset and length. Then updates the map
+	 * key so that it matches the new offset. If the fragment has a length of 0 it gets
+	 * removed from the model (and the DB).
 	 * @param model
 	 * @param rtfDoc
 	 * @param annotation
@@ -737,6 +750,8 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	}
 
 	/**
+	 * Goes through the editor text and all the annotations to build the string that will be written
+	 * to the disk. Converts any special characters to their RTF tags as well.
 	 * @param contents
 	 * @param model
 	 * @return
@@ -792,6 +807,8 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	}
 
 	/**
+	 * Gets the annotations and their positions from the model and sorts them by position. Sets them into 
+	 * the two provided arraylists.
 	 * @param model
 	 * @param positions
 	 * @param annotations
@@ -838,6 +855,11 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		}
 	}
 	
+	/**
+	 * Gets the rtf representations of newline and tab if the current character is one of those.
+	 * @param c
+	 * @return
+	 */
 	private String getEndChar(char c)
 	{
 		String output = EMPTY;
@@ -852,6 +874,12 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		return output;
 	}
 	
+	/**
+	 * Stops newlines tabs and EOF from being written, adds an escape to brackets and backslash, converts non-ascii 
+	 * characters to their RTF tag and lets all other characters through.
+	 * @param c
+	 * @return
+	 */
 	private String getMiddleChar(char c)
 	{
 		String output = EMPTY;
@@ -972,7 +1000,8 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	}
 	
 	/**
-	 * Handles a group start by pushing the current state of formatting onto the stack.
+	 * Handles a group start by pushing the current state of formatting onto the stack. 
+	 * But first calls handleTag on \\plain which ends all current formatting..
 	 * @param document
 	 * @param text
 	 * @param stream
@@ -999,6 +1028,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	
 	/**
 	 * Handles the end of a group by popping the last formatting state off the stack.
+	 * It first ends all current formatting and then restores the formatting of the popped state.
 	 * @param document
 	 * @param text
 	 * @param stream

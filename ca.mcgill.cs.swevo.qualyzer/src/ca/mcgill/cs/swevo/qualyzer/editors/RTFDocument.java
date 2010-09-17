@@ -19,7 +19,8 @@ import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
 
 /**
- * The model for the Rich Text Document.
+ * The model for the Rich Text Document. Used to gather all the rich text tags and fragments when
+ * the document is being parsed.
  *
  */
 public class RTFDocument extends Document
@@ -32,7 +33,7 @@ public class RTFDocument extends Document
 	private HashMap<Position, FragmentAnnotation> fFragments;
 	
 	/**
-	 * 
+	 * Constructor.
 	 */
 	public RTFDocument()
 	{

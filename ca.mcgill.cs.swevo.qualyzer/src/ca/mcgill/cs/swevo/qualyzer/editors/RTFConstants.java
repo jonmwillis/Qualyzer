@@ -15,6 +15,8 @@ package ca.mcgill.cs.swevo.qualyzer.editors;
 
 /**
  * Stores all the ID's for the various annotations and actions.
+ * *_TYPE denotes an annotation type string.
+ * *_ACTION_ID denotes the action ID used by the RTFEditor.
  */
 public final class RTFConstants
 {
