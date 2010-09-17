@@ -26,7 +26,8 @@ import ca.mcgill.cs.swevo.qualyzer.model.Fragment;
 import ca.mcgill.cs.swevo.qualyzer.model.IAnnotatedDocument;
 
 /**
- *
+ * Handles the marking of Text in the RTFEditor. Asks the user what code they want to add,
+ * then it creates or updates the fragment and tells the sourceviewer about the change in annotation.
  */
 public class MarkTextAction extends Action implements ITestableAction
 {

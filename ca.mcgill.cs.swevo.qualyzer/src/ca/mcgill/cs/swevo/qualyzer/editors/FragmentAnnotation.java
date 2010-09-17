@@ -30,11 +30,12 @@ public class FragmentAnnotation extends Annotation
 	 */
 	public FragmentAnnotation(Fragment fragment)
 	{
-		super(RTFConstants.FRAGMENT_TYPE, false, buildCodeString(fragment)); //$NON-NLS-1$
+		super(RTFConstants.FRAGMENT_TYPE, false, buildCodeString(fragment));
 		fFragment = fragment;
 	}
 	
 	/**
+	 * Returns the text containing all the code names.
 	 * @return
 	 */
 	private static String buildCodeString(Fragment fragment)

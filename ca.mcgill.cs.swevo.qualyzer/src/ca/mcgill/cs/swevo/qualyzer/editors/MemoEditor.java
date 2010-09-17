@@ -39,7 +39,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
- *
+ * The implementation of the RTFEditor that handles Memos. Adds a style bar.
  */
 public class MemoEditor extends RTFEditor implements MemoListener
 {
@@ -53,11 +53,8 @@ public class MemoEditor extends RTFEditor implements MemoListener
 	private static final String CODE_IMG = "CODE_IMG"; //$NON-NLS-1$
 
 	private Button fBoldButton;
-
 	private Button fUnderlineButton;
-
 	private Button fItalicButton;
-
 	private Button fCodeButton;
 	
 	/**
@@ -92,6 +89,9 @@ public class MemoEditor extends RTFEditor implements MemoListener
 		}
 	}
 	
+	/**
+	 * Adds a listener to the sourceviewer.
+	 */
 	@Override
 	protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler ruler, int styles)
 	{

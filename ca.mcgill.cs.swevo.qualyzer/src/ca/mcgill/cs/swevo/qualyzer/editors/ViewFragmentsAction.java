@@ -25,7 +25,8 @@ import ca.mcgill.cs.swevo.qualyzer.model.Fragment;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
 
 /**
- *
+ * View all the associated fragments actions. Asks which code the user wants to examine and then
+ * opens the fragment viewer.
  */
 public class ViewFragmentsAction extends Action
 {

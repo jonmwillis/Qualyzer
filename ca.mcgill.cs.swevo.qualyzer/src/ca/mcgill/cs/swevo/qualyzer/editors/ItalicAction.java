@@ -19,6 +19,7 @@ import org.eclipse.swt.graphics.Point;
 
 /**
  * The Italic Action in the RTF Editor.
+ * Mostly delegates to the SourceViewer.
  */
 public class ItalicAction extends Action
 {

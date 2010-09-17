@@ -242,7 +242,7 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 	}
 
 	/**
-	 * 
+	 * Attaches the button actions to the buttons.
 	 */
 	private void hookupButtonActions()
 	{
@@ -364,6 +364,8 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 	}
 
 	/**
+	 * Creates the listener that seeks to the specified time when a time is entered into the 
+	 * current time text widget.
 	 * @return
 	 */
 	private KeyListener createGotoListener()
@@ -674,7 +676,7 @@ public class TranscriptEditor extends RTFEditor implements TranscriptListener
 	}
 
 	/**
-	 * 
+	 * Create a timestamp based on where the action was called from.
 	 */
 	public void addTimeStamp()
 	{
