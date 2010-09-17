@@ -27,7 +27,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Fragment;
 
 /**
- *
+ * Asks the user which code they want to remove from the fragment and then saves the change.
  */
 public class RemoveCodeAction extends Action
 {

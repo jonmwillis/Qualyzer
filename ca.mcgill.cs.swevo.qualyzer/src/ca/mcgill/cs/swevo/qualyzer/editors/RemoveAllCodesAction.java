@@ -25,7 +25,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Fragment;
 
 /**
- *
+ * Removes all the codes from a given fragment. Then deletes that fragment.
  */
 public class RemoveAllCodesAction extends Action
 {

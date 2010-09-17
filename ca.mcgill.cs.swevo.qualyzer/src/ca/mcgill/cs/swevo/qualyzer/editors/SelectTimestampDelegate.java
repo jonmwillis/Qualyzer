@@ -18,7 +18,7 @@ import org.eclipse.ui.texteditor.AbstractRulerActionDelegate;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 /**
- * 
+ * Delegates the ruler action to the timestamp action.
  *
  */
 public class SelectTimestampDelegate extends AbstractRulerActionDelegate

@@ -13,6 +13,7 @@ package ca.mcgill.cs.swevo.qualyzer.editors;
 
 /**
  * Represents a snapshot of the state of the parsers. Is necessary to allow proper handling of groups.
+ * Maintains the formatting state (bold, italic, underline).
  */
 public class ParserState
 {

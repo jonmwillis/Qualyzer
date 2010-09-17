@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.RTFEditorInput;
 
 /**
- *
+ * The action that occurs when the user clicks on a Timestamp in the vertical ruler.
  */
 public class SelectTimestampAction extends SelectMarkerRulerAction
 {

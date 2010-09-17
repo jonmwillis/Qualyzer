@@ -18,7 +18,7 @@ import org.eclipse.jface.text.Position;
 import org.eclipse.swt.graphics.Point;
 
 /**
- *
+ * The action that handles underlining in the RTF Editor, mostly delegates to the sourceviewer.
  */
 public class UnderlineAction extends Action
 {

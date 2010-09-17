@@ -51,7 +51,9 @@ public class AudioPlayer
 	private double fMicSecondsPerByte;
 	
 	/**
-	 * 
+	 * Takes the filename of the audio file and the editor that is opening it.
+	 * @param audioFile
+	 * @param editor
 	 */
 	public AudioPlayer(String audioFile, TranscriptEditor editor)
 	{
@@ -256,7 +258,7 @@ public class AudioPlayer
 	}
 	
 	/**
-	 * 
+	 * The audio player is closing so stop the file from playing and close the stream.
 	 */
 	public void close()
 	{

@@ -19,6 +19,7 @@ import org.eclipse.swt.graphics.Point;
 
 /**
  * The bold action in the RTF Editor.
+ * Mostly delegates to the SourceViewer.
  */
 public class BoldAction extends Action
 {
