@@ -209,6 +209,12 @@
             id="ca.mcgill.cs.swevo.qualyzer.commands.addTimestamp"
             name="Add Timestamp">
       </command>
+      <command
+            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.ReportIssueHandler"
+            description="Report an Issue to Qualyzer developers"
+            id="ca.mcgill.cs.swevo.qualyzer.commands.reportIssue"
+            name="%command.name.reportIssue">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -263,6 +269,12 @@
                   commandId="org.eclipse.ui.window.preferences"
                   label="%command.label.preferences"
                   style="push">
+            </command>
+            <command
+                  commandId="ca.mcgill.cs.swevo.qualyzer.commands.reportIssue"
+                  label="Report &amp;Issue"
+                  style="push"
+                  tooltip="%command.tooltip.reportIssue">
             </command>
             <separator
                   name="fileMenu/lastSeparator"
