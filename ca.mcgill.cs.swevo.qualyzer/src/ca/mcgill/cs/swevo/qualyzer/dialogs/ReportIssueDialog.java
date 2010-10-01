@@ -43,6 +43,10 @@ import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
 @SuppressWarnings("restriction")
 public class ReportIssueDialog extends TitleAreaDialog
 {
+	/**
+	 * 
+	 */
+	private static final String QUALYZER_LOG = "qualyzer.log";
 	// private static Logger gLogger = LoggerFactory.getLogger(ReportIssueDialog.class);
 
 	private static final int REPORT_HEIGHT = 150;
@@ -135,16 +139,17 @@ public class ReportIssueDialog extends TitleAreaDialog
 								EclipseEnvironmentInfo.getDefault().getNL())); //$NON-NLS-1$
 		sBuilder.append(String.format("Command-line arguments: %s\n", 
 								(Object[])EclipseEnvironmentInfo.getDefault().getCommandLineArgs())); //$NON-NLS-1$
-		sBuilder.append("==== End of System Information ====\n\n");
+		sBuilder.append("==== End of System Information ====\n\n"); //$NON-NLS-1$
 		
-		sBuilder.append("==== Qualyzer Log ====\n");
-		String qualyzerPath = ResourcesPlugin.getWorkspace().getRoot().getLocation().append("Qualyzer.log").toOSString();
+		sBuilder.append("==== Qualyzer Log ====\n"); //$NON-NLS-1$
+		String qualyzerPath = ResourcesPlugin.getWorkspace().getRoot().getLocation().append(QUALYZER_LOG).toOSString();
 		sBuilder.append(readFile(qualyzerPath));
-		sBuilder.append("==== End of Qualyzer Log ====\n\n");
+		sBuilder.append("==== End of Qualyzer Log ====\n\n"); //$NON-NLS-1$
 		
-		sBuilder.append("==== Workspace Log ====\n");
-		sBuilder.append(readFile(InternalPlatform.getDefault().getFrameworkLog().getFile().getAbsolutePath()));
-		sBuilder.append("==== End of Workspace Log ====\n\n");
+		sBuilder.append("==== Workspace Log ====\n"); //$NON-NLS-1$
+		String workspaceLogPath = InternalPlatform.getDefault().getFrameworkLog().getFile().getAbsolutePath();
+		sBuilder.append(readFile(workspaceLogPath));
+		sBuilder.append("==== End of Workspace Log ====\n\n"); //$NON-NLS-1$
 		
 		sBuilder.append("=== END OF REPORT ===\n"); //$NON-NLS-1$
 
