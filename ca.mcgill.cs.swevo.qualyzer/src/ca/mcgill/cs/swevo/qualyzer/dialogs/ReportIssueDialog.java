@@ -30,6 +30,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
@@ -79,7 +80,6 @@ public class ReportIssueDialog extends TitleAreaDialog
 	{
 		super.create();
 		setTitle(Messages.getString("dialogs.ReportIssueDialog.title")); //$NON-NLS-1$
-		setMessage(Messages.getString("dialogs.ReportIssueDialog.message")); //$NON-NLS-1$
 	}
 
 	/*
@@ -93,10 +93,17 @@ public class ReportIssueDialog extends TitleAreaDialog
 		Composite composite = new Composite(parent, SWT.NULL);
 		composite.setLayout(new GridLayout(1, false));
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		Label label = new Label(composite, SWT.LEFT | SWT.WRAP);
+		label.setText(Messages.getString("dialogs.ReportIssueDialog.message"));
+		GridData gData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		gData.widthHint = REPORT_WIDTH;
+		label.setLayoutData(gData);
+		
 		// CSOFF:
 		fReportText = new Text(composite, SWT.MULTI | SWT.WRAP | SWT.BORDER | SWT.READ_ONLY | SWT.V_SCROLL);
 		// CSON:
-		GridData gData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		
+		gData = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gData.heightHint = REPORT_HEIGHT;
 		gData.widthHint = REPORT_WIDTH;
 		fReportText.setLayoutData(gData);
@@ -185,9 +192,13 @@ public class ReportIssueDialog extends TitleAreaDialog
 		return sBuilder.toString();
 	}
 
-	private void copyToClipboard()
+	/**
+	 * Copy the content of the textbox in the clipboard. 
+	 */
+	public void copyToClipboard()
 	{
-
+		// This is to give the illusion that something happened. Otherwise, the users will see nothing.
+		fReportText.selectAll();
 		String textData = fReportText.getText();
 		TextTransfer textTransfer = TextTransfer.getInstance();
 		fClipboard.setContents(new Object[] { textData }, new Transfer[] { textTransfer });
@@ -215,5 +226,24 @@ public class ReportIssueDialog extends TitleAreaDialog
 
 		return super.close();
 	}
+	
+	/**
+	 *
+	 * @return The Text widget (for testing)
+	 */
+	public Text getReportTextWidget()
+	{
+		return fReportText;
+	}
+	
+	/**
+	 *
+	 * @return The clipboard (for testing)
+	 */
+	public Clipboard getClipboard()
+	{
+		return fClipboard;
+	}
+	
 
 }
