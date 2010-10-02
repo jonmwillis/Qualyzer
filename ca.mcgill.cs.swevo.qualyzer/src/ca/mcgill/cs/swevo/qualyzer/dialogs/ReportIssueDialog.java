@@ -18,7 +18,7 @@ import java.io.IOException;
 import org.eclipse.core.internal.runtime.InternalPlatform;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.internal.adaptor.EclipseEnvironmentInfo;
-import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
@@ -30,6 +30,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -42,7 +43,7 @@ import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
  *
  */
 @SuppressWarnings("restriction")
-public class ReportIssueDialog extends TitleAreaDialog
+public class ReportIssueDialog extends Dialog
 {
 	/**
 	 * 
@@ -51,7 +52,7 @@ public class ReportIssueDialog extends TitleAreaDialog
 	// private static Logger gLogger = LoggerFactory.getLogger(ReportIssueDialog.class);
 
 	private static final int REPORT_HEIGHT = 150;
-	private static final int REPORT_WIDTH = 250;
+	private static final int REPORT_WIDTH = 500;
 	
 	private Text fReportText;
 
@@ -79,7 +80,8 @@ public class ReportIssueDialog extends TitleAreaDialog
 	public void create()
 	{
 		super.create();
-		setTitle(Messages.getString("dialogs.ReportIssueDialog.title")); //$NON-NLS-1$
+		super.getShell().setText(Messages.getString("dialogs.ReportIssueDialog.title"));
+//		setTitle(Messages.getString("dialogs.ReportIssueDialog.title")); //$NON-NLS-1$
 	}
 
 	/*
@@ -92,12 +94,18 @@ public class ReportIssueDialog extends TitleAreaDialog
 	{
 		Composite composite = new Composite(parent, SWT.NULL);
 		composite.setLayout(new GridLayout(1, false));
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		Label label = new Label(composite, SWT.LEFT | SWT.WRAP);
-		label.setText(Messages.getString("dialogs.ReportIssueDialog.message"));
 		GridData gData = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gData.widthHint = REPORT_WIDTH;
+		gData.minimumWidth = REPORT_WIDTH;
+		composite.setLayoutData(gData);
+		
+		
+		Text label = new Text(composite, SWT.LEFT | SWT.WRAP | SWT.READ_ONLY | SWT.NO_SCROLL);
+		label.setText(Messages.getString("dialogs.ReportIssueDialog.message"));
+		gData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		gData.widthHint = REPORT_WIDTH;
 		label.setLayoutData(gData);
+		label.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 		
 		// CSOFF:
 		fReportText = new Text(composite, SWT.MULTI | SWT.WRAP | SWT.BORDER | SWT.READ_ONLY | SWT.V_SCROLL);
