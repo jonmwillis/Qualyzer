@@ -270,12 +270,6 @@
                   label="%command.label.preferences"
                   style="push">
             </command>
-            <command
-                  commandId="ca.mcgill.cs.swevo.qualyzer.commands.reportIssue"
-                  label="Report &amp;Issue"
-                  style="push"
-                  tooltip="%command.tooltip.reportIssue">
-            </command>
             <separator
                   name="fileMenu/lastSeparator"
                   visible="true">
@@ -295,6 +289,12 @@
                id="helpMenu"
                label="%menu.label.help"
                tooltip="%menu.tooltip.help">
+            <command
+                  commandId="ca.mcgill.cs.swevo.qualyzer.commands.reportIssue"
+                  label="Report &amp;Issue"
+                  style="push"
+                  tooltip="%command.tooltip.reportIssue">
+            </command>
             <command
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.aboutQualyzer"
                   label="%command.label.aboutQualyzer"
