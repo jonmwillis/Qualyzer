@@ -17,14 +17,15 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
+
 /**
  * Handler for the About Qualyzer Command.
  */
 public class AboutQualyzerHandler extends AbstractHandler
 {
-	private static final String RELEASE_NUMBER = "1.1.1"; //$NON-NLS-1$
 	private static final String RELEASE = Messages.getString("handlers.AboutQualyzerHandler.releaseTag") + //$NON-NLS-1$
-		" " + RELEASE_NUMBER + "\n\n"; //$NON-NLS-1$ //$NON-NLS-2$
+		" " + QualyzerActivator.CURRENT_VERSION + "\n\n"; //$NON-NLS-1$ //$NON-NLS-2$
 	
 	private static final String MCGILL = Messages.getString("handlers.AboutQualyzerHandler.mcGillTag")+ //$NON-NLS-1$
 		"\n\n"; //$NON-NLS-1$ 
