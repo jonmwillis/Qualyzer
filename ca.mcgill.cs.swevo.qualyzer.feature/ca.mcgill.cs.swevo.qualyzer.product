@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Qualyzer" uid="ca.mcgill.cs.swevo.qualyzer.product" id="ca.mcgill.cs.swevo.qualyzer.product" application="ca.mcgill.cs.swevo.qualyzer.application" version="1.1.0" useFeatures="true" includeLaunchers="true">
+<product name="Qualyzer" uid="ca.mcgill.cs.swevo.qualyzer.product" id="ca.mcgill.cs.swevo.qualyzer.product" application="ca.mcgill.cs.swevo.qualyzer.application" version="1.1.2" useFeatures="true" includeLaunchers="true">
 
    <configIni use="default">
    </configIni>
@@ -139,9 +139,9 @@ IT IS YOUR OBLIGATION TO READ AND ACCEPT ALL SUCH TERMS AND CONDITIONS PRIOR TO 
    </plugins>
 
    <features>
-      <feature id="ca.mcgill.cs.swevo.qualyzer.feature" version="1.1.1.qualifier"/>
-      <feature id="ca.mcgill.cs.swevo.qualyzer.dependencies" version="1.1.1.qualifier"/>
-      <feature id="ca.mcgill.cs.swevo.qualyzer.rcp_feature" version="1.1.1.qualifier"/>
+      <feature id="ca.mcgill.cs.swevo.qualyzer.dependencies" version="1.1.2.qualifier"/>
+      <feature id="ca.mcgill.cs.swevo.qualyzer.feature" version="1.1.2.qualifier"/>
+      <feature id="ca.mcgill.cs.swevo.qualyzer.rcp_feature" version="1.1.2.qualifier"/>
    </features>
 
    <configurations>
