@@ -125,7 +125,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	protected void setDocumentContent(IDocument document, InputStream contentStream, String encoding)
 			throws CoreException
 	{
-		String text = EMPTY;
+		StringBuilder text = new StringBuilder(EMPTY);
 		fBoldTag = -1;
 		fItalicTag = -1;
 		fUnderlineTag = -1;
@@ -168,7 +168,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 									pushState((RTFDocument) document, text, contentStream);
 									push = false;
 								}
-								text += handleTag(groupTag, (RTFDocument) document, text, contentStream);
+								text.append(handleTag(groupTag, (RTFDocument) document, text, contentStream));
 								stop = isIgnoredGroup(groupTag) || groupTag.equals(RTFTags.IGNORE) || 
 									groupTag.equals(STAR_SLASH);
 							}while(!stop && groupTag.length() > 1 && groupTag.charAt(groupTag.length() - 1) == '\\');
@@ -177,7 +177,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 						{
 							pushState((RTFDocument) document, text, contentStream);
 							push = false;
-							text += ch;
+							text.append(ch);
 						}
 					}
 					else if(ch == '}')
@@ -192,14 +192,14 @@ public class RTFDocumentProvider extends FileDocumentProvider
 					do
 					{
 						escape = nextTag(contentStream);
-						text += handleTag(escape, (RTFDocument) document, text, contentStream);
+						text.append(handleTag(escape, (RTFDocument) document, text, contentStream));
 						stop = escape.equals(RTFTags.IGNORE) || escape.equals(STAR_SLASH);
 					}while(escape.length() > 1 && escape.charAt(escape.length() - 1) == '\\' && !stop);
 					
 				}
 				else if((!Character.isWhitespace(ch) && ch != '\0') || ch == ' ')
 				{
-					text += ch;
+					text.append(ch);
 				}
 			}
 		}
@@ -208,7 +208,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 			e.printStackTrace();
 		}
 		
-		document.set(text);
+		document.set(text.toString());
 	}
 	
 	/**
@@ -238,7 +238,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	 * @return String The text to add to the parsed text.
 	 * @throws IOException
 	 */
-	private String handleTag(String escape, RTFDocument document, String currentText, InputStream stream) 
+	private String handleTag(String escape, RTFDocument document, StringBuilder currentText, InputStream stream) 
 		throws IOException
 	{
 		String string = escape.trim();
@@ -332,7 +332,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	 * @param currentText
 	 * @param string
 	 */
-	private void handleFormatTag(RTFDocument document, String currentText, String string)
+	private void handleFormatTag(RTFDocument document, StringBuilder currentText, String string)
 	{
 		if(string.equals(RTFTags.BOLD_START)) 
 		{
@@ -364,7 +364,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	 * @param document
 	 * @param currentText
 	 */
-	private void endUnderline(RTFDocument document, String currentText)
+	private void endUnderline(RTFDocument document, StringBuilder currentText)
 	{
 		if(fUnderlineTag == -1)
 		{
@@ -408,7 +408,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	 * @param document
 	 * @param currentText
 	 */
-	private void startUnderline(RTFDocument document, String currentText)
+	private void startUnderline(RTFDocument document, StringBuilder currentText)
 	{
 		if(fUnderlineTag != -1)
 		{
@@ -448,7 +448,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	 * @param document
 	 * @param currentText
 	 */
-	private void endItalic(RTFDocument document, String currentText)
+	private void endItalic(RTFDocument document, StringBuilder currentText)
 	{
 		if(fItalicTag == -1)
 		{
@@ -492,7 +492,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	 * @param document
 	 * @param currentText
 	 */
-	private void startItalic(RTFDocument document, String currentText)
+	private void startItalic(RTFDocument document, StringBuilder currentText)
 	{
 		if(fItalicTag != -1)
 		{
@@ -532,7 +532,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	 * @param document
 	 * @param currentText
 	 */
-	private void endBold(RTFDocument document, String currentText)
+	private void endBold(RTFDocument document, StringBuilder currentText)
 	{
 		if(fBoldTag == -1)
 		{
@@ -576,7 +576,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	 * @param document
 	 * @param currentText
 	 */
-	private void startBold(RTFDocument document, String currentText)
+	private void startBold(RTFDocument document, StringBuilder currentText)
 	{
 		if(fBoldTag != -1)
 		{
@@ -1008,7 +1008,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	 * @param stream
 	 * @throws IOException
 	 */
-	private void pushState(RTFDocument document, String text, InputStream stream) throws IOException
+	private void pushState(RTFDocument document, StringBuilder text, InputStream stream) throws IOException
 	{
 		ParserState state = new ParserState(fBoldTag != -1, fItalicTag != -1, fUnderlineTag != -1);
 		fStack.push(state);
@@ -1035,7 +1035,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	 * @param stream
 	 * @throws IOException
 	 */
-	private void popState(RTFDocument document, String text, InputStream stream) throws IOException
+	private void popState(RTFDocument document, StringBuilder text, InputStream stream) throws IOException
 	{
 		handleTag(RTFTags.PLAIN, document, text, stream);
 		ParserState state = fStack.pop();
