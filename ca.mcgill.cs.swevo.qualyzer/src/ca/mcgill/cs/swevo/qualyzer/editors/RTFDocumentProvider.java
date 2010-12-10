@@ -732,12 +732,12 @@ public class RTFDocumentProvider extends FileDocumentProvider
 		FileEditorInput input = (FileEditorInput) element;
 		IAnnotationModel model = getAnnotationModel(element);
 
-		String contents = document.get();
-		String toWrite = EMPTY;
+		StringBuilder contents = new StringBuilder(document.get());
+		StringBuilder toWrite = new StringBuilder(EMPTY);
 
 		toWrite = buildRTFString(contents, model);
 
-		InputStream stream = new ByteArrayInputStream(toWrite.getBytes());
+		InputStream stream = new ByteArrayInputStream(toWrite.toString().getBytes());
 		try
 		{
 			input.getFile().setContents(stream, IResource.FORCE, new NullProgressMonitor());
@@ -810,7 +810,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	 * @param model
 	 * @return
 	 */
-	private String buildRTFString(String contents, IAnnotationModel model)
+	private StringBuilder buildRTFString(StringBuilder contents, IAnnotationModel model)
 	{
 		StringBuilder output = new StringBuilder(RTFTags.HEADER);
 		ArrayList<Position> positions = new ArrayList<Position>();
@@ -857,7 +857,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 			output.append(getEndChar(c));
 		}
 
-		return output.append(RTFTags.FOOTER).toString();
+		return output.append(RTFTags.FOOTER);
 	}
 
 	/**
