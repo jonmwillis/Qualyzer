@@ -33,8 +33,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonNavigator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.model.Code;
@@ -58,8 +56,6 @@ public class CodeChooserDialog extends TitleAreaDialog
 	private Code fCode;
 	private Fragment fFragment;
 	
-//	private static Logger gLogger = LoggerFactory.getLogger(CodeChooserDialog.class);
-	
 	/**
 	 * Constructor.
 	 * @param shell
@@ -82,8 +78,7 @@ public class CodeChooserDialog extends TitleAreaDialog
 		setTitle(Messages.getString("dialogs.CodeChooserDialog.add")); //$NON-NLS-1$
 		setMessage(Messages.getString("dialogs.CodeChooserDialog.enterName")); //$NON-NLS-1$
 		
-//		gLogger.error("Create is now true");
-		getButton(IDialogConstants.OK_ID).setEnabled(true);
+		getButton(IDialogConstants.OK_ID).setEnabled(false);
 	}
 	
 	/* (non-Javadoc)
@@ -138,46 +133,38 @@ public class CodeChooserDialog extends TitleAreaDialog
 			@Override
 			public void modifyText(ModifyEvent e)
 			{
-				try {
-//					gLogger.error("In Modify Text");
-					CodeChooserValidator validator = new CodeChooserValidator(fCodeName.getText().trim(), 
-							fProject, fFragment);
-					if(!validator.isValid())
+				CodeChooserValidator validator = new CodeChooserValidator(fCodeName.getText().trim(), 
+						fProject, fFragment);
+				if(!validator.isValid())
+				{
+					if(validator.getErrorMessage().equals(Messages.getString(
+							"dialogs.CodeChooserDialog.nameTaken"))) //$NON-NLS-1$
 					{
-						if(validator.getErrorMessage().equals(Messages.getString(
-								"dialogs.CodeChooserDialog.nameTaken"))) //$NON-NLS-1$
+						setErrorMessage(null);
+						setMessage(Messages.getString("dialogs.CodeChooserDialog.enterName")); //$NON-NLS-1$
+						for(Code code : fProject.getCodes())
 						{
-							setErrorMessage(null);
-							setMessage(Messages.getString("dialogs.CodeChooserDialog.enterName")); //$NON-NLS-1$
-							for(Code code : fProject.getCodes())
+							if(code.getCodeName().equals(fCodeName.getText().trim()))
 							{
-								if(code.getCodeName().equals(fCodeName.getText().trim()))
-								{
-									fDescription.setText(code.getDescription());
-								}
+								fDescription.setText(code.getDescription());
 							}
-//							gLogger.error("In OK");
-							getButton(IDialogConstants.OK_ID).setEnabled(true);
 						}
-						else
-						{
-//							gLogger.error("In False");
-							setErrorMessage(validator.getErrorMessage());
-							getButton(IDialogConstants.OK_ID).setEnabled(false);
-						}
+						getButton(IDialogConstants.OK_ID).setEnabled(true);
 					}
 					else
 					{
-//						gLogger.error("In Outter Else");
-						setErrorMessage(null);
-						setMessage(Messages.getString(
-								"dialogs.CodeChooserDialog.doesNotExist"), IMessageProvider.WARNING); //$NON-NLS-1$
-						getButton(IDialogConstants.OK_ID).setEnabled(true);
+						setErrorMessage(validator.getErrorMessage());
+						getButton(IDialogConstants.OK_ID).setEnabled(false);
 					}
-//					gLogger.error("Out Modify Text");
-				} catch(Exception exp) {
-//					gLogger.error("Exception occurred in Modify Text", exp);
 				}
+				else
+				{
+					setErrorMessage(null);
+					setMessage(Messages.getString(
+							"dialogs.CodeChooserDialog.doesNotExist"), IMessageProvider.WARNING); //$NON-NLS-1$
+					getButton(IDialogConstants.OK_ID).setEnabled(true);
+				}
+				
 			}
 			
 		};
