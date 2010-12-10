@@ -672,21 +672,21 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	 */
 	private EscapePair nextTag(InputStream ioStream) throws IOException
 	{
-		String escape = EMPTY;
+		StringBuilder escape = new StringBuilder(EMPTY);
 		char ch2 = (char) ioStream.read();
 		if (ch2 == 'u')
 		{
-			escape += ch2;
+			escape.append(ch2);
 			ch2 = (char) ioStream.read();
-			String unicode = EMPTY;
+			StringBuilder unicode = new StringBuilder(EMPTY);
 			while (Character.isDigit(ch2))
 			{
-				escape += ch2;
-				unicode += ch2;
+				escape.append(ch2);
+				unicode.append(ch2);
 				ch2 = (char) ioStream.read();
 			}
 
-			if (!unicode.isEmpty())
+			if (!unicode.toString().isEmpty())
 			{
 				int letterCount = Character.isLetter(ch2) ? 1 : 0;
 				while (letterCount < 1)
@@ -697,25 +697,25 @@ public class RTFDocumentProvider extends FileDocumentProvider
 						letterCount++;
 					}
 				}
-				return new EscapePair(unicode, ch2);
+				return new EscapePair(unicode.toString(), ch2);
 			}
 		}
 		boolean notBracket = ch2 != '{' && ch2 != '}';
 		while (ch2 != ' ' && notBracket && ch2 != '\\' && ch2 != '\n')
 		{
-			escape += ch2;
+			escape.append(ch2);
 			ch2 = (char) ioStream.read();
 			notBracket = ch2 != '{' && ch2 != '}';
 		}
 		if (ch2 == '\\')
 		{
-			escape += RTFTags.BACKSLASH;
+			escape.append(RTFTags.BACKSLASH);
 		}
-		else if (ch2 != '{' || escape.isEmpty())
+		else if (ch2 != '{' || escape.toString().isEmpty())
 		{
-			escape += ch2;
+			escape.append(ch2);
 		}
-		return new EscapePair(escape, ch2);
+		return new EscapePair(escape.toString(), ch2);
 	}
 
 	/**
@@ -812,7 +812,7 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	 */
 	private String buildRTFString(String contents, IAnnotationModel model)
 	{
-		String output = RTFTags.HEADER;
+		StringBuilder output = new StringBuilder(RTFTags.HEADER);
 		ArrayList<Position> positions = new ArrayList<Position>();
 		ArrayList<Annotation> annotations = new ArrayList<Annotation>();
 		prepareAnnotationLists(model, positions, annotations);
@@ -839,25 +839,25 @@ public class RTFDocumentProvider extends FileDocumentProvider
 				}
 				if (position != null)
 				{
-					output += getStartTagFromAnnotation(annotation);
+					output.append(getStartTagFromAnnotation(annotation));
 				}
 			}
 
 			char c = contents.charAt(i);
-			output += getMiddleChar(c);
+			output.append(getMiddleChar(c));
 
 			if (position != null && i == position.offset + position.length - 1)
 			{
-				output += getEndTagFromAnnotation(annotation);
+				output.append(getEndTagFromAnnotation(annotation));
 
 				position = null;
 				annotation = null;
 			}
 
-			output += getEndChar(c);
+			output.append(getEndChar(c));
 		}
 
-		return output + RTFTags.FOOTER;
+		return output.append(RTFTags.FOOTER).toString();
 	}
 
 	/**
@@ -918,16 +918,16 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	 */
 	private String getEndChar(char c)
 	{
-		String output = EMPTY;
+		StringBuilder output = new StringBuilder(EMPTY);
 		if (c == '\n')
 		{
-			output += RTFTags.NEW_LINE_TAG;
+			output.append(RTFTags.NEW_LINE_TAG);
 		}
 		else if (c == '\t')
 		{
-			output += RTFTags.TAB_TAG;
+			output.append(RTFTags.TAB_TAG);
 		}
-		return output;
+		return output.toString();
 	}
 
 	/**
@@ -939,25 +939,25 @@ public class RTFDocumentProvider extends FileDocumentProvider
 	 */
 	private String getMiddleChar(char c)
 	{
-		String output = EMPTY;
+		StringBuilder output = new StringBuilder(EMPTY);
 		if (c != '\n' && c != '\t' && c != '\0')
 		{
 			if (c == '{' || c == '}' || c == '\\')
 			{
-				output += RTFTags.BACKSLASH;
+				output.append(RTFTags.BACKSLASH);
 			}
 
 			if (CharUtils.isAscii(c))
 			{
-				output += c;
+				output.append(c);
 			}
 			else
 			{
 				int unicode = (int) c;
-				output = RTFTags.UNICODE_START_TAG + unicode + RTFTags.UNICODE_END_TAG;
+				output = new StringBuilder(RTFTags.UNICODE_START_TAG + unicode + RTFTags.UNICODE_END_TAG);
 			}
 		}
-		return output;
+		return output.toString();
 	}
 
 	/**
