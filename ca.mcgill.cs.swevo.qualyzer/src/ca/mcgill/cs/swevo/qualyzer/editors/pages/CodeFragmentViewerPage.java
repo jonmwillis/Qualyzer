@@ -292,7 +292,7 @@ public class CodeFragmentViewerPage extends FormPage implements ProjectListener,
 			numPunctuation++;
 		}
 		
-		while(end < text.length() && !Character.isWhitespace(text.charAt(end)) && numPunctuation < 2)
+		while(end < text.length() && text.charAt(end) != '\n' && text.charAt(end) != '\t' && numPunctuation < 2)
 		{
 			end++;
 			if(end < text.length() && isPunctuation(text, end))
@@ -325,7 +325,7 @@ public class CodeFragmentViewerPage extends FormPage implements ProjectListener,
 			numPunctuation++;
 		}
 		
-		while(start > 0 && !Character.isWhitespace(text.charAt(start-1)) && numPunctuation < 2)
+		while(start > 0 && text.charAt(start) != '\n' && text.charAt(start) != '\t' && numPunctuation < 2)
 		{
 			start--;
 			if(start > 0 && isPunctuation(text, start -1))
