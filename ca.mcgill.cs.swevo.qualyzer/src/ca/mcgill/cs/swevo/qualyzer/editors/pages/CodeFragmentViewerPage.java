@@ -225,32 +225,31 @@ public class CodeFragmentViewerPage extends FormPage implements ProjectListener,
 		int end = findEnd(text, fragment);
 		
 		String fragText = text.substring(start, end);
-		String newText = fragText.trim();
 		
 		FormText formText = toolkit.createFormText(sectionClient, true);
 		
-		StringBuffer buffer = new StringBuffer();
-		buffer.append(FormTextConstants.FORM_START); 
-		buffer.append(FormTextConstants.PARAGRAPH_START);
+		StringBuilder builder = new StringBuilder();
+		builder.append(FormTextConstants.FORM_START); 
+		builder.append(FormTextConstants.PARAGRAPH_START);
 		
-		int fragStart = fragment.getOffset() - start - (fragText.length() - newText.length());
+		int fragStart = fragment.getOffset() - start;
 		int fragEnd = fragStart + fragment.getLength();
 		
-		String temp = newText.substring(0, fragStart).replace(LESS, LESS_CODE);
-		buffer.append(temp.replace(GREATER, GREATER_CODE));
+		String temp = fragText.substring(0, fragStart).replace(LESS, LESS_CODE);
+		builder.append(temp.replace(GREATER, GREATER_CODE));
 		
-		buffer.append(FormTextConstants.LINK_START_HEAD + FormTextConstants.LINK_START_TAIL);
-		temp = newText.substring(fragStart, fragEnd).replace(LESS, LESS_CODE);
-		buffer.append(temp.replace(GREATER, GREATER_CODE));
-		buffer.append(FormTextConstants.LINK_END); 
+		builder.append(FormTextConstants.LINK_START_HEAD + FormTextConstants.LINK_START_TAIL);
+		temp = fragText.substring(fragStart, fragEnd).replace(LESS, LESS_CODE);
+		builder.append(temp.replace(GREATER, GREATER_CODE));
+		builder.append(FormTextConstants.LINK_END); 
 		
-		temp = newText.substring(fragEnd, newText.length()).replace(LESS, LESS_CODE);
-		buffer.append(temp.replace(GREATER, GREATER_CODE));
+		temp = fragText.substring(fragEnd, fragText.length()).replace(LESS, LESS_CODE);
+		builder.append(temp.replace(GREATER, GREATER_CODE));
 		
-		buffer.append(FormTextConstants.PARAGRAPH_END); 
-		buffer.append(FormTextConstants.FORM_END); 
+		builder.append(FormTextConstants.PARAGRAPH_END); 
+		builder.append(FormTextConstants.FORM_END); 
 		
-		formText.setText(buffer.toString(), true, false);
+		formText.setText(builder.toString(), true, false);
 		formText.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 		formText.addHyperlinkListener(createHyperlinkListener(fragment));
 		
@@ -293,7 +292,7 @@ public class CodeFragmentViewerPage extends FormPage implements ProjectListener,
 			numPunctuation++;
 		}
 		
-		while(end < text.length() && text.charAt(end) != '\n' && numPunctuation < 2 && text.charAt(end) != '\t')
+		while(end < text.length() && !Character.isWhitespace(text.charAt(end)) && numPunctuation < 2)
 		{
 			end++;
 			if(end < text.length() && isPunctuation(text, end))
@@ -326,7 +325,7 @@ public class CodeFragmentViewerPage extends FormPage implements ProjectListener,
 			numPunctuation++;
 		}
 		
-		while(start > 0 && text.charAt(start-1) != '\n' && text.charAt(start-1) != '\t' && numPunctuation < 2)
+		while(start > 0 && !Character.isWhitespace(text.charAt(start-1)) && numPunctuation < 2)
 		{
 			start--;
 			if(start > 0 && isPunctuation(text, start -1))
