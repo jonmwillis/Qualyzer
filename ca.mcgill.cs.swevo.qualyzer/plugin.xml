@@ -271,6 +271,22 @@
                   style="push">
             </command>
             <separator
+                  name="fileMenu/importSeparator"
+                  visible="true">
+            </separator>
+            <command
+                  commandId="org.eclipse.ui.file.import"
+                  label="%command.label.importproject"
+                  style="push"
+                  tooltip="%command.tooltip.importproject">
+            </command>
+            <command
+                  commandId="org.eclipse.ui.file.export"
+                  label="%command.label.exportproject"
+                  style="push"
+                  tooltip="%command.tooltip.exportproject">
+            </command>
+            <separator
                   name="fileMenu/lastSeparator"
                   visible="true">
             </separator>
