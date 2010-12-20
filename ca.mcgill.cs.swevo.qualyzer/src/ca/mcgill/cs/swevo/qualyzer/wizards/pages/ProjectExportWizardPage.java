@@ -23,8 +23,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.internal.wizards.datatransfer.ArchiveFileExportOperation;
 import org.eclipse.ui.internal.wizards.datatransfer.WizardArchiveFileResourceExportPage1;
 
-import ca.mcgill.cs.swevo.qualyzer.wizards.Messages;
-
 /**
  * Extends the WizardArchiveFileResourceExportPage1 in order to force a refresh of all
  *  the resources before trying to access them.
@@ -39,7 +37,7 @@ public class ProjectExportWizardPage extends WizardArchiveFileResourceExportPage
 	public ProjectExportWizardPage(IStructuredSelection selection)
 	{
 		super(selection);
-		setMessage(Messages.getString("wizards.ProjectExportWizard.title"), IMessageProvider.INFORMATION);
+		setMessage(Messages.getString("wizards.pages.ProjectExportWizardPage.title"), IMessageProvider.INFORMATION);
 		//Save the dirty editors here. No longer done later, since it doesn't work there for some reason.
 		saveDirtyEditors();
 	}
