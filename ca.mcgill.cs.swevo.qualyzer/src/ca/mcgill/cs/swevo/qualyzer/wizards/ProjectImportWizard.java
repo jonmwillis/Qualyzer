@@ -88,13 +88,14 @@ public class ProjectImportWizard extends Wizard implements IImportWizard
 		super.addPages();
 		fMainPage = new WizardProjectsImportPage(
 				"wizardExternalProjectsPage", fInitialPath, fCurrentSelection); //$NON-NLS-1$
+//		fMainPage.setMessage(Messages.getString("wizards.ProjectImportWizard.title"), IMessageProvider.INFORMATION);
 		addPage(fMainPage);
 	}
 
 	@Override
 	public void init(IWorkbench workbench, IStructuredSelection currentSelection)
 	{
-		setWindowTitle("wizards.ProjectExportWizard.title");
+		setWindowTitle(Messages.getString("wizards.ProjectImportWizard.title"));
 		setDefaultPageImageDescriptor(IDEWorkbenchPlugin.getIDEImageDescriptor(
 				"wizban/importproj_wiz.png")); //$NON-NLS-1$
 		this.fCurrentSelection = currentSelection;
