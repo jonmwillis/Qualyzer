@@ -92,16 +92,32 @@ public class ExportCodesHandler extends AbstractHandler
 					
 					Map<String, List<String>> documentMap = new HashMap<String, List<String>>();
 					Map<String, List<Integer>> freqMap = new HashMap<String, List<Integer>>();
+					Map<String, String> codeMap = buildCodeMap(project);
 					
 					detectDocuments(project, facade, documentMap, freqMap);
-					
-					StringBuilder buffer = buildStringBuilder(documentMap, freqMap);
+					StringBuilder buffer = buildStringBuilder(documentMap, freqMap, codeMap);
 					
 					writeFile(shell, fileName, buffer);
 				}
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Does something.
+	 *
+	 * @param project
+	 * @return
+	 */
+	private Map<String, String> buildCodeMap(Project project)
+	{
+		Map<String, String> codeMap = new HashMap<String, String>();
+		for (Code code : project.getCodes())
+		{
+			codeMap.put(code.getCodeName(), code.getDescription());
+		}
+		return codeMap;
 	}
 
 	/**
@@ -149,14 +165,18 @@ public class ExportCodesHandler extends AbstractHandler
 	 * @return
 	 */
 	private StringBuilder buildStringBuilder(Map<String, List<String>> transcriptMap, 
-			Map<String, List<Integer>> freqMap)
+			Map<String, List<Integer>> freqMap, Map<String, String> codeMap)
 	{
-		StringBuilder buffer = new StringBuilder();
-		
+		StringBuilder builder = new StringBuilder();
 		for(String codeName : transcriptMap.keySet())
 		{
 			int totalFreq = sum(freqMap.get(codeName));
-			buffer.append(codeName + COMMA + totalFreq + COMMA);
+			builder.append(codeName);
+			builder.append(COMMA);
+			builder.append(codeMap.get(codeName));
+			builder.append(COMMA);
+			builder.append(totalFreq);
+			builder.append(COMMA);
 			List<String> transcripts = transcriptMap.get(codeName);
 			List<Integer> frequencies = freqMap.get(codeName);
 			
@@ -164,11 +184,11 @@ public class ExportCodesHandler extends AbstractHandler
 			{
 				String transcriptName = transcripts.get(i);
 				Integer frequency = frequencies.get(i);
-				buffer.append(transcriptName + COMMA + frequency + COMMA);
+				builder.append(transcriptName + COMMA + frequency + COMMA);
 			}
-			buffer.append("\n"); //$NON-NLS-1$
+			builder.append("\n"); //$NON-NLS-1$
 		}
-		return buffer;
+		return builder;
 	}
 
 	/**
