@@ -215,6 +215,16 @@
             id="ca.mcgill.cs.swevo.qualyzer.commands.reportIssue"
             name="%command.name.reportIssue">
       </command>
+      <command
+            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.ExportProjectHandler"
+            id="ca.mcgill.cs.swevo.qualyzer.commands.exportProjects"
+            name="%command.label.exportproject">
+      </command>
+      <command
+            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.ImportProjectHandler"
+            id="ca.mcgill.cs.swevo.qualyzer.commands.importProjects"
+            name="%command.label.importproject">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -275,13 +285,15 @@
                   visible="true">
             </separator>
             <command
-                  commandId="org.eclipse.ui.file.import"
+                  commandId="ca.mcgill.cs.swevo.qualyzer.commands.importProjects"
+                  icon="icons/import.gif"
                   label="%command.label.importproject"
                   style="push"
                   tooltip="%command.tooltip.importproject">
             </command>
             <command
-                  commandId="org.eclipse.ui.file.export"
+                  commandId="ca.mcgill.cs.swevo.qualyzer.commands.exportProjects"
+                  icon="icons/export.gif"
                   label="%command.label.exportproject"
                   style="push"
                   tooltip="%command.tooltip.exportproject">
@@ -607,7 +619,7 @@
                icon="icons/import.gif"
                label="%menu.label.import">
             <command
-                  commandId="org.eclipse.ui.file.import"
+                  commandId="ca.mcgill.cs.swevo.qualyzer.commands.importProjects"
                   icon="icons/prj_obj.gif"
                   label="%command.label.project"
                   style="push">
@@ -677,7 +689,7 @@
                id="exportMenu"
                label="%menu.label.export">
             <command
-                  commandId="org.eclipse.ui.file.export"
+                  commandId="ca.mcgill.cs.swevo.qualyzer.commands.exportProjects"
                   icon="icons/prj_obj.gif"
                   label="%command.label.project"
                   style="push">
