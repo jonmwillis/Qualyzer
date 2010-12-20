@@ -13,15 +13,9 @@
  */
 package ca.mcgill.cs.swevo.qualyzer.editors.pages;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.jface.text.IDocument;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -42,9 +36,7 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
-import ca.mcgill.cs.swevo.qualyzer.editors.RTFDocumentProvider;
 import ca.mcgill.cs.swevo.qualyzer.editors.RTFEditor;
-import ca.mcgill.cs.swevo.qualyzer.editors.inputs.RTFEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.model.Code;
 import ca.mcgill.cs.swevo.qualyzer.model.CodeEntry;
 import ca.mcgill.cs.swevo.qualyzer.model.CodeListener;
@@ -59,6 +51,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.ProjectListener;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 import ca.mcgill.cs.swevo.qualyzer.model.ListenerManager.ChangeType;
 import ca.mcgill.cs.swevo.qualyzer.ui.ResourcesUtil;
+import ca.mcgill.cs.swevo.qualyzer.util.FragmentUtil;
 
 /**
  * Displays all the Fragments that are associated with a given code.
@@ -184,25 +177,8 @@ public class CodeFragmentViewerPage extends FormPage implements ProjectListener,
 		sectionClient.setLayout(new TableWrapLayout());
 		sectionClient.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 		
-		RTFDocumentProvider provider = new RTFDocumentProvider();
-		
-		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(document.getProject().getFolderName());
-		IFile file;
-		if(document instanceof Transcript)
-		{
-			file = project.getFile("transcripts" + File.separator + document.getFileName()); //$NON-NLS-1$
-		}
-		else
-		{
-			file = project.getFile("memos" + File.separator + document.getFileName()); //$NON-NLS-1$
-		}
-		
-		RTFEditorInput input = new RTFEditorInput(file, Facade.getInstance().forceDocumentLoad(document));
-		IDocument createdDocument = provider.getCreatedDocument(input);
-		
-		String text = createdDocument.get();
-		
-		sort(contents);
+		String text = FragmentUtil.getDocumentText(document);
+		FragmentUtil.sortFragments(contents);
 		
 		for(Fragment fragment : contents)
 		{
@@ -347,23 +323,6 @@ public class CodeFragmentViewerPage extends FormPage implements ProjectListener,
 		boolean isPunctuation = text.charAt(index) == '!' || text.charAt(index) == '?' || 
 			text.charAt(index) == '.';
 		return isPunctuation;
-	}
-
-	/**
-	 * Sort the list of fragments according to the offsets.
-	 * @param contents
-	 */
-	private void sort(ArrayList<Fragment> contents)
-	{
-		Collections.sort(contents, new Comparator<Fragment>(){
-
-			@Override
-			public int compare(Fragment o1, Fragment o2)
-			{
-				return o1.getOffset() - o2.getOffset();
-			}
-		});
-		
 	}
 
 	/**
