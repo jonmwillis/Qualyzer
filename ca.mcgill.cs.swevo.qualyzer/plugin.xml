@@ -201,7 +201,7 @@
       <command
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.ExportCodesHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.exportCodes"
-            name="Export Codes">
+            name="Export Codes (Summary)">
       </command>
       <command
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.AddTimeStampHandler"
@@ -224,6 +224,11 @@
             defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.ImportProjectHandler"
             id="ca.mcgill.cs.swevo.qualyzer.commands.importProjects"
             name="%command.label.importproject">
+      </command>
+      <command
+            defaultHandler="ca.mcgill.cs.swevo.qualyzer.handlers.ExportCodesFragmentsHandler"
+            id="ca.mcgill.cs.swevo.qualyzer.commands.exportCodesFragments"
+            name="Export Codes (with Fragments)">
       </command>
    </extension>
    <extension
@@ -707,7 +712,23 @@
             <command
                   commandId="ca.mcgill.cs.swevo.qualyzer.commands.exportCodes"
                   icon="icons/code_obj.png"
-                  label="Codes"
+                  label="Codes (Summary)"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <iterate
+                        ifEmpty="false"
+                        operator="and">
+                     <instanceof
+                           value="ca.mcgill.cs.swevo.qualyzer.providers.WrapperCode">
+                     </instanceof>
+                  </iterate>
+               </visibleWhen>
+            </command>
+            <command
+                  commandId="ca.mcgill.cs.swevo.qualyzer.commands.exportCodesFragments"
+                  icon="icons/code_obj.png"
+                  label="Codes (with Fragments)"
                   style="push">
                <visibleWhen
                      checkEnabled="false">

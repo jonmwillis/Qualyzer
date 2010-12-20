@@ -95,7 +95,7 @@ public class ExportCodesHandler extends AbstractHandler
 					
 					detectDocuments(project, facade, documentMap, freqMap);
 					
-					StringBuffer buffer = buildStringBuffer(documentMap, freqMap);
+					StringBuilder buffer = buildStringBuilder(documentMap, freqMap);
 					
 					writeFile(shell, fileName, buffer);
 				}
@@ -109,7 +109,7 @@ public class ExportCodesHandler extends AbstractHandler
 	 * @param fileName
 	 * @param buffer
 	 */
-	private void writeFile(Shell shell, String fileName, StringBuffer buffer)
+	private void writeFile(Shell shell, String fileName, StringBuilder buffer)
 	{
 		File file = new File(fileName);
 		FileWriter writer = null;
@@ -148,9 +148,10 @@ public class ExportCodesHandler extends AbstractHandler
 	 * @param freqMap
 	 * @return
 	 */
-	private StringBuffer buildStringBuffer(Map<String, List<String>> transcriptMap, Map<String, List<Integer>> freqMap)
+	private StringBuilder buildStringBuilder(Map<String, List<String>> transcriptMap, 
+			Map<String, List<Integer>> freqMap)
 	{
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		
 		for(String codeName : transcriptMap.keySet())
 		{
