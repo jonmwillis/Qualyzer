@@ -56,8 +56,8 @@ public class ImportTranscriptHandler extends AbstractHandler implements ITestabl
 			Project project = ResourcesUtil.getProject(element);
 			
 			ImportTranscriptWizard wizard = new ImportTranscriptWizard(project);
-			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-			QualyzerWizardDialog dialog = new QualyzerWizardDialog(shell, wizard);
+			
+			QualyzerWizardDialog dialog = new QualyzerWizardDialog(wizard);
 			dialog.setBlockOnOpen(!fTesting);
 			dialog.open();
 			fTester.execute(dialog);

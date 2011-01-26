@@ -48,7 +48,7 @@ public class NewMemoHandler extends AbstractHandler implements ITestableHandler
 	{
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		CommonNavigator view = (CommonNavigator) page.findView(QualyzerActivator.PROJECT_EXPLORER_VIEW_ID);
-		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+		
 		ISelection selection = view.getCommonViewer().getSelection();
 		
 		if(selection != null && selection instanceof IStructuredSelection)
@@ -57,7 +57,7 @@ public class NewMemoHandler extends AbstractHandler implements ITestableHandler
 			Project project = ResourcesUtil.getProject(element);
 			
 			NewMemoWizard wizard = new NewMemoWizard(project);
-			QualyzerWizardDialog dialog = new QualyzerWizardDialog(shell, wizard);
+			QualyzerWizardDialog dialog = new QualyzerWizardDialog(wizard);
 			dialog.create();
 			dialog.setBlockOnOpen(!fTesting);
 			dialog.open();

@@ -58,8 +58,8 @@ public class AddParticipantHandler extends AbstractHandler implements ITestableH
 			Project project = ResourcesUtil.getProject(element);
 			
 			AddParticipantWizard wizard = new AddParticipantWizard(project);
-			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-			QualyzerWizardDialog dialog = new QualyzerWizardDialog(shell, wizard);
+			
+			QualyzerWizardDialog dialog = new QualyzerWizardDialog(wizard);
 			dialog.setBlockOnOpen(!fTesting);
 			dialog.open();
 			fTester.execute(dialog);

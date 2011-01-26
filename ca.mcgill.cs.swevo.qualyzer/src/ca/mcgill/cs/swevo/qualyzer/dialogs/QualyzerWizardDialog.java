@@ -16,31 +16,28 @@ package ca.mcgill.cs.swevo.qualyzer.dialogs;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * For Testing, exposes the finishPressed() method.
  */
 public class QualyzerWizardDialog extends WizardDialog
 {
-
 	/**
 	 * @param parentShell
 	 * @param newWizard
 	 */
-	public QualyzerWizardDialog(Shell parentShell, IWizard newWizard)
+	public QualyzerWizardDialog(IWizard newWizard)
 	{
-		super(parentShell, newWizard);
-		// TODO Auto-generated constructor stub
+		super(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), newWizard);
 	}
 	
-	/* (non-Javadoc)
+	/**
 	 * @see org.eclipse.jface.wizard.WizardDialog#finishPressed()
 	 */
 	@Override
 	public void finishPressed()
 	{
-		// TODO Auto-generated method stub
 		super.finishPressed();
 	}
-
 }
