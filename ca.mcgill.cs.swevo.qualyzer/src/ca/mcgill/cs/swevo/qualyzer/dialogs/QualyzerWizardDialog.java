@@ -15,7 +15,6 @@ package ca.mcgill.cs.swevo.qualyzer.dialogs;
 
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
 /**
