@@ -53,9 +53,8 @@ public class ImportMemoHandler extends AbstractHandler implements ITestableHandl
 			Object element = ((IStructuredSelection) selection).getFirstElement();
 			Project project = ResourcesUtil.getProject(element);
 			
-			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			ImportMemoWizard wizard = new ImportMemoWizard(project);
-			QualyzerWizardDialog dialog = new QualyzerWizardDialog(shell, wizard);
+			QualyzerWizardDialog dialog = new QualyzerWizardDialog(wizard);
 			dialog.create();
 			dialog.setBlockOnOpen(!fTesting);
 			dialog.open();

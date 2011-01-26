@@ -59,8 +59,7 @@ public class AddInvestigatorHandler extends AbstractHandler implements ITestable
 			Project project = ResourcesUtil.getProject(element);
 		
 			AddInvestigatorWizard wizard = new AddInvestigatorWizard(project);
-			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-			QualyzerWizardDialog dialog = new QualyzerWizardDialog(shell, wizard);
+			QualyzerWizardDialog dialog = new QualyzerWizardDialog(wizard);
 			dialog.setBlockOnOpen(!fTesting);
 			dialog.open();
 			fTester.execute(dialog);

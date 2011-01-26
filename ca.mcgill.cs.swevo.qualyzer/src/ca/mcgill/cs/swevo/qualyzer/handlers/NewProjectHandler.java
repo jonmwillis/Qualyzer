@@ -47,9 +47,8 @@ public class NewProjectHandler extends AbstractHandler implements ITestableHandl
 	public Object execute(ExecutionEvent event) throws ExecutionException
 	{
 		NewProjectWizard wizard = new NewProjectWizard();
-		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-		
-		QualyzerWizardDialog dialog = new QualyzerWizardDialog(shell, wizard);
+				
+		QualyzerWizardDialog dialog = new QualyzerWizardDialog(wizard);
 		dialog.create();
 		dialog.setBlockOnOpen(!fTesting);
 		dialog.open();
