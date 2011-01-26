@@ -13,11 +13,15 @@
  */
 package ca.mcgill.cs.swevo.qualyzer.util;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.HashMap;
 import java.util.Map;
@@ -401,7 +405,18 @@ public final class FileUtil
 			
 			try
 			{
-				FileUtil.copyFile(fileOrig, file);
+				if(existingTranscript.endsWith(".rtf"))
+				{
+					FileUtil.copyFile(fileOrig, file);
+				}
+				else if(existingTranscript.endsWith(".txt"))
+				{
+					FileUtil.importTextFile(fileOrig, file);
+				}
+				else
+				{
+					throw new QualyzerException(Messages.getString("util.FileUtil.UnknownFileFormat"));
+				}
 			}
 			catch (IOException e)
 			{
@@ -541,5 +556,76 @@ public final class FileUtil
 		int secondsRemaining = seconds % SECONDS_PER_MINUTE;
 		String secs = (secondsRemaining < TEN) ? "0"+secondsRemaining : ""+secondsRemaining; //$NON-NLS-1$ //$NON-NLS-2$
 		return minutes + ":" + secs; //$NON-NLS-1$
+	}
+
+	/**
+	 * Imports a text file (.txt or .rtf) and produces an RTF file. Blank lines are
+	 * converted to spaces, and double-blank lines are converted into paragraphs.
+	 * @param input The File to be imported.
+	 * @param output The File representing the location where to create the rtf file.
+	 * @throws IOException
+	 */
+	public static void importTextFile(File input, File output) throws IOException
+	{
+		if(output.exists())
+		{
+			output.delete();
+		}
+		
+		FileWriter writer = null;
+		BufferedReader reader = null;
+		try
+		{
+			writer = new FileWriter(output);
+			reader = new BufferedReader(new FileReader(input));
+			writer.write("{\\rtf1\\ansi\\deff0\n\n\n"); 
+			String line = reader.readLine();
+			while(line!=null)
+			{
+				writer.write(line + "\\par ");
+				line = reader.readLine();
+				
+				// TODO The code below can be use to split transcripts differently, based on user
+				// properties.
+//				// read the next line. If it's bank, skip all of them and replace
+//				// with a \par. If not, replace with a blank.
+//				String newLine = reader.readLine();
+//				if(newLine == null)
+//				{
+//					writer.write(line);
+//					break;
+//				}
+//				if(newLine.length()!=0)
+//				{
+//					writer.write(line + " ");
+//					line = newLine;
+//				}
+//				else
+//				{
+//					while(newLine.length() == 0)
+//					{
+//						newLine = reader.readLine();
+//					}
+//					writer.write(line + "\\par ");
+//					line = newLine;
+//				}
+			}
+			writer.write("}\n\0");
+		}
+		catch(IOException e)
+		{
+			gLogger.error("Could not copy file.", e); //$NON-NLS-1$
+		}
+		finally
+		{
+			if(writer != null)
+			{
+				writer.close();
+			}
+			if(reader != null)
+			{
+				reader.close();
+			}
+		}
 	}
 }
