@@ -91,9 +91,10 @@ public class ImportTranscriptPage extends TranscriptWizardPage
 			public void widgetSelected(SelectionEvent e)
 			{
 				FileDialog dialog = new FileDialog(getShell());
-				dialog.setFilterExtensions(new String[]{"*.rtf"}); //$NON-NLS-1$
-				dialog.setFilterNames(new String[]{Messages.getString(
-						"wizards.pages.ImportTranscriptPage.textExt")}); //$NON-NLS-1$
+				dialog.setFilterExtensions(new String[]{"*.rtf", "*.txt"}); 
+				dialog.setFilterNames(new String[]{
+						Messages.getString("wizards.pages.ImportTranscriptPage.textExt"),
+						Messages.getString("wizards.pages.ImportTranscriptPage.textTxt")}); 
 				
 				String file = dialog.open();
 				fTranscriptFile.setText(file);
