@@ -584,31 +584,6 @@ public final class FileUtil
 			{
 				writer.write(line + "\\par ");
 				line = reader.readLine();
-				
-				// TODO The code below can be use to split transcripts differently, based on user
-				// properties.
-//				// read the next line. If it's bank, skip all of them and replace
-//				// with a \par. If not, replace with a blank.
-//				String newLine = reader.readLine();
-//				if(newLine == null)
-//				{
-//					writer.write(line);
-//					break;
-//				}
-//				if(newLine.length()!=0)
-//				{
-//					writer.write(line + " ");
-//					line = newLine;
-//				}
-//				else
-//				{
-//					while(newLine.length() == 0)
-//					{
-//						newLine = reader.readLine();
-//					}
-//					writer.write(line + "\\par ");
-//					line = newLine;
-//				}
 			}
 			writer.write("}\n\0");
 		}
