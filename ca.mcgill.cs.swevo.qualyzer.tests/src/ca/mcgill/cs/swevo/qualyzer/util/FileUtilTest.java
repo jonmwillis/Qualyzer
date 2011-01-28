@@ -18,6 +18,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -121,6 +122,82 @@ public class FileUtilTest
 		catch(IOException e)
 		{
 			assertFalse(true);
+		}
+	}
+	
+	/**
+	 * Tests the import of text file into RTF.
+	 */
+	@Test
+	public void importTextFileTest()
+	{
+		File lIn = new File("TextTranscript.txt");
+		File lOut = new File("ImportTestOut.rtf");
+		
+		try
+		{
+			FileUtil.importTextFile(lIn,lOut);
+		}
+		catch (IOException e)
+		{
+			fail("IOException in test");
+		}
+		
+		try
+		{
+			FileReader reader1 = new FileReader(lOut);
+			FileReader reader2 = new FileReader("OracleImportTest.rtf");
+			
+			int c;
+			while((c = reader1.read()) != -1)
+			{
+				int c2 = reader2.read();
+				
+				assertEquals(c, c2);
+			}
+			
+			assertEquals(reader2.read(), -1);
+		}
+		catch(IOException e)
+		{
+			fail("IOException in test");
+		}
+	}
+	
+	/**
+	 * Tests the import of an empty text file into RTF.
+	 */
+	@Test
+	public void importEmptyTextFileTest()
+	{
+		File lIn = new File("EmptyFile.txt");
+		File lOut = new File("ImportTestOut.rtf");
+		
+		try
+		{
+			FileUtil.importTextFile(lIn,lOut);
+		}
+		catch (IOException e)
+		{
+			fail("IOException in test");
+		}
+		
+		try
+		{
+			BufferedReader reader1 = new BufferedReader(new FileReader(lOut));
+			String line = reader1.readLine();	
+			assertEquals(line,"{\\rtf1\\ansi\\deff0");
+			line = reader1.readLine();
+			assertEquals(line,"");
+			line = reader1.readLine();
+			assertEquals(line,"");
+			line = reader1.readLine();
+			assertEquals(line,"}");
+			
+		}
+		catch(Exception e)
+		{
+			fail("Exception in test");
 		}
 	}
 	

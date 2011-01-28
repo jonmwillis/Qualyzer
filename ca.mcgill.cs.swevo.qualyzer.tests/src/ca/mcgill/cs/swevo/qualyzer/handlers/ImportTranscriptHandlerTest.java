@@ -57,8 +57,10 @@ public class ImportTranscriptHandlerTest
 	private static final String PART = "Part";
 	private static final String DOC = "ImportDocument.rtf";
 	private static final String DOC_LIBRE_OFFICE = "ImportDocumentLibreOffice3.rtf";
+	private static final String DOC_TXT = "TextTranscript.txt";
 	private static final String DOC_NAME = "ImportDocument";
 	private static final String DOC_LIBRE_OFFICE_NAME = "ImportDocumentLibreOffice3";
+	private static final String DOC_TXT_NAME = "TextTranscript";
 
 	@Before
 	public void setUp()
@@ -115,7 +117,20 @@ public class ImportTranscriptHandlerTest
 
 		Transcript transcript = fProject.getTranscripts().get(0);
 		assertEquals(transcript.getName(), name);
-		assertEquals(transcript.getFileName(), filePath);
+		String lNewPath = filePath;
+		if(filePath.endsWith(".rtf"))
+		{
+			assertEquals(transcript.getFileName(), filePath);
+		}
+		else
+		{
+			// Calculate the length of the extension
+			int extensionLength = filePath.length() - filePath.lastIndexOf(".");
+			String newFilePath = filePath.substring(0,filePath.length()-extensionLength);
+			String newTranscript = transcript.getFileName().substring(0,transcript.getFileName().length()-extensionLength);
+			assertEquals(newFilePath,newTranscript);
+			lNewPath = newFilePath + ".rtf";
+		}
 
 		Transcript lTranscript = Facade.getInstance().forceTranscriptLoad(transcript);
 		assertEquals(lTranscript.getParticipants().size(), 1);
@@ -130,7 +145,7 @@ public class ImportTranscriptHandlerTest
 			fail();
 		}
 
-		IFile file = wProject.getFile("/transcripts/" + filePath);
+		IFile file = wProject.getFile("/transcripts/" + lNewPath);
 		assertTrue(file.exists());
 
 		assertEquals(fPage.getEditorReferences().length, 1);
@@ -150,5 +165,12 @@ public class ImportTranscriptHandlerTest
 	{
 		// Import LibreOffice RTF document
 		importTranscript(DOC_LIBRE_OFFICE, DOC_LIBRE_OFFICE_NAME);
+	}
+	
+	@Test
+	public void importTextTranscriptTest()
+	{
+		// Import Text document
+		importTranscript(DOC_TXT, DOC_TXT_NAME);
 	}
 }
