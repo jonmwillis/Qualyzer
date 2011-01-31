@@ -9,9 +9,6 @@
  *     Jonathan Faubert
  *     Martin Robillard
  *******************************************************************************/
-/**
- * 
- */
 package ca.mcgill.cs.swevo.qualyzer.wizards;
 
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -42,7 +39,7 @@ public class ImportMemoWizard extends Wizard
 		fProject = project;
 	}
 
-	/* (non-Javadoc)
+	/**
 	 * @see org.eclipse.jface.wizard.Wizard#addPages()
 	 */
 	@Override
@@ -52,7 +49,7 @@ public class ImportMemoWizard extends Wizard
 		addPage(fPage);
 	}
 	
-	/* (non-Javadoc)
+	/**
 	 * @see org.eclipse.jface.wizard.Wizard#performFinish()
 	 */
 	@Override
@@ -83,7 +80,4 @@ public class ImportMemoWizard extends Wizard
 	{
 		return fMemo;
 	}
-	
-	
-
 }

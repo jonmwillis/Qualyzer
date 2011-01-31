@@ -9,9 +9,6 @@
  *     Jonathan Faubert
  *     Martin Robillard
  *******************************************************************************/
-/**
- * A set of utilities to manage files.
- */
 package ca.mcgill.cs.swevo.qualyzer.util;
 
 import java.io.BufferedReader;
@@ -49,18 +46,19 @@ import ca.mcgill.cs.swevo.qualyzer.model.Timestamp;
 import ca.mcgill.cs.swevo.qualyzer.model.Transcript;
 
 /**
- *
+ * Utilities to manage files.
  */
 public final class FileUtil
 {
-	public static final String ACTIVE_INV = "activeInv"; //$NON-NLS-1$
-	public static final String PROJECT_VERSION = "projectVersion"; //$NON-NLS-1$
-	private static final String DELIMITER = ";"; //$NON-NLS-1$
-	private static final String EQUAL = "="; //$NON-NLS-1$
+	public static final String ACTIVE_INV = "activeInv"; 
+	public static final String PROJECT_VERSION = "projectVersion"; 
+	private static final String DELIMITER = ";"; 
+	private static final String EQUAL = "="; 
 
-	private static final String MEMOS = "memos"; //$NON-NLS-1$
-	private static final String TRANSCRIPTS = "transcripts"; //$NON-NLS-1$
-	private static final String AUDIO = "audio"; //$NON-NLS-1$
+	private static final String MEMOS = "memos"; 
+	private static final String TRANSCRIPTS = "transcripts"; 
+	private static final String AUDIO = "audio"; 
+	private static final String EXT_RTF = ".rtf";
 	private static final int SECONDS_PER_MINUTE = 60;
 	private static final int TEN = 10;
 	private static Logger gLogger = LoggerFactory.getLogger(FileUtil.class);
@@ -308,7 +306,7 @@ public final class FileUtil
 		String workspacePath = wProject.getLocation().toString();
 		hookupAudioFile(audioFilePath, workspacePath, transcriptName);
 		
-		String transcriptFileName = transcriptName.replace(' ', '_') + ".rtf"; //$NON-NLS-1$
+		String transcriptFileName = transcriptName.replace(' ', '_') + EXT_RTF; 
 		createTranscriptFile(existingTranscript, projectName, transcriptFileName); 
 	}
 	
@@ -374,12 +372,12 @@ public final class FileUtil
 				if(!file.createNewFile())
 				{
 					throw new QualyzerException(Messages.getString(
-							"util.FileUtil.transcriptCreateFailed")); //$NON-NLS-1$
+							"util.FileUtil.transcriptCreateFailed")); 
 				}
 				else
 				{
 					FileWriter writer = new FileWriter(file);
-					writer.write("{\\rtf1\\ansi\\deff0\n\n\n}\n\0"); //$NON-NLS-1$
+					writer.write("{\\rtf1\\ansi\\deff0\n\n\n}\n\0"); 
 					writer.close();
 				}
 			}
@@ -404,7 +402,7 @@ public final class FileUtil
 			
 			try
 			{
-				if(existingTranscript.endsWith(".rtf"))
+				if(existingTranscript.endsWith(EXT_RTF))
 				{
 					FileUtil.copyFile(fileOrig, file);
 				}
@@ -433,7 +431,7 @@ public final class FileUtil
 	{
 		IProject wProject = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 		String workspacePath = wProject.getLocation().toString();
-		String memoFileName = memoName.replace(' ', '_') + ".rtf"; //$NON-NLS-1$
+		String memoFileName = memoName.replace(' ', '_') + EXT_RTF; 
 		String path = workspacePath+File.separator+MEMOS+File.separator+memoFileName;
 		File file = new File(path);
 		if(fileName == null || fileName.isEmpty())
@@ -472,9 +470,21 @@ public final class FileUtil
 			
 			try
 			{
-				FileUtil.copyFile(fileOrig, file);
+				//FileUtil.copyFile(fileOrig, file);
+				if(fileName.endsWith(EXT_RTF))
+				{
+					FileUtil.copyFile(fileOrig, file);
+				}
+				else if(fileName.endsWith(".txt"))
+				{
+					FileUtil.importTextFile(fileOrig, file);
+				}
+				else
+				{
+					throw new QualyzerException(Messages.getString("util.FileUtil.UnknownFileFormat"));
+				}
 			}
-			catch (IOException e)
+			catch(IOException e)
 			{
 				throw new QualyzerException(Messages.getString("util.FileUtil.memoCopyFailed"), e);  //$NON-NLS-1$
 			}
