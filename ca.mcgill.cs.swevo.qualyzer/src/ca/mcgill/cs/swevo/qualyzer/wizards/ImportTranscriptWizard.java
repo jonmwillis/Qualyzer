@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Jonathan Faubert
+ *     Martin Robillard
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.wizards;
 

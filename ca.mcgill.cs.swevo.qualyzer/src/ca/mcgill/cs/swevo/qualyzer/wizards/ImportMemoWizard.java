@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Jonathan Faubert
+ *     Martin Robillard
  *******************************************************************************/
 /**
  * 
@@ -24,11 +25,10 @@ import ca.mcgill.cs.swevo.qualyzer.util.FileUtil;
 import ca.mcgill.cs.swevo.qualyzer.wizards.pages.ImportMemoPage;
 
 /**
- *
+ * A wizard to import memos.
  */
 public class ImportMemoWizard extends Wizard
 {
-	
 	private ImportMemoPage fPage;
 	private Project fProject;
 	private Memo fMemo;

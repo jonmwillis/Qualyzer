@@ -7,21 +7,20 @@
  *
  * Contributors:
  *     Jonathan Faubert
+ *     Martin Robillard
  *******************************************************************************/
 /**
- * 
+ * A set of utilities to manage files.
  */
 package ca.mcgill.cs.swevo.qualyzer.util;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.HashMap;
 import java.util.Map;
