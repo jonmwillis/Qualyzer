@@ -7,10 +7,8 @@
  *
  * Contributors:
  *     Jonathan Faubert
+ *     Martin Robillard
  *******************************************************************************/
-/**
- * 
- */
 package ca.mcgill.cs.swevo.qualyzer.wizards.pages;
 
 import java.io.File;
@@ -33,7 +31,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Project;
 import ca.mcgill.cs.swevo.qualyzer.model.validation.ImportTranscriptValidator;
 
 /**
- *
+ * The wizard page to import memos.
  */
 public class ImportMemoPage extends NewMemoPage
 {
@@ -52,7 +50,7 @@ public class ImportMemoPage extends NewMemoPage
 		setDescription(Messages.getString("wizards.pages.ImportMemoPage.chooseFile")); //$NON-NLS-1$
 	}
 	
-	/* (non-Javadoc)
+	/**
 	 * @see ca.mcgill.cs.swevo.qualyzer.wizards.pages.NewMemoPage#createControl(org.eclipse.swt.widgets.Composite)
 	 */
 	@Override
@@ -116,9 +114,11 @@ public class ImportMemoPage extends NewMemoPage
 			public void widgetSelected(SelectionEvent e)
 			{
 				FileDialog dialog = new FileDialog(getShell());
-				dialog.setFilterExtensions(new String[]{"*.rtf"}); //$NON-NLS-1$
-				dialog.setFilterNames(new String[]{"Rich Text Files (.rtf)"}); //$NON-NLS-1$
-				
+				dialog.setFilterExtensions(new String[]{"*.rtf", "*.txt"}); 
+				dialog.setFilterNames(new String[]{
+						Messages.getString("wizards.pages.ImportTranscriptPage.textExt"),
+						Messages.getString("wizards.pages.ImportTranscriptPage.textTxt")}); 
+								
 				String file = dialog.open();
 				if(file != null)
 				{
@@ -156,7 +156,7 @@ public class ImportMemoPage extends NewMemoPage
 		return !file.exists();
 	}
 	
-	/* (non-Javadoc)
+	/**
 	 * @see ca.mcgill.cs.swevo.qualyzer.wizards.pages.NewMemoPage#validate()
 	 */
 	@Override
@@ -184,12 +184,10 @@ public class ImportMemoPage extends NewMemoPage
 	}
 	
 	/**
-	 * 
 	 * @return
 	 */
 	public Text getFileText()
 	{
 		return fMemoFile;
 	}
-
 }
