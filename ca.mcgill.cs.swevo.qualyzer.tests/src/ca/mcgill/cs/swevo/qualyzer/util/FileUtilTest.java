@@ -34,7 +34,6 @@ import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Project;
 
 /**
- * @author Jonathan Faubert (jonfaub@gmail.com)
  *
  */
 public class FileUtilTest
