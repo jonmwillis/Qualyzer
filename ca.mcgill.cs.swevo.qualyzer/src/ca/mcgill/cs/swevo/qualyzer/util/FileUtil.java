@@ -367,25 +367,7 @@ public final class FileUtil
 		
 		if(existingTranscript.isEmpty())
 		{
-			try
-			{
-				if(!file.createNewFile())
-				{
-					throw new QualyzerException(Messages.getString(
-							"util.FileUtil.transcriptCreateFailed")); 
-				}
-				else
-				{
-					FileWriter writer = new FileWriter(file);
-					writer.write("{\\rtf1\\ansi\\deff0\n\n\n}\n\0"); 
-					writer.close();
-				}
-			}
-			catch (IOException e)
-			{
-				gLogger.error("Failed to create new File", e); //$NON-NLS-1$
-				throw new QualyzerException(Messages.getString("util.FileUtil.errorCreateTranscript"), e); //$NON-NLS-1$
-			}
+			createNewRTFFile(file);
 		}
 		else
 		{
@@ -424,8 +406,9 @@ public final class FileUtil
 
 	/**
 	 * Create a new empty memo file or copy an existing one.
-	 * @param memoName
-	 * @param name
+	 * @param memoName The name of the memo
+	 * @param projectName The name of the  project
+	 * @param fileName The name of the file to import the memo from.
 	 */
 	public static void setupMemoFiles(String memoName, String projectName, String fileName)
 	{
@@ -436,24 +419,7 @@ public final class FileUtil
 		File file = new File(path);
 		if(fileName == null || fileName.isEmpty())
 		{
-			try
-			{
-				if(!file.createNewFile())
-				{
-					throw new QualyzerException(Messages.getString("util.FileUtil.memoFailed")); //$NON-NLS-1$
-				}
-				else
-				{
-					FileWriter writer = new FileWriter(file);
-					writer.write("{\\rtf1\\ansi\\deff0\n\n\n}\n\0"); //$NON-NLS-1$
-					writer.close();
-				}
-			}
-			catch (IOException e)
-			{
-				gLogger.error("Failed to create new File", e);  //$NON-NLS-1$
-				throw new QualyzerException(Messages.getString("util.FileUtil.memoCreationFailed"), e);  //$NON-NLS-1$
-			}
+			createNewRTFFile(file);
 		}
 		else
 		{
@@ -470,7 +436,6 @@ public final class FileUtil
 			
 			try
 			{
-				//FileUtil.copyFile(fileOrig, file);
 				if(fileName.endsWith(EXT_RTF))
 				{
 					FileUtil.copyFile(fileOrig, file);
@@ -488,6 +453,33 @@ public final class FileUtil
 			{
 				throw new QualyzerException(Messages.getString("util.FileUtil.memoCopyFailed"), e);  //$NON-NLS-1$
 			}
+		}
+	}
+
+	/**
+	 * Creates a new, empty RTF file at the requested path, or throws a QualyzerException.
+	 * @param file The file handle representing the desired location for the new RTF file.
+	 * @throws QualyzerException If the file cannot be created.
+	 */
+	private static void createNewRTFFile(File file) throws QualyzerException
+	{
+		try
+		{
+			if(!file.createNewFile())
+			{
+				throw new QualyzerException(Messages.getString("util.FileUtil.cannotCreateEmptyRTFFile")); 
+			}
+			else
+			{
+				FileWriter writer = new FileWriter(file);
+				writer.write("{\\rtf1\\ansi\\deff0\n\n\n}\n\0"); 
+				writer.close();
+			}
+		}
+		catch (IOException e)
+		{
+			gLogger.error("Failed to create new File", e);  
+			throw new QualyzerException(Messages.getString("util.FileUtil.cannotCreateEmptyRTFFile"), e);  
 		}
 	}
 	
