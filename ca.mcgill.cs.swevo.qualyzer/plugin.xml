@@ -1511,14 +1511,8 @@
       <presentation
          home-page-id="root">
          <implementation
-            ws="win32"
             style="css/shared.css"
-            kind="html"
-            os="win32">
-         </implementation>
-         <implementation
-            style="css/shared_swt.properties"
-            kind="swt">
+            kind="html">
          </implementation>
       </presentation>
    </config>
