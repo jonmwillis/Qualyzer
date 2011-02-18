@@ -50,6 +50,12 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor
 		// register(exitAction);
 		fSaveAction = ActionFactory.SAVE.create(window);
 		register(fSaveAction);
+		
+		// This code is for displaying the welcome page from a menu
+		if (window.getWorkbench().getIntroManager().hasIntro()) 
+		{
+	        register(ActionFactory.INTRO.create(window));
+		}
 	}
 
 	@Override
