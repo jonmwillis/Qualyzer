@@ -29,11 +29,23 @@ public final class RTFTags
 	public static final String UNDERLINE_END = "ulnone"; //$NON-NLS-1$
 	public static final String NEW_LINE = "par"; //$NON-NLS-1$
 	public static final String TAB = "tab"; //$NON-NLS-1$
-	public static final String BACKSLASH = "\\"; //$NON-NLS-1$
-	public static final String LEFT_BRACE = "{"; //$NON-NLS-1$
-	public static final String RIGHT_BRACE = "}"; //$NON-NLS-1$
+
+	
 	public static final String PAR_DEFAULT = "pard"; //$NON-NLS-1$
 	public static final String PLAIN = "plain"; //$NON-NLS-1$
+	public static final String UNICODE_COUNT = "c"; //$NON-NLS-1$
+	public static final String UNICODE_COUNT_FULL = "uc"; //$NON-NLS-1$
+	public static final String SPACE_CHAR = " "; //$NON-NLS-1$
+	public static final String NEW_LINE_CHAR = "\n"; //$NON-NLS-1$
+	public static final String CARRIAGE_CHAR = "\r"; //$NON-NLS-1$
+	public static final char MINUS = '-'; //$NON-NLS-1$
+	public static final char ESCAPE_8BIT = '\''; //$NON-NLS-1$
+	public static final char UNICODE = 'u'; //$NON-NLS-1$
+	public static final char BACKSLASH = '\\'; //$NON-NLS-1$
+	public static final char LEFT_BRACE = '{'; //$NON-NLS-1$
+	public static final char RIGHT_BRACE = '}'; //$NON-NLS-1$
+	public static final char QUOTE = '"'; //$NON-NLS-1$
+	
 	
 	public static final String BOLD_START_TAG = "\\b"; //$NON-NLS-1$
 	public static final String BOLD_END_TAG = "\\b0"; //$NON-NLS-1$
@@ -54,6 +66,10 @@ public final class RTFTags
 	public static final String COLOR_TABLE2 = "colortbl"; //$NON-NLS-1$
 	
 	public static final String[] IGNORE_GROUPS = {FONT_TABLE, STYLESHEET, INFO, IGNORE, COLOR_TABLE, COLOR_TABLE2};
+	
+	public static final char[] ESCAPE_CONTROLS = {LEFT_BRACE, RIGHT_BRACE, BACKSLASH, QUOTE};
+	
+	public static final String[] SPACES = {SPACE_CHAR, NEW_LINE_CHAR, CARRIAGE_CHAR};
 	
 	
 	private RTFTags()
