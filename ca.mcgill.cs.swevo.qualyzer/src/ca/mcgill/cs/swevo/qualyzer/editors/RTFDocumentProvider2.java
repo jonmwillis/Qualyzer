@@ -224,9 +224,11 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 		{
 			Map<String, Integer> oldState = safeState(state);
 			reset(oldState, text, document);
-			Map<String, Integer> newTags = new HashMap<String, Integer>(oldState);
-			resetNew(text, newTags, document);
-			handleControlCommand(groupName, text, newTags, document);
+			Map<String, Integer> newState = new HashMap<String, Integer>(oldState);
+			state.push(newState);
+			resetNew(text, newState, document);
+			
+			handleControlCommand(groupName, text, newState, document);
 		}
 		return new ParserPair(c, groupName);
 	}
