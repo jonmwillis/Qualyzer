@@ -105,7 +105,7 @@ public class RTFEditor extends ColorerEditor implements ProjectListener, CodeLis
 	{
 		super();
 		setSourceViewerConfiguration(new RTFSourceViewerConfiguration(getTextColorer()));
-		setDocumentProvider(new RTFDocumentProvider());
+		setDocumentProvider(new RTFDocumentProvider2());
 		
 		fIsDirty = false;
 		fRegistry = QualyzerActivator.getDefault().getImageRegistry();
