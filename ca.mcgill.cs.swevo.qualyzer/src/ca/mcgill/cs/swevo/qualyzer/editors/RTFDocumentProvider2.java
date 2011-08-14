@@ -138,6 +138,7 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 				{
 					ParserPair pair = handleControl(contentStream);
 					printSpace = handleControlCommand(pair.fString, text, safeState(state), rtfDocument);
+					c = pair.fChar;
 				}
 				else if (ch == LEFT_BRACE)
 				{
@@ -515,7 +516,7 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 	 */
 	private Map<String, Integer> safeState(Stack<Map<String, Integer>> state, boolean pop)
 	{
-		if (state.isEmpty())
+		if (!state.isEmpty())
 		{
 			if (pop)
 			{
