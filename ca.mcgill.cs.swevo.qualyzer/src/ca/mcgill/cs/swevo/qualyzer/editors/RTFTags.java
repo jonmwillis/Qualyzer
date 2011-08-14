@@ -38,6 +38,7 @@ public final class RTFTags
 	public static final String NEW_LINE_CHAR = "\n"; //$NON-NLS-1$
 	public static final String TAB_CHAR = "\n"; //$NON-NLS-1$
 	public static final String CARRIAGE_CHAR = "\r"; //$NON-NLS-1$
+	public static final char NULL_CHAR = '\0'; //$NON-NLS-1$
 	public static final char MINUS = '-'; //$NON-NLS-1$
 	public static final char ESCAPE_8BIT = '\''; //$NON-NLS-1$
 	public static final char BACKSLASH = '\\'; //$NON-NLS-1$

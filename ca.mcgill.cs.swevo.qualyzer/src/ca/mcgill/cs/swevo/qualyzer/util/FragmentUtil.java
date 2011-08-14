@@ -20,7 +20,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.text.IDocument;
 
-import ca.mcgill.cs.swevo.qualyzer.editors.RTFDocumentProvider;
+import ca.mcgill.cs.swevo.qualyzer.editors.RTFDocumentProvider2;
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.RTFEditorInput;
 import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Fragment;
@@ -46,7 +46,7 @@ public final class FragmentUtil
 	 */
 	public static String getDocumentText(IAnnotatedDocument document) 
 	{
-		RTFDocumentProvider provider = new RTFDocumentProvider();
+		RTFDocumentProvider2 provider = new RTFDocumentProvider2();
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(document.getProject().getFolderName());
 		IFile file;
 		if(document instanceof Transcript)

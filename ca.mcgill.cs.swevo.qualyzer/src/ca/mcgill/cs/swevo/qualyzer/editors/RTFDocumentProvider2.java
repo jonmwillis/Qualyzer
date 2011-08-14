@@ -10,50 +10,36 @@
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer.editors;
 
-import static ca.mcgill.cs.swevo.qualyzer.editors.RTFTags.BACKSLASH;
-import static ca.mcgill.cs.swevo.qualyzer.editors.RTFTags.BOLD_END;
-import static ca.mcgill.cs.swevo.qualyzer.editors.RTFTags.BOLD_START;
-import static ca.mcgill.cs.swevo.qualyzer.editors.RTFTags.ESCAPE_8BIT;
-import static ca.mcgill.cs.swevo.qualyzer.editors.RTFTags.ESCAPE_CONTROLS;
-import static ca.mcgill.cs.swevo.qualyzer.editors.RTFTags.ITALIC_END;
-import static ca.mcgill.cs.swevo.qualyzer.editors.RTFTags.ITALIC_START;
-import static ca.mcgill.cs.swevo.qualyzer.editors.RTFTags.LEFT_BRACE;
-import static ca.mcgill.cs.swevo.qualyzer.editors.RTFTags.MINUS;
-import static ca.mcgill.cs.swevo.qualyzer.editors.RTFTags.NEW_LINE;
-import static ca.mcgill.cs.swevo.qualyzer.editors.RTFTags.NEW_LINE_CHAR;
-import static ca.mcgill.cs.swevo.qualyzer.editors.RTFTags.RESET;
-import static ca.mcgill.cs.swevo.qualyzer.editors.RTFTags.RIGHT_BRACE;
-import static ca.mcgill.cs.swevo.qualyzer.editors.RTFTags.SPACES;
-import static ca.mcgill.cs.swevo.qualyzer.editors.RTFTags.SPACE_CHAR;
-import static ca.mcgill.cs.swevo.qualyzer.editors.RTFTags.TAB;
-import static ca.mcgill.cs.swevo.qualyzer.editors.RTFTags.TAB_CHAR;
-import static ca.mcgill.cs.swevo.qualyzer.editors.RTFTags.UNDERLINE_END;
-import static ca.mcgill.cs.swevo.qualyzer.editors.RTFTags.UNDERLINE_START;
-import static ca.mcgill.cs.swevo.qualyzer.editors.RTFTags.UNICODE;
-import static ca.mcgill.cs.swevo.qualyzer.editors.RTFTags.UNICODE_COUNT;
-import static ca.mcgill.cs.swevo.qualyzer.editors.RTFTags.UNICODE_COUNT_FULL;
+import static ca.mcgill.cs.swevo.qualyzer.editors.RTFTags.*;
 import static ca.mcgill.cs.swevo.qualyzer.util.ParserUtil.equal;
 import static ca.mcgill.cs.swevo.qualyzer.util.ParserUtil.getDefault;
 import static ca.mcgill.cs.swevo.qualyzer.util.ParserUtil.in;
 
-import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 import java.util.Stack;
 
+import org.apache.commons.lang.CharUtils;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
+import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.ui.editors.text.FileDocumentProvider;
+import org.eclipse.ui.part.FileEditorInput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ca.mcgill.cs.swevo.qualyzer.editors.inputs.RTFEditorInput;
+import ca.mcgill.cs.swevo.qualyzer.model.Facade;
 import ca.mcgill.cs.swevo.qualyzer.model.Fragment;
 import ca.mcgill.cs.swevo.qualyzer.model.IAnnotatedDocument;
 
@@ -75,6 +61,8 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 	private static final String EMPTY = ""; //$NON-NLS-1$
 
 	private static final int HEX_RADIX = 16;
+	
+	private static final String SPACE = " "; //$NON-NLS-1$
 
 	/**
 	 * Exists only for use by things that need parsed documents, but that don't want to open the editor.
@@ -149,15 +137,18 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 				if (ch == BACKSLASH)
 				{
 					ParserPair pair = handleControl(contentStream);
-					printSpace = handleSubControl(pair.fString, text, safeState(state), rtfDocument);
+					printSpace = handleControlCommand(pair.fString, text, safeState(state), rtfDocument);
 				}
 				else if (ch == LEFT_BRACE)
 				{
-
+					ParserPair pair = handleGroup(contentStream, state, text, rtfDocument);
+					printSpace = false;
+					c = pair.fChar;
 				}
 				else if (ch == RIGHT_BRACE)
 				{
-
+					handleEndGroup(contentStream, state, text, rtfDocument);
+					printSpace = false;
 					c = contentStream.read();
 				}
 				else
@@ -185,7 +176,102 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 		rtfDocument.set(text.toString());
 	}
 
-	private boolean handleSubControl(String control, StringBuilder text, Map<String, Integer> state,
+	private void handleEndGroup(InputStream contentStream, Stack<Map<String, Integer>> state, StringBuilder text,
+			RTFDocument document)
+	{
+		Map<String, Integer> oldState = safeState(state, true);
+		reset(oldState, text, document);
+		Map<String, Integer> currentState = safeState(state);
+		resetNew(text, currentState, document);
+	}
+
+	private ParserPair handleGroup(InputStream contentStream, Stack<Map<String, Integer>> state, StringBuilder text,
+			RTFDocument document) throws IOException
+	{
+		int c = contentStream.read();
+		char ch = NULL_CHAR;
+		ParserPair pair = null;
+		String groupName = null;
+		while (c != -1)
+		{
+			ch = (char) c;
+			if (!Character.isWhitespace(ch))
+			{
+				break;
+			}
+			else
+			{
+				c = contentStream.read();
+			}
+		}
+
+		if (ch == BACKSLASH)
+		{
+			pair = handleControl(contentStream);
+			c = pair.fChar;
+			groupName = pair.fString;
+		}
+		else
+		{
+			groupName = " ";
+		}
+
+		if (in(groupName, IGNORE_GROUPS))
+		{
+			c = skipGroup(contentStream, c);
+		}
+		else
+		{
+			Map<String, Integer> oldState = safeState(state);
+			reset(oldState, text, document);
+			Map<String, Integer> newTags = new HashMap<String, Integer>(oldState);
+			resetNew(text, newTags, document);
+			handleControlCommand(groupName, text, newTags, document);
+		}
+		return new ParserPair(c, groupName);
+	}
+
+	private void resetNew(StringBuilder text, Map<String, Integer> state, RTFDocument document)
+	{
+		for (String command : state.keySet())
+		{
+			state.remove(command);
+			handleControlCommand(command, text, state, document);
+		}
+
+	}
+
+	private void reset(Map<String, Integer> state, StringBuilder text, RTFDocument document)
+	{
+		// I think this won't work because PLAIN will erase the tags in the state.
+		// It should probably be a copy...
+		// Super important: the reset won't work like in the python parser.
+		// It will need some special treatment...
+		handleControlCommand(PLAIN, text, state, document);
+
+	}
+
+	private int skipGroup(InputStream contentStream, int inputC) throws IOException
+	{
+		int c = inputC;
+		int count = 1;
+		while (c != -1 && count > 0)
+		{
+			char ch = (char) c;
+			if (ch == LEFT_BRACE)
+			{
+				count++;
+			}
+			else if (ch == RIGHT_BRACE)
+			{
+				count--;
+			}
+			c = contentStream.read();
+		}
+		return c;
+	}
+
+	private boolean handleControlCommand(String control, StringBuilder text, Map<String, Integer> state,
 			RTFDocument document)
 	{
 		boolean printSpace = false;
@@ -224,9 +310,9 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 		}
 		else if (in(control, RESET))
 		{
-			handleSubControl(BOLD_END, text, state, document);
-			handleSubControl(ITALIC_END, text, state, document);
-			handleSubControl(UNDERLINE_END, text, state, document);
+			handleControlCommand(BOLD_END, text, state, document);
+			handleControlCommand(ITALIC_END, text, state, document);
+			handleControlCommand(UNDERLINE_END, text, state, document);
 		}
 		else if (in(control, ESCAPE_CONTROLS))
 		{
@@ -758,6 +844,346 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 		{
 			state.put(BOLD_START, boldPos);
 		}
+	}
+	
+	/**
+	 * Converts the contents of the document back into rtf so that it can be saved to disk.
+	 * 
+	 * @see org.eclipse.ui.editors.text.FileDocumentProvider#doSaveDocument(org.eclipse.core.runtime.IProgressMonitor,
+	 *      java.lang.Object, org.eclipse.jface.text.IDocument, boolean)
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	protected void doSaveDocument(IProgressMonitor monitor, Object element, IDocument document, boolean overwrite)
+			throws CoreException
+	{
+		FileEditorInput input = (FileEditorInput) element;
+		IAnnotationModel model = getAnnotationModel(element);
+
+		StringBuilder contents = new StringBuilder(document.get());
+		StringBuilder toWrite = new StringBuilder(EMPTY);
+
+		toWrite = buildRTFString(contents, model);
+
+		InputStream stream = new ByteArrayInputStream(toWrite.toString().getBytes());
+		try
+		{
+			input.getFile().setContents(stream, IResource.FORCE, new NullProgressMonitor());
+		}
+		catch (CoreException e)
+		{
+
+		}
+
+		// This seems to be necessary for the timestamp markers to persist across saves.
+		FileInfo info = (FileInfo) getElementInfo(element);
+		if (info != null)
+		{
+			RTFAnnotationModel rtfModel = (RTFAnnotationModel) info.fModel;
+			rtfModel.updateMarkers(info.fDocument);
+		}
+
+		// Updates all of the fragment positions, and removes any annotations that have length 0.
+		IAnnotatedDocument rtfDoc = ((RTFEditorInput) element).getDocument();
+		Iterator<Annotation> iter = model.getAnnotationIterator();
+		while (iter.hasNext())
+		{
+			Annotation annotation = iter.next();
+			if (annotation instanceof FragmentAnnotation)
+			{
+				updateFragment(model, rtfDoc, annotation);
+			}
+			else
+			{
+				if (model.getPosition(annotation).length == 0)
+				{
+					model.removeAnnotation(annotation);
+				}
+			}
+		}
+
+		Facade.getInstance().saveDocument(rtfDoc);
+	}
+	
+	/**
+	 * Updates the given annotation's fragment to match it's new offset and length. Then updates the map key so that it
+	 * matches the new offset. If the fragment has a length of 0 it gets removed from the model (and the DB).
+	 * 
+	 * @param model
+	 * @param rtfDoc
+	 * @param annotation
+	 */
+	private void updateFragment(IAnnotationModel model, IAnnotatedDocument rtfDoc, Annotation annotation)
+	{
+		Fragment fragment = ((FragmentAnnotation) annotation).getFragment();
+		Position position = model.getPosition(annotation);
+		if (position.length == 0)
+		{
+			model.removeAnnotation(annotation);
+		}
+		else
+		{
+			fragment.setOffset(position.offset);
+			fragment.setLength(position.length);
+			rtfDoc.getFragments().remove(position.offset);
+			rtfDoc.getFragments().put(position.offset, fragment);
+		}
+	}
+
+	/**
+	 * Goes through the editor text and all the annotations to build the string that will be written to the disk.
+	 * Converts any special characters to their RTF tags as well.
+	 * 
+	 * @param contents
+	 * @param model
+	 * @return
+	 */
+	private StringBuilder buildRTFString(StringBuilder contents, IAnnotationModel model)
+	{
+		StringBuilder output = new StringBuilder(HEADER);
+		ArrayList<Position> positions = new ArrayList<Position>();
+		ArrayList<Annotation> annotations = new ArrayList<Annotation>();
+		prepareAnnotationLists(model, positions, annotations);
+
+		Position position = null;
+		Annotation annotation = null;
+
+		for (int i = 0; i < contents.length(); i++)
+		{
+			if (position == null)
+			{
+				for (int j = 0; j < positions.size(); j++)
+				{
+					if (positions.get(j).offset == i)
+					{
+						position = positions.remove(j);
+						annotation = annotations.remove(j);
+						break;
+					}
+					else if (positions.get(j).offset > i)
+					{
+						break;
+					}
+				}
+				if (position != null)
+				{
+					output.append(getStartTagFromAnnotation(annotation));
+				}
+			}
+
+			char c = contents.charAt(i);
+			output.append(getMiddleChar(c));
+
+			if (position != null && i == position.offset + position.length - 1)
+			{
+				output.append(getEndTagFromAnnotation(annotation));
+
+				position = null;
+				annotation = null;
+			}
+
+			output.append(getEndChar(c));
+		}
+
+		return output.append(FOOTER);
+	}
+	
+	/**
+	 * Gets the annotations and their positions from the model and sorts them by position. Sets them into the two
+	 * provided arraylists.
+	 * 
+	 * @param model
+	 * @param positions
+	 * @param annotations
+	 */
+	@SuppressWarnings("unchecked")
+	private void prepareAnnotationLists(IAnnotationModel model, ArrayList<Position> positions,
+			ArrayList<Annotation> annotations)
+	{
+		Iterator<Annotation> iter = model.getAnnotationIterator();
+		while (iter.hasNext())
+		{
+			Annotation annotation = iter.next();
+			String type = annotation.getType();
+			if (!(annotation instanceof FragmentAnnotation) && !type.equals(RTFConstants.TIMESTAMP_TYPE))
+			{
+				if (positions.isEmpty())
+				{
+					annotations.add(annotation);
+					positions.add(model.getPosition(annotation));
+				}
+				else
+				{
+					Position position = model.getPosition(annotation);
+					int i;
+					for (i = 0; i < positions.size(); i++)
+					{
+						Position curPos = positions.get(i);
+						if (position.offset < curPos.offset)
+						{
+							annotations.add(i, annotation);
+							positions.add(i, position);
+							break;
+						}
+					}
+
+					if (i >= positions.size())
+					{
+						annotations.add(annotation);
+						positions.add(position);
+					}
+				}
+
+			}
+		}
+	}
+
+	/**
+	 * Gets the rtf representations of newline and tab if the current character is one of those.
+	 * 
+	 * @param c
+	 * @return
+	 */
+	private String getEndChar(char c)
+	{
+		StringBuilder output = new StringBuilder(EMPTY);
+		if (c == '\n')
+		{
+			output.append(NEW_LINE_TAG);
+		}
+		else if (c == '\t')
+		{
+			output.append(TAB_TAG);
+		}
+		return output.toString();
+	}
+
+	/**
+	 * Stops newlines tabs and EOF from being written, adds an escape to brackets and backslash, converts non-ascii
+	 * characters to their RTF tag and lets all other characters through.
+	 * 
+	 * @param c
+	 * @return
+	 */
+	private String getMiddleChar(char c)
+	{
+		StringBuilder output = new StringBuilder(EMPTY);
+		if (c != '\n' && c != '\t' && c != '\0')
+		{
+			if (c == '{' || c == '}' || c == '\\')
+			{
+				output.append(BACKSLASH);
+			}
+
+			if (CharUtils.isAscii(c))
+			{
+				output.append(c);
+			}
+			else
+			{
+				int unicode = (int) c;
+				output = new StringBuilder(UNICODE_START_TAG + unicode + UNICODE_END_TAG);
+			}
+		}
+		return output.toString();
+	}
+
+	/**
+	 * @param annotation
+	 * @return
+	 */
+	private String getEndTagFromAnnotation(Annotation annotation)
+	{
+		String tag = EMPTY;
+		String type = annotation.getType();
+
+		if (type.equals(RTFConstants.BOLD_TYPE))
+		{
+			tag = BOLD_END_TAG + SPACE;
+		}
+		else if (type.equals(RTFConstants.ITALIC_TYPE))
+		{
+			tag = ITALIC_END_TAG + SPACE;
+		}
+		else if (type.equals(RTFConstants.UNDERLINE_TYPE))
+		{
+			tag = UNDERLINE_END_TAG + SPACE;
+		}
+		else if (type.equals(RTFConstants.BOLD_ITALIC_TYPE))
+		{
+			tag = BOLD_END_TAG + ITALIC_END_TAG + SPACE;
+		}
+		else if (type.equals(RTFConstants.BOLD_UNDERLINE_TYPE))
+		{
+			tag = BOLD_END_TAG + UNDERLINE_END_TAG + SPACE;
+		}
+		else if (type.equals(RTFConstants.ITALIC_UNDERLINE_TYPE))
+		{
+			tag = ITALIC_END_TAG + UNDERLINE_END_TAG + SPACE;
+		}
+		else if (type.equals(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE))
+		{
+			tag = BOLD_END_TAG + ITALIC_END_TAG + UNDERLINE_END_TAG + SPACE;
+		}
+
+		return tag;
+	}
+
+	/**
+	 * @param annotation
+	 * @return
+	 */
+	private String getStartTagFromAnnotation(Annotation annotation)
+	{
+		String tag = EMPTY;
+		String type = annotation.getType();
+
+		if (type.equals(RTFConstants.BOLD_TYPE))
+		{
+			tag = BOLD_START_TAG + SPACE;
+		}
+		else if (type.equals(RTFConstants.ITALIC_TYPE))
+		{
+			tag = ITALIC_START_TAG + SPACE;
+		}
+		else if (type.equals(RTFConstants.UNDERLINE_TYPE))
+		{
+			tag = UNDERLINE_START_TAG + SPACE;
+		}
+		else if (type.equals(RTFConstants.BOLD_ITALIC_TYPE))
+		{
+			tag = BOLD_START_TAG + ITALIC_START_TAG + SPACE;
+		}
+		else if (type.equals(RTFConstants.BOLD_UNDERLINE_TYPE))
+		{
+			tag = BOLD_START_TAG + UNDERLINE_START_TAG + SPACE;
+		}
+		else if (type.equals(RTFConstants.ITALIC_UNDERLINE_TYPE))
+		{
+			tag = ITALIC_START_TAG + UNDERLINE_START_TAG + SPACE;
+		}
+		else if (type.equals(RTFConstants.BOLD_ITALIC_UNDERLINE_TYPE))
+		{
+			tag = BOLD_START_TAG + ITALIC_START_TAG + UNDERLINE_START_TAG + SPACE;
+		}
+
+		return tag;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ui.editors.text.FileDocumentProvider#createAnnotationModel(java.lang.Object)
+	 */
+	@Override
+	protected IAnnotationModel createAnnotationModel(Object element) throws CoreException
+	{
+		if (element instanceof RTFEditorInput)
+		{
+			return new RTFAnnotationModel((RTFEditorInput) element);
+		}
+
+		return super.createAnnotationModel(element);
 	}
 }
 
