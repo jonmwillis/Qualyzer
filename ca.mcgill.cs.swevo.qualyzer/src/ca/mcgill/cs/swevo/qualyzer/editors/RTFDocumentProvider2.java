@@ -374,6 +374,11 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 	private char get8bit(String numberStr)
 	{
 		int c = Integer.parseInt(numberStr, HEX_RADIX);
+		// Replace weird bullet point by dashes.
+		if (c == BULLET_POINT)
+		{
+			c = '-';
+		}
 		return (char) c;
 	}
 
