@@ -839,7 +839,7 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 
 		// Save state
 		state.put(ITALIC_START, italicPos);
-		if (italicPos != -1)
+		if (underlinePos != -1)
 		{
 			state.put(UNDERLINE_START, underlinePos);
 		}
