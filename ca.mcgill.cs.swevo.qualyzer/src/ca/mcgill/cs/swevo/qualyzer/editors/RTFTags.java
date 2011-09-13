@@ -38,6 +38,7 @@ public final class RTFTags
 	public static final String NEW_LINE_CHAR = "\n"; //$NON-NLS-1$
 	public static final String TAB_CHAR = "\t"; //$NON-NLS-1$
 	public static final String CARRIAGE_CHAR = "\r"; //$NON-NLS-1$
+	public static final String NULL_CHAR_STR = "\0";  //$NON-NLS-1$
 	public static final char NULL_CHAR = '\0'; //$NON-NLS-1$
 	public static final char MINUS = '-'; //$NON-NLS-1$
 	public static final char ESCAPE_8BIT = '\''; //$NON-NLS-1$
@@ -72,7 +73,7 @@ public final class RTFTags
 	public static final String[] ESCAPE_CONTROLS = { String.valueOf(LEFT_BRACE), String.valueOf(RIGHT_BRACE),
 			String.valueOf(BACKSLASH), String.valueOf(QUOTE) };
 
-	public static final String[] SPACES = { SPACE_CHAR, NEW_LINE_CHAR, CARRIAGE_CHAR };
+	public static final String[] SPACES = { SPACE_CHAR, NEW_LINE_CHAR, CARRIAGE_CHAR, NULL_CHAR_STR};
 
 	public static final String[] RESET = { PAR_DEFAULT, PLAIN };
 
