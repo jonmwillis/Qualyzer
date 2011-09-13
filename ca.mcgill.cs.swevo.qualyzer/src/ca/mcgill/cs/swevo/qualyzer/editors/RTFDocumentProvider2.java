@@ -277,7 +277,8 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 	private boolean handleControlCommand(String control, StringBuilder text, Map<String, Integer> state,
 			RTFDocument document)
 	{
-		boolean printSpace = false;
+		// May need to be tweaked for NEW_LINE, ESCAPE, and TAB
+		boolean printSpace = true;
 
 		if (control.equals(BOLD_START) && !state.containsKey(BOLD_START))
 		{
@@ -316,16 +317,15 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 			handleControlCommand(BOLD_END, text, state, document);
 			handleControlCommand(ITALIC_END, text, state, document);
 			handleControlCommand(UNDERLINE_END, text, state, document);
+			printSpace = false;
 		}
 		else if (in(control, ESCAPE_CONTROLS))
 		{
 			text.append(control);
-			printSpace = true;
 		}
 		else if (control.charAt(0) == ESCAPE_8BIT)
 		{
 			text.append(get8bit(control.substring(1)));
-			printSpace = true;
 		}
 		else if (control.equals(UNICODE_COUNT_FULL))
 		{
@@ -337,7 +337,10 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 			int unicodeNumber = Integer.parseInt(unicode.fString);
 			char unicodeChar = (char) unicodeNumber;
 			text.append(unicodeChar);
-			printSpace = true;
+		}
+		else 
+		{	
+			printSpace = false;
 		}
 		return printSpace;
 	}
@@ -421,6 +424,11 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 				if (isEmpty(controlWord))
 				{
 					controlWord.append(ch);
+					c = contentStream.read();
+				}
+				else if (Character.isWhitespace(ch))
+				{
+					// This is a delimiter. Skip it
 					c = contentStream.read();
 				}
 				break;
