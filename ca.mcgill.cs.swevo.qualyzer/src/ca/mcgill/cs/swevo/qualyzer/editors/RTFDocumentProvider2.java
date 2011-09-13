@@ -598,7 +598,7 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 			return;
 		}
 
-		int boldPos = currentText.length();
+		int boldPos = state.get(BOLD_START);
 		int italicPos = getDefault(state, ITALIC_START, -1);
 		int underlinePos = getDefault(state, UNDERLINE_START, -1);
 
@@ -650,7 +650,7 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 			return;
 		}
 
-		int underlinePos = currentText.length();
+		int underlinePos = state.get(UNDERLINE_START);
 		int italicPos = getDefault(state, ITALIC_START, -1);
 		int boldPos = getDefault(state, BOLD_START, -1);
 
@@ -755,7 +755,7 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 			return;
 		}
 
-		int italicPos = currentText.length();
+		int italicPos = state.get(ITALIC_START);
 		int underlinePos = getDefault(state, UNDERLINE_START, -1);
 		int boldPos = getDefault(state, BOLD_START, -1);
 
