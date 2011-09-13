@@ -36,7 +36,7 @@ public final class RTFTags
 	public static final String UNICODE_COUNT_FULL = "uc"; //$NON-NLS-1$
 	public static final String SPACE_CHAR = " "; //$NON-NLS-1$
 	public static final String NEW_LINE_CHAR = "\n"; //$NON-NLS-1$
-	public static final String TAB_CHAR = "\n"; //$NON-NLS-1$
+	public static final String TAB_CHAR = "\t"; //$NON-NLS-1$
 	public static final String CARRIAGE_CHAR = "\r"; //$NON-NLS-1$
 	public static final char NULL_CHAR = '\0'; //$NON-NLS-1$
 	public static final char MINUS = '-'; //$NON-NLS-1$
@@ -47,6 +47,7 @@ public final class RTFTags
 	public static final char QUOTE = '"'; //$NON-NLS-1$
 	public static final char UNICODE_COUNT = 'c'; //$NON-NLS-1$
 	public static final char UNICODE = 'u'; //$NON-NLS-1$
+	public static final int BULLET_POINT = 149;
 
 	public static final String BOLD_START_TAG = "\\b"; //$NON-NLS-1$
 	public static final String BOLD_END_TAG = "\\b0"; //$NON-NLS-1$
