@@ -127,7 +127,6 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 		Map<String, Integer> currentTags = new HashMap<String, Integer>();
 		Stack<Map<String, Integer>> state = new Stack<Map<String, Integer>>();
 		state.push(currentTags);
-		boolean printSpace = true;
 
 		try
 		{
@@ -138,19 +137,17 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 				if (ch == BACKSLASH)
 				{
 					ParserPair pair = handleControl(contentStream);
-					printSpace = handleControlCommand(pair.fString, text, safeState(state), rtfDocument);
+					handleControlCommand(pair.fString, text, safeState(state), rtfDocument);
 					c = pair.fChar;
 				}
 				else if (ch == LEFT_BRACE)
 				{
 					ParserPair pair = handleGroup(contentStream, state, text, rtfDocument);
-					printSpace = false;
 					c = pair.fChar;
 				}
 				else if (ch == RIGHT_BRACE)
 				{
 					handleEndGroup(contentStream, state, text, rtfDocument);
-					printSpace = false;
 					c = contentStream.read();
 				}
 				else
@@ -158,9 +155,8 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 					if (!in(ch, SPACES))
 					{
 						text.append(ch);
-						printSpace = true;
 					}
-					else if (equal(ch, SPACE_CHAR) && printSpace)
+					else if (equal(ch, SPACE_CHAR) && true)
 					{
 						text.append(ch);
 					}
@@ -277,12 +273,9 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 	}
 
 	//CSOFF:
-	private boolean handleControlCommand(String control, StringBuilder text, Map<String, Integer> state,
+	private void handleControlCommand(String control, StringBuilder text, Map<String, Integer> state,
 			RTFDocument document)
 	{
-		// May need to be tweaked for NEW_LINE, ESCAPE, and TAB
-		boolean printSpace = true;
-
 		if (control.equals(BOLD_START) && !state.containsKey(BOLD_START))
 		{
 			startBold(document, text, state);
@@ -320,7 +313,6 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 			handleControlCommand(BOLD_END, text, state, document);
 			handleControlCommand(ITALIC_END, text, state, document);
 			handleControlCommand(UNDERLINE_END, text, state, document);
-			printSpace = false;
 		}
 		else if (in(control, ESCAPE_CONTROLS))
 		{
@@ -341,11 +333,6 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 			char unicodeChar = (char) unicodeNumber;
 			text.append(unicodeChar);
 		}
-		else 
-		{	
-			printSpace = false;
-		}
-		return printSpace;
 	}
 	//CSON:
 
