@@ -115,8 +115,9 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 	}
 
 	/**
-	 * This is the main loop.
+	 * This is the main loop of the RTF parser.
 	 */
+	//CSOFF:
 	@Override
 	protected void setDocumentContent(IDocument document, InputStream contentStream, String encoding)
 			throws CoreException
@@ -176,6 +177,7 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 
 		rtfDocument.set(text.toString());
 	}
+	//CSON:
 
 	private void handleEndGroup(InputStream contentStream, Stack<Map<String, Integer>> state, StringBuilder text,
 			RTFDocument document)
@@ -274,6 +276,7 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 		return c;
 	}
 
+	//CSOFF:
 	private boolean handleControlCommand(String control, StringBuilder text, Map<String, Integer> state,
 			RTFDocument document)
 	{
@@ -344,6 +347,7 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 		}
 		return printSpace;
 	}
+	//CSON:
 
 	private ParserPair parseUnicode(String unicodeStr)
 	{
@@ -388,6 +392,7 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 		return handleControl(contentStream, c, EMPTY);
 	}
 
+	//CSOFF:
 	private ParserPair handleControl(InputStream contentStream, int startChar, String startControl) throws IOException
 	{
 		StringBuilder controlWord = new StringBuilder(startControl);
@@ -443,7 +448,8 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 
 		return new ParserPair(c, controlWord.toString());
 	}
-
+	//CSON:
+	
 	private ParserPair getUnicode(InputStream contentStream) throws IOException
 	{
 		StringBuilder control = new StringBuilder();
@@ -1204,9 +1210,10 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 }
 
 /**
- * 
+ * Used by the parser to return a string and the last read character (similar to peek).
  *
  */
+//CSOFF:
 class ParserPair
 {
 	public final int fChar;
@@ -1219,3 +1226,4 @@ class ParserPair
 		fString = str;
 	}
 }
+//CSON:
