@@ -39,28 +39,21 @@ import ca.mcgill.cs.swevo.qualyzer.QualyzerActivator;
 import ca.mcgill.cs.swevo.qualyzer.QualyzerException;
 
 /**
- *
+ * Dialog to allow users to report issues to the Qualyzer development team.
  */
 @SuppressWarnings("restriction")
 public class ReportIssueDialog extends Dialog
 {
-	/**
-	 * 
-	 */
 	private static final String QUALYZER_LOG = "qualyzer.log";
-	// private static Logger gLogger = LoggerFactory.getLogger(ReportIssueDialog.class);
-
 	private static final int REPORT_HEIGHT = 150;
 	private static final int REPORT_WIDTH = 500;
 	
 	private Text fReportText;
-
 	private Button fCopyButton;
-
 	private Clipboard fClipboard;
 
 	/**
-	 * Constructor.
+	 * Constructor. Stores a clipboard in this dialog instance.
 	 * 
 	 * @param shell
 	 */
@@ -70,9 +63,7 @@ public class ReportIssueDialog extends Dialog
 		fClipboard = new Clipboard(PlatformUI.getWorkbench().getDisplay());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
 	 * @see org.eclipse.jface.dialogs.Dialog#create()
 	 */
 	@Override
@@ -80,12 +71,9 @@ public class ReportIssueDialog extends Dialog
 	{
 		super.create();
 		super.getShell().setText(Messages.getString("dialogs.ReportIssueDialog.title"));
-//		setTitle(Messages.getString("dialogs.ReportIssueDialog.title")); //$NON-NLS-1$
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
 	 * @see org.eclipse.jface.dialogs.TitleAreaDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
 	 */
 	@Override
@@ -97,7 +85,6 @@ public class ReportIssueDialog extends Dialog
 		gData.widthHint = REPORT_WIDTH;
 		gData.minimumWidth = REPORT_WIDTH;
 		composite.setLayoutData(gData);
-		
 		
 		Text label = new Text(composite, SWT.LEFT | SWT.WRAP | SWT.READ_ONLY | SWT.NO_SCROLL);
 		label.setText(Messages.getString("dialogs.ReportIssueDialog.message"));
@@ -204,18 +191,14 @@ public class ReportIssueDialog extends Dialog
 	 */
 	public void copyToClipboard()
 	{
-		// This is to give the illusion that something happened. Otherwise, the users will see nothing.
+		// This is to give the illusion that something happened. 
+		// Otherwise, the users will see nothing.
 		fReportText.selectAll();
 		String textData = fReportText.getText();
 		TextTransfer textTransfer = TextTransfer.getInstance();
 		fClipboard.setContents(new Object[] { textData }, new Transfer[] { textTransfer });
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.dialogs.Dialog#okPressed()
-	 */
 	@Override
 	public void okPressed()
 	{
@@ -235,7 +218,6 @@ public class ReportIssueDialog extends Dialog
 	}
 	
 	/**
-	 *
 	 * @return The Text widget (for testing)
 	 */
 	public Text getReportTextWidget()
@@ -244,13 +226,10 @@ public class ReportIssueDialog extends Dialog
 	}
 	
 	/**
-	 *
 	 * @return The clipboard (for testing)
 	 */
 	public Clipboard getClipboard()
 	{
 		return fClipboard;
 	}
-	
-
 }
