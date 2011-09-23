@@ -11,18 +11,22 @@
 package ca.mcgill.cs.swevo.qualyzer;
 
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.ui.application.IWorkbenchConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.ide.IDE;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  */
 public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor
 {
 	private static final String PERSPECTIVE_ID = "ca.mcgill.cs.swevo.qualyzer.perspective"; //$NON-NLS-1$
+	private final Logger fLogger = LoggerFactory.getLogger(ApplicationWorkbenchAdvisor.class);
 
 	@Override
 	public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer)
@@ -49,6 +53,23 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor
 
 		IDE.registerAdapters();
 	}
+	
+	// This method is necessary to prevent the platform from
+    // issuing a warning that resources are not saved, after each session.
+    // Impact on performance to be assessed.
+    @Override
+    public boolean preShutdown()
+    {
+        try
+        {
+            ResourcesPlugin.getWorkspace().save(true, null);
+        }
+        catch(final CoreException lException)
+        {
+            fLogger.error("Problem saving workspace state", lException); //$NON-NLS-1$
+        }
+        return super.preShutdown();
+    } 
 	
 	@Override
 	public void initialize(IWorkbenchConfigurer configurer)
