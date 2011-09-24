@@ -289,12 +289,7 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 
 	private void reset(Map<String, Integer> state, StringBuilder text, RTFDocument document)
 	{
-		// I think this won't work because PLAIN will erase the tags in the state.
-		// It should probably be a copy...
-		// Super important: the reset won't work like in the python parser.
-		// It will need some special treatment...
 		handleControlCommand(PLAIN, text, state, document);
-
 	}
 
 	private int skipGroup(InputStream contentStream, int inputC) throws IOException
