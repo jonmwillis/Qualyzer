@@ -10,10 +10,14 @@
  *******************************************************************************/
 package ca.mcgill.cs.swevo.qualyzer;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -141,4 +145,54 @@ public final class TestUtil
 	view.selectReveal(selection);
 	}
 	
+	public static final String readFile(File file)
+	{
+		BufferedInputStream bin = null;
+		StringBuilder builder = new StringBuilder();
+
+		try
+		{
+			// create FileInputStream object
+			FileInputStream fin = new FileInputStream(file);
+
+			// create object of BufferedInputStream
+			bin = new BufferedInputStream(fin);
+
+			// create a byte array
+			byte[] contents = new byte[1024];
+
+			int bytesRead = 0;
+			while ((bytesRead = bin.read(contents)) != -1)
+			{
+
+				builder.append(new String(contents, 0, bytesRead));
+			}
+
+		}
+		catch (FileNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+		catch (IOException ioe)
+		{
+			ioe.printStackTrace();
+		}
+		finally
+		{
+			// close the BufferedInputStream using close method
+			try
+			{
+				if (bin != null)
+					bin.close();
+			}
+			catch (IOException ioe)
+			{
+				ioe.printStackTrace();
+			}
+
+		}
+		
+		return builder.toString();
+		
+	}
 }
