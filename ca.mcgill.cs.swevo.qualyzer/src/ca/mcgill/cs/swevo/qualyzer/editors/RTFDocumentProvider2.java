@@ -100,6 +100,8 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 	private static final int HEX_RADIX = 16;
 	
 	private static final String SPACE = " "; //$NON-NLS-1$
+	
+	private static final String UNICOUNT = "UNICOUNT";
 
 	/**
 	 * Exists only for use by things that need parsed documents, but that don't want to open the editor.
@@ -162,6 +164,7 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 		RTFDocument rtfDocument = (RTFDocument) document;
 		StringBuilder text = new StringBuilder();
 		Map<String, Integer> currentTags = new HashMap<String, Integer>();
+		currentTags.put(UNICOUNT, 1);
 		Stack<Map<String, Integer>> state = new Stack<Map<String, Integer>>();
 		state.push(currentTags);
 
@@ -173,7 +176,7 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 				char ch = (char) c;
 				if (ch == BACKSLASH)
 				{
-					ParserPair pair = handleControl(contentStream);
+					ParserPair pair = handleControl(contentStream, safeState(state));
 					handleControlCommand(pair.fString, text, safeState(state), rtfDocument);
 					c = pair.fChar;
 				}
@@ -193,7 +196,7 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 					{
 						text.append(ch);
 					}
-					else if (equal(ch, SPACE_CHAR) && true)
+					else if (equal(ch, SPACE_CHAR))
 					{
 						text.append(ch);
 					}
@@ -243,7 +246,7 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 
 		if (ch == BACKSLASH)
 		{
-			pair = handleControl(contentStream);
+			pair = handleControl(contentStream, safeState(state));
 			c = pair.fChar;
 			groupName = pair.fString;
 		}
@@ -261,6 +264,7 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 			Map<String, Integer> oldState = safeState(state);
 			reset(oldState, text, document);
 			Map<String, Integer> newState = new HashMap<String, Integer>(oldState);
+			newState.put(UNICOUNT, oldState.get(UNICOUNT));
 			state.push(newState);
 			resetNew(text, newState, document);
 			
@@ -273,6 +277,10 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 	{
 		for (String command : state.keySet())
 		{
+			if (command.equals(UNICOUNT))
+			{
+				continue;
+			}
 			state.remove(command);
 			handleControlCommand(command, text, state, document);
 		}
@@ -359,9 +367,10 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 		{
 			text.append(get8bit(control.substring(1)));
 		}
-		else if (control.equals(UNICODE_COUNT_FULL))
+		else if (isUnicodeCount(control))
 		{
-			// Do nothing for now. really!
+			int number = Integer.parseInt(control.substring(2));
+			state.put(UNICOUNT, number);
 		}
 		else if (isUnicode(control))
 		{
@@ -372,6 +381,11 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 		}
 	}
 	//CSON:
+
+	private boolean isUnicodeCount(String control)
+	{
+		return control.length() > 2 && control.startsWith(UNICODE_COUNT_FULL) && Character.isDigit(control.charAt(2));
+	}
 
 	private ParserPair parseUnicode(String unicodeStr)
 	{
@@ -410,14 +424,14 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 		return (char) c;
 	}
 
-	private ParserPair handleControl(InputStream contentStream) throws IOException
+	private ParserPair handleControl(InputStream contentStream, Map<String, Integer> state) throws IOException
 	{
 		int c = contentStream.read();
-		return handleControl(contentStream, c, EMPTY);
+		return handleControl(contentStream, c, EMPTY, state);
 	}
 
 	//CSOFF:
-	private ParserPair handleControl(InputStream contentStream, int startChar, String startControl) throws IOException
+	private ParserPair handleControl(InputStream contentStream, int startChar, String startControl, Map<String, Integer> state) throws IOException
 	{
 		StringBuilder controlWord = new StringBuilder(startControl);
 		int c = startChar;
@@ -429,7 +443,7 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 			if (ch == UNICODE && isEmpty(controlWord))
 			{
 				// This is potentially an unicode char
-				ParserPair pair = getUnicode(contentStream);
+				ParserPair pair = getUnicode(contentStream, state);
 				c = pair.fChar;
 				controlWord = new StringBuilder(pair.fString);
 				break;
@@ -488,8 +502,9 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 	}
 
 	
-	private ParserPair getUnicode(InputStream contentStream) throws IOException
+	private ParserPair getUnicode(InputStream contentStream, Map<String, Integer> state) throws IOException
 	{
+		
 		StringBuilder control = new StringBuilder();
 		int c = contentStream.read();
 		if (c != -1)
@@ -501,10 +516,15 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 				control.append(UNICODE_COUNT_FULL);
 				control.append(number.fString);
 				c = number.fChar;
+				// This is a control so a space is a delimiter.
+				if (Character.isWhitespace((char) c))
+				{
+					c = contentStream.read();
+				}
 			}
 			else if (!Character.isDigit(ch))
 			{
-				ParserPair result = handleControl(contentStream, c, String.valueOf(UNICODE));
+				ParserPair result = handleControl(contentStream, c, String.valueOf(UNICODE), state);
 				c = result.fChar;
 				control = new StringBuilder(result.fString);
 			}
@@ -512,26 +532,44 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 			{
 				ParserPair number = getNumber(contentStream, Integer.parseInt(String.valueOf(ch)));
 				int replacement = number.fChar;
-				String replch = String.valueOf((char) replacement);
-				if (equal(BACKSLASH, replch))
-				{
-					// This is a 8 bit
-					ParserPair repl8bit = handleControl(contentStream);
-					c = repl8bit.fChar;
-					replch = repl8bit.fString;
-				}
-				else
-				{
-					// This was a 7 bit character
-					c = contentStream.read();
-				}
+				ParserPair replPair = getUnicodeReplacement(contentStream, replacement, state);
+				c = replPair.fChar;
+				
 				control.append(UNICODE);
 				control.append(number.fString);
-				control.append(replch);
+				control.append(replPair.fString);
 			}
 		}
 
 		return new ParserPair(c, control.toString());
+	}
+	
+	private ParserPair getUnicodeReplacement(InputStream contentStream, int replC, Map<String, Integer> state)
+	throws IOException
+	{
+		int count = state.get(UNICOUNT);
+		int currentCount = 0;
+		int c = replC;
+		StringBuilder replString = new StringBuilder();
+		while (currentCount < count)
+		{
+			String replch = String.valueOf((char) c);
+			if (equal(BACKSLASH, replch))
+			{
+				// This is a 8 bit
+				ParserPair repl8bit = handleControl(contentStream, state);
+				replString.append(repl8bit.fString);
+				c = repl8bit.fChar;
+			}
+			else
+			{
+				// This was a 7 bit character
+				replString.append(replch);
+				c = contentStream.read();
+			}
+			currentCount++;
+		}
+		return new ParserPair(c, replString.toString());
 	}
 
 	private ParserPair getNumber(InputStream contentStream) throws IOException
