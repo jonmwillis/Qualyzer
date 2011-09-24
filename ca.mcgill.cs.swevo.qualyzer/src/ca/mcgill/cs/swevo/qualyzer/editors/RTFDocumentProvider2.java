@@ -426,7 +426,15 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 		while (c != -1)
 		{
 			ch = (char) c;
-			if (Character.isLetter(ch))
+			if (ch == UNICODE && isEmpty(controlWord))
+			{
+				// This is potentially an unicode char
+				ParserPair pair = getUnicode(contentStream);
+				c = pair.fChar;
+				controlWord = new StringBuilder(pair.fString);
+				break;
+			}
+			else if (Character.isLetter(ch))
 			{
 				// Start of a control word
 				controlWord.append(ch);
@@ -434,12 +442,7 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 			else if (ch == ESCAPE_8BIT && isEmpty(controlWord))
 			{
 				// This is an escaped 8bit char
-				controlWord.append(ch);
-			}
-			else if (ch == UNICODE && isEmpty(controlWord))
-			{
-				// This is potentially an unicode char
-				ParserPair pair = getUnicode(contentStream);
+				ParserPair pair = get8Bit(contentStream);
 				c = pair.fChar;
 				controlWord = new StringBuilder(pair.fString);
 				break;
@@ -474,6 +477,17 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 	}
 	//CSON:
 	
+	private ParserPair get8Bit(InputStream contentStream) throws IOException
+	{
+		StringBuilder sBuilder = new StringBuilder();
+		sBuilder.append(ESCAPE_8BIT);
+		sBuilder.append((char) contentStream.read());
+		sBuilder.append((char) contentStream.read());
+		int c = contentStream.read();
+		return new ParserPair(c, sBuilder.toString());
+	}
+
+	
 	private ParserPair getUnicode(InputStream contentStream) throws IOException
 	{
 		StringBuilder control = new StringBuilder();
@@ -496,7 +510,7 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 			}
 			else
 			{
-				ParserPair number = getNumber(contentStream);
+				ParserPair number = getNumber(contentStream, Integer.parseInt(String.valueOf(ch)));
 				int replacement = number.fChar;
 				String replch = String.valueOf((char) replacement);
 				if (equal(BACKSLASH, replch))
@@ -522,7 +536,16 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 
 	private ParserPair getNumber(InputStream contentStream) throws IOException
 	{
+		return getNumber(contentStream, -1);
+	}
+	
+	private ParserPair getNumber(InputStream contentStream, int initial) throws IOException
+	{
 		StringBuilder number = new StringBuilder();
+		if (initial > -1)
+		{
+			number.append(initial);
+		}
 		int c = contentStream.read();
 		while (c != -1)
 		{
@@ -530,6 +553,7 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 			if (Character.isDigit(ch))
 			{
 				number.append(ch);
+				c = contentStream.read();
 			}
 			else
 			{
