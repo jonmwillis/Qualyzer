@@ -47,6 +47,7 @@ public class ReportIssueDialog extends Dialog
 	private static final String QUALYZER_LOG = "qualyzer.log";
 	private static final int REPORT_HEIGHT = 150;
 	private static final int REPORT_WIDTH = 500;
+	private static final int MAX_LOG_LINES = 500;
 	
 	private Text fReportText;
 	private Button fCopyButton;
@@ -167,12 +168,18 @@ public class ReportIssueDialog extends Dialog
 		}
 		
 		StringBuilder sBuilder = new StringBuilder();
+		int lineNumber = 0;
 		try
 		{
 			BufferedReader reader = new BufferedReader(new FileReader(filePath));
 			String line = null;
 			while ((line = reader.readLine()) != null) 
 			{
+				lineNumber++;
+				if(lineNumber > MAX_LOG_LINES)
+				{
+					break;
+				}
 				sBuilder.append(line);
 				sBuilder.append("\n"); //$NON-NLS-1$
 			}
