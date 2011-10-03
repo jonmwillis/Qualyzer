@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Jonathan Faubert
+ *     Martin Robillard
  *******************************************************************************/
 /**
  * 
@@ -16,6 +17,7 @@ package ca.mcgill.cs.swevo.qualyzer.editors.pages;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -58,11 +60,6 @@ import ca.mcgill.cs.swevo.qualyzer.util.FragmentUtil;
  */
 public class CodeFragmentViewerPage extends FormPage implements ProjectListener, CodeListener
 {
-	
-	private static final String GREATER_CODE = "&gt;"; //$NON-NLS-1$
-	private static final String GREATER = ">"; //$NON-NLS-1$
-	private static final String LESS_CODE = "&lt;"; //$NON-NLS-1$
-	private static final String LESS = "<"; //$NON-NLS-1$
 	private static final String VIEW_FRAGMENTS = Messages.getString(
 			"editors.pages.CodeFragmentViewerPage.viewFragments"); //$NON-NLS-1$
 	private Code fCode;
@@ -190,7 +187,8 @@ public class CodeFragmentViewerPage extends FormPage implements ProjectListener,
 	}
 
 	/**
-	 * Creates the form text representing one fragment. Sets the fragment text itself as a hyperlink to the document.
+	 * Creates the form text representing one fragment. 
+	 * Sets the fragment text itself as a hyperlink to the document.
 	 * @param sectionClient
 	 * @param text
 	 * @param fragment
@@ -211,16 +209,13 @@ public class CodeFragmentViewerPage extends FormPage implements ProjectListener,
 		int fragStart = fragment.getOffset() - start;
 		int fragEnd = fragStart + fragment.getLength();
 		
-		String temp = fragText.substring(0, fragStart).replace(LESS, LESS_CODE);
-		builder.append(temp.replace(GREATER, GREATER_CODE));
+		builder.append(StringEscapeUtils.escapeHtml(fragText.substring(0, fragStart)));
 		
 		builder.append(FormTextConstants.LINK_START_HEAD + FormTextConstants.LINK_START_TAIL);
-		temp = fragText.substring(fragStart, fragEnd).replace(LESS, LESS_CODE);
-		builder.append(temp.replace(GREATER, GREATER_CODE));
+		builder.append(StringEscapeUtils.escapeHtml(fragText.substring(fragStart, fragEnd)));
 		builder.append(FormTextConstants.LINK_END); 
 		
-		temp = fragText.substring(fragEnd, fragText.length()).replace(LESS, LESS_CODE);
-		builder.append(temp.replace(GREATER, GREATER_CODE));
+		builder.append(StringEscapeUtils.escapeHtml(fragText.substring(fragEnd, fragText.length())));
 		
 		builder.append(FormTextConstants.PARAGRAPH_END); 
 		builder.append(FormTextConstants.FORM_END); 
