@@ -67,8 +67,10 @@ public final class RTFTags
 	public static final String IGNORE = "*"; //$NON-NLS-1$
 	public static final String COLOR_TABLE = "colortbl;"; //$NON-NLS-1$
 	public static final String COLOR_TABLE2 = "colortbl"; //$NON-NLS-1$
+	public static final String PICTURE = "pict"; //$NON-NLS-1$
 
-	public static final String[] IGNORE_GROUPS = { FONT_TABLE, STYLESHEET, INFO, IGNORE, COLOR_TABLE, COLOR_TABLE2 };
+	public static final String[] IGNORE_GROUPS = { FONT_TABLE, STYLESHEET, INFO, IGNORE, COLOR_TABLE, COLOR_TABLE2,
+		PICTURE };
 
 	public static final String[] ESCAPE_CONTROLS = { String.valueOf(LEFT_BRACE), String.valueOf(RIGHT_BRACE),
 			String.valueOf(BACKSLASH), String.valueOf(QUOTE) };

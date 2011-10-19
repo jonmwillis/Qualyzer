@@ -35,6 +35,7 @@ public class RTFParserTest
 	private static final String DOC = "ImportDocument";
 	private static final String DOC_UNICODE = "UnicodeStyleOO3";
 	private static final String GERMAN_UNICODE = "GermanUnicode";
+	private static final String IMAGE_UNICODE = "ImageUnicode";
 	
 	@Before
 	public void setUp()
@@ -115,5 +116,12 @@ public class RTFParserTest
 	{
 		// Import Custom RTF document
 		importTranscript(GERMAN_UNICODE + ".rtf", GERMAN_UNICODE, GERMAN_UNICODE + ".txt");
+	}
+	
+	@Test
+	public void importImageUnicode()
+	{
+		// Import Custom RTF document
+		importTranscript(IMAGE_UNICODE + ".rtf", IMAGE_UNICODE, IMAGE_UNICODE + ".txt");
 	}
 }
