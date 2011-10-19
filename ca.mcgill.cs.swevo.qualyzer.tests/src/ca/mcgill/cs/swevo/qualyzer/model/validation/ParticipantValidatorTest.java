@@ -75,6 +75,22 @@ public class ParticipantValidatorTest
 	}
 	
 	/**
+	 * Tests that names with accents actually work.
+	 */
+	@Test 
+	public void testAccents()
+	{
+		CodeValidator lValidator = new CodeValidator("-_  ", fProject);
+		assertTrue(lValidator.isValid());
+		lValidator = new CodeValidator("Pépé et Mémé", fProject);
+		assertTrue(lValidator.isValid());
+		lValidator = new CodeValidator("&", fProject);
+		assertFalse(lValidator.isValid());
+		lValidator = new CodeValidator("Tschüß", fProject);
+		assertTrue(lValidator.isValid());
+	}
+	
+	/**
 	 * Verifies that the ID follows alphanumerical+
 	 */
 	@Test
