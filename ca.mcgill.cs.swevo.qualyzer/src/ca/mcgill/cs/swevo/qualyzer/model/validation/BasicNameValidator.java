@@ -21,6 +21,10 @@ import ca.mcgill.cs.swevo.qualyzer.model.Project;
  * - A name in alphanumerical+ format.
  * - A name is shorter than 256 characters long.
  */
+/**
+ * @author martin
+ *
+ */
 public class BasicNameValidator extends AbstractValidator
 {
 	private static final String BLANK = " "; //$NON-NLS-1$
@@ -72,7 +76,7 @@ public class BasicNameValidator extends AbstractValidator
 			lReturn = false;
 			fMessage = fLabel + BLANK + Messages.getString("model.validation.BasicNameValidator.tooLong"); //$NON-NLS-1$
 		}
-		else if(!ValidationUtils.verifyID(fName))
+		else if(!validateName(fName))
 		{
 			lReturn = false;
 			fMessage = fLabel + BLANK + Messages.getString("model.validation.BasicNameValidator.invalid"); //$NON-NLS-1$
@@ -87,6 +91,18 @@ public class BasicNameValidator extends AbstractValidator
 			}
 		}
 		return lReturn;
+	}
+	
+	
+	/**
+	 * Step method of the template method design pattern. Defines the 
+	 * exact format for names. Override to change the format.
+	 * @param pName The name to validate
+	 * @return True if the name is valid
+	 */
+	protected boolean validateName(String pName)
+	{
+		return ValidationUtils.verifyID(fName);
 	}
 	
 	/**
