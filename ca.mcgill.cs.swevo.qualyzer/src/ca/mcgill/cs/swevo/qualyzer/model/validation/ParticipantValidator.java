@@ -17,7 +17,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Project;
 /**
  * Validates the business rules when a new investigator is created.
  */
-public class ParticipantValidator extends BasicNameValidator
+public class ParticipantValidator extends RelaxedNameValidator
 {
 	/**
 	 * Constructs a new ParticipantValidator.

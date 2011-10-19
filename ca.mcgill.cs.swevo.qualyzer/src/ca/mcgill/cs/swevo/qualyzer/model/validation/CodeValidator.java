@@ -17,7 +17,7 @@ import ca.mcgill.cs.swevo.qualyzer.model.Project;
 /**
  * Validates the business rules when a new code is created.
  */
-public class CodeValidator extends BasicNameValidator
+public class CodeValidator extends RelaxedNameValidator
 {
 	/**
 	 * Constructs a new CodeValidator.
