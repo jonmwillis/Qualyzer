@@ -112,11 +112,11 @@ public class CodeValidatorTest
 	{
 		CodeValidator lValidator = new CodeValidator("-_  ", fProject);
 		assertTrue(lValidator.isValid());
-		lValidator = new CodeValidator("Pépé et Mémé", fProject);
+		lValidator = new CodeValidator("PÃ©pÃ© et MÃ©mÃ©", fProject);
 		assertTrue(lValidator.isValid());
 		lValidator = new CodeValidator("&", fProject);
 		assertFalse(lValidator.isValid());
-		lValidator = new CodeValidator("Tschüß", fProject);
+		lValidator = new CodeValidator("TschÃ¢Ã§", fProject);
 		assertTrue(lValidator.isValid());
 	}
 	
