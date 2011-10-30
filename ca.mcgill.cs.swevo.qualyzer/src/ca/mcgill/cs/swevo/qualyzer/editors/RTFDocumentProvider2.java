@@ -161,6 +161,24 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 	protected void setDocumentContent(IDocument document, InputStream contentStream, String encoding)
 			throws CoreException
 	{
+//      TO REMOVE BEFORE RELEASE. LEFT IN CASE BUG #121 REAPPEARS
+//		StringBuilder builder = new StringBuilder();
+//		// DEBUG ONLY
+//		try {
+//			BufferedReader br = new BufferedReader(new InputStreamReader(contentStream));
+//			String thisLine;
+//			gLogger.error("QDEBUG - CONTENT OF FILE!");
+//			while((thisLine = br.readLine()) != null) {
+//				gLogger.error(thisLine);
+//				builder.append(thisLine + "\n");
+//			}
+//			byte[] content = builder.toString().getBytes();
+//			ByteArrayInputStream bais = new ByteArrayInputStream(content);
+//			contentStream = bais;
+//		} catch(Exception e) {
+//			gLogger.error("QDEBUG: Error while debugging rtf parser.");
+//		}
+		
 		RTFDocument rtfDocument = (RTFDocument) document;
 		StringBuilder text = new StringBuilder();
 		Map<String, Integer> currentTags = new HashMap<String, Integer>();
@@ -1026,9 +1044,10 @@ public class RTFDocumentProvider2 extends FileDocumentProvider
 		}
 		else
 		{
+			int oldOffset = fragment.getOffset();
 			fragment.setOffset(position.offset);
 			fragment.setLength(position.length);
-			rtfDoc.getFragments().remove(position.offset);
+			rtfDoc.getFragments().remove(oldOffset);
 			rtfDoc.getFragments().put(position.offset, fragment);
 		}
 	}
