@@ -2,7 +2,7 @@
 <feature
       id="ca.mcgill.cs.swevo.qualyzer.feature"
       label="Qualyzer Feature"
-      version="1.1.2.qualifier"
+      version="1.2.0.qualifier"
       provider-name="McGill University">
 
    <description url="http://www.example.com/description">
