@@ -139,9 +139,9 @@ IT IS YOUR OBLIGATION TO READ AND ACCEPT ALL SUCH TERMS AND CONDITIONS PRIOR TO 
    </plugins>
 
    <features>
-      <feature id="ca.mcgill.cs.swevo.qualyzer.dependencies" version="1.1.2.qualifier"/>
-      <feature id="ca.mcgill.cs.swevo.qualyzer.feature" version="1.1.2.qualifier"/>
-      <feature id="ca.mcgill.cs.swevo.qualyzer.rcp_feature" version="1.1.2.qualifier"/>
+      <feature id="ca.mcgill.cs.swevo.qualyzer.dependencies" version="1.2.0.qualifier"/>
+      <feature id="ca.mcgill.cs.swevo.qualyzer.feature" version="1.2.0.qualifier"/>
+      <feature id="ca.mcgill.cs.swevo.qualyzer.rcp_feature" version="1.2.0.qualifier"/>
    </features>
 
    <configurations>
