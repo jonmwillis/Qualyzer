@@ -7,7 +7,6 @@
  *
  * Contributors:
  *     Jonathan Faubert
- *     Martin Robillard
  *******************************************************************************/
 /**
  * 
@@ -17,7 +16,6 @@ package ca.mcgill.cs.swevo.qualyzer.editors.pages;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -60,6 +58,13 @@ import ca.mcgill.cs.swevo.qualyzer.util.FragmentUtil;
  */
 public class CodeFragmentViewerPage extends FormPage implements ProjectListener, CodeListener
 {
+	
+	private static final String GREATER_CODE = "&gt;"; //$NON-NLS-1$
+	private static final String GREATER = ">"; //$NON-NLS-1$
+	private static final String LESS_CODE = "&lt;"; //$NON-NLS-1$
+	private static final String LESS = "<"; //$NON-NLS-1$
+	private static final String AMP = "&";
+	private static final String AMP_CODE = "&amp;";
 	private static final String VIEW_FRAGMENTS = Messages.getString(
 			"editors.pages.CodeFragmentViewerPage.viewFragments"); //$NON-NLS-1$
 	private Code fCode;
@@ -187,8 +192,7 @@ public class CodeFragmentViewerPage extends FormPage implements ProjectListener,
 	}
 
 	/**
-	 * Creates the form text representing one fragment. 
-	 * Sets the fragment text itself as a hyperlink to the document.
+	 * Creates the form text representing one fragment. Sets the fragment text itself as a hyperlink to the document.
 	 * @param sectionClient
 	 * @param text
 	 * @param fragment
@@ -209,13 +213,24 @@ public class CodeFragmentViewerPage extends FormPage implements ProjectListener,
 		int fragStart = fragment.getOffset() - start;
 		int fragEnd = fragStart + fragment.getLength();
 		
-		builder.append(StringEscapeUtils.escapeHtml(fragText.substring(0, fragStart)));
+		/* 
+		 * Note that general escaping methods such as StringEscapeUtils.escapeHtml should
+		 * note be used here because the FormText widget does not support all HTML escaped
+		 * codes, only the ones used here. See the documentation for FormText.
+		 */
+		String temp = fragText.substring(0, fragStart).replace(LESS, LESS_CODE);
+		temp = temp.replace(AMP, AMP_CODE);
+		builder.append(temp.replace(GREATER, GREATER_CODE));
 		
 		builder.append(FormTextConstants.LINK_START_HEAD + FormTextConstants.LINK_START_TAIL);
-		builder.append(StringEscapeUtils.escapeHtml(fragText.substring(fragStart, fragEnd)));
+		temp = fragText.substring(fragStart, fragEnd).replace(LESS, LESS_CODE);
+		temp = temp.replace(AMP, AMP_CODE);
+		builder.append(temp.replace(GREATER, GREATER_CODE));
 		builder.append(FormTextConstants.LINK_END); 
 		
-		builder.append(StringEscapeUtils.escapeHtml(fragText.substring(fragEnd, fragText.length())));
+		temp = fragText.substring(fragEnd, fragText.length()).replace(LESS, LESS_CODE);
+		temp = temp.replace(AMP, AMP_CODE);
+		builder.append(temp.replace(GREATER, GREATER_CODE));
 		
 		builder.append(FormTextConstants.PARAGRAPH_END); 
 		builder.append(FormTextConstants.FORM_END); 
